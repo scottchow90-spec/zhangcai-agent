@@ -1,0 +1,782 @@
+[
+  {
+    "id": "a-share-15d-selection",
+    "name": "短线强势股 26 因子评分",
+    "alias": "A股15维选股；15维选股",
+    "group": "selection",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "通达信公式 / TQ",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "保留历史名称 A股15维选股；包内当前为 V6 / 26 因子。"
+  },
+  {
+    "id": "a-share-bottom-fishing",
+    "name": "抄底策略",
+    "alias": "抄底策略；飞龙在天波段<20 × 缠论高胜率买点TOP选股 v2严格流程报告；飞龙在天波段<20；飞龙波段小于20",
+    "group": "selection",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "convertible-bond-screening-strategy",
+    "name": "可转债筛选策略",
+    "alias": "可转债筛选策略；可转债筛选技能",
+    "group": "selection",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "通达信公式 / TQ",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "buzhang-leader-mining",
+    "name": "补涨龙头挖掘",
+    "alias": "补涨龙头挖掘",
+    "group": "selection",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "通达信公式 / TQ"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "chanlun-first-board",
+    "name": "缠论首板",
+    "alias": "缠论首板",
+    "group": "selection",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "dragon-pullback",
+    "name": "龙回头",
+    "alias": "龙回头",
+    "group": "selection",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "feilong-strategy",
+    "name": "飞龙在天",
+    "alias": "飞龙在天；飞龙；飞龙选股",
+    "group": "selection",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "通达信公式 / TQ",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "five-dimension-resonance",
+    "name": "五维共振选股",
+    "alias": "五维共振选股",
+    "group": "selection",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "通达信公式 / TQ",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "core-mainline-scoring-system",
+    "name": "核心主线评分",
+    "alias": "核心主线评分；核心主线评分系统；核心主线确定逻辑",
+    "group": "mainline",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "新闻公告 / 网络源"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "four-strategy-system",
+    "name": "四策略系统",
+    "alias": "四策略系统",
+    "group": "selection",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "golden-ignition",
+    "name": "黄金点火",
+    "alias": "黄金点火",
+    "group": "selection",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "通达信公式 / TQ"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "nana-teacher-five-strategies",
+    "name": "娜娜老师5策略",
+    "alias": "娜娜老师5策略",
+    "group": "selection",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "通达信公式 / TQ",
+      "新闻公告 / 网络源"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "oversold-first-board",
+    "name": "超跌首板",
+    "alias": "超跌首板",
+    "group": "selection",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "quality-track-stock-selection",
+    "name": "优质赛道选股",
+    "alias": "优质赛道选股",
+    "group": "selection",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "quant-strategy-bundle-chen",
+    "name": "陈氏量化策略合集",
+    "alias": "陈氏量化策略合集",
+    "group": "selection",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "quantitative-trading",
+    "name": "量化交易",
+    "alias": "量化交易",
+    "group": "selection",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "shortline-hotspot-mining",
+    "name": "短线热点挖掘",
+    "alias": "短线热点挖掘；热点龙头",
+    "group": "mainline",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "新闻公告 / 网络源"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "stock-hard-gate",
+    "name": "硬闸",
+    "alias": "硬闸",
+    "group": "settings",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "通达信公式 / TQ"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "stock-unified",
+    "name": "股票技能统一入口",
+    "alias": "股票技能统一入口；股票技能总验收；股票统一入口；股票技能工作流；股票技能审计；所有股票技能",
+    "group": "settings",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "新闻公告 / 网络源"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "a-share-longhubang-analysis",
+    "name": "龙虎榜分析",
+    "alias": "龙虎榜分析；龙虎榜资金分析；龙虎榜净买额分析",
+    "group": "capital",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "龙虎榜 / 资金源"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "a-share-leader-deep-research",
+    "name": "龙头深度研究",
+    "alias": "龙头深度研究；龙头深度分析；龙头深度技能；龙头深度；龙头分析",
+    "group": "ladder",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "龙虎榜 / 资金源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "a-share-limit-up-leader-classification",
+    "name": "每日涨停板龙头分类",
+    "alias": "每日涨停板龙头分类",
+    "group": "ladder",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "龙虎榜 / 资金源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "a-share-limit-up-mining",
+    "name": "妖股挖掘",
+    "alias": "妖股挖掘；连板挖掘；连板挖掘v2",
+    "group": "ladder",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "龙虎榜 / 资金源",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "limit-up-review",
+    "name": "涨停板深度复盘",
+    "alias": "涨停板深度复盘",
+    "group": "ladder",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "通达信公式 / TQ",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "lobster-ai",
+    "name": "龙虾智能涨停监控",
+    "alias": "龙虾智能涨停监控；龙虾AI涨停监控",
+    "group": "ladder",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "a-share-intraday-position-monitor",
+    "name": "持仓股监控技能",
+    "alias": "持仓股监控技能；持仓股监控",
+    "group": "watchlist",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "通达信公式 / TQ",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "baimao-score-system",
+    "name": "白猫老师评分体系",
+    "alias": "白猫老师评分体系",
+    "group": "research",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "通达信公式 / TQ",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "big-bull-analysis-scoring-system",
+    "name": "大牛线分析评分系统",
+    "alias": "大牛线分析评分系统；大牛线分析；大牛线评分系统；大牛线百分制排名；黄金点火板块评分；大牛线量化工具；大牛线；大牛线量化；大牛线4.0；五公式科学评分；五公式综合评分",
+    "group": "research",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "通达信公式 / TQ"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "financial-roe-analysis",
+    "name": "财务净资产收益率杜邦分析",
+    "alias": "财务净资产收益率杜邦分析；财务ROE杜邦深度分析",
+    "group": "research",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "stock-analysis",
+    "name": "个股分析",
+    "alias": "个股分析",
+    "group": "research",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "stock-research-engine",
+    "name": "个股研究引擎",
+    "alias": "个股研究引擎",
+    "group": "research",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "新闻公告 / 网络源"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "stock-study",
+    "name": "高级股票研究",
+    "alias": "高级股票研究",
+    "group": "research",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "stock-research-codex",
+    "name": "通用股票研究",
+    "alias": "通用股票研究",
+    "group": "settings",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "support-pressure-analysis-system",
+    "name": "支撑压力分析系统",
+    "alias": "支撑压力分析系统；支撑压力系统；支撑阻力分析系统",
+    "group": "research",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "risk-mine-clearance",
+    "name": "风险排雷技能",
+    "alias": "风险排雷技能；风险排雷；个股风险排雷；暴雷前排查；风险预警",
+    "group": "research",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "stock-watchlist",
+    "name": "自选股管理",
+    "alias": "自选股管理",
+    "group": "watchlist",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "baimao-teacher-system",
+    "name": "白猫老师六公式通达信体系",
+    "alias": "白猫老师六公式通达信体系",
+    "group": "research",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "通达信公式 / TQ",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "jigou-capital-monitoring",
+    "name": "机构资金监控",
+    "alias": "机构资金监控",
+    "group": "capital",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "通达信公式 / TQ",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "zhuangjia-capital-monitoring",
+    "name": "庄家资金监控",
+    "alias": "庄家资金监控",
+    "group": "capital",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "通达信公式 / TQ"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "youzi-capital-monitoring",
+    "name": "游资资金监控",
+    "alias": "游资资金监控",
+    "group": "capital",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "通达信公式 / TQ",
+      "龙虎榜 / 资金源",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "tdx-local-hub",
+    "name": "通达信本地中枢",
+    "alias": "通达信本地中枢",
+    "group": "settings",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "通达信公式 / TQ"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "kaipanla",
+    "name": "开盘啦",
+    "alias": "开盘啦",
+    "group": "settings",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "a-share-hotspot-sentiment-analysis",
+    "name": "A股热点舆情研判",
+    "alias": "A股热点舆情研判；A股舆情分析工作流；五站A股舆情研判；市场情报；三端社媒财经简报；短线侠A股数据接口；短线侠 A 股数据接口",
+    "group": "mainline",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "a-share-short-term-market-sentiment",
+    "name": "短线市场情绪",
+    "alias": "短线市场情绪；短线情绪；短线市场情绪研判；短线市场情绪评分系统",
+    "group": "mainline",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "a-share-thinktank-brief",
+    "name": "顶级智库观点",
+    "alias": "顶级智库观点",
+    "group": "mainline",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "baimao-daily-intel-review",
+    "name": "白猫老师每日资讯及复盘报告",
+    "alias": "白猫老师每日资讯及复盘报告",
+    "group": "reports",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "industry-chain-analysis",
+    "name": "产业链深度研究",
+    "alias": "产业链深度研究",
+    "group": "mainline",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "wechat-public-writing",
+    "name": "公众号写作",
+    "alias": "公众号写作",
+    "group": "reports",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "新闻公告 / 网络源"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "stock-deliverable",
+    "name": "股票投研交付",
+    "alias": "股票投研交付",
+    "group": "reports",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "龙虎榜 / 资金源",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "stock-recap-video",
+    "name": "股票复盘视频",
+    "alias": "股票复盘视频",
+    "group": "reports",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "渲染 / 语音环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "a-share-sentiment-word-delivery",
+    "name": "A股情绪文档验收",
+    "alias": "A股情绪文档验收；A股舆情 Word 交付",
+    "group": "reports",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "新闻公告 / 网络源",
+      "文档输出环境"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "old-leader-oversold-rebound",
+    "name": "老龙头超跌反弹",
+    "alias": "老龙头超跌反弹",
+    "group": "selection",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "新闻公告 / 网络源"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  },
+  {
+    "id": "technical-analysis",
+    "name": "技术分析",
+    "alias": "技术分析；技术面分析；技术面；技术指标分析",
+    "group": "research",
+    "dependencies": [
+      "日线行情",
+      "数据新鲜度",
+      "通达信公式 / TQ"
+    ],
+    "entry": "scripts/codex_entry.py",
+    "state": "待适配",
+    "note": "根入口已发现；尚未完成 Harness 业务执行验证。"
+  }
+]
