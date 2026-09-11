@@ -1,0 +1,300 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "白猫老师每日资讯及复盘报告证据包",
+  "type": "object",
+  "required": [
+    "workflow",
+    "mode",
+    "trade_date",
+    "sources",
+    "headline_conclusion",
+    "event_pool",
+    "theme_clusters",
+    "market_feedback",
+    "capital_behavior",
+    "risk_items",
+    "next_session_plan"
+  ],
+  "properties": {
+    "workflow": {
+      "const": "baimao-daily-intel-review"
+    },
+    "mode": {
+      "enum": ["morning", "midday", "closing"]
+    },
+    "trade_date": {
+      "type": "string",
+      "description": "YYYY-MM-DD"
+    },
+    "is_test_fixture": {
+      "type": "boolean",
+      "description": "仅限 selftest/closure gate 使用。正式运行禁止为 true。"
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "type", "collected_at"],
+        "properties": {
+          "id": {"type": "string"},
+          "name": {"type": "string"},
+          "type": {"type": "string"},
+          "collected_at": {"type": "string"},
+          "path": {"type": "string"},
+          "url": {"type": "string"},
+          "note": {"type": "string"}
+        }
+      }
+    },
+    "headline_conclusion": {
+      "type": "object",
+      "description": "所有模式必填：报告开头六件套",
+      "required": ["market_direction", "strongest_theme", "second_theme", "major_risk", "capital_behavior", "next_session_observation", "source"],
+      "properties": {
+        "market_direction": {"type": "string"},
+        "strongest_theme": {"type": "string"},
+        "second_theme": {"type": "string"},
+        "major_risk": {"type": "string"},
+        "capital_behavior": {"type": "string"},
+        "next_session_observation": {"type": "string"},
+        "source": {"type": "string"}
+      }
+    },
+    "event_pool": {
+      "type": "array",
+      "description": "所有模式必填：先建事件池，再聚类主题",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["time", "title", "category", "source", "heat", "keywords", "summary", "impact", "confidence"],
+        "properties": {
+          "time": {"type": "string"},
+          "title": {"type": "string"},
+          "category": {"type": "string"},
+          "source": {"type": "string"},
+          "heat": {"type": "number"},
+          "keywords": {"type": "array", "items": {"type": "string"}},
+          "summary": {"type": "string"},
+          "impact": {"type": "string"},
+          "confidence": {"type": "string"}
+        }
+      }
+    },
+    "theme_clusters": {
+      "type": "array",
+      "description": "所有模式必填：事件池聚类后的主题排序",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["name", "score", "conclusion", "evidence", "logic", "market_feedback", "capital_feedback", "watch_targets", "next_observation", "invalidation", "source"],
+        "properties": {
+          "name": {"type": "string"},
+          "score": {"type": "number"},
+          "conclusion": {"type": "string"},
+          "evidence": {"type": "string"},
+          "logic": {"type": "string"},
+          "market_feedback": {"type": "string"},
+          "capital_feedback": {"type": "string"},
+          "watch_targets": {"type": "array", "items": {"type": "string"}},
+          "next_observation": {"type": "string"},
+          "invalidation": {"type": "string"},
+          "source": {"type": "string"}
+        }
+      }
+    },
+    "market_feedback": {
+      "type": "object",
+      "description": "所有模式必填：用盘面验证事件和主题",
+      "required": ["price_breadth", "sector_diffusion", "limit_up_structure", "volume_state", "risk_appetite", "source"],
+      "properties": {
+        "price_breadth": {"type": "string"},
+        "sector_diffusion": {"type": "string"},
+        "limit_up_structure": {"type": "string"},
+        "volume_state": {"type": "string"},
+        "risk_appetite": {"type": "string"},
+        "source": {"type": "string"}
+      }
+    },
+    "capital_behavior": {
+      "type": "object",
+      "description": "所有模式必填：资金风格判断",
+      "required": ["main_style", "active_side", "defensive_side", "large_vs_micro", "source"],
+      "properties": {
+        "main_style": {"type": "string"},
+        "active_side": {"type": "string"},
+        "defensive_side": {"type": "string"},
+        "large_vs_micro": {"type": "string"},
+        "source": {"type": "string"}
+      }
+    },
+    "risk_items": {
+      "type": "array",
+      "description": "所有模式必填：风险、触发和失效条件",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["risk", "level", "trigger", "invalidation", "source"],
+        "properties": {
+          "risk": {"type": "string"},
+          "level": {"type": "string"},
+          "trigger": {"type": "string"},
+          "invalidation": {"type": "string"},
+          "source": {"type": "string"}
+        }
+      }
+    },
+    "next_session_plan": {
+      "type": "array",
+      "description": "所有模式必填：下一窗口观察计划",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["direction", "observe", "trigger", "invalidation"],
+        "properties": {
+          "direction": {"type": "string"},
+          "observe": {"type": "string"},
+          "trigger": {"type": "string"},
+          "invalidation": {"type": "string"}
+        }
+      }
+    },
+    "indices": {
+      "type": "array",
+      "description": "midday/closing 必填：上证、深证、创业、科创、北证",
+      "items": {
+        "type": "object",
+        "required": ["name", "pct", "reason", "source"],
+        "properties": {
+          "name": {"type": "string"},
+          "pct": {"type": "number"},
+          "reason": {"type": "string"},
+          "source": {"type": "string"}
+        }
+      }
+    },
+    "breadth": {
+      "type": "object",
+      "description": "midday/closing 必填",
+      "required": ["up", "down", "source"],
+      "properties": {
+        "up": {"type": "number"},
+        "down": {"type": "number"},
+        "limit_up": {"type": "number"},
+        "limit_down": {"type": "number"},
+        "lianban": {"type": "number"},
+        "source": {"type": "string"}
+      }
+    },
+    "sectors": {
+      "type": "array",
+      "description": "midday/closing 至少 6 条，需可拆出涨幅前三和跌幅前三",
+      "items": {
+        "type": "object",
+        "required": ["name", "pct", "reason", "source"],
+        "properties": {
+          "name": {"type": "string"},
+          "pct": {"type": "number"},
+          "reason": {"type": "string"},
+          "source": {"type": "string"}
+        }
+      }
+    },
+    "style": {
+      "type": "object",
+      "description": "midday/closing 必填",
+      "required": ["hs300_pct", "microcap_pct", "source"],
+      "properties": {
+        "hs300_pct": {"type": "number"},
+        "microcap_pct": {"type": "number"},
+        "source": {"type": "string"}
+      }
+    },
+    "news": {
+      "type": "array",
+      "description": "closing 需要 2-3 条，按 heat 选热度最高",
+      "items": {
+        "type": "object",
+        "required": ["time", "title", "heat", "summary", "impact", "source"],
+        "properties": {
+          "time": {"type": "string"},
+          "title": {"type": "string"},
+          "heat": {"type": "number"},
+          "summary": {"type": "string"},
+          "impact": {"type": "string"},
+          "source": {"type": "string"}
+        }
+      }
+    },
+    "summary": {
+      "type": "string",
+      "description": "closing 必填，约 50 字，硬闸上限 90 字"
+    },
+    "watch_directions": {
+      "type": "array",
+      "description": "closing 必填，2-3 个未来关注方向",
+      "items": {
+        "type": "object",
+        "required": ["name", "trigger"],
+        "properties": {
+          "name": {"type": "string"},
+          "trigger": {"type": "string"}
+        }
+      }
+    },
+    "after_close_events": {
+      "type": "array",
+      "description": "morning 必填，昨日盘后大事 1-2 条",
+      "items": {
+        "type": "object",
+        "required": ["title", "summary", "impact", "source"],
+        "properties": {
+          "title": {"type": "string"},
+          "summary": {"type": "string"},
+          "repeat_count": {"type": "number"},
+          "heat": {"type": "number"},
+          "impact": {"type": "string"},
+          "source": {"type": "string"}
+        }
+      }
+    },
+    "regulatory_events": {
+      "type": "array",
+      "description": "morning 必填，监管/停牌/减持/风险公告",
+      "items": {
+        "type": "object",
+        "required": ["type", "subject", "event", "risk", "source"],
+        "properties": {
+          "type": {"type": "string"},
+          "subject": {"type": "string"},
+          "event": {"type": "string"},
+          "risk": {"type": "string"},
+          "source": {"type": "string"}
+        }
+      }
+    },
+    "overseas": {
+      "type": "object",
+      "description": "morning 必填，隔夜外盘",
+      "required": ["indices", "source"],
+      "properties": {
+        "source": {"type": "string"},
+        "indices": {"type": "array"},
+        "sectors": {"type": "array"}
+      }
+    },
+    "calendar": {
+      "type": "object",
+      "description": "morning 必填，新股打新、新股上市和事项日历",
+      "required": ["items", "source"],
+      "properties": {
+        "source": {"type": "string"},
+        "items": {"type": "array"}
+      }
+    },
+    "viewpoints": {
+      "type": "array",
+      "description": "morning 必填，1-5 条简明观点"
+    }
+  }
+}

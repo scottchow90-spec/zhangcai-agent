@@ -1,0 +1,183 @@
+[
+  {
+    "id": "a-share-15d-selection",
+    "dataStatus": "partial",
+    "missingData": [
+      "9月9日仍有少量个股日线缺口（每日补全记录）"
+    ],
+    "dataNote": "市场主体数据可用，但部分个股日线尚有缺口，报告会保留缺口提示。",
+    "businessEntry": "scripts/run_a_share_15d.py",
+    "businessHash": "E0570CD26EE7D7B332656E47AFCE84F76685C2A4078690B42E996C0C0F59A57B",
+    "codexEntryHash": "50F983020454E3E1B4548F5118F591D84D5FCCB5FFD2C79C5B8B4D487B04392F",
+    "legacyEntryHash": "D13CDB22D000880FA3B419DCEEDA5E67DDB5C4B27E9FA84CD034A1F7085EFC7A",
+    "codexWrapperShared": true
+  },
+  {
+    "id": "a-share-bottom-fishing",
+    "dataStatus": "available",
+    "missingData": [],
+    "dataNote": "日线行情、数据新鲜度与对应技能依赖已发现，可提交 Harness 运行。",
+    "businessEntry": "scripts/抄底策略.py",
+    "businessHash": "C40E24C8486BEDC7E8F923ABD151BD3C48B88AAE097E960D4F5A0C9898DB15B7",
+    "codexEntryHash": "50F983020454E3E1B4548F5118F591D84D5FCCB5FFD2C79C5B8B4D487B04392F",
+    "legacyEntryHash": "D3A18CADCFFE6F76C34E7C6EF0D6826CEDF095EE0C651D107E633360A4AD854C",
+    "codexWrapperShared": true
+  },
+  {
+    "id": "convertible-bond-screening-strategy",
+    "dataStatus": "missing",
+    "missingData": [
+      "可转债日线行情",
+      "可转债基础资料/转股价与赎回公告快照"
+    ],
+    "dataNote": "当前项目仅有可转债算法与校验代码，没有可转债行情快照，运行会被数据闸门拦截。",
+    "businessEntry": "scripts/run_convertible_bond_screening.py",
+    "businessHash": "776BFDC8CE924E7C68F53B03BF0DDA97061C24089C6B196BF2AF9311F3710B6E",
+    "codexEntryHash": "9AFD0B37C6FCBDAC576F078A43A838AC1AF0885B3B4DE45BF00252043DAF0667",
+    "legacyEntryHash": "E39F16CBB98A3FE4FEF1180B5B7BFFF1194D95FEA4CCE678048E7110D8E008CD",
+    "codexWrapperShared": false
+  },
+  {
+    "id": "buzhang-leader-mining",
+    "dataStatus": "available",
+    "missingData": [],
+    "dataNote": "日线行情、数据新鲜度与对应技能依赖已发现，可提交 Harness 运行。",
+    "businessEntry": "scripts/business_entry.py",
+    "businessHash": "F6B2CC71715A94C678888A624D5F649C1A6CCB707747A12334EBCF74E19A4D49",
+    "codexEntryHash": "50F983020454E3E1B4548F5118F591D84D5FCCB5FFD2C79C5B8B4D487B04392F",
+    "legacyEntryHash": "DB9CB64647EE43A12267481D697C4ED83A9E51ACD6FEC04C125AE358D150BA83",
+    "codexWrapperShared": true
+  },
+  {
+    "id": "chanlun-first-board",
+    "dataStatus": "available",
+    "missingData": [],
+    "dataNote": "日线行情、数据新鲜度与对应技能依赖已发现，可提交 Harness 运行。",
+    "businessEntry": "scripts/run_chanlun_first_board.py",
+    "businessHash": "3CA556DF216798CF22FBB017F4F9F0E15C9E98A1119123BBB2142934C08B0E2C",
+    "codexEntryHash": "50F983020454E3E1B4548F5118F591D84D5FCCB5FFD2C79C5B8B4D487B04392F",
+    "legacyEntryHash": "FBC17FB0F4781141CBB6A07B8F45BD639BCC97E766ED13416E55319154483022",
+    "codexWrapperShared": true
+  },
+  {
+    "id": "dragon-pullback",
+    "dataStatus": "available",
+    "missingData": [],
+    "dataNote": "日线行情、数据新鲜度与对应技能依赖已发现，可提交 Harness 运行。",
+    "businessEntry": "scripts/run_strong_leader_first_yin.py",
+    "businessHash": "4D183266F034C71F4F0468366B421C113A6AB7D3ED4D6A1A3D960D3C7ABEF99D",
+    "codexEntryHash": "50F983020454E3E1B4548F5118F591D84D5FCCB5FFD2C79C5B8B4D487B04392F",
+    "legacyEntryHash": "73AD09AFB908BBD23A91B857CE154246E3E1845856102848447CD38B9535A9E6",
+    "codexWrapperShared": true
+  },
+  {
+    "id": "feilong-strategy",
+    "dataStatus": "available",
+    "missingData": [],
+    "dataNote": "日线行情、数据新鲜度与对应技能依赖已发现，可提交 Harness 运行。",
+    "businessEntry": "scripts/feilong_realtime_report.py",
+    "businessHash": "38CA8577E14ADA53465E981B43021DEF8E0D18A671B4EA877744DA96AE51ED68",
+    "codexEntryHash": "50F983020454E3E1B4548F5118F591D84D5FCCB5FFD2C79C5B8B4D487B04392F",
+    "legacyEntryHash": "B0EC045ED656E23B0D54020F8D8CF96C88284934AB1B295F61D17684194F0727",
+    "codexWrapperShared": true
+  },
+  {
+    "id": "five-dimension-resonance",
+    "dataStatus": "available",
+    "missingData": [],
+    "dataNote": "日线行情、数据新鲜度与对应技能依赖已发现，可提交 Harness 运行。",
+    "businessEntry": "scripts/run_feilong_block_resonance.py",
+    "businessHash": "91CA9390015483F498A3905E6F1E091F1B25D3E137CB975ED9534B2202FCE6F5",
+    "codexEntryHash": "50F983020454E3E1B4548F5118F591D84D5FCCB5FFD2C79C5B8B4D487B04392F",
+    "legacyEntryHash": "D9AF1CCB32158D43171A4A36272DEADDB7D16D165B92AD8F825811614C777D0A",
+    "codexWrapperShared": true
+  },
+  {
+    "id": "four-strategy-system",
+    "dataStatus": "available",
+    "missingData": [],
+    "dataNote": "日线行情、数据新鲜度与对应技能依赖已发现，可提交 Harness 运行。",
+    "businessEntry": "scripts/run_four_strategy_smoke.py",
+    "businessHash": "A624684C81B80C9D0B5B7545ED5569009ABDFD9BA4D57C72F48564EBB250ABA4",
+    "codexEntryHash": "50F983020454E3E1B4548F5118F591D84D5FCCB5FFD2C79C5B8B4D487B04392F",
+    "legacyEntryHash": "1E1B699BBB27D040360C130FEADF21827699302228C6F18C4B0735F07853775B",
+    "codexWrapperShared": true
+  },
+  {
+    "id": "golden-ignition",
+    "dataStatus": "available",
+    "missingData": [],
+    "dataNote": "日线行情、数据新鲜度与对应技能依赖已发现，可提交 Harness 运行。",
+    "businessEntry": "scripts/entry_golden_ignition.py",
+    "businessHash": "25126102BDED0E19ABD222E701F996957B6782EF358A778772A1332070694E58",
+    "codexEntryHash": "50F983020454E3E1B4548F5118F591D84D5FCCB5FFD2C79C5B8B4D487B04392F",
+    "legacyEntryHash": "BB94FB7C58DECD4FB8CF0E4530663DFBB7FD0D5499DDC6790259C337A5E67B97",
+    "codexWrapperShared": true
+  },
+  {
+    "id": "nana-teacher-five-strategies",
+    "dataStatus": "available",
+    "missingData": [],
+    "dataNote": "日线行情、数据新鲜度与对应技能依赖已发现，可提交 Harness 运行。",
+    "businessEntry": "scripts/business_entry.py",
+    "businessHash": "14F1FE49958150A78569A1D273BA59A155819B6B1A4B7D47C2260886597797D6",
+    "codexEntryHash": "50F983020454E3E1B4548F5118F591D84D5FCCB5FFD2C79C5B8B4D487B04392F",
+    "legacyEntryHash": "CFCDF8758F94E6AD09D37EE46C91099D8762F04279AD173C26118CC2DEE16DAE",
+    "codexWrapperShared": true
+  },
+  {
+    "id": "oversold-first-board",
+    "dataStatus": "available",
+    "missingData": [],
+    "dataNote": "日线行情、数据新鲜度与对应技能依赖已发现，可提交 Harness 运行。",
+    "businessEntry": "scripts/run_oversold_first_board_smoke.py",
+    "businessHash": "EC20DF56E18D8AD4BE7F567025637FFE21827284D3D371212CAB76A3A6E11FC3",
+    "codexEntryHash": "50F983020454E3E1B4548F5118F591D84D5FCCB5FFD2C79C5B8B4D487B04392F",
+    "legacyEntryHash": "5C2B4E81AC25A3F6671E806F59DFE5F2CBDC0C827136D4C9E8BC12E4EEA98383",
+    "codexWrapperShared": true
+  },
+  {
+    "id": "quality-track-stock-selection",
+    "dataStatus": "available",
+    "missingData": [],
+    "dataNote": "日线行情、数据新鲜度与对应技能依赖已发现，可提交 Harness 运行。",
+    "businessEntry": "scripts/legacy_codex_entry.py",
+    "businessHash": "FBB51D2587A7F12754636065C495BB868EFBC371B4856A8F9220E4E2E89E581B",
+    "codexEntryHash": "50F983020454E3E1B4548F5118F591D84D5FCCB5FFD2C79C5B8B4D487B04392F",
+    "legacyEntryHash": "FBB51D2587A7F12754636065C495BB868EFBC371B4856A8F9220E4E2E89E581B",
+    "codexWrapperShared": true
+  },
+  {
+    "id": "quant-strategy-bundle-chen",
+    "dataStatus": "available",
+    "missingData": [],
+    "dataNote": "日线行情、数据新鲜度与对应技能依赖已发现，可提交 Harness 运行。",
+    "businessEntry": "scripts/run_quant_bundle.py",
+    "businessHash": "C14C4C2FE8347C5EF6C2CF9C6CCEA1E8ED8AD1A748530F20122234F8BF34B036",
+    "codexEntryHash": "50F983020454E3E1B4548F5118F591D84D5FCCB5FFD2C79C5B8B4D487B04392F",
+    "legacyEntryHash": "2FF9E3C7522D9F91D3E3AAB298FB53293AAF27922EEDB5353A94784B06F30093",
+    "codexWrapperShared": true
+  },
+  {
+    "id": "quantitative-trading",
+    "dataStatus": "available",
+    "missingData": [],
+    "dataNote": "日线行情、数据新鲜度与对应技能依赖已发现，可提交 Harness 运行。",
+    "businessEntry": "scripts/run_quantitative_trading_smoke.py",
+    "businessHash": "D0DBFC832A7FA3B194BD26C078B1FE09683EC1EB61A0C88C7C89A92DAE0952F3",
+    "codexEntryHash": "50F983020454E3E1B4548F5118F591D84D5FCCB5FFD2C79C5B8B4D487B04392F",
+    "legacyEntryHash": "329D5442529FC6B67C9A42CF96F749DD216D073B21BC502EE247965B8DB66194",
+    "codexWrapperShared": true
+  },
+  {
+    "id": "old-leader-oversold-rebound",
+    "dataStatus": "available",
+    "missingData": [],
+    "dataNote": "日线行情、数据新鲜度与对应技能依赖已发现，可提交 Harness 运行。",
+    "businessEntry": "scripts/legacy_codex_entry.py",
+    "businessHash": "A6985FD4DF80784C032845CCFEFEF369E9B07DCA19B21E4367FB5F81351FA377",
+    "codexEntryHash": "50F983020454E3E1B4548F5118F591D84D5FCCB5FFD2C79C5B8B4D487B04392F",
+    "legacyEntryHash": "A6985FD4DF80784C032845CCFEFEF369E9B07DCA19B21E4367FB5F81351FA377",
+    "codexWrapperShared": true
+  }
+]

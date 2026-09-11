@@ -1,0 +1,7 @@
+# 掌财智能体独立运行时：公共 DeepSeek API 不发送 Harness 专用请求扩展。
+- id: session-log-deepseek
+  disabled: true
+- id: plugin-package-inventory-deepseek
+  disabled: true
+- id: session-title-llm
+  disabled: true

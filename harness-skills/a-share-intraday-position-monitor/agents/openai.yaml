@@ -1,0 +1,6 @@
+interface:
+  display_name: "持仓股监控技能"
+  short_description: "按实时行情、持仓成本和持股数量生成盘中分级风险监控方案"
+  default_prompt: "使用 $a-share-intraday-position-monitor 为301372生成成本25元、持股20万股的持仓监控方案。"
+policy:
+  allow_implicit_invocation: false

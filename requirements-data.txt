@@ -1,0 +1,3 @@
+# Optional public-market enrichment. The packaged app still works with the
+# built-in Eastmoney/连板网 HTTP adapters when AkShare is not installed.
+akshare==1.18.60

@@ -1,0 +1,205 @@
+{
+  "manifest_version": 1,
+  "canonical_skill": "stock-analysis",
+  "merged_at": "2026-07-22T10:41:35+08:00",
+  "zero_loss_rule": "Every original source file is copied byte-for-byte; SKILL.md is renamed ORIGINAL_SKILL.md only to avoid nested skill discovery.",
+  "sources": {
+    "stock-research-engine": {
+      "original_file_count": 15,
+      "absorbed_file_count": 15,
+      "files": [
+        {
+          "source_path": "agents/openai.yaml",
+          "absorbed_path": "merged_sources/stock-research-engine/agents/openai.yaml",
+          "size": 350,
+          "sha256": "9be3ac5514564779d649a006a70ebcaeabe8be7b794a9c608fe0e808206bac69"
+        },
+        {
+          "source_path": "references/analysis-framework.md",
+          "absorbed_path": "merged_sources/stock-research-engine/references/analysis-framework.md",
+          "size": 8161,
+          "sha256": "b6bf44dbac53e6cfe9d84fadfc7552cbb05027cb31b7318a920ad37026948506"
+        },
+        {
+          "source_path": "references/business_spec.md",
+          "absorbed_path": "merged_sources/stock-research-engine/references/business_spec.md",
+          "size": 6137,
+          "sha256": "249245ab36c5db584b47d8b28eedf579a396fbda38a42e7044542a509c4ee922"
+        },
+        {
+          "source_path": "references/workflow.md",
+          "absorbed_path": "merged_sources/stock-research-engine/references/workflow.md",
+          "size": 3178,
+          "sha256": "e7764251c080a80ea51dcb95b009c6c6ccca2e16a730b39aba5cccd4a5934245"
+        },
+        {
+          "source_path": "reports/audit/stock-research-engine-20260722-033546.json",
+          "absorbed_path": "merged_sources/stock-research-engine/reports/audit/stock-research-engine-20260722-033546.json",
+          "size": 1039,
+          "sha256": "a252aa74825893ebc31aa75640e2d336b797911476dae3e1f27a00332a92549a"
+        },
+        {
+          "source_path": "reports/audit/stock-research-engine-20260722-034926.json",
+          "absorbed_path": "merged_sources/stock-research-engine/reports/audit/stock-research-engine-20260722-034926.json",
+          "size": 1039,
+          "sha256": "a252aa74825893ebc31aa75640e2d336b797911476dae3e1f27a00332a92549a"
+        },
+        {
+          "source_path": "reports/executions/stock-research-engine-20260722-033546-228973.receipt.json",
+          "absorbed_path": "merged_sources/stock-research-engine/reports/executions/stock-research-engine-20260722-033546-228973.receipt.json",
+          "size": 4155,
+          "sha256": "4b487ed2ccfa2f97a627621ae502692ffe8352574240d1605350081ebb788945"
+        },
+        {
+          "source_path": "reports/executions/stock-research-engine-20260722-033546-228973.stderr.txt",
+          "absorbed_path": "merged_sources/stock-research-engine/reports/executions/stock-research-engine-20260722-033546-228973.stderr.txt",
+          "size": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "source_path": "reports/executions/stock-research-engine-20260722-033546-228973.stdout.txt",
+          "absorbed_path": "merged_sources/stock-research-engine/reports/executions/stock-research-engine-20260722-033546-228973.stdout.txt",
+          "size": 328,
+          "sha256": "97a7c1b3040a3cf56aa46027476983c3478f71de38be390a35429673f214d0a8"
+        },
+        {
+          "source_path": "reports/executions/stock-research-engine-20260722-034926-728977.receipt.json",
+          "absorbed_path": "merged_sources/stock-research-engine/reports/executions/stock-research-engine-20260722-034926-728977.receipt.json",
+          "size": 4155,
+          "sha256": "4a1dd3b600d7d00fcfe16d0bc85e5b0991cd2dad94bef67bb8b09a9a627f8ce1"
+        },
+        {
+          "source_path": "reports/executions/stock-research-engine-20260722-034926-728977.stderr.txt",
+          "absorbed_path": "merged_sources/stock-research-engine/reports/executions/stock-research-engine-20260722-034926-728977.stderr.txt",
+          "size": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "source_path": "reports/executions/stock-research-engine-20260722-034926-728977.stdout.txt",
+          "absorbed_path": "merged_sources/stock-research-engine/reports/executions/stock-research-engine-20260722-034926-728977.stdout.txt",
+          "size": 328,
+          "sha256": "8438486bdeac677fea6a40eac7881bf5f81c9b2288f2d574c87a030f885730c6"
+        },
+        {
+          "source_path": "scripts/codex_entry.py",
+          "absorbed_path": "merged_sources/stock-research-engine/scripts/codex_entry.py",
+          "size": 525,
+          "sha256": "f380564b8fd6b87fa39bb329590a152d69442288f78927257928a468492b25b7"
+        },
+        {
+          "source_path": "scripts/run_stock_research_engine.py",
+          "absorbed_path": "merged_sources/stock-research-engine/scripts/run_stock_research_engine.py",
+          "size": 313,
+          "sha256": "734ed52ffb5f5eb227bdb1abf233b19707a6e7ba58bee2c6665fd2cb95972cf9"
+        },
+        {
+          "source_path": "SKILL.md",
+          "absorbed_path": "merged_sources/stock-research-engine/ORIGINAL_SKILL.md",
+          "size": 3047,
+          "sha256": "728bbddf8da3aa32d476db63673a37462bdfbc3b63f2f158a34d5421d79022e4"
+        }
+      ]
+    },
+    "stock-study": {
+      "original_file_count": 14,
+      "absorbed_file_count": 14,
+      "files": [
+        {
+          "source_path": "agents/openai.yaml",
+          "absorbed_path": "merged_sources/stock-study/agents/openai.yaml",
+          "size": 340,
+          "sha256": "9ec635f529abf9326f3f8de399a6bfc5230d23000639e6122826929f8eaaa557"
+        },
+        {
+          "source_path": "references/business_spec.md",
+          "absorbed_path": "merged_sources/stock-study/references/business_spec.md",
+          "size": 4181,
+          "sha256": "0357475c5010e1d0d2f30c3ec00e1d163bd3f47985b59f0274e7fff5d690a594"
+        },
+        {
+          "source_path": "references/workflow.md",
+          "absorbed_path": "merged_sources/stock-study/references/workflow.md",
+          "size": 3158,
+          "sha256": "c1c9c1d0f6f2e9c02f532e82192ebc395b4bda995c3ca117e73340db0a1e708a"
+        },
+        {
+          "source_path": "reports/audit/stock-study-20260722-033546.json",
+          "absorbed_path": "merged_sources/stock-study/reports/audit/stock-study-20260722-033546.json",
+          "size": 1058,
+          "sha256": "00b13c1db9100c1c62eb8d7c681b45ee39e38993951ab96649fc0a0e28a2474d"
+        },
+        {
+          "source_path": "reports/audit/stock-study-20260722-034926.json",
+          "absorbed_path": "merged_sources/stock-study/reports/audit/stock-study-20260722-034926.json",
+          "size": 1058,
+          "sha256": "00b13c1db9100c1c62eb8d7c681b45ee39e38993951ab96649fc0a0e28a2474d"
+        },
+        {
+          "source_path": "reports/executions/stock-study-20260722-033546-551962.receipt.json",
+          "absorbed_path": "merged_sources/stock-study/reports/executions/stock-study-20260722-033546-551962.receipt.json",
+          "size": 3906,
+          "sha256": "cc3a852a95e9085bedc4cea9d228c75dbb1ff49cbeec3e10b1a7d8c21ac82af7"
+        },
+        {
+          "source_path": "reports/executions/stock-study-20260722-033546-551962.stderr.txt",
+          "absorbed_path": "merged_sources/stock-study/reports/executions/stock-study-20260722-033546-551962.stderr.txt",
+          "size": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "source_path": "reports/executions/stock-study-20260722-033546-551962.stdout.txt",
+          "absorbed_path": "merged_sources/stock-study/reports/executions/stock-study-20260722-033546-551962.stdout.txt",
+          "size": 298,
+          "sha256": "c7fcd0f1096ca161483e2429151cb4044e5febcf1d38a923a5cf3a05c8233ae6"
+        },
+        {
+          "source_path": "reports/executions/stock-study-20260722-034927-026250.receipt.json",
+          "absorbed_path": "merged_sources/stock-study/reports/executions/stock-study-20260722-034927-026250.receipt.json",
+          "size": 3905,
+          "sha256": "5707a68b29dbb1dbf7e79b65d56a1faaa5a2424903bf031e86732d3945e2e675"
+        },
+        {
+          "source_path": "reports/executions/stock-study-20260722-034927-026250.stderr.txt",
+          "absorbed_path": "merged_sources/stock-study/reports/executions/stock-study-20260722-034927-026250.stderr.txt",
+          "size": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "source_path": "reports/executions/stock-study-20260722-034927-026250.stdout.txt",
+          "absorbed_path": "merged_sources/stock-study/reports/executions/stock-study-20260722-034927-026250.stdout.txt",
+          "size": 298,
+          "sha256": "8d8b05b0036880105730b1f454a1a4e040fce97bc579af2f514ffdb6dc24ca02"
+        },
+        {
+          "source_path": "scripts/codex_entry.py",
+          "absorbed_path": "merged_sources/stock-study/scripts/codex_entry.py",
+          "size": 495,
+          "sha256": "97a67068a34cd521bf8d964684e41f0c39e78844f68094d3120398be1fa23cc7"
+        },
+        {
+          "source_path": "scripts/run_stock_study.py",
+          "absorbed_path": "merged_sources/stock-study/scripts/run_stock_study.py",
+          "size": 303,
+          "sha256": "5e0930dd26bbaf817f9081593fb87ddba0f300ed203a05367824b77abd5259e7"
+        },
+        {
+          "source_path": "SKILL.md",
+          "absorbed_path": "merged_sources/stock-study/ORIGINAL_SKILL.md",
+          "size": 2612,
+          "sha256": "4f0886649d16050e03d25e9c41bebb3c03f0261139be018882ae521023d6d8e5"
+        }
+      ]
+    }
+  },
+  "backup": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-07-22\\new-chat-6\\outputs\\stock-skill-merge-backup-20260722-104134.zip",
+    "size": 1264158,
+    "sha256": "08ce1d88bbc374b934ab6b9f33df185dc5d7a1fdb922d1ddadada71796fe87d2",
+    "verified_entries": 587
+  },
+  "premerge_manifest": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-07-22\\new-chat-6\\outputs\\stock-skill-merge-premerge-manifest-20260722-104134.json",
+    "size": 130911,
+    "sha256": "1436796abbe61fdddd5665771488b99d2c604a80690541863cda774e744a178e"
+  }
+}

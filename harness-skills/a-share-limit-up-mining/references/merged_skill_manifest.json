@@ -1,0 +1,121 @@
+{
+  "manifest_version": 1,
+  "canonical_skill": "a-share-limit-up-mining",
+  "merged_at": "2026-07-22T10:41:35+08:00",
+  "zero_loss_rule": "Every original source file is copied byte-for-byte; SKILL.md is renamed ORIGINAL_SKILL.md only to avoid nested skill discovery.",
+  "sources": {
+    "a-share-limit-up-mining-v2": {
+      "original_file_count": 16,
+      "absorbed_file_count": 16,
+      "files": [
+        {
+          "source_path": "agents/openai.yaml",
+          "absorbed_path": "merged_sources/a-share-limit-up-mining-v2/agents/openai.yaml",
+          "size": 343,
+          "sha256": "6f861c118af7fc8d65ee75b4261ddc6bad339124484c9383eae5c43a1302bbd3"
+        },
+        {
+          "source_path": "references/business_spec.md",
+          "absorbed_path": "merged_sources/a-share-limit-up-mining-v2/references/business_spec.md",
+          "size": 1220,
+          "sha256": "d5780bbecc068888c9a92e37d088c16ea4c73863867829598db7874fc5311548"
+        },
+        {
+          "source_path": "references/workflow.md",
+          "absorbed_path": "merged_sources/a-share-limit-up-mining-v2/references/workflow.md",
+          "size": 1271,
+          "sha256": "818252bbebfdf24bee9c345ab2823c4c2c01064115977cf7b2c268365b5bf1d7"
+        },
+        {
+          "source_path": "reports/executions/a-share-limit-up-mining-v2-20260722-033507-126468.receipt.json",
+          "absorbed_path": "merged_sources/a-share-limit-up-mining-v2/reports/executions/a-share-limit-up-mining-v2-20260722-033507-126468.receipt.json",
+          "size": 3929,
+          "sha256": "e7cb5385d62745ed77860e52ea92ecf9820b194f764ae232c50a785fd6ae8029"
+        },
+        {
+          "source_path": "reports/executions/a-share-limit-up-mining-v2-20260722-033507-126468.stderr.txt",
+          "absorbed_path": "merged_sources/a-share-limit-up-mining-v2/reports/executions/a-share-limit-up-mining-v2-20260722-033507-126468.stderr.txt",
+          "size": 477,
+          "sha256": "76bde86dd773ae5f700b5a9772c8062ecceb8ef3f3dc9da5ef36de2f76614bc3"
+        },
+        {
+          "source_path": "reports/executions/a-share-limit-up-mining-v2-20260722-033507-126468.stdout.txt",
+          "absorbed_path": "merged_sources/a-share-limit-up-mining-v2/reports/executions/a-share-limit-up-mining-v2-20260722-033507-126468.stdout.txt",
+          "size": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "source_path": "reports/executions/a-share-limit-up-mining-v2-20260722-034531-544208.receipt.json",
+          "absorbed_path": "merged_sources/a-share-limit-up-mining-v2/reports/executions/a-share-limit-up-mining-v2-20260722-034531-544208.receipt.json",
+          "size": 3964,
+          "sha256": "440ef808a2f7962f548a2e480615e1bd9ba08bfd2686050d62dbf9fe837a567d"
+        },
+        {
+          "source_path": "reports/executions/a-share-limit-up-mining-v2-20260722-034531-544208.stderr.txt",
+          "absorbed_path": "merged_sources/a-share-limit-up-mining-v2/reports/executions/a-share-limit-up-mining-v2-20260722-034531-544208.stderr.txt",
+          "size": 635,
+          "sha256": "140865de5e28a34f2fd95abc15dbcdfbe7806760fe376f4c12e20b4eb263479e"
+        },
+        {
+          "source_path": "reports/executions/a-share-limit-up-mining-v2-20260722-034531-544208.stdout.txt",
+          "absorbed_path": "merged_sources/a-share-limit-up-mining-v2/reports/executions/a-share-limit-up-mining-v2-20260722-034531-544208.stdout.txt",
+          "size": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "source_path": "reports/executions/a-share-limit-up-mining-v2-20260722-034731-464086.receipt.json",
+          "absorbed_path": "merged_sources/a-share-limit-up-mining-v2/reports/executions/a-share-limit-up-mining-v2-20260722-034731-464086.receipt.json",
+          "size": 4807,
+          "sha256": "edb65399be7784b32aeed9b0c63751c9b3abcb6e61b4c230004186ba49f70416"
+        },
+        {
+          "source_path": "reports/executions/a-share-limit-up-mining-v2-20260722-034731-464086.stderr.txt",
+          "absorbed_path": "merged_sources/a-share-limit-up-mining-v2/reports/executions/a-share-limit-up-mining-v2-20260722-034731-464086.stderr.txt",
+          "size": 507,
+          "sha256": "74b6d959951c1d7ac2178b702981ee16e452edc8955d844b2f9e685a749e9a08"
+        },
+        {
+          "source_path": "reports/executions/a-share-limit-up-mining-v2-20260722-034731-464086.stdout.txt",
+          "absorbed_path": "merged_sources/a-share-limit-up-mining-v2/reports/executions/a-share-limit-up-mining-v2-20260722-034731-464086.stdout.txt",
+          "size": 346,
+          "sha256": "c35a76262d5b11bdffb303e6c4ef416a10a42d3fe67e04a93fc72689af68b90b"
+        },
+        {
+          "source_path": "scripts/_date_utils.py",
+          "absorbed_path": "merged_sources/a-share-limit-up-mining-v2/scripts/_date_utils.py",
+          "size": 2447,
+          "sha256": "41dbfe2c255d512b89d45e3aa30616d3fa36184ce52922c05d0d05e14ef21486"
+        },
+        {
+          "source_path": "scripts/codex_entry.py",
+          "absorbed_path": "merged_sources/a-share-limit-up-mining-v2/scripts/codex_entry.py",
+          "size": 513,
+          "sha256": "e7cce78b030daf22ebd11c2bfcf1e8ce04bbed834018438194256445af0a7876"
+        },
+        {
+          "source_path": "scripts/v2.py",
+          "absorbed_path": "merged_sources/a-share-limit-up-mining-v2/scripts/v2.py",
+          "size": 1760,
+          "sha256": "a88c2ff2a145073f66dc4719ad85862ca2f07f197372863466cec7b957018d44"
+        },
+        {
+          "source_path": "SKILL.md",
+          "absorbed_path": "merged_sources/a-share-limit-up-mining-v2/ORIGINAL_SKILL.md",
+          "size": 2650,
+          "sha256": "69fd378e1eda2ebcc583ab192afb280b7fed90ecee4489effc8d2f4298ae25c5"
+        }
+      ]
+    }
+  },
+  "backup": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-07-22\\new-chat-6\\outputs\\stock-skill-merge-backup-20260722-104134.zip",
+    "size": 1264158,
+    "sha256": "08ce1d88bbc374b934ab6b9f33df185dc5d7a1fdb922d1ddadada71796fe87d2",
+    "verified_entries": 587
+  },
+  "premerge_manifest": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-07-22\\new-chat-6\\outputs\\stock-skill-merge-premerge-manifest-20260722-104134.json",
+    "size": 130911,
+    "sha256": "1436796abbe61fdddd5665771488b99d2c604a80690541863cda774e744a178e"
+  }
+}

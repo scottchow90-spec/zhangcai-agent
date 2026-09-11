@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "白猫老师每日资讯及复盘报告数据源矩阵",
+  "updated_at": "2026-07-01",
+  "principle": "本地结构化数据优先，当前新闻和公告必须核验来源与时间；正式报告不得使用无来源数字或无时间窗口事件。",
+  "sources": [
+    {
+      "id": "tdx_market",
+      "module": "行情结构",
+      "priority": 1,
+      "examples": ["tdx-local-hub", "C:\\new_tdx_mock", "通达信本地K线与板块"],
+      "required_fields": ["indices", "breadth", "sectors", "style", "trade_date"],
+      "freshness": "午盘使用当日 12:00 前窗口；收盘使用当日 15:00 后窗口",
+      "fail_behavior": "返回 DATA_STALE 或 DATA_BLOCKED，不输出指数评分和市场方向"
+    },
+    {
+      "id": "official_announcement",
+      "module": "公告监管",
+      "priority": 1,
+      "examples": ["交易所公告", "证监会", "上市公司公告", "新股日历"],
+      "required_fields": ["regulatory_events", "calendar", "risk_items"],
+      "freshness": "早盘覆盖昨日收盘后至当日开盘前；收盘覆盖当日有效公告",
+      "fail_behavior": "监管风险模块降级，若重大风险缺失则 BLOCKED"
+    },
+    {
+      "id": "financial_media",
+      "module": "新闻事件",
+      "priority": 2,
+      "examples": ["主流财经媒体", "财联社类快讯", "交易复盘"],
+      "required_fields": ["news", "event_pool", "headline_conclusion"],
+      "freshness": "早盘、午盘、收盘按对应时间窗口采集",
+      "fail_behavior": "新闻来源不足时返回 NEWS_SOURCE_BLOCKED，不输出热点排序"
+    },
+    {
+      "id": "community_research",
+      "module": "社区研究",
+      "priority": 2,
+      "examples": ["韭研公社热度文章", "https://www.jiuyangongshe.com/study_hot"],
+      "required_fields": ["news", "event_pool", "theme_clusters"],
+      "freshness": "早盘覆盖昨日盘后至开盘前；午盘和收盘按对应窗口采集当前热度文章",
+      "usage_limit": "只作新闻热度、盘前纪要、涨停复盘、题材和个股信息差线索；公告、政策、监管、订单、业绩等强事实必须回查官方原文",
+      "acquisition": "需要交互或登录态时只通过用户的 Google Chrome，不保存凭证",
+      "fail_behavior": "来源不可用时标记社区研究源缺失，不得伪造热点或将单一社区观点升级为强结论"
+    },
+    {
+      "id": "local_news_cache",
+      "module": "本地新闻缓存",
+      "priority": 2,
+      "examples": ["tdx-local-hub news", "已落盘 evidence/source"],
+      "required_fields": ["sources", "event_pool"],
+      "freshness": "必须检查采集时间，不得复用过期缓存作当日结论",
+      "fail_behavior": "只生成 DATA_REQUIRED 准备单"
+    },
+    {
+      "id": "capital_style",
+      "module": "资金与风格",
+      "priority": 2,
+      "examples": ["沪深300", "微盘指数", "成交额", "龙虎榜或资金流字段"],
+      "required_fields": ["style", "capital_behavior", "market_feedback"],
+      "freshness": "午盘和收盘必须使用对应窗口",
+      "fail_behavior": "不输出资金行为和风格判断"
+    },
+    {
+      "id": "overseas_mapping",
+      "module": "隔夜外盘",
+      "priority": 3,
+      "examples": ["美股指数", "核心行业ETF", "商品和汇率映射"],
+      "required_fields": ["overseas"],
+      "freshness": "早盘使用上一海外交易日收盘后数据",
+      "fail_behavior": "早盘外盘模块降级，并写明缺失字段"
+    }
+  ]
+}

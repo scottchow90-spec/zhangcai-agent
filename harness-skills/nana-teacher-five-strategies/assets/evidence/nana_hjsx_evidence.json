@@ -1,0 +1,232 @@
+{
+  "status": "PASS_WITH_TDX_GUI_NOT_VERIFIED",
+  "generated_at": "2026-07-18T21:50:55+08:00",
+  "strategy": "黄金双响",
+  "source": {
+    "path": "G:\\AI新产品部\\娜娜老师\\黄金双响.pptx",
+    "sha256": "b28e29d479ab1c31892b9ec903db34620f0230ced793c4466ac8424c6582bb9e",
+    "size_bytes": 1849737,
+    "slide_count": 26,
+    "current_hash_match": true
+  },
+  "formula": {
+    "path": "C:\\Users\\25296\\Documents\\Codex\\2026-07-18\\g-ai\\outputs\\nana_hjsx_xg.txt",
+    "sha256": "f988bdc91a43d84941df3f12d231951987494b1dddf04d8dcfa3b02290c1ae70",
+    "size_bytes": 1139,
+    "formula_check": {
+      "strategy": "黄金双响",
+      "path": "C:\\Users\\25296\\Documents\\Codex\\2026-07-18\\g-ai\\outputs\\nana_hjsx_xg.txt",
+      "sha256": "f988bdc91a43d84941df3f12d231951987494b1dddf04d8dcfa3b02290c1ae70",
+      "size_bytes": 1139,
+      "required_markers": [
+        "HJSX7:=",
+        "V>=REF(V,7)*0.80",
+        "AMOUNT>=30000000"
+      ],
+      "missing": [],
+      "status": "PASS"
+    },
+    "final_output": "XG:(HJSX3 OR HJSX4 OR HJSX5 OR HJSX6 OR HJSX7) AND BIGUP AND TREND AND STF AND LISTED AND LIQ AND C>3;",
+    "status": "PASS"
+  },
+  "workflow": {
+    "path": "C:\\Users\\25296\\Documents\\Codex\\2026-07-18\\g-ai\\outputs\\nana_hjsx_workflow.md",
+    "sha256": "8e0fec6e9158f7b8c94151da7de2305d823b868d637a510e020d847b081b8117",
+    "size_bytes": 1821,
+    "title": "# 黄金双响选股工作流",
+    "formula_reference_present": true,
+    "source_reference_present": true,
+    "status": "PASS"
+  },
+  "scan_result": {
+    "target_trade_date": "20260717",
+    "scanned_symbols": 5406,
+    "current_count": 5,
+    "current_candidates": [
+      {
+        "symbol": "600664.SH",
+        "name": "哈药股份",
+        "variant": "涨停+大阳",
+        "close": 5.33,
+        "pct_change": 7.89,
+        "amount_yi": 45.23,
+        "invalidation": 3.53,
+        "evidence": "前炮后2日缩量整理，后炮量为前炮1.99倍并过平台"
+      },
+      {
+        "symbol": "301092.SZ",
+        "name": "争光股份",
+        "variant": "大阳+大阳",
+        "close": 61.82,
+        "pct_change": 11.13,
+        "amount_yi": 8.46,
+        "invalidation": 51.41,
+        "evidence": "前炮后3日缩量整理，后炮量为前炮0.86倍并过平台"
+      },
+      {
+        "symbol": "300105.SZ",
+        "name": "龙源技术",
+        "variant": "大阳+大阳",
+        "close": 9.1,
+        "pct_change": 8.72,
+        "amount_yi": 7.47,
+        "invalidation": 6.62,
+        "evidence": "前炮后4日缩量整理，后炮量为前炮1.06倍并过平台"
+      },
+      {
+        "symbol": "000948.SZ",
+        "name": "南天信息",
+        "variant": "大阳+大阳",
+        "close": 14.15,
+        "pct_change": 5.75,
+        "amount_yi": 3.88,
+        "invalidation": 12.1,
+        "evidence": "前炮后5日缩量整理，后炮量为前炮1.02倍并过平台"
+      },
+      {
+        "symbol": "002642.SZ",
+        "name": "荣联科技",
+        "variant": "大阳+大阳",
+        "close": 7.35,
+        "pct_change": 5.6,
+        "amount_yi": 3.67,
+        "invalidation": 6.32,
+        "evidence": "前炮后5日缩量整理，后炮量为前炮0.89倍并过平台"
+      }
+    ],
+    "history_signal_count": 548,
+    "history_distinct_symbols": 471,
+    "backtest_metrics": {
+      "forward_1d": {
+        "evaluated": 543,
+        "average_pct": -0.147,
+        "median_pct": -0.65,
+        "win_rate_pct": 45.3
+      },
+      "forward_3d": {
+        "evaluated": 538,
+        "average_pct": 0.267,
+        "median_pct": -0.43,
+        "win_rate_pct": 47.4
+      },
+      "forward_5d": {
+        "evaluated": 533,
+        "average_pct": 0.052,
+        "median_pct": -1.5,
+        "win_rate_pct": 45.03
+      },
+      "max_drawdown_5d": {
+        "evaluated": 533,
+        "average_pct": -7.477,
+        "worst_pct": -49.49
+      }
+    },
+    "most_recent_signal": {
+      "strategy": "黄金双响",
+      "variant": "涨停+大阳",
+      "signal_date": "20260717",
+      "close": 5.33,
+      "pct_change": 7.89,
+      "amount_yi": 45.23,
+      "ma5": 4.51,
+      "ma10": 3.83,
+      "ma20": 3.45,
+      "first_shot_date": "20260714",
+      "interval_days": 2,
+      "first_volume_ratio": 2.69,
+      "second_vs_first_volume": 1.99,
+      "invalidation": 3.53,
+      "evidence": "前炮后2日缩量整理，后炮量为前炮1.99倍并过平台",
+      "forward_1d_pct": null,
+      "forward_3d_pct": null,
+      "forward_5d_pct": null,
+      "max_drawdown_5d_pct": null,
+      "market": "SH",
+      "code": "600664",
+      "symbol": "600664.SH",
+      "name": "哈药股份",
+      "data_path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh600664.day"
+    },
+    "most_recent_signal_local_data_readback": {
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh600664.day",
+      "exists": true,
+      "size_bytes": 248064,
+      "last_date": "20260717",
+      "last_close": 5.33
+    }
+  },
+  "candidate_quote_continuity_checks": [
+    {
+      "strategy": "黄金双响",
+      "symbol": "600664.SH",
+      "name": "哈药股份",
+      "local_date": "20260716",
+      "local_close": 4.94,
+      "quote_date": "20260717",
+      "quote_preclose": 4.94,
+      "quote_close": 5.33,
+      "signal_close": 5.33,
+      "status": "PASS"
+    },
+    {
+      "strategy": "黄金双响",
+      "symbol": "301092.SZ",
+      "name": "争光股份",
+      "local_date": "20260716",
+      "local_close": 55.63,
+      "quote_date": "20260717",
+      "quote_preclose": 55.63,
+      "quote_close": 61.82,
+      "signal_close": 61.82,
+      "status": "PASS"
+    },
+    {
+      "strategy": "黄金双响",
+      "symbol": "300105.SZ",
+      "name": "龙源技术",
+      "local_date": "20260716",
+      "local_close": 8.37,
+      "quote_date": "20260717",
+      "quote_preclose": 8.37,
+      "quote_close": 9.1,
+      "signal_close": 9.1,
+      "status": "PASS"
+    },
+    {
+      "strategy": "黄金双响",
+      "symbol": "000948.SZ",
+      "name": "南天信息",
+      "local_date": "20260716",
+      "local_close": 13.38,
+      "quote_date": "20260717",
+      "quote_preclose": 13.38,
+      "quote_close": 14.15,
+      "signal_close": 14.15,
+      "status": "PASS"
+    },
+    {
+      "strategy": "黄金双响",
+      "symbol": "002642.SZ",
+      "name": "荣联科技",
+      "local_date": "20260716",
+      "local_close": 6.96,
+      "quote_date": "20260717",
+      "quote_preclose": 6.96,
+      "quote_close": 7.35,
+      "signal_close": 7.35,
+      "status": "PASS"
+    }
+  ],
+  "checks": {
+    "source_hash_readback": "PASS",
+    "formula_structure_and_hash": "PASS",
+    "workflow_formula_source_mapping": "PASS",
+    "full_market_scan_and_history": "PASS",
+    "current_candidate_quote_continuity": "PASS"
+  },
+  "unverified": [
+    "通达信公式管理器 GUI 编译/导入回执",
+    "通达信内部批量选股回执",
+    "分时、Level-2、公告和板块人工复核"
+  ]
+}

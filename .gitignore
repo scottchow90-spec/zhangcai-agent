@@ -28,6 +28,7 @@ yarn-error.log*
 
 # local environment
 .env*
+.dsh*/
 
 # deployment and generated files
 .vercel
@@ -36,3 +37,35 @@ next-env.d.ts
 /.wrangler/
 /outputs/
 /work/
+
+# Runtime research data is user-local and must never be packaged as source.
+/data/runtime/
+/data/public/
+/data/reports/
+/data/logs/
+/data/news/
+/data/harness/
+!/data/runtime/.gitkeep
+!/data/public/.gitkeep
+!/data/reports/.gitkeep
+!/data/logs/.gitkeep
+!/data/news/.gitkeep
+!/data/harness/.gitkeep
+
+# Local runtime state, generated reports, builds, and caches
+/.cache/
+/.runtime/
+**/.runtime/
+/.dsh/
+/.dsh-bridge/
+/.next/
+/.vinext/
+/.wrangler/
+/dist/
+/runtime-results/
+/reports/
+/**/reports/
+/data/strategy-results/
+/data/dev-server*.log
+**/__pycache__/
+*.log

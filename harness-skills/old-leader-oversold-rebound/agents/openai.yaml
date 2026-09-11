@@ -1,0 +1,6 @@
+interface:
+  display_name: "老龙头超跌反弹"
+  short_description: "扫描近一年A股老龙头大幅回撤后的二连板与三天二板反弹机会"
+  default_prompt: "Use $old-leader-oversold-rebound to scan and verify A-share old-leader oversold rebounds for the requested trade date."
+policy:
+  allow_implicit_invocation: false

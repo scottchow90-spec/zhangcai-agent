@@ -1,0 +1,35 @@
+{
+  "schema": "MERGED_SKILL_SOURCE_MANIFEST_V2",
+  "generated_at": "2026-09-02T00:55:11.8619041+08:00",
+  "sources": [
+    "a-share-sentiment-workflow"
+  ],
+  "retired_components": [
+    {
+      "name": "market-intel",
+      "status": "historical_reports_only",
+      "redirect": "canonical_unified_workflow"
+    },
+    {
+      "name": "social-finance-brief",
+      "status": "historical_reports_only",
+      "redirect": "canonical_unified_workflow"
+    }
+  ],
+  "files": {
+    "a-share-sentiment-workflow": {
+      "agents/openai.yaml": "4afe69f96735980cdb0fbe372e66993a6ffda8756291a75006df4cc0610f3de7",
+      "references/business_spec.md": "973614c3bcfcddbf45f21f1845450224da906befdc73ec43062df3bf8bf5622d",
+      "references/checklist.md": "f7984d10bb34b5097108faf2271887eccf2f183054e2707d0db28c0397382475",
+      "references/workflow.md": "806b29535f064d76dd45174a274212e22afbece5206e023cdac1ed4fca32df1e",
+      "requirements.txt": "72a6f5ac0365cd19eeebd73fe9c607df4df992e002d8e34da225d02daea91e92",
+      "scripts/a-share-sentiment-workflow.py": "1460e035602fa4ceb51d5d1b8887fe7db17d24644ebf689af31b11acffdd3745",
+      "scripts/canonical_business_adapter.py": "fd23d43cfcf1ce6946cf1a515ffb8922c69acfd0c7083e72f2d2e7d470cf0e0f",
+      "scripts/codex_entry.py": "436df78918abf2a4e47c2d0deabca898400302e8498833aac8d0231e4cc1d892",
+      "scripts/five_site_chrome_visible_extract.mjs": "b0140f01bd618ae023b9658a6d2871576bb233aaa1f518ca697e4a29e42d9ab4",
+      "scripts/legacy_codex_entry.py": "2ef52b4700487547bf30c78c45223283e96339fba6717e94de31a934b1be84e8",
+      "SOURCE_SKILL.md": "b39c74577b86ffa799bd9dea9a0a7c120f64a03b16692da28da61c3a29ac6db2"
+    }
+  },
+  "last_synchronized_at": "2026-09-02T00:55:11.8619041+08:00"
+}

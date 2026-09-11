@@ -1,0 +1,235 @@
+{
+  "manifest_version": 1,
+  "canonical_skill": "support-pressure-analysis-system",
+  "merged_at": "2026-07-22T10:41:34+08:00",
+  "zero_loss_rule": "Every original source file is copied byte-for-byte; SKILL.md is renamed ORIGINAL_SKILL.md only to avoid nested skill discovery.",
+  "sources": {
+    "support-resistance-analysis-system": {
+      "original_file_count": 18,
+      "absorbed_file_count": 18,
+      "files": [
+        {
+          "source_path": "agents/openai.yaml",
+          "absorbed_path": "merged_sources/support-resistance-analysis-system/agents/openai.yaml",
+          "size": 381,
+          "sha256": "b4f2223a0809581a73c0f326ae703426b59fab3655100631d2cd20bd3b6c828e"
+        },
+        {
+          "source_path": "references/business_spec.md",
+          "absorbed_path": "merged_sources/support-resistance-analysis-system/references/business_spec.md",
+          "size": 9127,
+          "sha256": "fc93040ee14e521f44af0736e99d24d40817aff5380ebd96d6c7124a0d4426a2"
+        },
+        {
+          "source_path": "references/support-resistance-deep-system.md",
+          "absorbed_path": "merged_sources/support-resistance-analysis-system/references/support-resistance-deep-system.md",
+          "size": 2799,
+          "sha256": "f4c8a656b585306e6af893622a37b3ae27a25e156da7287b33ee47b7510235c5"
+        },
+        {
+          "source_path": "references/workflow.md",
+          "absorbed_path": "merged_sources/support-resistance-analysis-system/references/workflow.md",
+          "size": 2868,
+          "sha256": "b0bba07701134811c96a3b173905c741c0869408134eee64d82b33d041016618"
+        },
+        {
+          "source_path": "reports/executions/support-resistance-analysis-system-20260722-033559-893106.receipt.json",
+          "absorbed_path": "merged_sources/support-resistance-analysis-system/reports/executions/support-resistance-analysis-system-20260722-033559-893106.receipt.json",
+          "size": 4639,
+          "sha256": "697e9d07ab27f35aef037fd3d81822b168cd5f6200da762f7c0bef387e3e55a2"
+        },
+        {
+          "source_path": "reports/executions/support-resistance-analysis-system-20260722-033559-893106.stderr.txt",
+          "absorbed_path": "merged_sources/support-resistance-analysis-system/reports/executions/support-resistance-analysis-system-20260722-033559-893106.stderr.txt",
+          "size": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "source_path": "reports/executions/support-resistance-analysis-system-20260722-033559-893106.stdout.txt",
+          "absorbed_path": "merged_sources/support-resistance-analysis-system/reports/executions/support-resistance-analysis-system-20260722-033559-893106.stdout.txt",
+          "size": 384,
+          "sha256": "8e4007d2243d5524e4a47f8dc473bdf52a5ab59da1c719867887e31380802538"
+        },
+        {
+          "source_path": "reports/executions/support-resistance-analysis-system-20260722-034949-146161.receipt.json",
+          "absorbed_path": "merged_sources/support-resistance-analysis-system/reports/executions/support-resistance-analysis-system-20260722-034949-146161.receipt.json",
+          "size": 4638,
+          "sha256": "865021b363bf24b2896038b03ca51b034156484bfbb52f07ff9497d7ca5a60e8"
+        },
+        {
+          "source_path": "reports/executions/support-resistance-analysis-system-20260722-034949-146161.stderr.txt",
+          "absorbed_path": "merged_sources/support-resistance-analysis-system/reports/executions/support-resistance-analysis-system-20260722-034949-146161.stderr.txt",
+          "size": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "source_path": "reports/executions/support-resistance-analysis-system-20260722-034949-146161.stdout.txt",
+          "absorbed_path": "merged_sources/support-resistance-analysis-system/reports/executions/support-resistance-analysis-system-20260722-034949-146161.stdout.txt",
+          "size": 384,
+          "sha256": "8e4007d2243d5524e4a47f8dc473bdf52a5ab59da1c719867887e31380802538"
+        },
+        {
+          "source_path": "scripts/codex_entry.py",
+          "absorbed_path": "merged_sources/support-resistance-analysis-system/scripts/codex_entry.py",
+          "size": 551,
+          "sha256": "61b7800464da00aad177b585c096411b2e6119ff9f80f762160d3b9c7c20646f"
+        },
+        {
+          "source_path": "scripts/elliott_wave_dashboard.py",
+          "absorbed_path": "merged_sources/support-resistance-analysis-system/scripts/elliott_wave_dashboard.py",
+          "size": 6085,
+          "sha256": "b225455b97bb857b060bfefd0dd595753ffa832133b3f9f1457bb9e750b3f505"
+        },
+        {
+          "source_path": "scripts/entry_support_resistance.py",
+          "absorbed_path": "merged_sources/support-resistance-analysis-system/scripts/entry_support_resistance.py",
+          "size": 55401,
+          "sha256": "c1ab45db21037aff2f046fb0e3f19c589256f32f9db21dbb4b07e05161ff529f"
+        },
+        {
+          "source_path": "scripts/sr_workflow.py",
+          "absorbed_path": "merged_sources/support-resistance-analysis-system/scripts/sr_workflow.py",
+          "size": 37278,
+          "sha256": "5e39a8ca54c60e41482fcd50e19fb7c3234bf596c46f4219384027b3c2b2fc8b"
+        },
+        {
+          "source_path": "scripts/support-resistance-analysis-system.py",
+          "absorbed_path": "merged_sources/support-resistance-analysis-system/scripts/support-resistance-analysis-system.py",
+          "size": 8101,
+          "sha256": "5aef3113880fad26d5e1157d465c4e6298656670ac800575ca693aa59eb5350e"
+        },
+        {
+          "source_path": "scripts/support-resistance-analysis-system_closure_gate.py",
+          "absorbed_path": "merged_sources/support-resistance-analysis-system/scripts/support-resistance-analysis-system_closure_gate.py",
+          "size": 349,
+          "sha256": "c2b494955d792da9d00cb243d746a7a749653340cb44eed28d0594efcc043bb7"
+        },
+        {
+          "source_path": "scripts/tdx_hub.py",
+          "absorbed_path": "merged_sources/support-resistance-analysis-system/scripts/tdx_hub.py",
+          "size": 528,
+          "sha256": "9f0be1130bf597aaf27e386047d57c725a8a2e3524f3d3286b2539577aa40afe"
+        },
+        {
+          "source_path": "SKILL.md",
+          "absorbed_path": "merged_sources/support-resistance-analysis-system/ORIGINAL_SKILL.md",
+          "size": 2844,
+          "sha256": "344e7b2bb3049dce75ed28bb639481b3dbb5e742d06779fa9b3e864b380a4372"
+        }
+      ]
+    },
+    "technical-analysis": {
+      "original_file_count": 16,
+      "absorbed_file_count": 16,
+      "files": [
+        {
+          "source_path": "agents/openai.yaml",
+          "absorbed_path": "merged_sources/technical-analysis/agents/openai.yaml",
+          "size": 329,
+          "sha256": "17aa88f16f791ae367e4ebe6a26191ad4123556b0c5e593a135a7029baee26f0"
+        },
+        {
+          "source_path": "references/business_spec.md",
+          "absorbed_path": "merged_sources/technical-analysis/references/business_spec.md",
+          "size": 8517,
+          "sha256": "ae6fab4ad883a1ef3baeb88dcd3f001f2213167e12320da3a1ca1b9c96685ca1"
+        },
+        {
+          "source_path": "references/support-resistance-deep-system.md",
+          "absorbed_path": "merged_sources/technical-analysis/references/support-resistance-deep-system.md",
+          "size": 2799,
+          "sha256": "f4c8a656b585306e6af893622a37b3ae27a25e156da7287b33ee47b7510235c5"
+        },
+        {
+          "source_path": "references/workflow.md",
+          "absorbed_path": "merged_sources/technical-analysis/references/workflow.md",
+          "size": 2802,
+          "sha256": "2004d6fe23eca0244688b9b0477d1dd79fc19c9a78d8c686e96db3ad11910b6b"
+        },
+        {
+          "source_path": "reports/executions/technical-analysis-20260722-033600-352062.receipt.json",
+          "absorbed_path": "merged_sources/technical-analysis/reports/executions/technical-analysis-20260722-033600-352062.receipt.json",
+          "size": 4295,
+          "sha256": "b076fcb697e5be6ca52166e43044308c4040718b0dd7ff8e3cdd5f642f4e2692"
+        },
+        {
+          "source_path": "reports/executions/technical-analysis-20260722-033600-352062.stderr.txt",
+          "absorbed_path": "merged_sources/technical-analysis/reports/executions/technical-analysis-20260722-033600-352062.stderr.txt",
+          "size": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "source_path": "reports/executions/technical-analysis-20260722-033600-352062.stdout.txt",
+          "absorbed_path": "merged_sources/technical-analysis/reports/executions/technical-analysis-20260722-033600-352062.stdout.txt",
+          "size": 237,
+          "sha256": "39448a3b185e371ec1467b47e0d5c15965191e937c862ef70553a5c1eb8f73a4"
+        },
+        {
+          "source_path": "reports/executions/technical-analysis-20260722-034949-980856.receipt.json",
+          "absorbed_path": "merged_sources/technical-analysis/reports/executions/technical-analysis-20260722-034949-980856.receipt.json",
+          "size": 4294,
+          "sha256": "f41a17db5abc89ef90483b64903694241bc8a1c858d027ec9d3bab8f686d696c"
+        },
+        {
+          "source_path": "reports/executions/technical-analysis-20260722-034949-980856.stderr.txt",
+          "absorbed_path": "merged_sources/technical-analysis/reports/executions/technical-analysis-20260722-034949-980856.stderr.txt",
+          "size": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "source_path": "reports/executions/technical-analysis-20260722-034949-980856.stdout.txt",
+          "absorbed_path": "merged_sources/technical-analysis/reports/executions/technical-analysis-20260722-034949-980856.stdout.txt",
+          "size": 237,
+          "sha256": "39448a3b185e371ec1467b47e0d5c15965191e937c862ef70553a5c1eb8f73a4"
+        },
+        {
+          "source_path": "scripts/codex_entry.py",
+          "absorbed_path": "merged_sources/technical-analysis/scripts/codex_entry.py",
+          "size": 519,
+          "sha256": "84728fcac1bae984f32cf28054717d164fe03dd407d6b0a72e58fecff346294c"
+        },
+        {
+          "source_path": "scripts/entry_technical_analysis.py",
+          "absorbed_path": "merged_sources/technical-analysis/scripts/entry_technical_analysis.py",
+          "size": 4208,
+          "sha256": "8cf4c58057e16b4a1b2ed38797fda1a3abbee16fcbc6f64d95882e1042b27ccb"
+        },
+        {
+          "source_path": "scripts/tdx_hub.py",
+          "absorbed_path": "merged_sources/technical-analysis/scripts/tdx_hub.py",
+          "size": 528,
+          "sha256": "9f0be1130bf597aaf27e386047d57c725a8a2e3524f3d3286b2539577aa40afe"
+        },
+        {
+          "source_path": "scripts/technical-analysis.py",
+          "absorbed_path": "merged_sources/technical-analysis/scripts/technical-analysis.py",
+          "size": 7881,
+          "sha256": "1d86088727c08c9bb14696bad8894be37807b0a62ccd36a41070f875dfc0af4e"
+        },
+        {
+          "source_path": "scripts/technical-analysis_closure_gate.py",
+          "absorbed_path": "merged_sources/technical-analysis/scripts/technical-analysis_closure_gate.py",
+          "size": 333,
+          "sha256": "ab25fdd1fea839ed0c1a9aceb3b1fe70c626e3db6d3eca168c9ad00bafb5ae09"
+        },
+        {
+          "source_path": "SKILL.md",
+          "absorbed_path": "merged_sources/technical-analysis/ORIGINAL_SKILL.md",
+          "size": 2685,
+          "sha256": "2306a055dda225b26fc4e004b01faea783c43f8ec7123be1e5015491455db7a7"
+        }
+      ]
+    }
+  },
+  "backup": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-07-22\\new-chat-6\\outputs\\stock-skill-merge-backup-20260722-104134.zip",
+    "size": 1264158,
+    "sha256": "08ce1d88bbc374b934ab6b9f33df185dc5d7a1fdb922d1ddadada71796fe87d2",
+    "verified_entries": 587
+  },
+  "premerge_manifest": {
+    "path": "C:\\Users\\Administrator\\Documents\\Codex\\2026-07-22\\new-chat-6\\outputs\\stock-skill-merge-premerge-manifest-20260722-104134.json",
+    "size": 130911,
+    "sha256": "1436796abbe61fdddd5665771488b99d2c604a80690541863cda774e744a178e"
+  }
+}

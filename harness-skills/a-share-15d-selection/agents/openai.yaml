@@ -1,0 +1,6 @@
+interface:
+  display_name: "A股短线强势股26因子评分"
+  short_description: "V6.1四轴26因子评估爆发力、持续性与可交易性"
+  default_prompt: "Use $a-share-15d-selection to recompute up to five stocks from the latest local limit-up pool and deliver the truthful result count in a verified Word report from the locked teaching-case template."
+policy:
+  allow_implicit_invocation: false
