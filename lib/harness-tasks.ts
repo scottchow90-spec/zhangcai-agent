@@ -163,21 +163,27 @@ async function delay(ms: number) { await new Promise((resolve) => window.setTime
 async function fetchBridge(path: string, init?: RequestInit) {
   let lastError: unknown;
   let lastGatewayResponse: Response | undefined;
-  const endpoints = [...BRIDGE_ENDPOINTS, bridgeUrl()];
+  // bridgeUrl() knows whether the page is local or served below /test on the
+  // remote host, so prefer it. Keep /bridge as a development-proxy fallback.
+  const endpoints = Array.from(new Set([bridgeUrl(), ...BRIDGE_ENDPOINTS]));
   for (let endpointIndex = 0; endpointIndex < endpoints.length; endpointIndex += 1) {
     for (let attempt = 0; attempt < 3; attempt += 1) {
       try {
         const response = await fetch(`${endpoints[endpointIndex]}${path}`, init);
-        // Vite 同源代理在 4318 短暂重启时会返回 502/503。把它视为
-        // 连接失败，继续重试并切换到直连地址，避免前端过早结束任务。
-        if (response.status >= 502 && response.status <= 504) {
+        // 开发模式的同源代理只在 Vite 开发服务中存在；生产服务或远端
+        // 8888 的旧首页可能分别返回 404/401。上述状态同样表示“当前
+        // 入口不可用”，必须切换到 bridgeUrl() 的真实桥接地址。
+        const endpointUnavailable = [401, 403, 404, 405, 502, 503, 504].includes(response.status);
+        if (endpointUnavailable) {
           lastGatewayResponse = response;
-          lastError = new Error(`桥接代理返回 ${response.status}`);
+          lastError = new Error(`桥接入口返回 ${response.status}`);
           if (attempt < 2) {
             await delay(350 * (attempt + 1));
             continue;
           }
-          if (endpointIndex < BRIDGE_ENDPOINTS.length - 1) break;
+          // The current endpoint is unavailable. Leave the retry loop so the
+          // outer loop can try the next endpoint instead of returning 401/404.
+          break;
         }
         return response;
       } catch (error) {
@@ -245,6 +251,14 @@ export async function runHarnessInBackground(input: {
   try {
     const startResponse = await fetchBridge('/agent/start', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ task: input.task, skillId: input.skillId, market: input.market, context: input.context }) });
     const start = await startResponse.json().catch(() => ({}));
+    if (startResponse.status === 409 || start.status === 'busy') {
+      const message = String(start.error || 'Harness 正在执行长任务，请稍后再试。');
+      // A rejected concurrent start is not a failed task. Remove its temporary
+      // tray entry and surface the reason immediately on every calling page.
+      dismissHarnessTask(local.id);
+      window.alert(message);
+      throw new Error(message);
+    }
     if (!startResponse.ok || start.status !== 'accepted' || typeof start.job_id !== 'string') throw new Error(start.error || `Harness 后台任务启动失败（${startResponse.status}）`);
     updateHarnessTask(local.id, { backendJobId: start.job_id, status: 'running' });
     let connectivityFailures = 0;

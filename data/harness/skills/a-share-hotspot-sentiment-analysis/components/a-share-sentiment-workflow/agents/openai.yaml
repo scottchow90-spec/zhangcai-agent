@@ -1,0 +1,6 @@
+interface:
+  display_name: "A股热点舆情研判"
+  short_description: "八站强制采集、三源五维验证和短线情绪结论的统一研判"
+  default_prompt: "执行A股热点舆情研判，严格检查八站每站10条和连板网、通达信、短线侠交叉验证，只生成一份Word。"
+policy:
+  allow_implicit_invocation: true

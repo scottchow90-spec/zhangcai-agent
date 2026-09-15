@@ -1,0 +1,18 @@
+{
+  "schema": "QUALITY-TRACK-PAPER-LEDGER-1",
+  "automatic_order": false,
+  "observations": [
+    {
+      "observation_id": "20260912T000247-669CA31BC538",
+      "generated_at": "2026-09-12T00:02:47+08:00",
+      "signal_complete_trade_date": "20260911",
+      "selection_status": "NO_TRADE",
+      "selection_sha256": "669CA31BC53859266FA892511C5A790C17EEC8B0194E0BE7B27FC72F71EDAE1F",
+      "selection_size": 636055,
+      "positions": [],
+      "state": "NO_TRADE_RECORDED",
+      "settlement": null
+    }
+  ],
+  "last_updated_at": "2026-09-12T00:04:45+08:00"
+}

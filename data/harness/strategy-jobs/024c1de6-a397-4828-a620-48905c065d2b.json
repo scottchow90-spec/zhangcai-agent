@@ -1,0 +1,23 @@
+{
+  "id": "024c1de6-a397-4828-a620-48905c065d2b",
+  "skill_id": "a-share-bottom-fishing",
+  "status": "completed",
+  "started_at": 1789012536861,
+  "strategy_status": "BLOCKED",
+  "output": "{\"schema\": \"STOCK_CANONICAL_BUSINESS_RESULT_V1\", \"skill_id\": \"a-share-bottom-fishing\", \"status\": \"BLOCKED\", \"business_process\": {\"command\": [\"C:\\\\Users\\\\Scott\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\python\\\\python.exe\", \"C:\\\\work\\\\260907 �Ʋ�������\\\\CodeX-st-wsp\\\\zhangcai-demo\\\\harness-skills\\\\a-share-bottom-fishing\\\\scripts\\\\legacy_codex_entry.py\", \"run\"], \"cwd\": \"C:\\\\work\\\\260907 �Ʋ�������\\\\CodeX-st-wsp\\\\zhangcai-demo\\\\harness-skills\\\\a-share-bottom-fishing\", \"returncode\": 1, \"timed_out\": false, \"failure_tokens\": [\"\\\"status\\\": \\\"BLOCKED\\\"\"], \"validation_errors\": []}, \"business_binding\": {\"path\": \"C:\\\\work\\\\260907 �Ʋ�������\\\\CodeX-st-wsp\\\\zhangcai-demo\\\\harness-skills\\\\a-share-bottom-fishing\\\\scripts\\\\legacy_codex_entry.py\", \"sha256\": \"d3a18cadcffe6f76c34e7c6ef0d6826cedf095ee0c651d107e633360a4ad854c\"}, \"artifacts\": {\"stdout\": \"C:\\\\work\\\\260907 �Ʋ�������\\\\CodeX-st-wsp\\\\zhangcai-demo\\\\data\\\\strategy-results\\\\executions\\\\runs\\\\20260910-115718-628545\\\\business_child.stdout.txt\", \"stderr\": \"C:\\\\work\\\\260907 �Ʋ�������\\\\CodeX-st-wsp\\\\zhangcai-demo\\\\data\\\\strategy-results\\\\executions\\\\runs\\\\20260910-115718-628545\\\\business_child.stderr.txt\"}}\r\r\n\nSTOCK_RUNTIME_RECEIPT {\"runtime\": \"stock-canonical-runtime-v3\", \"skill_id\": \"a-share-bottom-fishing\", \"status\": \"BLOCKED\", \"receipt\": \"C:\\\\work\\\\260907 �Ʋ�������\\\\CodeX-st-wsp\\\\zhangcai-demo\\\\data\\\\strategy-results\\\\executions\\\\a-share-bottom-fishing-20260910-115730-101979.receipt.json\", \"receipt_sha256\": \"9305a0056669dc2d462ff601cb30cb438abb3cc7a575661331c3fafbf010639a\"}",
+  "result": {
+    "status": "BLOCKED",
+    "output": "{\"schema\": \"STOCK_CANONICAL_BUSINESS_RESULT_V1\", \"skill_id\": \"a-share-bottom-fishing\", \"status\": \"BLOCKED\", \"business_process\": {\"command\": [\"C:\\\\Users\\\\Scott\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\python\\\\python.exe\", \"C:\\\\work\\\\260907 �Ʋ�������\\\\CodeX-st-wsp\\\\zhangcai-demo\\\\harness-skills\\\\a-share-bottom-fishing\\\\scripts\\\\legacy_codex_entry.py\", \"run\"], \"cwd\": \"C:\\\\work\\\\260907 �Ʋ�������\\\\CodeX-st-wsp\\\\zhangcai-demo\\\\harness-skills\\\\a-share-bottom-fishing\", \"returncode\": 1, \"timed_out\": false, \"failure_tokens\": [\"\\\"status\\\": \\\"BLOCKED\\\"\"], \"validation_errors\": []}, \"business_binding\": {\"path\": \"C:\\\\work\\\\260907 �Ʋ�������\\\\CodeX-st-wsp\\\\zhangcai-demo\\\\harness-skills\\\\a-share-bottom-fishing\\\\scripts\\\\legacy_codex_entry.py\", \"sha256\": \"d3a18cadcffe6f76c34e7c6ef0d6826cedf095ee0c651d107e633360a4ad854c\"}, \"artifacts\": {\"stdout\": \"C:\\\\work\\\\260907 �Ʋ�������\\\\CodeX-st-wsp\\\\zhangcai-demo\\\\data\\\\strategy-results\\\\executions\\\\runs\\\\20260910-115718-628545\\\\business_child.stdout.txt\", \"stderr\": \"C:\\\\work\\\\260907 �Ʋ�������\\\\CodeX-st-wsp\\\\zhangcai-demo\\\\data\\\\strategy-results\\\\executions\\\\runs\\\\20260910-115718-628545\\\\business_child.stderr.txt\"}}\r\r\n\nSTOCK_RUNTIME_RECEIPT {\"runtime\": \"stock-canonical-runtime-v3\", \"skill_id\": \"a-share-bottom-fishing\", \"status\": \"BLOCKED\", \"receipt\": \"C:\\\\work\\\\260907 �Ʋ�������\\\\CodeX-st-wsp\\\\zhangcai-demo\\\\data\\\\strategy-results\\\\executions\\\\a-share-bottom-fishing-20260910-115730-101979.receipt.json\", \"receipt_sha256\": \"9305a0056669dc2d462ff601cb30cb438abb3cc7a575661331c3fafbf010639a\"}",
+    "elapsed_ms": 21250,
+    "receipt": {
+      "runtime": "stock-canonical-runtime-v3",
+      "skill_id": "a-share-bottom-fishing",
+      "status": "BLOCKED",
+      "receipt": "C:\\work\\260907 �Ʋ�������\\CodeX-st-wsp\\zhangcai-demo\\data\\strategy-results\\executions\\a-share-bottom-fishing-20260910-115730-101979.receipt.json",
+      "receipt_sha256": "9305a0056669dc2d462ff601cb30cb438abb3cc7a575661331c3fafbf010639a"
+    },
+    "skill_id": "a-share-bottom-fishing"
+  },
+  "elapsed_ms": 21250,
+  "completed_at": 1789012650199
+}

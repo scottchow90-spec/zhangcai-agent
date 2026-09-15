@@ -1,0 +1,325 @@
+{
+  "schema": "ZHANGCAI_TDX_DAILY_INTEGRITY_V1",
+  "startedAt": "2026-09-10T23:30:12+08:00",
+  "finishedAt": "2026-09-10T23:30:21+08:00",
+  "tdxRoot": "C:\\new_tdx_mock",
+  "stockListSource": "Tongdaxin TQ get_stock_list(market=5)",
+  "targetDate": "20260910",
+  "before": {
+    "targetDate": "20260910",
+    "stockCount": 5569,
+    "completeCount": 5549,
+    "staleCount": 12,
+    "missingFileCount": 8,
+    "corruptCount": 0,
+    "dateDistribution": {
+      "20260910": 5549,
+      "20260903": 2,
+      "20260831": 2,
+      "20260828": 3,
+      "20260909": 2,
+      "20260904": 1,
+      "20260908": 1,
+      "20260907": 1
+    },
+    "byMarket": {
+      "SH": {
+        "stockCount": 2320,
+        "completeCount": 2311,
+        "staleCount": 6,
+        "missingFileCount": 3,
+        "corruptCount": 0
+      },
+      "SZ": {
+        "stockCount": 2903,
+        "completeCount": 2895,
+        "staleCount": 6,
+        "missingFileCount": 2,
+        "corruptCount": 0
+      },
+      "BJ": {
+        "stockCount": 346,
+        "completeCount": 343,
+        "staleCount": 0,
+        "missingFileCount": 3,
+        "corruptCount": 0
+      }
+    }
+  },
+  "repairs": [
+    {
+      "code": "000016.SZ",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz000016.day",
+      "status": "written",
+      "fetchedDate": "20260910",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "002731.SZ",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz002731.day",
+      "status": "written",
+      "fetchedDate": "20260910",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "002870.SZ",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz002870.day",
+      "status": "written",
+      "fetchedDate": "20260910",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "002998.SZ",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz002998.day",
+      "status": "written",
+      "fetchedDate": "20260910",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "301139.SZ",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz301139.day",
+      "status": "written",
+      "fetchedDate": "20260910",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "301390.SZ",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz301390.day",
+      "status": "written",
+      "fetchedDate": "20260910",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "301686.SZ",
+      "before": "missing_file",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz301686.day",
+      "status": "written",
+      "fetchedDate": "20260910",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "301716.SZ",
+      "before": "missing_file",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz301716.day",
+      "status": "unresolved",
+      "fetchedDate": null,
+      "reason": "TQ 未返回目标交易日数据"
+    },
+    {
+      "code": "600825.SH",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh600825.day",
+      "status": "written",
+      "fetchedDate": "20260910",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "600929.SH",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh600929.day",
+      "status": "written",
+      "fetchedDate": "20260910",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "601091.SH",
+      "before": "missing_file",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh601091.day",
+      "status": "unresolved",
+      "fetchedDate": null,
+      "reason": "TQ 未返回目标交易日数据"
+    },
+    {
+      "code": "603159.SH",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh603159.day",
+      "status": "written",
+      "fetchedDate": "20260910",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "605577.SH",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh605577.day",
+      "status": "written",
+      "fetchedDate": "20260910",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "688291.SH",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh688291.day",
+      "status": "written",
+      "fetchedDate": "20260910",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "688432.SH",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh688432.day",
+      "status": "written",
+      "fetchedDate": "20260910",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "688801.SH",
+      "before": "missing_file",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh688801.day",
+      "status": "unresolved",
+      "fetchedDate": null,
+      "reason": "TQ 未返回目标交易日数据"
+    },
+    {
+      "code": "688837.SH",
+      "before": "missing_file",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh688837.day",
+      "status": "unresolved",
+      "fetchedDate": null,
+      "reason": "TQ 未返回目标交易日数据"
+    },
+    {
+      "code": "920201.BJ",
+      "before": "missing_file",
+      "path": "C:\\new_tdx_mock\\vipdoc\\bj\\lday\\bj920201.day",
+      "status": "unresolved",
+      "fetchedDate": null,
+      "reason": "TQ 未返回目标交易日数据"
+    },
+    {
+      "code": "920229.BJ",
+      "before": "missing_file",
+      "path": "C:\\new_tdx_mock\\vipdoc\\bj\\lday\\bj920229.day",
+      "status": "unresolved",
+      "fetchedDate": null,
+      "reason": "TQ 未返回目标交易日数据"
+    },
+    {
+      "code": "920298.BJ",
+      "before": "missing_file",
+      "path": "C:\\new_tdx_mock\\vipdoc\\bj\\lday\\bj920298.day",
+      "status": "unresolved",
+      "fetchedDate": null,
+      "reason": "TQ 未返回目标交易日数据"
+    }
+  ],
+  "after": {
+    "targetDate": "20260910",
+    "stockCount": 5569,
+    "completeCount": 5562,
+    "staleCount": 0,
+    "missingFileCount": 7,
+    "corruptCount": 0,
+    "dateDistribution": {
+      "20260910": 5562
+    },
+    "byMarket": {
+      "SH": {
+        "stockCount": 2320,
+        "completeCount": 2317,
+        "staleCount": 0,
+        "missingFileCount": 3,
+        "corruptCount": 0
+      },
+      "SZ": {
+        "stockCount": 2903,
+        "completeCount": 2902,
+        "staleCount": 0,
+        "missingFileCount": 1,
+        "corruptCount": 0
+      },
+      "BJ": {
+        "stockCount": 346,
+        "completeCount": 343,
+        "staleCount": 0,
+        "missingFileCount": 3,
+        "corruptCount": 0
+      }
+    }
+  },
+  "unresolved": [
+    {
+      "code": "301716.SZ",
+      "market": "SZ",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz301716.day",
+      "status": "missing_file",
+      "latestDate": null,
+      "recordCount": 0,
+      "aligned": false
+    },
+    {
+      "code": "601091.SH",
+      "market": "SH",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh601091.day",
+      "status": "missing_file",
+      "latestDate": null,
+      "recordCount": 0,
+      "aligned": false
+    },
+    {
+      "code": "688801.SH",
+      "market": "SH",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh688801.day",
+      "status": "missing_file",
+      "latestDate": null,
+      "recordCount": 0,
+      "aligned": false
+    },
+    {
+      "code": "688837.SH",
+      "market": "SH",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh688837.day",
+      "status": "missing_file",
+      "latestDate": null,
+      "recordCount": 0,
+      "aligned": false
+    },
+    {
+      "code": "920201.BJ",
+      "market": "BJ",
+      "path": "C:\\new_tdx_mock\\vipdoc\\bj\\lday\\bj920201.day",
+      "status": "missing_file",
+      "latestDate": null,
+      "recordCount": 0,
+      "aligned": false
+    },
+    {
+      "code": "920229.BJ",
+      "market": "BJ",
+      "path": "C:\\new_tdx_mock\\vipdoc\\bj\\lday\\bj920229.day",
+      "status": "missing_file",
+      "latestDate": null,
+      "recordCount": 0,
+      "aligned": false
+    },
+    {
+      "code": "920298.BJ",
+      "market": "BJ",
+      "path": "C:\\new_tdx_mock\\vipdoc\\bj\\lday\\bj920298.day",
+      "status": "missing_file",
+      "latestDate": null,
+      "recordCount": 0,
+      "aligned": false
+    }
+  ],
+  "complete": false,
+  "output": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\runtime\\tdx-daily-integrity-20260910-233021.json"
+}

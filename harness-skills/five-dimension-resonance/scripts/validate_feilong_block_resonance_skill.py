@@ -419,7 +419,10 @@ def main() -> int:
     runner_text = (SKILL / "scripts" / "run_feilong_block_resonance.py").read_text(encoding="utf-8")
     if "sector_star = 4.0 if pct >= 9.5 else 3.0" in runner_text:
         issues.append("forbidden_stock_gain_mainline_proxy_present")
-    if mainline_market.get("model_version") != "CORE-MAINLINE-100-V2":
+    if mainline_market.get("model_version") not in {
+        "CORE-MAINLINE-CLOSE-V3",
+        "CORE-MAINLINE-100-V2",
+    }:
         issues.append("mainline_model_binding_missing")
     if any("mainline_scoring" not in item for item in all_results):
         issues.append("per_stock_mainline_evidence_missing")

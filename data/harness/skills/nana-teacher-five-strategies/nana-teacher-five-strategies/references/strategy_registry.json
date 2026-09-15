@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "skill": "nana-teacher-five-strategies",
+  "display_name": "娜娜老师5策略",
+  "tdx_root": "C:\\new_tdx_mock",
+  "strategies": [
+    {
+      "id": "ybzj",
+      "name": "元宝藏金",
+      "aliases": ["元宝藏金", "元宝"],
+      "formula": "assets/formulas/nana_ybzj_xg.txt",
+      "workflow": "assets/workflows/nana_ybzj_workflow.md",
+      "evidence": "assets/evidence/nana_ybzj_evidence.json",
+      "source_pptx": "G:\\AI新产品部\\娜娜老师\\元宝藏金.pptx",
+      "source_sha256": "0b4256616ea475dcf0e8c9718ef62035cea807612ce0f5f7d85fce0ec16e926e",
+      "required_formula_markers": ["V>MA(V,5)*1.20", "AMOUNT>=30000000", "XG:"]
+    },
+    {
+      "id": "dlq",
+      "name": "地极破晓",
+      "aliases": ["地极破晓", "地量群"],
+      "formula": "assets/formulas/nana_dlq_xg.txt",
+      "workflow": "assets/workflows/nana_dlq_workflow.md",
+      "evidence": "assets/evidence/nana_dlq_evidence.json",
+      "source_pptx": "G:\\AI新产品部\\娜娜老师\\地极破晓.pptx",
+      "source_sha256": "3b2aaa37d78f159723198ca7187c5c012953ab5c58ea0979e71b3159749926ee",
+      "required_formula_markers": ["V<MA(V,20)*0.60", "AMOUNT>=30000000", "XG:"]
+    },
+    {
+      "id": "ylxs",
+      "name": "游龙吸水",
+      "aliases": ["游龙吸水"],
+      "formula": "assets/formulas/nana_ylxs_xg.txt",
+      "workflow": "assets/workflows/nana_ylxs_workflow.md",
+      "evidence": "assets/evidence/nana_ylxs_evidence.json",
+      "source_pptx": "G:\\AI新产品部\\娜娜老师\\游龙吸水1.pptx",
+      "source_sha256": "d388838cbd60d7f09a0bea5b331a2384e6329120c7583ef94a67dcc9d59a4f08",
+      "required_formula_markers": ["V<MA(V,5)*0.85", "AMOUNT>=30000000", "XG:"]
+    },
+    {
+      "id": "fyby",
+      "name": "负阴抱阳",
+      "aliases": ["负阴抱阳"],
+      "formula": "assets/formulas/nana_fyby_xg.txt",
+      "workflow": "assets/workflows/nana_fyby_workflow.md",
+      "evidence": "assets/evidence/nana_fyby_evidence.json",
+      "source_pptx": "G:\\AI新产品部\\娜娜老师\\负阴抱阳.pptx",
+      "source_sha256": "25ae85498b6b380ea7fbecb9fefed197d69e314abb463ee3685a336e78dd4d15",
+      "required_formula_markers": ["V<REF(V,1)*0.70", "AMOUNT>=30000000", "XG:"]
+    },
+    {
+      "id": "hjsx",
+      "name": "黄金双响",
+      "aliases": ["黄金双响", "双响炮"],
+      "formula": "assets/formulas/nana_hjsx_xg.txt",
+      "workflow": "assets/workflows/nana_hjsx_workflow.md",
+      "evidence": "assets/evidence/nana_hjsx_evidence.json",
+      "source_pptx": "G:\\AI新产品部\\娜娜老师\\黄金双响.pptx",
+      "source_sha256": "b28e29d479ab1c31892b9ec903db34620f0230ced793c4466ac8424c6582bb9e",
+      "required_formula_markers": ["HJSX7:=", "V>=REF(V,7)*0.80", "AMOUNT>=30000000", "XG:"]
+    }
+  ],
+  "runtime_boundary": "本地D盘日线扫描与同逻辑回放不替代通达信公式管理器GUI编译、导入或内部批量选股回执。"
+}

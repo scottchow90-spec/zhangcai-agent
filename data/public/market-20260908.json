@@ -1,0 +1,22 @@
+{
+  "schema": "ZHANGCAI_PUBLIC_MARKET_V1",
+  "date": "2026-09-08",
+  "fetchedAt": "2026-09-09T09:32:49+08:00",
+  "sources": {
+    "lianban": {
+      "url": "https://lianban.net/opendata/2026-09-08.json",
+      "status": "missing",
+      "error": "URLError: <urlopen error [WinError 10013] 嘗試存取通訊端被拒絕，因為存取權限不足。>"
+    },
+    "eastmoneyLimitUp": {
+      "url": "https://push2ex.eastmoney.com/getTopicZTPool?ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wz.ztzt&Pageindex=0&pagesize=10000&sort=fbt%3Aasc&date=20260908",
+      "status": "missing",
+      "error": "URLError: <urlopen error [WinError 10013] 嘗試存取通訊端被拒絕，因為存取權限不足。>"
+    },
+    "eastmoneyLhb": {
+      "url": "https://datacenter-web.eastmoney.com/api/data/v1/get?sortColumns=SECURITY_CODE%2CTRADE_DATE&sortTypes=1%2C-1&pageSize=5000&pageNumber=1&reportName=RPT_DAILYBILLBOARD_DETAILSNEW&columns=SECURITY_CODE%2CSECURITY_NAME_ABBR%2CTRADE_DATE%2CBILLBOARD_NET_AMT%2CBILLBOARD_BUY_AMT%2CBILLBOARD_SELL_AMT%2CEXPLAIN&source=WEB&client=WEB&filter=%28TRADE_DATE%3C%3D%272026-09-08%27%29%28TRADE_DATE%3E%3D%272026-09-08%27%29",
+      "status": "missing",
+      "error": "URLError: <urlopen error [WinError 10013] 嘗試存取通訊端被拒絕，因為存取權限不足。>"
+    }
+  }
+}

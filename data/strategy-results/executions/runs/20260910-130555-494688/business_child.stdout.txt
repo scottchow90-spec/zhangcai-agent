@@ -1,0 +1,15 @@
+{
+  "status": "CLEAN_PASS",
+  "strategy_id": "strong-leader-first-yin-v1",
+  "selection_status": "SIGNAL",
+  "current_state": "STRICT_NONZERO",
+  "latest_trade_date": "20260909",
+  "strict_count": 1,
+  "turnover_divergence_count": 0,
+  "practical_count": 3,
+  "technical_trade_ready_count": 1,
+  "candidate_count": 4,
+  "historical_signal_count": 592,
+  "report": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\dragon-pullback\\reports\\strong-leader-first-yin-20260909.json",
+  "latest_report": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\dragon-pullback\\reports\\strong-leader-first-yin-latest.json"
+}

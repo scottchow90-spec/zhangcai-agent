@@ -1,0 +1,6 @@
+interface:
+  display_name: "风险排雷技能"
+  short_description: "整合个股暴雷排查、风险预警、证据去重和市场失效检查"
+  default_prompt: "使用 $risk-mine-clearance 运行最新A股风险排雷技能并给出证据化结论。"
+policy:
+  allow_implicit_invocation: false

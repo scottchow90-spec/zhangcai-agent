@@ -1,0 +1,444 @@
+{
+  "receipt_version": 4,
+  "runtime": "stock-canonical-runtime-v3",
+  "runtime_surface": "Codex",
+  "skill_id": "baimao-teacher-system",
+  "entry": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\baimao-teacher-system\\scripts\\codex_entry.py",
+  "run_dir": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\baimao-teacher-system\\reports\\executions\\runs\\20260909-155717-680388",
+  "command": [
+    "C:\\Users\\Scott\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\baimao-teacher-system\\scripts\\canonical_business_adapter.py",
+    "--run-dir",
+    "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\baimao-teacher-system\\reports\\executions\\runs\\20260909-155717-680388",
+    "--timeout",
+    "300",
+    "status"
+  ],
+  "extra_args": [
+    "status"
+  ],
+  "cwd": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\baimao-teacher-system",
+  "started_at": "2026-09-09T15:57:17+08:00",
+  "finished_at": "2026-09-09T15:57:18+08:00",
+  "elapsed_seconds": 0.687,
+  "returncode": 2,
+  "status": "BLOCKED",
+  "execution_purpose": "readiness_validation",
+  "request_fingerprint": "6ba177d9e64837c2a001bf2ca072fb12abb728c9f94d6d42396ea96991a4fedf",
+  "failure_class": "BUSINESS_REJECTED",
+  "production_policy_sha256": "f44fa31a3cf8477e52e80cbd2d18e26d6459cdedf22ffdb1000538004dd2bf85",
+  "production_readiness": {
+    "schema": "STOCK_PRODUCTION_READINESS_V1",
+    "status": "BLOCKED",
+    "execution_purpose": "readiness_validation",
+    "conclusion_eligible": false,
+    "request_fingerprint": "6ba177d9e64837c2a001bf2ca072fb12abb728c9f94d6d42396ea96991a4fedf",
+    "policy_sha256": "f44fa31a3cf8477e52e80cbd2d18e26d6459cdedf22ffdb1000538004dd2bf85",
+    "data_gate": null,
+    "failure_class": "BUSINESS_REJECTED",
+    "output_bytes": {
+      "stdout": 0,
+      "stderr": 189,
+      "limit": 16777216,
+      "limited": false
+    },
+    "persistence": "atomic_replace_with_verified_readback",
+    "errors": [
+      "business_stdout_not_single_json_object",
+      "semantic_or_artifact_assertion_failed"
+    ]
+  },
+  "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
+  "executor_sha256": "f423262f56f5b5e6da8938c7cb6900bc5a7cc5f9f3c246692bfd9bbee6304463",
+  "contract_sha256": "6219ba992e748e04e5336c5067a0bf40bf4c2f0aed6531d02c44c17a3c33ea73",
+  "production_surface_signature": "9329d640defff34ca4865d88d42d82019be1aa1617532d8206396322ebe79f6b",
+  "business_bindings": [
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\baimao-teacher-system\\scripts\\canonical_business_adapter.py",
+      "sha256": "bc557bd0507aa236108ffb6206a3608759adce59bf46a8a58d316adf7e542b3d"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\baimao-teacher-system\\scripts\\legacy_codex_entry.py",
+      "sha256": "8ed2965717c9e792e477bf79d6cd80de3259c4c2a6da1788299e1012bbc7bb7d"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\baimao-teacher-system\\SKILL.md",
+      "sha256": "3499a8fe52abe4ffb3bf7f81fd91bb19c1904319c4425b80aabfa319a35082e9"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\baimao-teacher-system\\references\\workflow.md",
+      "sha256": "b0eff5ff604922813a0536f2137b60e683c1b845513a6d5820f8de4d75434ad6"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\baimao-teacher-system\\scripts\\baimao-teacher-system.py",
+      "sha256": "40921ff83b67b3ca0c701b514295e15a821fb65ef8766df95dee2fdb01aae2de"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\baimao-teacher-system\\scripts\\baimao-teacher-system_closure_gate.py",
+      "sha256": "5e9ad597070574c67a751869c7045d582d4f8828cc8968bd00c1628c33379c7a"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\scripts\\lianban_daily_client.py",
+      "sha256": "7d6a51fc1efa1472b7e3bee49b208e581732f7108b64ecbaef446fb5749be51a"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\baimao-teacher-system\\scripts\\baimao_workflow_acceptance.py",
+      "sha256": "d86fa2ca9f23f51310696bf0217c6f6c0805f4340879c7ee4c7349ea3193e63c"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\scripts\\stock_evidence_set.py",
+      "sha256": "3cad995bf4d464e7747ba9123cb85b69dfef87058545e0cf087b2b3c91e4f82f"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\scripts\\stock_runtime_bootstrap\\sitecustomize.py",
+      "sha256": "b101151ab8a66d264bad58bc82f8cb5d2e971d193f0d0b28799a7b882c3eba27"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\scripts\\stock_runtime_bootstrap\\tdx_process_guard.py",
+      "sha256": "884c84e8e69bdac0f35ba7f06c6f6e97925698a8af4a06d514b0631b3060f834"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\stock-unified\\scripts\\stock_contract_catalog.py",
+      "sha256": "cb9736deed9ac9e1bfbbed6e1dc9afbcfd6a505896d05eda87315cedaa422332"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\stock-unified\\scripts\\stock_production_readiness.py",
+      "sha256": "b97a0f145f8d0e176116a8f280f6b2a86af64ccb0f36a9fecb9fb67a3f43fa8a"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\a-share-hotspot-sentiment-analysis\\scripts\\duanxianxia_client.ps1",
+      "sha256": "e86bf63ce6959baa112c8a331866be66135e5611feb4b871ddca205ebc65ec2f"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\stock-unified\\scripts\\audit_stock_production_readiness.py",
+      "sha256": "8afedf67fe22437a0b897be606e9b3c37a75b48fe4d7a4774d940eadcd5e2519"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\stock-unified\\scripts\\sync_stock_execution_contracts.py",
+      "sha256": "04249a89e4124c83e82e7a54d6ba4c9d50ce1a5b4c8838202b20ea08a55663fb"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\scripts\\stock_adapter_io.py",
+      "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
+    }
+  ],
+  "contract_preflight": {
+    "status": "CLEAN_PASS",
+    "catalog_count": null,
+    "contract_count": null,
+    "surface_signature": "9329d640defff34ca4865d88d42d82019be1aa1617532d8206396322ebe79f6b"
+  },
+  "contract_postflight": {
+    "status": "CLEAN_PASS",
+    "catalog_count": null,
+    "contract_count": null,
+    "surface_signature_before": "9329d640defff34ca4865d88d42d82019be1aa1617532d8206396322ebe79f6b",
+    "surface_signature_after": "9329d640defff34ca4865d88d42d82019be1aa1617532d8206396322ebe79f6b",
+    "errors": []
+  },
+  "stock_business_lease": {
+    "status": "ACQUIRED",
+    "lease_id": "21484-1788940636302140500",
+    "root_lease_id": "21484-1788940636302140500",
+    "root_skill_id": "baimao-teacher-system",
+    "skill_id": "baimao-teacher-system",
+    "pid": 21484,
+    "lock_path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\.runtime\\stock-business-runtime.baimao-teacher-system.lock",
+    "acquired_at": "2026-09-09T15:57:16+08:00",
+    "waited_seconds": 0.0
+  },
+  "workflow_telemetry": [
+    {
+      "name": "request_validation",
+      "status": "CLEAN_PASS",
+      "elapsed_seconds": 0.0,
+      "error_count": 0
+    },
+    {
+      "name": "global_contract_preflight",
+      "status": "CLEAN_PASS",
+      "elapsed_seconds": 3.938,
+      "surface_stable": true
+    },
+    {
+      "name": "workflow_queue_wait",
+      "status": "CLEAN_PASS",
+      "elapsed_seconds": 0.015,
+      "waited_seconds": 0.0,
+      "lock_path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\.runtime\\stock-business-runtime.baimao-teacher-system.lock"
+    },
+    {
+      "name": "binding_validation",
+      "status": "CLEAN_PASS",
+      "elapsed_seconds": 0.0,
+      "error_count": 0
+    },
+    {
+      "name": "tdx_control_scan",
+      "status": "CLEAN_PASS",
+      "elapsed_seconds": 0.781,
+      "finding_count": 0
+    },
+    {
+      "name": "evidence_set",
+      "status": "DISABLED",
+      "elapsed_seconds": 0.0,
+      "mode": null
+    },
+    {
+      "name": "supplemental_target_date",
+      "status": "CLEAN_PASS",
+      "elapsed_seconds": 0.0,
+      "mode": "runtime_date"
+    },
+    {
+      "name": "supplemental_lianban",
+      "status": "DEGRADED",
+      "elapsed_seconds": 0.032,
+      "mode": "direct_fetch",
+      "cache_hit": false
+    },
+    {
+      "name": "business_process",
+      "status": "BLOCKED",
+      "elapsed_seconds": 1.078,
+      "returncode": 2
+    },
+    {
+      "name": "contract_surface_postflight",
+      "status": "CLEAN_PASS",
+      "elapsed_seconds": 3.906,
+      "surface_stable": true,
+      "error_count": 0
+    },
+    {
+      "name": "result_validation",
+      "status": "BLOCKED",
+      "elapsed_seconds": 0.0,
+      "semantic_check_count": 8
+    },
+    {
+      "name": "production_gate",
+      "status": "BLOCKED",
+      "elapsed_seconds": 0.0,
+      "execution_purpose": "readiness_validation",
+      "conclusion_eligible": false,
+      "error_count": 2
+    },
+    {
+      "name": "runtime_inside_lease",
+      "status": "BLOCKED",
+      "elapsed_seconds": 6.391
+    },
+    {
+      "name": "total_runtime_to_receipt",
+      "status": "BLOCKED",
+      "elapsed_seconds": 10.344
+    }
+  ],
+  "tdx_process_integrity": {
+    "status": "CLEAN_PASS",
+    "errors": [],
+    "before": {
+      "status": "OK",
+      "captured_at": "2026-09-09T15:57:17+08:00",
+      "processes": [
+        {
+          "name": "tdxcef",
+          "pid": 6188,
+          "start_time": "/Date(1788940562601)/"
+        },
+        {
+          "name": "tdxcef",
+          "pid": 12564,
+          "start_time": "/Date(1788940562660)/"
+        },
+        {
+          "name": "TdxW",
+          "pid": 23776,
+          "start_time": "/Date(1788940551492)/"
+        }
+      ],
+      "errors": []
+    },
+    "after": {
+      "status": "OK",
+      "captured_at": "2026-09-09T15:57:18+08:00",
+      "processes": [
+        {
+          "name": "tdxcef",
+          "pid": 6188,
+          "start_time": "/Date(1788940562601)/"
+        },
+        {
+          "name": "tdxcef",
+          "pid": 12564,
+          "start_time": "/Date(1788940562660)/"
+        },
+        {
+          "name": "TdxW",
+          "pid": 23776,
+          "start_time": "/Date(1788940551492)/"
+        }
+      ],
+      "errors": []
+    }
+  },
+  "tdx_process_guard": {
+    "schema": "TDX_PROCESS_GUARD_AUDIT_V1",
+    "status": "CLEAN_PASS",
+    "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\baimao-teacher-system\\reports\\executions\\runs\\20260909-155717-680388\\tdx_process_guard.jsonl",
+    "exists": false,
+    "event_count": 0,
+    "events": [],
+    "errors": [],
+    "artifact": null
+  },
+  "evidence_set": {
+    "enabled": false,
+    "status": "DISABLED",
+    "environment": {},
+    "errors": []
+  },
+  "supplemental_sources": {
+    "lianban_daily": {
+      "enabled": true,
+      "required": false,
+      "status": "DEGRADED",
+      "mode": "direct_fetch",
+      "cache_hit": false,
+      "cache_manifest": null,
+      "client": "D:\\C盘转移\\日志\\codex\\scripts\\lianban_daily_client.py",
+      "command": [
+        "C:\\Users\\Scott\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "D:\\C盘转移\\日志\\codex\\scripts\\lianban_daily_client.py",
+        "--latest",
+        "--output",
+        "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\baimao-teacher-system\\reports\\executions\\runs\\20260909-155717-680388\\lianban-daily.json"
+      ],
+      "snapshot": {
+        "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\baimao-teacher-system\\reports\\executions\\runs\\20260909-155717-680388\\lianban-daily.json",
+        "exists": false
+      },
+      "source_url": "https://lianban.net/days/2026-09-09.html",
+      "open_data_url": "https://lianban.net/opendata/2026-09-09.json",
+      "target_date_resolution": {
+        "status": "CLEAN_PASS",
+        "mode": "runtime_date",
+        "target_date": "2026-09-09",
+        "fallback_date": "2026-09-09",
+        "errors": []
+      },
+      "child": {
+        "started_at": "2026-09-09T15:57:17+08:00",
+        "finished_at": "2026-09-09T15:57:17+08:00",
+        "elapsed_seconds": 0.0,
+        "returncode": 125,
+        "stdout": "",
+        "stderr": "lianban_client_missing:D:\\C盘转移\\日志\\codex\\scripts\\lianban_daily_client.py"
+      },
+      "environment": {
+        "CODEX_LIANBAN_STATUS": "DEGRADED",
+        "CODEX_LIANBAN_SNAPSHOT": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\baimao-teacher-system\\reports\\executions\\runs\\20260909-155717-680388\\lianban-daily.json",
+        "CODEX_LIANBAN_SOURCE_URL": "https://lianban.net/days/2026-09-09.html",
+        "CODEX_LIANBAN_OPEN_DATA_URL": "https://lianban.net/opendata/2026-09-09.json",
+        "CODEX_LIANBAN_ATTRIBUTION": "连板网"
+      },
+      "errors": [
+        "lianban_client_missing:D:\\C盘转移\\日志\\codex\\scripts\\lianban_daily_client.py",
+        "lianban_snapshot_missing:C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\baimao-teacher-system\\reports\\executions\\runs\\20260909-155717-680388\\lianban-daily.json"
+      ]
+    }
+  },
+  "binding_errors": [],
+  "contract_stability_errors": [],
+  "business_stdout_validation": {
+    "ok": false,
+    "errors": [
+      "business_stdout_not_single_json_object"
+    ],
+    "data_gate": null,
+    "output_size": 0,
+    "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "semantic_assertions": [
+    {
+      "type": "returncode_zero",
+      "actual": 2,
+      "ok": false
+    },
+    {
+      "type": "stdout_nonempty",
+      "actual_size": 0,
+      "ok": false
+    },
+    {
+      "type": "output_contains_any",
+      "values": [
+        "\"schema\": \"STOCK_CANONICAL_BUSINESS_RESULT_V1\"",
+        "\"schema\":\"STOCK_CANONICAL_BUSINESS_RESULT_V1\""
+      ],
+      "found": [],
+      "ok": false
+    },
+    {
+      "type": "output_contains_any",
+      "values": [
+        "\"status\": \"CLEAN_PASS\"",
+        "\"status\":\"CLEAN_PASS\""
+      ],
+      "found": [],
+      "ok": false
+    },
+    {
+      "type": "output_not_contains",
+      "values": [
+        "\"status\": \"BLOCKED\"",
+        "\"status\":\"BLOCKED\"",
+        "\"status\": \"FAILED\"",
+        "\"status\":\"FAILED\"",
+        "\"status\": \"PROCEDURAL\"",
+        "\"status\":\"PROCEDURAL\"",
+        "\"status\": \"DATA_REQUIRED\"",
+        "\"status\":\"DATA_REQUIRED\"",
+        "Traceback (most recent call last)",
+        "TIMEOUT after "
+      ],
+      "found": [],
+      "ok": true
+    },
+    {
+      "type": "required_artifact",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\baimao-teacher-system\\reports\\executions\\runs\\20260909-155717-680388\\business_child.stdout.txt",
+      "minimum_size": 0,
+      "matched": 0,
+      "ok": false
+    },
+    {
+      "type": "required_artifact",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\baimao-teacher-system\\reports\\executions\\runs\\20260909-155717-680388\\business_child.stderr.txt",
+      "minimum_size": 0,
+      "matched": 0,
+      "ok": false
+    },
+    {
+      "type": "required_artifact",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\baimao-teacher-system\\reports\\executions\\runs\\20260909-155717-680388\\business_result.json",
+      "minimum_size": 100,
+      "matched": 0,
+      "ok": false
+    }
+  ],
+  "required_artifacts": [],
+  "stdout_artifact": {
+    "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\baimao-teacher-system\\reports\\executions\\baimao-teacher-system-20260909-155722-711724.stdout.txt",
+    "size": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr_artifact": {
+    "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\skill_pack_extract\\Codex股票技能迁移包\\payload\\skills\\baimao-teacher-system\\reports\\executions\\baimao-teacher-system-20260909-155722-711724.stderr.txt",
+    "size": 189,
+    "sha256": "b40a9da8296cade4c6ebeaa5d08d3fcba1df5d2c1cf126c5bc42b96679461309"
+  },
+  "receipt_integrity": "2af56715007c982bc0fee65af4e8e0ca45b1719960b6b347623a2da6b58fe1b6"
+}

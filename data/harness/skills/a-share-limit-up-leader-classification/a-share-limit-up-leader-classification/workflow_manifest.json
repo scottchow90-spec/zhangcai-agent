@@ -1,0 +1,14 @@
+{
+  "workflow_name": "每日涨停板龙头分类",
+  "skill_name": "a-share-limit-up-leader-classification",
+  "version": "1.1.0",
+  "status": "approved",
+  "target_system": "local_codex",
+  "live_run_allowed": true,
+  "approval_required": true,
+  "delivery_format": "docx",
+  "old_result_reuse_allowed": false,
+  "business_template_allowed": false,
+  "docx_conclusion_preflight_required": true,
+  "docx_conclusion_preflight_command": "codex_entry.py verify-docx --file <最终DOCX>"
+}

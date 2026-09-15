@@ -1443,6 +1443,10 @@ export default function WorkspacePages({
   page,
   market,
   onSelect,
+  onSelectCode,
+  onRefreshMarket,
+  marketRefreshing = false,
+  marketRefreshMessage = '',
   watch,
   onWatch,
   navigate,
@@ -1450,6 +1454,10 @@ export default function WorkspacePages({
   page: string;
   market: Market;
   onSelect: (s: Stock) => void;
+  onSelectCode?: (code: string) => boolean;
+  onRefreshMarket?: () => Promise<void> | void;
+  marketRefreshing?: boolean;
+  marketRefreshMessage?: string;
   watch: string[];
   onWatch: (code: string) => void;
   navigate: (id: string) => void;
@@ -1457,6 +1465,8 @@ export default function WorkspacePages({
   const [search, setSearch] = useState(''),
     [group, setGroup] = useState('all'),
     [skill, setSkill] = useState<Skill | null>(null),
+    [researchCode, setResearchCode] = useState(''),
+    [researchCodeError, setResearchCodeError] = useState(''),
     [theme, setTheme] = useState(0),
     [selectedStrategy, setSelectedStrategy] = useState('a-share-15d-selection');
   const [minPct, setMinPct] = useState('3'),
@@ -1487,6 +1497,18 @@ export default function WorkspacePages({
     [strategyPrefsReady, setStrategyPrefsReady] = useState(false);
   const resumedStrategyIds = useRef(new Set<string>());
   const [, forceWatchRender] = useState(0);
+  useEffect(() => {
+    if (!openedArchive) return;
+    window.requestAnimationFrame(() => {
+      document.querySelector<HTMLElement>('.archive-sheet')?.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    });
+  }, [openedArchive?.id]);
+  useEffect(() => {
+    if (!skill) return;
+    window.requestAnimationFrame(() => {
+      document.querySelector<HTMLElement>('.skill-sheet')?.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    });
+  }, [skill?.id]);
   const [capitalSnapshot, setCapitalSnapshot] = useState<CapitalSnapshot | null>(null);
   const [capitalHarnessOutput, setCapitalHarnessOutput] = useState('');
   const [capitalLoading, setCapitalLoading] = useState(false);
@@ -1573,11 +1595,16 @@ export default function WorkspacePages({
   const selectedStrategyHasFailure = strategyRunHasFailure(selectedStrategyRun);
   const selectedStrategyMeta = strategyCatalogItem(selectedStrategy);
   const selectedStrategyStatus = strategyDataStatus(selectedStrategy);
-  const searchableStocks = market.allStocks?.length ? market.allStocks : market.stocks;
+  // 个股研究只展示与当前行情日期一致的日线，避免刷新后把旧交易日混入研究列表。
+  const searchableStocks = useMemo(() => {
+    const source = market.allStocks?.length ? market.allStocks : market.stocks;
+    return source.filter((row) => String(row.date || '') === String(market.date || ''));
+  }, [market.allStocks, market.stocks, market.date]);
   const filteredStocks = useMemo(() => {
     let rows = searchableStocks.filter((x) =>
       `${x.name} ${x.code}`.includes(search.trim()),
     );
+    if (sort === 'gain') rows = [...rows].sort((a, b) => b.pct - a.pct || b.amount - a.amount);
     if (sort === 'amount') rows = [...rows].sort((a, b) => b.amount - a.amount);
     if (sort === 'loss') rows = [...rows].sort((a, b) => a.pct - b.pct);
     return rows;
@@ -1614,6 +1641,18 @@ export default function WorkspacePages({
       setEnvironmentLoading(false);
     }
   }
+  async function openTongdaxin() {
+    setEnvironmentMessage('正在打开通达信客户端…');
+    try {
+      const response = await fetch(bridgeUrl('/runtime/tdx/open'), { method: 'POST' });
+      const body = await response.json().catch(() => ({}));
+      if (!response.ok || !['accepted', 'already_open'].includes(String(body.status))) throw new Error(body.error || '打开通达信失败');
+      setEnvironmentMessage(body.status === 'already_open' ? '通达信已打开，请完成登录后重新检测。' : '已请求打开通达信，请完成登录后重新检测。');
+      window.setTimeout(() => { void refreshEnvironment(); }, 2500);
+    } catch (error) {
+      setEnvironmentMessage(error instanceof Error ? error.message : '打开通达信失败');
+    }
+  }
   useEffect(() => {
     if (page !== 'settings') return;
     void refreshEnvironment();
@@ -1628,10 +1667,22 @@ export default function WorkspacePages({
       for (let attempt = 0; attempt < 180 && status === 'running'; attempt += 1) {
         await new Promise((resolve) => window.setTimeout(resolve, 2000));
         const current = await getDailyDataRefreshStatus();
+        const currentState = current.state as Record<string, unknown> | undefined;
+        const steps = Array.isArray(currentState?.steps) ? currentState.steps as Record<string, unknown>[] : [];
+        const activeStep = steps.find((step) => step.status === 'running');
+        if (activeStep) {
+          const startedAt = Date.parse(String(activeStep.startedAt || ''));
+          const elapsed = Number.isFinite(startedAt) ? Math.max(0, Math.floor((Date.now() - startedAt) / 1000)) : 0;
+          const mm = String(Math.floor(elapsed / 60)).padStart(2, '0');
+          const ss = String(elapsed % 60).padStart(2, '0');
+          setEnvironmentMessage(`${String(activeStep.name || '日线补全')}进行中 · 已运行 ${mm}:${ss} · 通达信正在处理，完成后由 DeepSeek Harness 校验`);
+        } else if (currentState?.harness && typeof currentState.harness === 'object' && (currentState.harness as Record<string, unknown>).status === 'pending') {
+          setEnvironmentMessage('通达信日线步骤已结束 · 正在等待 DeepSeek Harness 校验结果');
+        }
         const latestJob = Array.isArray(current.jobs)
           ? current.jobs.at(-1) as Record<string, unknown> | undefined
           : undefined;
-        status = current.state?.status || String(latestJob?.status || '') || status;
+        status = String(currentState?.status || latestJob?.status || '') || status;
       }
       setEnvironmentMessage(status === 'completed' ? '日线补全与 Harness 校验已完成。' : status === 'partial' ? '日线补全已结束，但有步骤未完成，请查看下方状态。' : '日线补全仍在后台运行，可稍后重新检测。');
       await refreshEnvironment();
@@ -2290,6 +2341,42 @@ export default function WorkspacePages({
       </Table>
     );
   }
+  const skillDestination = (item: Skill) => {
+    // 只有个股研究类技能需要先进入个股页输入代码；其他技能保留原有详情和执行方式。
+    return item.group === 'research' ? 'research' : null;
+  };
+  function handleSkillClick(item: Skill) {
+    const destination = skillDestination(item);
+    if (destination && destination !== page) {
+      setSkill(null);
+      navigate(destination);
+      return;
+    }
+    setSkill(item);
+  }
+  function openResearchCode() {
+    const code = researchCode.trim().replace(/\D/g, '').slice(-6);
+    if (!/^\d{6}$/.test(code)) {
+      setResearchCodeError('请输入 6 位股票代码');
+      return;
+    }
+    const opened = onSelectCode
+      ? onSelectCode(code)
+      : Boolean(searchableStocks.find((row) => row.code === code));
+    if (!onSelectCode) {
+      const row = searchableStocks.find((item) => item.code === code);
+      if (row) onSelect(row);
+    }
+    if (!opened && onSelectCode) {
+      setResearchCodeError(`当日日线中未找到 ${code}，请先刷新行情`);
+      return;
+    }
+    if (!opened && !onSelectCode) {
+      setResearchCodeError(`当日日线中未找到 ${code}，请先刷新行情`);
+      return;
+    }
+    setResearchCodeError('');
+  }
   function skillCards(list: Skill[]) {
     return (
       <div className="skill-grid">
@@ -2299,7 +2386,7 @@ export default function WorkspacePages({
           const run = s.group === 'selection' ? strategyRuns[s.id] : undefined;
           const hasReport = strategyRunHasReport(run);
           const hasFailure = strategyRunHasFailure(run);
-          return <button className={`skill-card skill-card-${mode}`} key={s.id} onClick={() => setSkill(s)}>
+          return <button className={`skill-card skill-card-${mode}`} key={s.id} onClick={() => handleSkillClick(s)}>
             <div className="skill-card-top">
               <span className="skill-icon">
                 {i % 3 === 0 ? (
@@ -2376,9 +2463,14 @@ export default function WorkspacePages({
   const environmentIntegrity = (environmentDaily.integrity && typeof environmentDaily.integrity === 'object' ? environmentDaily.integrity : {}) as Record<string, unknown>;
   const environmentIntegrityAfter = (environmentIntegrity.after && typeof environmentIntegrity.after === 'object' ? environmentIntegrity.after : {}) as Record<string, unknown>;
   const environmentIntegrityUnresolved = Array.isArray(environmentIntegrity.unresolved) ? environmentIntegrity.unresolved as Record<string, unknown>[] : [];
+  const environmentIntegrityUnresolvedCount = Number(environmentIntegrity.unresolvedCount ?? environmentIntegrityUnresolved.length);
   const environmentIntegrityRepairs = Array.isArray(environmentIntegrity.repairs) ? environmentIntegrity.repairs as Record<string, unknown>[] : [];
   const environmentIntegrityNonTrading = Array.isArray(environmentIntegrity.nonTrading) ? environmentIntegrity.nonTrading as Record<string, unknown>[] : [];
   const environmentIntegrityRepairedCount = environmentIntegrityRepairs.filter((item) => item.status === 'written').length;
+  const environmentIntegrityManualAction = String(environmentIntegrity.manualAction || '');
+  const environmentRunningStep = Array.isArray(environmentDailyState.steps)
+    ? (environmentDailyState.steps as Record<string, unknown>[]).find((step) => step.status === 'running')
+    : undefined;
   const environmentSources = Array.isArray(environment.sources) ? environment.sources as Record<string, unknown>[] : [];
   const environmentValidation = (environment.harnessValidation && typeof environment.harnessValidation === 'object' ? environment.harnessValidation : {}) as Record<string, unknown>;
   return (
@@ -2823,6 +2915,34 @@ export default function WorkspacePages({
       )}
       {page === 'research' && (
         <>
+          <div className="research-code-entry">
+            <div className="research-code-copy">
+              <b>按代码打开个股</b>
+              <span>仅匹配 {d(market.date)} 当日日线 · 输入后可查看十项个股技能</span>
+            </div>
+            <div className="research-code-controls">
+              <Input
+                aria-label="输入股票代码"
+                placeholder="股票代码，如 300959"
+                value={researchCode}
+                maxLength={6}
+                onChange={(e) => {
+                  setResearchCode(e.target.value.replace(/\D/g, '').slice(0, 6));
+                  setResearchCodeError('');
+                }}
+                onKeyDown={(e) => { if (e.key === 'Enter') openResearchCode(); }}
+              />
+              <Button variant="outline" onClick={openResearchCode}>查看个股</Button>
+              {onRefreshMarket && (
+                <Button variant="outline" onClick={() => void onRefreshMarket()} disabled={marketRefreshing}>
+                  {marketRefreshing ? <LoaderCircle className="spin" size={15} /> : <RefreshCw size={15} />}
+                  刷新行情
+                </Button>
+              )}
+            </div>
+            {researchCodeError && <span className="form-error">{researchCodeError}</span>}
+            {marketRefreshMessage && <span className="subtle research-refresh-message">{marketRefreshMessage}</span>}
+          </div>
           <div className="filter-toolbar">
             <div className="search-field">
               <Search size={17} />
@@ -2862,14 +2982,14 @@ export default function WorkspacePages({
           </div>
           <Box
             title="全量个股档案"
-            extra={<span className="subtle">{searchableStocks.length} 只本地股票 · 点击查看行情详情</span>}
-          >
+            extra={<span className="subtle">{searchableStocks.length} 只 {d(market.date)} 日线股票 · 点击查看行情详情</span>}
+            >
             {filteredStocks.length ? (
               stockTable(filteredStocks.slice(pageNo * 15, pageNo * 15 + 15))
             ) : (
-              <Empty
-                title="没有找到这只股票"
-                body="可按六位代码或中文名称检索全部本地股票历史。"
+                <Empty
+                title="暂无当日日线股票"
+                body="请先刷新行情；随后可按六位代码或中文名称检索。"
               />
             )}
             {filteredStocks.length > 0 && (
@@ -3128,7 +3248,7 @@ export default function WorkspacePages({
                 <div className={`environment-card ${environmentTdx.status === 'open' ? 'ready' : 'warn'}`}>
                   <Database size={20} />
                   <div><b>通达信客户端</b><small>{environmentTdx.status === 'open' ? '进程已打开，可调用 TQ' : '未检测到 TdxW 进程'}</small></div>
-                  <strong>{environmentTdx.status === 'open' ? '已打开' : '未打开'}</strong>
+                  {environmentTdx.status === 'open' ? <strong>已打开</strong> : <Button variant="outline" size="sm" onClick={openTongdaxin}>打开通达信</Button>}
                 </div>
                 <div className={`environment-card ${environmentDaily.complete === true ? 'ready' : 'warn'}`}>
                   <Database size={20} />
@@ -3142,8 +3262,11 @@ export default function WorkspacePages({
                 </div>
               </div>
               {environmentSnapshot && <div className="environment-details"><span>沪 {String((environmentDaily.directories as Record<string, unknown> | undefined)?.SH ? ((environmentDaily.directories as Record<string, Record<string, unknown>>).SH.fileCount || 0) : 0)} 文件</span><span>深 {String((environmentDaily.directories as Record<string, Record<string, unknown>> | undefined)?.SZ?.fileCount || 0)} 文件</span><span>北 {String((environmentDaily.directories as Record<string, Record<string, unknown>> | undefined)?.BJ?.fileCount || 0)} 文件</span><span>数据目录 {String(environmentTdx.root || 'C:\\new_tdx_mock')}</span><span>日线状态 {String(environmentDailyState.status || '未执行')}</span><span>其他数据 {String(environmentSupplementalState.status || '未执行')}</span></div>}
+              {environmentRunningStep && <div className="environment-validation">当前步骤：{String(environmentRunningStep.name || '日线补全')} · 已在后台运行，页面可继续使用</div>}
               {environmentSources.length > 0 && <div className="environment-source-list"><div className="environment-source-title"><b>其他数据源新鲜度</b><small>来源快照与 Harness 校验结果</small></div><Table><TableHeader><TableRow><TableHead>数据源</TableHead><TableHead>状态</TableHead><TableHead>日期</TableHead><TableHead>记录</TableHead><TableHead>校验</TableHead></TableRow></TableHeader><TableBody>{environmentSources.map((source, index) => { const name = String(source.name || `source-${index}`); const fresh = source.fresh === true; return <TableRow key={`${name}-${index}`}><TableCell>{dataSourceLabels[name] || name}</TableCell><TableCell className={source.status === 'available' ? 'up' : 'down'}>{source.status === 'available' ? '可用' : String(source.status || '缺失')}</TableCell><TableCell>{d(String(source.date || ''))}</TableCell><TableCell>{source.recordCount === null || source.recordCount === undefined ? '—' : String(source.recordCount)}</TableCell><TableCell className={fresh ? 'up' : 'down'}>{fresh ? '同日最新' : '需复核'}</TableCell></TableRow>; })}</TableBody></Table><div className="environment-validation">Harness 校验：{String(environmentValidation.status || '未执行')} · 数据日 {d(String(environmentValidation.dataDate || environmentDaily.date || ''))}{environmentValidation.summary ? ` · ${String(environmentValidation.summary).slice(0, 120)}` : ''}</div></div>}
-              {environmentIntegrityAfter.stockCount !== undefined && <div className="environment-source-list"><div className="environment-source-title"><b>个股日线完整性报告</b><small>按 TQ 股票清单逐代码核验 .day 文件最后一条记录，并用公开历史 K 线作缺口兜底</small></div><div className="environment-details"><span>目标交易日 {d(String(environmentIntegrity.targetDate || environmentIntegrityAfter.targetDate || ''))}</span><span>应有 {String(environmentIntegrityAfter.stockCount || 0)} 只</span><span>文件已齐 {String(environmentIntegrityAfter.completeCount || 0)} 只</span><span className="up">未上市/停牌计入 {environmentIntegrityNonTrading.length} 只</span><span className={environmentIntegrityUnresolved.length ? 'down' : 'up'}>仍需补齐 {environmentIntegrityUnresolved.length} 只</span><span className="up">本次补写 {environmentIntegrityRepairedCount} 条</span></div>{environmentIntegrityUnresolved.length > 0 && <Table><TableHeader><TableRow><TableHead>代码</TableHead><TableHead>市场</TableHead><TableHead>状态</TableHead><TableHead>说明</TableHead></TableRow></TableHeader><TableBody>{environmentIntegrityUnresolved.map((item, index) => <TableRow key={`${String(item.code || 'unknown')}-${index}`}><TableCell>{String(item.code || '—')}</TableCell><TableCell>{String(item.market || '—')}</TableCell><TableCell className="down">未补齐</TableCell><TableCell>TQ 与公开历史 K 线均未返回 {d(String(environmentIntegrity.targetDate || environmentIntegrityAfter.targetDate || ''))} 数据</TableCell></TableRow>)}</TableBody></Table>}{environmentIntegrityNonTrading.length > 0 && <Table><TableHeader><TableRow><TableHead>代码</TableHead><TableHead>处理</TableHead><TableHead>依据</TableHead></TableRow></TableHeader><TableBody>{environmentIntegrityNonTrading.map((item, index) => <TableRow key={`${String(item.code || 'non-trading')}-${index}`}><TableCell>{String(item.code || '—')}</TableCell><TableCell className="up">{String(item.type || 'non_trading') === 'unlisted' ? '未上市，计入完整' : '停牌/无交易，计入完整'}</TableCell><TableCell>{String(item.reason || '目标交易日无成交记录')}</TableCell></TableRow>)}</TableBody></Table>}</div>}
+              {environmentIntegrityAfter.stockCount !== undefined && <div className="environment-source-list"><div className="environment-source-title"><b>个股日线完整性报告</b><small>按 TQ 股票清单逐代码核验 .day 文件最后一条记录，并用公开历史 K 线作缺口兜底</small></div><div className="environment-details"><span>目标交易日 {d(String(environmentIntegrity.targetDate || environmentIntegrityAfter.targetDate || ''))}</span><span>应有 {String(environmentIntegrityAfter.stockCount || 0)} 只</span><span>文件已齐 {String(environmentIntegrityAfter.completeCount || 0)} 只</span><span className="up">未上市/停牌计入 {environmentIntegrityNonTrading.length} 只</span><span className={environmentIntegrityUnresolvedCount ? 'down' : 'up'}>仍需补齐 {environmentIntegrityUnresolvedCount} 只</span><span className="up">本次补写 {environmentIntegrityRepairedCount} 条</span></div>{environmentIntegrityUnresolved.length > 0 && <><div className="subtle">以下仅展示前 10 条，完整清单保存在本地完整性报告中。</div><Table><TableHeader><TableRow><TableHead>代码</TableHead><TableHead>市场</TableHead><TableHead>状态</TableHead><TableHead>说明</TableHead></TableRow></TableHeader><TableBody>{environmentIntegrityUnresolved.map((item, index) => <TableRow key={`${String(item.code || 'unknown')}-${index}`}><TableCell>{String(item.code || '—')}</TableCell><TableCell>{String(item.market || '—')}</TableCell><TableCell className="down">未补齐</TableCell><TableCell>TQ 与公开历史 K 线均未返回 {d(String(environmentIntegrity.targetDate || environmentIntegrityAfter.targetDate || ''))} 数据</TableCell></TableRow>)}</TableBody></Table></>}{environmentIntegrityNonTrading.length > 0 && <Table><TableHeader><TableRow><TableHead>代码</TableHead><TableHead>处理</TableHead><TableHead>依据</TableHead></TableRow></TableHeader><TableBody>{environmentIntegrityNonTrading.map((item, index) => <TableRow key={`${String(item.code || 'non-trading')}-${index}`}><TableCell>{String(item.code || '—')}</TableCell><TableCell className="up">{String(item.type || 'non_trading') === 'unlisted' ? '未上市，计入完整' : '停牌/无交易，计入完整'}</TableCell><TableCell>{String(item.reason || '目标交易日无成交记录')}</TableCell></TableRow>)}</TableBody></Table>}</div>}
+              <div className="environment-validation environment-manual-guide"><b>日线补齐操作顺序</b><br /><span>① 先进入通达信客户端并登录，手动执行“盘后数据下载/日线数据下载”。</span><br /><span>② 等通达信提示下载完成后，再点击下方“通过 Harness 补全通达信日线”，由 Harness 读取并落盘校验。</span><br /><strong>网页按钮不能替代通达信的盘后下载。</strong></div>
+              {environmentIntegrityManualAction && <div className="environment-validation">{environmentIntegrityManualAction}</div>}
               <div className="environment-actions"><Button className="primary-button" onClick={replenishDailyData} disabled={dailyRefreshRunning}>{dailyRefreshRunning ? <LoaderCircle className="spin" size={15} /> : <RefreshCw size={15} />}通过 Harness 补全通达信日线</Button><Button variant="outline" onClick={replenishSupplementalData} disabled={supplementalRefreshRunning}>{supplementalRefreshRunning ? <LoaderCircle className="spin" size={15} /> : <Database size={15} />}补齐其他数据</Button><span>{environmentMessage || '页面打开时检测一次；日线和其他数据补齐均在后台执行，并由 DeepSeek Harness 校验。'}</span></div>
             </div>
           </Box>

@@ -1,0 +1,6 @@
+interface:
+  display_name: "量化交易"
+  short_description: "量化交易独立 Codex 股票工作流；仅显式调用，禁止跨技能路由和别名混用"
+  default_prompt: "Use $quantitative-trading to run the exact 量化交易 workflow without routing to sibling stock skills."
+policy:
+  allow_implicit_invocation: false

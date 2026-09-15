@@ -1,0 +1,146 @@
+{
+  "version": 5,
+  "record": {
+    "identity": {
+      "createdAt": 1789011162043,
+      "cwd": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo",
+      "isSeeded": false,
+      "inheritedEventCount": 0
+    },
+    "rows": {
+      "title": {
+        "ver": 1,
+        "seq": 14586,
+        "val": "请读取并执行任务文件 C:\\work\\2"
+      },
+      "titleInput": {
+        "ver": 3,
+        "seq": 14586,
+        "val": {
+          "first": {
+            "seq": 7,
+            "text": "请读取并执行任务文件 C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\harness\\tasks\\task-e7e4f571-2c9e-4335-845a-004596585b90.txt，最终只输出文件要求的结果。"
+          },
+          "count": 1,
+          "lastSeq": 7
+        }
+      },
+      "llmRetry": {
+        "ver": 1,
+        "seq": 14586,
+        "val": {}
+      },
+      "sandboxMode": {
+        "ver": 1,
+        "seq": 14586,
+        "val": "workspace-write"
+      },
+      "goal": {
+        "ver": 6,
+        "seq": 14586,
+        "val": {
+          "current": null,
+          "seenGoalIds": [],
+          "failure": null
+        }
+      },
+      "plan": {
+        "ver": 3,
+        "seq": 14586,
+        "val": {
+          "active": false,
+          "wanted": null,
+          "running": null,
+          "activeAtLastHeader": false
+        }
+      },
+      "tokenUsage": {
+        "ver": 2,
+        "seq": 14586,
+        "val": {
+          "totals": {
+            "uncachedInputTokens": 34031,
+            "outputTokens": 14946,
+            "cacheReadTokens": 451200,
+            "cacheWriteTokens": 0
+          },
+          "last": {
+            "turn": 1,
+            "step": 15,
+            "buckets": {
+              "uncachedInputTokens": 574,
+              "outputTokens": 7679,
+              "cacheReadTokens": 47616,
+              "cacheWriteTokens": 0
+            }
+          }
+        }
+      },
+      "contextPressure": {
+        "ver": 4,
+        "seq": 14586,
+        "val": {
+          "surfaceTokens": 32304,
+          "contextWindow": 1000000,
+          "pressureTokens": 48190,
+          "sampledSurfaceTokens": 27529
+        }
+      },
+      "contextBreakdown": {
+        "ver": 2,
+        "seq": 14586,
+        "val": {
+          "systemTokens": 1179,
+          "toolsTokens": 7257,
+          "messageTokens": 32304
+        }
+      },
+      "todos": {
+        "ver": 2,
+        "seq": 14586,
+        "val": null
+      },
+      "turnBoundary": {
+        "ver": 2,
+        "seq": 14586,
+        "val": {
+          "openTurnStartSeq": null,
+          "lastStepStartSeq": 6899,
+          "lastStepBoundary": {
+            "kind": "end",
+            "seq": 14585
+          },
+          "lastTurn": 1
+        }
+      },
+      "subagentTiming": {
+        "ver": 2,
+        "seq": 14586,
+        "val": {
+          "descriptorSeen": false,
+          "settledMs": 0
+        }
+      },
+      "subagent": {
+        "ver": 2,
+        "seq": 14586,
+        "val": {}
+      },
+      "subagentModelSelectionPolicy": {
+        "ver": 1,
+        "seq": 14586,
+        "val": null
+      },
+      "permissions": {
+        "ver": 2,
+        "seq": 14586,
+        "val": {
+          "preset": "workspace-write",
+          "sandbox": "workspace-write",
+          "approval": "ask",
+          "seeded": false
+        }
+      }
+    }
+  }
+}

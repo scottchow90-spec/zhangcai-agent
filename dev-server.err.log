@@ -1,0 +1,4 @@
+$ vinext dev --host 0.0.0.0 --port 3001
+12:07:13 [vite] (client) [console.error] [vinext] RSC HMR error: TypeError: Failed to fetch
+    at applyRscHmrUpdate (http://localhost:3002/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/app-browser-entry.js?v=a575afa7:1314:94)
+    at async handleRscUpdate (http://localhost:3002/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/app-browser-entry.js?v=a575afa7:1319:5)

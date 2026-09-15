@@ -1,0 +1,6 @@
+interface:
+  display_name: "核心主线评分系统"
+  short_description: "九项100分与双硬门槛的独立板块主线评分"
+  default_prompt: "使用核心主线评分系统执行板块级 CORE-MAINLINE-100-V2 评分并输出可审计结果。"
+policy:
+  allow_implicit_invocation: false

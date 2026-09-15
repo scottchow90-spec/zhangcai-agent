@@ -2,9 +2,9 @@ $ErrorActionPreference = 'Stop'
 $appRoot = Split-Path -Parent $PSScriptRoot
 Set-Location $appRoot
 
-# 绑定所有 IPv4 网卡，使同一局域网设备可以访问。用 netstat 检查端口，
-# 避免权限受限时 Get-NetTCPConnection 返回空值而重复启动服务。
-$front = netstat -ano 2>$null | Select-String ':3001\s+.*LISTENING'
+# Bind the web app to the configured interface. Use netstat so this also
+# works in restricted PowerShell sessions where Get-NetTCPConnection fails.
+$front = netstat -ano 2>$null | Select-String ':(3001|3002)\s+.*LISTENING'
 if (-not $front) {
   $out = Join-Path $appRoot 'dev-server.out.log'
   $err = Join-Path $appRoot 'dev-server.err.log'
@@ -12,22 +12,29 @@ if (-not $front) {
     -WorkingDirectory $appRoot -WindowStyle Hidden -RedirectStandardOutput $out -RedirectStandardError $err
 }
 
-# 端口仍在监听不代表桥接进程可用；网页触发恢复时先探测健康接口，
-# 对“占端口但不响应”的残留进程做定向回收，避免自动恢复被假监听阻塞。
+# A busy Harness bridge can need more than two seconds to answer /health.
+# Never kill an existing listener from auto-recovery: doing so aborts every
+# local and tunneled remote job. Start a bridge only when 4318 has no listener.
+$bridge = netstat -ano 2>$null | Select-String ':4318\s+.*LISTENING'
 $bridgeHealthy = $false
-try {
-  $health = Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:4318/health' -TimeoutSec 2
-  $bridgeHealthy = $health.StatusCode -eq 200
-} catch { $bridgeHealthy = $false }
-if (-not $bridgeHealthy) {
-  $bridge = netstat -ano 2>$null | Select-String ':4318\s+.*LISTENING'
-  foreach ($line in $bridge) {
-    if ($line.ToString() -match '\s(?<pid>\d+)\s*$') {
-      Stop-Process -Id ([int]$Matches.pid) -Force -ErrorAction SilentlyContinue
+if ($bridge) {
+  foreach ($attempt in 1..3) {
+    try {
+      $health = Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:4318/health' -TimeoutSec 5
+      if ($health.StatusCode -eq 200) {
+        $bridgeHealthy = $true
+        break
+      }
+    } catch {
+      if ($attempt -lt 3) { Start-Sleep -Milliseconds 750 }
     }
   }
+}
+if (-not $bridge) {
   Start-Process -FilePath 'pnpm.cmd' -ArgumentList @('agent:dev') `
     -WorkingDirectory $appRoot -WindowStyle Hidden
+} elseif (-not $bridgeHealthy) {
+  Write-Warning 'Port 4318 is listening but temporarily missed health checks; preserving the existing Harness process.'
 }
 
 $addresses = @(

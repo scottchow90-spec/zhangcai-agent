@@ -1,0 +1,133 @@
+{
+  "schema": "SHORT_TERM_STRONG_STOCK_SCORING_CONTRACT_V1",
+  "version": "A-SHARE-STRONG-26F-100-V6.1",
+  "owner_skill_id": "a-share-15d-selection",
+  "name": "短线强势股26因子爆发力与持续性评分",
+  "purpose": "short_term_breakout_and_persistence",
+  "decision_time": "trade_date_after_close",
+  "entry_assumption": "next_trade_day_open",
+  "scale": 100,
+  "positive_weight_total": 100,
+  "missing_evidence_policy": "zero_without_renormalization",
+  "fundamental_policy": {
+    "positive_weight": 0,
+    "allowed_roles": [
+      "hard_exclusion",
+      "risk_deduction",
+      "context_only"
+    ],
+    "forbidden_positive_factors": [
+      "PE/PB/股息率",
+      "ROE/长期盈利质量",
+      "营收与利润增长",
+      "财务安全性正向加分"
+    ]
+  },
+  "axes": {
+    "爆发力": 35,
+    "持续性": 35,
+    "市场协同": 20,
+    "可交易性": 10
+  },
+  "factors": [
+    {"id": "F01", "name": "强势收盘强度", "axis": "爆发力", "role": "pool_confirmation", "weight": 4},
+    {"id": "F02", "name": "前高突破强度", "axis": "爆发力", "role": "candidate_ranking", "weight": 4},
+    {"id": "F03", "name": "短周期收益加速度", "axis": "爆发力", "role": "candidate_ranking", "weight": 4},
+    {"id": "F04", "name": "健康放量质量", "axis": "爆发力", "role": "candidate_ranking", "weight": 4},
+    {"id": "F05", "name": "成交额放大强度", "axis": "爆发力", "role": "candidate_ranking", "weight": 3},
+    {"id": "F06", "name": "大牛线攻击信号", "axis": "爆发力", "role": "candidate_ranking", "weight": 4},
+    {"id": "F07", "name": "飞龙启动信号", "axis": "爆发力", "role": "candidate_ranking", "weight": 5},
+    {"id": "F08", "name": "游资点火强度", "axis": "爆发力", "role": "candidate_ranking", "weight": 4},
+    {"id": "F09", "name": "机构净流入强度", "axis": "爆发力", "role": "candidate_ranking", "weight": 3},
+    {"id": "F10", "name": "多周期相对强度", "axis": "持续性", "role": "candidate_ranking", "weight": 5},
+    {"id": "F11", "name": "均线多头结构", "axis": "持续性", "role": "candidate_ranking", "weight": 4},
+    {"id": "F12", "name": "趋势斜率", "axis": "持续性", "role": "candidate_ranking", "weight": 4},
+    {"id": "F13", "name": "趋势效率", "axis": "持续性", "role": "candidate_ranking", "weight": 4},
+    {"id": "F14", "name": "飞龙波段阶段", "axis": "持续性", "role": "candidate_ranking", "weight": 4},
+    {"id": "F15", "name": "趋势乖离健康度", "axis": "持续性", "role": "candidate_ranking", "weight": 3},
+    {"id": "F16", "name": "量价一致性", "axis": "持续性", "role": "candidate_ranking", "weight": 3},
+    {"id": "F17", "name": "资金合力持续性", "axis": "持续性", "role": "candidate_ranking", "weight": 4},
+    {"id": "F18", "name": "催化延续证据", "axis": "持续性", "role": "candidate_evidence", "weight": 4},
+    {"id": "F19", "name": "市场广度", "axis": "市场协同", "role": "market_regime", "weight": 4},
+    {"id": "F20", "name": "涨停生态", "axis": "市场协同", "role": "market_regime", "weight": 4},
+    {"id": "F21", "name": "主线题材共振", "axis": "市场协同", "role": "candidate_ranking", "weight": 7},
+    {"id": "F22", "name": "全市场相对强度", "axis": "市场协同", "role": "candidate_ranking", "weight": 5},
+    {"id": "F23", "name": "流动性分位", "axis": "可交易性", "role": "candidate_ranking", "weight": 3},
+    {"id": "F24", "name": "日内承接强度", "axis": "可交易性", "role": "candidate_ranking", "weight": 3},
+    {"id": "F25", "name": "流动性稳定度", "axis": "可交易性", "role": "candidate_ranking", "weight": 2},
+    {"id": "F26", "name": "波动可控性", "axis": "可交易性", "role": "candidate_ranking", "weight": 2}
+  ],
+  "hard_exclusions": [
+    {"id": "H01", "name": "风险警示或退市整理"},
+    {"id": "H02", "name": "立案调查或财务造假"},
+    {"id": "H03", "name": "当日一字板无法参与"},
+    {"id": "H04", "name": "波段极高且无主升启动"},
+    {"id": "H05", "name": "近3日极端加速且无启动承接"},
+    {"id": "H06", "name": "近5日或10日极端加速且无资金承接"},
+    {"id": "H07", "name": "飞龙段位置无效或过高"}
+  ],
+  "risk_deductions": [
+    {"id": "R01", "name": "大牛线庄出", "deduction": 2},
+    {"id": "R02", "name": "飞龙高位背离", "deduction": 2},
+    {"id": "R03", "name": "飞龙波段转弱", "deduction": 2},
+    {"id": "R04", "name": "机构大单出", "deduction": 2},
+    {"id": "R05", "name": "游资买方意向转负", "deduction": 2},
+    {"id": "R06", "name": "跌破主趋势线", "deduction": 3},
+    {"id": "R07", "name": "极端放量与大幅分歧", "deduction": 2},
+    {"id": "R08", "name": "重大公告或财务风险", "deduction": 3},
+    {"id": "R09", "name": "波段过高且无资金承接", "deduction": 3},
+    {"id": "R10", "name": "大额解禁或减持", "deduction": 2},
+    {"id": "R11", "name": "失控加速且承接不足", "deduction": 2},
+    {"id": "R12", "name": "高位钝化区", "deduction": 2},
+    {"id": "R13", "name": "强压力位压制", "deduction": 1},
+    {"id": "R14", "name": "五浪末端与指标背离", "deduction": 2},
+    {"id": "R15", "name": "反弹陷阱", "deduction": 1}
+  ],
+  "pending_factors": [
+    {"name": "首次封板时间", "reason": "需要分钟级涨停事件流"},
+    {"name": "开板次数与回封速度", "reason": "需要分钟级逐笔或盘口快照"},
+    {"name": "封单金额与撤单率", "reason": "需要可追溯Level-2盘口"},
+    {"name": "分钟VWAP偏离", "reason": "需要分钟成交序列"},
+    {"name": "真实换手率", "reason": "需要时点一致的自由流通股本"},
+    {"name": "连板梯队高度与晋级率", "reason": "需要逐日涨停事件标签库"},
+    {"name": "龙虎榜结构化净买入", "reason": "缺少时点结构化席位明细"},
+    {"name": "融资融券边际变化", "reason": "需要交易所时点数据"},
+    {"name": "公告事件强度与衰减", "reason": "需要公告发布时间、事件类型和历史基准"},
+    {"name": "社交情绪扩散速度", "reason": "需要去重、反操纵的时点舆情样本"}
+  ],
+  "rejected_factors": [
+    {"name": "PE/PB/股息率", "reason": "价值投资偏置，与短线爆发目标不一致"},
+    {"name": "ROE/长期盈利质量", "reason": "只保留为风险背景，不做短线正向加分"},
+    {"name": "营收与利润增长", "reason": "避免基本面重复加权和风格漂移"},
+    {"name": "重复涨幅阈值", "reason": "收益、相对强度和阶段因子已覆盖，禁止重复计分"},
+    {"name": "饱和控盘度", "reason": "缺少横截面区分力"}
+  ],
+  "predictive_validation": {
+    "status": "UNVERIFIED_REQUIRES_POINT_IN_TIME_FORWARD_LABELS",
+    "forward_horizons": [1, 3, 5],
+    "required_method": "walk_forward_out_of_sample",
+    "claim_limit": "strength_score_not_probability"
+  },
+  "consumer_policy": {
+    "accept_only_exact_version": true,
+    "require_factor_count": 26,
+    "require_risk_count": 15,
+    "require_hard_exclusion_count": 7,
+    "require_positive_weight_total": 100,
+    "require_fundamental_positive_weight": 0,
+    "missing_or_mismatched_contract": "block_score_and_ranking",
+    "forbidden_legacy_versions": [
+      "FIVE-DIMENSION-100-V4",
+      "A-SHARE-15D",
+      "15D-100"
+    ]
+  },
+  "consumers": {
+    "a-share-15d-selection": "authoritative_calculator",
+    "five-dimension-resonance": "authoritative_score_reuse_with_mainline_enrichment",
+    "limit-up-review": "reference_only_no_proxy_score",
+    "lobster-ai": "display_only_with_version_validation",
+    "tdx-local-hub": "data_provider_not_score_calculator",
+    "stock-unified": "catalog_contract_and_integrity_governance"
+  }
+}

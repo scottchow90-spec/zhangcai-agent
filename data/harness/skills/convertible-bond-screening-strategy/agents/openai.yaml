@@ -1,0 +1,6 @@
+interface:
+  display_name: "可转债筛选策略"
+  short_description: "基于本机通达信执行10项加权可转债评分与Top 10风险分层"
+  default_prompt: "使用 $convertible-bond-screening-strategy 运行最新完整交易日的可转债筛选策略，并展示评分Top 10和风险分层。"
+policy:
+  allow_implicit_invocation: false

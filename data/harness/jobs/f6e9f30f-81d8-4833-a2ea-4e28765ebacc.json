@@ -1,0 +1,8 @@
+{
+  "id": "f6e9f30f-81d8-4833-a2ea-4e28765ebacc",
+  "status": "failed",
+  "skill_id": "five-dimension-resonance",
+  "started_at": 1789046891951,
+  "error": "桥接服务在 Harness 返回前重启，任务未完成；可重新执行。",
+  "completed_at": 1789048847653
+}

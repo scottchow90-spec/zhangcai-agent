@@ -84,7 +84,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\a-share-15d-selection\\scripts\\canonical_business_adapter.py",
@@ -144,7 +144,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -171,7 +171,7 @@
           "sha256": "4af3aab7946b1f7877c5fc6f2f866a75842d80e5898ecaeafa4145425c765791"
         }
       ],
-      "contract_sha256": "2e61ac7efde67f6e9c842c71d2f4e78bcee5765b6154e3a232756231f6fddb89",
+      "contract_sha256": "6595c1390f2f665264881758cd2a53b9588a646f9894b9bebd4a72a01bfaf335",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -298,7 +298,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\a-share-bottom-fishing\\scripts\\canonical_business_adapter.py",
@@ -342,7 +342,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -365,7 +365,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "1c5113f514822a3b847b2d138fac0a44526ba49fc09c195eb216a37ef59c45ea",
+      "contract_sha256": "8db9ae6d77bc39fced2ff32a5ea3d58af61cf807779ff4f29ea8a00a249099ac",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -497,7 +497,7 @@
         }
       ],
       "facade_sha256": "9afd0b37c6fcbdac576f078a43a838ac1af0885b3b4de45bf00252043daf0667",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\convertible-bond-screening-strategy\\scripts\\canonical_business_adapter.py",
@@ -541,7 +541,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -564,7 +564,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "bb0fc9328e8d4ff5a7b898c3ebaa8fe64e724cbdd26c5d1414ae47d8ede8c870",
+      "contract_sha256": "36ed36b9ed95473280d3505de4cbede7efc3dca930aeb908cc274fddb0f2cb97",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -697,7 +697,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\buzhang-leader-mining\\scripts\\canonical_business_adapter.py",
@@ -741,7 +741,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -764,7 +764,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "aa6a0e1435b700634f6a54df0b3b3178f04f73571c4d46762e02e7eb36669eba",
+      "contract_sha256": "1db43949fb30ca6b31592394d6094c443f01e871c3063b56bc243cad88b57502",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -897,7 +897,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\chanlun-first-board\\scripts\\canonical_business_adapter.py",
@@ -937,7 +937,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -960,7 +960,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "3bd8b6affe2a56af7a10608437b06abece741854599e5bed824e050968b9d8ea",
+      "contract_sha256": "385f6472ab767f2251f0acff4e37750f426cf68cf173240ab562e435bfc8ab6b",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -1090,7 +1090,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\dragon-pullback\\scripts\\canonical_business_adapter.py",
@@ -1138,7 +1138,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -1161,7 +1161,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "ee3241aacf290c42f2c0df46c7fe278fc0a1e329a9fbdcf71e843fa4512de542",
+      "contract_sha256": "93e698c82ac4d6fe7d19465d64b14a23c6e43ba1095334d692111f5ad8ee09b5",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -1291,7 +1291,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\feilong-strategy\\scripts\\canonical_business_adapter.py",
@@ -1399,7 +1399,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -1430,7 +1430,7 @@
           "sha256": "e9d31c49cf34d2ab05664f0ee190b58090a3b58778812f1c0e60d8bc81f5cc70"
         }
       ],
-      "contract_sha256": "ba290ea64d52ab7be6a6c350de66e6ec52da4b7ffb28b99fd5db52b34ab0059e",
+      "contract_sha256": "a6ef4e32d9c1ef9ef97fd452ca6733f7781b416211b4b132014f9032d45e1cc2",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -1515,10 +1515,10 @@
         "--run-dir",
         "{run_dir}",
         "--timeout",
-        "300"
+        "900"
       ],
       "cwd": "{skill_root}",
-      "timeout_seconds": 360,
+      "timeout_seconds": 960,
       "semantic_assertions": [
         {
           "type": "returncode_zero"
@@ -1573,11 +1573,11 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\five-dimension-resonance\\scripts\\canonical_business_adapter.py",
-          "sha256": "c6b67f0263562619add41fd1ce5dc0a101822694047bcee08cc7d43d8fcd452d"
+          "sha256": "f0c23303d5ec9d6e84c5349df86a84697086337cd26473846d1dc80e8e46881c"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\five-dimension-resonance\\scripts\\legacy_codex_entry.py",
@@ -1609,7 +1609,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\five-dimension-resonance\\scripts\\validate_feilong_block_resonance_skill.py",
-          "sha256": "979307644b94f40676b1bc2f7dc6e1eda4e0d057615e5e91c368ed1b6a77f5a0"
+          "sha256": "829f2fd8281bf7d20b77bc15d1db27006662bb9855a71202d9a6a9dba5d09b49"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\five-dimension-resonance\\tests\\test_mainline_scoring.py",
@@ -1637,7 +1637,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -1672,7 +1672,7 @@
           "sha256": "007ea68fc63afda3bd159eee9fb119d25c53fd20bc64e0c963210ea6bf07bdde"
         }
       ],
-      "contract_sha256": "0442761512951ac71c623c807a9191a1b97734ad671a2bce73c3c95507b3d8d0",
+      "contract_sha256": "b99bd70e722acdd64c6f36941fd5f92e0c815b6eba7e928a7855eb1998c0c21d",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -1811,7 +1811,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\core-mainline-scoring-system\\SKILL.md",
@@ -1883,7 +1883,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -1906,7 +1906,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "2a34eeb7fef6031b6525b015b348774ef78bb9cb86b3221a84c2447ce561d746",
+      "contract_sha256": "5ad4a14c30b1efd8fe6db2cb6b68daaa9a57d60de181200cb3511c75c83e4221",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -2045,7 +2045,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\four-strategy-system\\scripts\\canonical_business_adapter.py",
@@ -2085,7 +2085,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -2108,7 +2108,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "2743218032a17155f1e6cd46d69aef0706394266feb1c422e876dfc25a6200b3",
+      "contract_sha256": "44c3831d9626e61051f4853f2fea37ada56bc44d458a928886683ea8431a3dc3",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -2228,7 +2228,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\golden-ignition\\scripts\\canonical_business_adapter.py",
@@ -2268,7 +2268,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -2291,7 +2291,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "7429052e39921a74397b2437b739a61a41f24ff7ae3a05fcd3f9e6a4f76ae3ed",
+      "contract_sha256": "a6da9a1cf8ee327b05197808e583a3b63d6128dc49fc675ada92869d67b18199",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -2411,7 +2411,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\nana-teacher-five-strategies\\scripts\\canonical_business_adapter.py",
@@ -2447,7 +2447,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -2470,7 +2470,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "4bf3aead4db8160df0892320dd1eb53446f64f0c45c1e05f67d77723d7af7607",
+      "contract_sha256": "90d222d3b3adf6966f40db8b9be4e028758dfd99f2f8d01b6e18776914ccfd83",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -2600,7 +2600,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\oversold-first-board\\scripts\\canonical_business_adapter.py",
@@ -2644,7 +2644,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -2667,7 +2667,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "021069a4c17b52fe100d5e75ebede471e222fc5168900b41376c8c7ea20e784c",
+      "contract_sha256": "f5074209f691e02affb366b4cea3beb068093a0c1c57488e8c62eb9ef6d327f8",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -2797,7 +2797,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\quality-track-stock-selection\\scripts\\canonical_business_adapter.py",
@@ -2833,7 +2833,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -2856,7 +2856,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "32e6fcc0f96d3db7a14de139f234e4476aa1797a49bd22eddfde8f34576b741e",
+      "contract_sha256": "54d6d20bd59d7190c7b27275ac85621e2897f04693a2ca49f732fb52781b13e6",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -2986,7 +2986,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\quant-strategy-bundle-chen\\scripts\\canonical_business_adapter.py",
@@ -3026,7 +3026,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -3049,7 +3049,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "4acb4d2b603ab668744167bbc32dca5196d77aa50a9ed07662644bb9cf7c0694",
+      "contract_sha256": "6e9467d67b9d8351c1449ba66cc0e4e52b3c38e3b11445e2119477aed7b4c957",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -3179,7 +3179,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\quantitative-trading\\scripts\\canonical_business_adapter.py",
@@ -3219,7 +3219,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -3242,7 +3242,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "225ca92c0ccceddf2ae05c37851f88cfeae1fb7682700a77f43b0550e57a0b11",
+      "contract_sha256": "2ccf5d2a49b72d8d80b8159bb7c697c2d2d58f73d1e339d7aa59b4eceb461075",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -3433,7 +3433,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\shortline-hotspot-mining\\SKILL.md",
@@ -3525,7 +3525,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -3548,7 +3548,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "f058768e797c1560fc46f07341a524ac8ae969a2b03967d4b87d0b87a1a2c7aa",
+      "contract_sha256": "b8e65bb3636993fd9c72229a942eae6699b215465678a7b477383936ad81fb2f",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -3692,7 +3692,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-hard-gate\\SKILL.md",
@@ -3752,7 +3752,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -3775,7 +3775,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "dfff9290266cf590c70f526c56e31bcd968971220629dbfb166a3c081815da6c",
+      "contract_sha256": "841045d3e5a1c521a78bc50a6ca18544f5e2111f17e35b0c35505cf3476debe7",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -3917,7 +3917,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\canonical_business_adapter.py",
@@ -3965,7 +3965,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -4012,7 +4012,7 @@
           "sha256": "8ce82c64d5d38287eed23924968563b1493e81196d0d7be4d1d556bb67351db3"
         }
       ],
-      "contract_sha256": "075b9e4fdc7cc14e1e4c14c43ef8d48fbb55bddd7f71dd1528b4e075b6e37373",
+      "contract_sha256": "eb2ac89ac16e473faf46a05fe5a7458f6f931718ac5753bbc1018fe7cfb165a9",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -4139,7 +4139,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\a-share-longhubang-analysis\\SKILL.md",
@@ -4199,7 +4199,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -4228,7 +4228,7 @@
           "date_mode": "latest_available"
         }
       },
-      "contract_sha256": "a29eba357265bf7c16d3cf7735b340fe7bf4b566dc418c952443c289b31c0fbc",
+      "contract_sha256": "715236d99c0a5fcedef5d661ca87e9d2f55e3d214bcc74537228e1cad48675ed",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -4360,7 +4360,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\a-share-leader-deep-research\\scripts\\canonical_business_adapter.py",
@@ -4456,7 +4456,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -4479,7 +4479,7 @@
           "sha256": "a0f37f2b7eb9cb38d3c301a2f43eb1a96b4b11ec616f1fedac12b3e62cc1bd99"
         }
       ],
-      "contract_sha256": "4f2b076e2ad40d8176073a6c5c61e7920d5aa38a85f206e2ed49b7cf70320663",
+      "contract_sha256": "3304b9963b442652a91bab0b20c6c83f9469db5fb55380646efe56d07300bb14",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -4625,7 +4625,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\a-share-limit-up-leader-classification\\scripts\\canonical_business_adapter.py",
@@ -4673,7 +4673,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -4696,7 +4696,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "e322e50b7e081e9039440033ab5892a8985a3e581028ee7c14e30d49b66b32c9",
+      "contract_sha256": "d9eb28beda6699bc41004077acefe2f61450cced440a02c2793bd15b6110044e",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": true,
@@ -4833,7 +4833,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\a-share-limit-up-mining\\scripts\\canonical_business_adapter.py",
@@ -4893,7 +4893,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -4916,7 +4916,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "bcf93c72eef6d5dfffe4d3327dcdd51f0805fd8f8bf852308434a81da21417d2",
+      "contract_sha256": "787a41d1a506bbee2dbf7065145e49ce90c5af643afec1c2a9f6ece59041935d",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -5057,7 +5057,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\limit-up-review\\scripts\\canonical_business_adapter.py",
@@ -5145,7 +5145,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -5176,7 +5176,7 @@
           "sha256": "8ddaa8cea8c512ddfbdd02b2b918cd60c95b8026bbfc6eb43347add1e4254d89"
         }
       ],
-      "contract_sha256": "09bd76586519bb1050a0be606e9119e4e61bf50c110d91b731622d148063b15e",
+      "contract_sha256": "78a6fadd0c088324a8ccca77e697924358738ff79c187a110b4840502936c933",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -5325,7 +5325,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\lobster-ai\\scripts\\canonical_business_adapter.py",
@@ -5361,7 +5361,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -5392,7 +5392,7 @@
           "sha256": "500b54eaea8fd27f673c812b50cae29c4597719612e617afd17b2f67a6d6e79d"
         }
       ],
-      "contract_sha256": "f2996da138df75b25db52a4dfa3637afa537db71b58d058b6a113a6bed3a45a0",
+      "contract_sha256": "c07aeaa73a0afc133b3178fea29c49a3096585b4cb9f9676519d577db9d4057a",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -5512,7 +5512,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\a-share-intraday-position-monitor\\scripts\\canonical_business_adapter.py",
@@ -5548,7 +5548,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -5571,7 +5571,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "6a591aa7d408758d9462948242c8b31ef32dc3003293c0fc6ecf13ac2761990f",
+      "contract_sha256": "ba3c922698fb5b330eeab948f01987240c3df743a3bee317fef96a89c3a25366",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -5691,7 +5691,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\baimao-score-system\\scripts\\canonical_business_adapter.py",
@@ -5739,7 +5739,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -5762,7 +5762,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "35a6033184d4f178e072f7935a28cc88d85b5c31e5fe973c1a1fbe292c27a2d8",
+      "contract_sha256": "c2afa8be6f1d1e49d95fdccba331634220f0a5f6d58629dc37d8d016e802b069",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -5899,7 +5899,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\big-bull-analysis-scoring-system\\SKILL.md",
@@ -5967,7 +5967,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -5990,7 +5990,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "24d7de9044e5e4c70c9830dd11b403a22003071782bc7f9750ee63ee9e1289b5",
+      "contract_sha256": "67eb96d3c6b33f6195611052d78b9e2da1969ba3f2c6c79036a0b91b7c2cbc72",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -6179,7 +6179,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\financial-roe-analysis\\scripts\\canonical_business_adapter.py",
@@ -6219,7 +6219,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -6242,7 +6242,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "5f1b6a1827c3a00ec28fa514c3a4b73ffcb5b7700a325d2e2d4c3ac21171a490",
+      "contract_sha256": "f3db224de34d320f03d78fee9156a1a5a652be06b4a99275bc84c153e2e1d010",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -6372,7 +6372,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-analysis\\scripts\\canonical_business_adapter.py",
@@ -6412,7 +6412,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -6435,7 +6435,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "8b6732bcefb698d72ebad59f1c2a17593b1c1223794efb9d2db5baeb95dfd650",
+      "contract_sha256": "b4d15ac3c1745feb136dabc4614febeb01148ea7003469d57542bebe110d6c25",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -6565,7 +6565,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-research-engine\\scripts\\canonical_business_adapter.py",
@@ -6605,7 +6605,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -6628,7 +6628,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "2c6bd4a669e6a1f04252baee13ae6fdf6cbb9bf42e69d3fac516fbf27348a1ce",
+      "contract_sha256": "c09f81171069c66818ecb7ba6197e8794a40f69fa51ca092c80b264dba062b71",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -6758,7 +6758,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-study\\scripts\\canonical_business_adapter.py",
@@ -6798,7 +6798,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -6821,7 +6821,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "f3ccdf2de0c9bafb6ca3be782f08bf81b6b988800a789bd2fdface53a23055dd",
+      "contract_sha256": "cef71e1fe97b95500d95a8bed032d713b8987b0e6f6a8be7c3a6ed54256c819f",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -6951,7 +6951,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-research-codex\\scripts\\canonical_business_adapter.py",
@@ -6987,7 +6987,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -7010,7 +7010,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "188edc574d853a5f377d6958d8a54afb62eca4795b2cb1f0709c145dc1ee84e7",
+      "contract_sha256": "a5355ac7536501ae5b40fb434cb038912345d3923c8b9db468a42f46bba0b923",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -7140,7 +7140,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\support-pressure-analysis-system\\scripts\\canonical_business_adapter.py",
@@ -7184,7 +7184,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -7207,7 +7207,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "97dcfaa271c3f0cb7861febd5b3d5408199cafda3204e9f8fa2cd1d15324b225",
+      "contract_sha256": "d78798d7ed6f877b4349bbe17e50a15565389957cf27ef5790159f2031bae2d0",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -7391,7 +7391,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\risk-mine-clearance\\scripts\\canonical_business_adapter.py",
@@ -7455,7 +7455,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -7478,7 +7478,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "009181206fd0d319b33b626b68a89a05f44f8b02895927cec1fb301596bee589",
+      "contract_sha256": "2bef0158ad77d619a356b9c59ca3f2f046a4cc2d8511086869190e4c381aa5f0",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -7614,7 +7614,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-watchlist\\scripts\\canonical_business_adapter.py",
@@ -7654,7 +7654,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -7677,7 +7677,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "b47c0495e9cc901b1226e0ed63d1fd22fb1cf91b70d2d1cb8a71a0b396ca4af7",
+      "contract_sha256": "3663e9c251cb65731af6649afd8823037316e5c60957a7d312637811ec55bd2d",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -7807,7 +7807,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\baimao-teacher-system\\scripts\\canonical_business_adapter.py",
@@ -7855,7 +7855,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -7878,7 +7878,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "167ffc073cd8d337fcb3ea0d8e013872b42cbd33dbc5ab014ff2a46d35df1279",
+      "contract_sha256": "8cb056b33f52568f9aa77f82cb9169c9402fb82bb8b2aab652b23a3d5c3b38cf",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -8010,7 +8010,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\jigou-capital-monitoring\\scripts\\canonical_business_adapter.py",
@@ -8050,7 +8050,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -8073,7 +8073,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "dd77f99ca43f6a0bce06c87bfade3ff0793949ca8859c3e6b067935d8f662676",
+      "contract_sha256": "d2803732555c66e1128f98df5bc45adf6a88db1bf6a6cb8e01d6790355e8e067",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -8203,7 +8203,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\zhuangjia-capital-monitoring\\scripts\\canonical_business_adapter.py",
@@ -8243,7 +8243,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -8266,7 +8266,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "140f21e4e62dcccedd90399f8f71261237ef1a67a524bb2b958533a18547ee57",
+      "contract_sha256": "a685c255728e8ef810f4c377a1cfdac01f224f6b9a7a94e201525edc0986482f",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -8386,7 +8386,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\youzi-capital-monitoring\\scripts\\canonical_business_adapter.py",
@@ -8430,7 +8430,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -8453,7 +8453,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "e9ef5a5feddf62063036b3386893901c9324f44c64a21caf80b29ea722c00954",
+      "contract_sha256": "1df2f7044c077bf91fa446e922df3e1324c120bfcc62d7544fad101c6d6a61ee",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -8585,7 +8585,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\tdx-local-hub\\scripts\\canonical_business_adapter.py",
@@ -8629,7 +8629,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -8660,7 +8660,7 @@
           "sha256": "ead464c08d0209d2add7b41aa3060465245fe2c6afc386087e4050e7a2f7a0f1"
         }
       ],
-      "contract_sha256": "b3237c3b92dd603f83c912ca00c164442f2587d5d470613cbeeda26b0b6be411",
+      "contract_sha256": "d46fe5b63ebcf48f37cc714c6c98399f7791398b5dfdf56848b14d8d4d1de23f",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -8783,7 +8783,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\kaipanla\\scripts\\canonical_business_adapter.py",
@@ -8823,7 +8823,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -8846,7 +8846,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "3198a63d2c8068decba6ac4876379ee636eb036d1a47b2ee3291815c235c97c7",
+      "contract_sha256": "d643442174d1ed0956a526f83bf9eb7bb4109fe39c6ecf3fada40c374399db55",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -8980,7 +8980,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\a-share-hotspot-sentiment-analysis\\SKILL.md",
@@ -9048,7 +9048,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -9087,7 +9087,7 @@
           "sha256": "32b3d6de0917d9b977ae13ff7e937fcaccd4471bbd9dcd363493d16225286320"
         }
       ],
-      "contract_sha256": "9b5b38405184b26d5484946c3164fc126fc011ddbc2c162de734def2f22f89f1",
+      "contract_sha256": "a2dcd6646d2492ca1d1934dd4ec09cd82f12fa619d3905d998a01202db0dedf0",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -9251,7 +9251,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\a-share-hotspot-sentiment-analysis\\scripts\\duanxianxia_client.ps1",
@@ -9319,7 +9319,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -9338,7 +9338,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "f7f2b5bf4f95067643616e64ec62426e48dfe81dcd35361ffe143f18d33970a5",
+      "contract_sha256": "d4c475f0bc114b3d5c22edaba7f7a920e0ee3b5f6501d866b85810252f5f9cf1",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -9479,7 +9479,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\a-share-thinktank-brief\\scripts\\canonical_business_adapter.py",
@@ -9527,7 +9527,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -9550,7 +9550,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "cead8247ac7af83efd29eda4989ab6ecddb601c74dead8a6ba16c249c998b28c",
+      "contract_sha256": "7fe8857f9e68478b552347df1b563298e09d966a9d99565620131a2cbd653365",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": true,
@@ -9687,7 +9687,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\baimao-daily-intel-review\\scripts\\canonical_business_adapter.py",
@@ -9731,7 +9731,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -9754,7 +9754,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "c7a1987ff4bdc359e4e2bdc8764f3ef2942dbeb2d50fccb1f6e817e1f7a9bc5e",
+      "contract_sha256": "e103233bd5775badf8e46a9221325fa16af91d94cdbc7b21b047cfe013a0d7ad",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": true,
@@ -9886,7 +9886,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\industry-chain-analysis\\scripts\\canonical_business_adapter.py",
@@ -9922,7 +9922,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -9945,7 +9945,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "c27b7c4679611b989d74b4f2df92312eae75bd4988798bdd8fc5040006875077",
+      "contract_sha256": "b45500fe41da324d5a56a573553d084ad032d2f453568a7d954328f0f9b16dd5",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -10075,7 +10075,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\wechat-public-writing\\scripts\\canonical_business_adapter.py",
@@ -10111,7 +10111,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -10134,7 +10134,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "650e6239b3132f5f934a93cb2f8288a769ae34c1b537f850b979a92e861e4b9c",
+      "contract_sha256": "24c0fbe43011e9d58d9486cbfe6f70498f79510764e3cf49596138ba1345bec5",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": true,
@@ -10254,7 +10254,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-deliverable\\scripts\\canonical_business_adapter.py",
@@ -10298,7 +10298,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -10321,7 +10321,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "ba7de7e3abeda993263b874d6ac3126c8c58bd548b5cf0ccd5db672474e6a6c7",
+      "contract_sha256": "288b146c1a7df77379dfc857cec0950cfdae9f550b2a8956b0f05e8a594229ad",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -10443,7 +10443,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-recap-video\\scripts\\canonical_business_adapter.py",
@@ -10487,7 +10487,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -10510,7 +10510,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "14153f81da487c54ce82d9dfd189fc292e5b13a6f095f93201d4b946162bccc7",
+      "contract_sha256": "227c113b8123319b42e94f72314cd70ea0763bd07fd9a74908b61a7bb95b15a6",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": true,
@@ -10633,7 +10633,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\a-share-sentiment-word-delivery\\scripts\\canonical_business_adapter.py",
@@ -10669,7 +10669,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -10692,7 +10692,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "5bcff63bec78624482f52114ff6e8a948de494d6234ccfb09f9f9d06dcf6608a",
+      "contract_sha256": "c2b9947ae2f0caf09b675e4d1403217ec98d03b24c4a3051c4010de88d9013db",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -10812,7 +10812,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\old-leader-oversold-rebound\\scripts\\canonical_business_adapter.py",
@@ -10848,7 +10848,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -10871,7 +10871,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "8da6099f95937e8051f1b1c8304ffa3db6c32a7bd14d0fcf30611ed000e4ab59",
+      "contract_sha256": "2b1ca10410cb5a082047dfcfe2dffb0cac31ce528fdc3857b5cb3fb2882c12b4",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,
@@ -11001,7 +11001,7 @@
         }
       ],
       "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
-      "executor_sha256": "cf977882b7bd9ef67f0db232b307de1be8de9428880e0fa5b970cf545b11c9e8",
+      "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
       "business_bindings": [
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\technical-analysis\\scripts\\canonical_business_adapter.py",
@@ -11041,7 +11041,7 @@
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
-          "sha256": "e1aa970bbd05769fc9d4ffcc18434f98d4b84d1dc98d0637f3d402a752afe639"
+          "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
         },
         {
           "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
@@ -11064,7 +11064,7 @@
           "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
         }
       ],
-      "contract_sha256": "7583640061dd7551dc9b019dd92cf45b7957e2871db4634c2b4c7bcf7c829640",
+      "contract_sha256": "5e5b491988235f8db52fa9c1c94eb47cef205fc7de80b5a5237856bc84314c8b",
       "workflow_guard": {
         "direct_legacy_execution": "blocked",
         "requires_explicit_business_args": false,

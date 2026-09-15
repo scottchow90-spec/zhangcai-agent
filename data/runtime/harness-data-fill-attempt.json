@@ -1,0 +1,5 @@
+{
+  "status": "error",
+  "at": "2026-09-09T10:07:54.9847407+08:00",
+  "error": "Response status code does not indicate success: 500 (Internal Server Error)."
+}

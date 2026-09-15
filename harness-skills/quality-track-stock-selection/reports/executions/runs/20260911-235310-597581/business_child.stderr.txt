@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "C:\work\260907 掌财智能体\CodeX-st-wsp\zhangcai-demo\harness-skills\quality-track-stock-selection\scripts\verify_backtest_stability.py", line 107, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "C:\work\260907 掌财智能体\CodeX-st-wsp\zhangcai-demo\harness-skills\quality-track-stock-selection\scripts\verify_backtest_stability.py", line 97, in main
+    raise RuntimeError("backtest anchor stability verification failed")
+RuntimeError: backtest anchor stability verification failed
+Traceback (most recent call last):
+  File "C:\work\260907 掌财智能体\CodeX-st-wsp\zhangcai-demo\harness-skills\quality-track-stock-selection\scripts\legacy_codex_entry.py", line 250, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "C:\work\260907 掌财智能体\CodeX-st-wsp\zhangcai-demo\harness-skills\quality-track-stock-selection\scripts\legacy_codex_entry.py", line 234, in main
+    return command_run(args.enrich_limit, args.final_limit, args.lookback_sessions)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\work\260907 掌财智能体\CodeX-st-wsp\zhangcai-demo\harness-skills\quality-track-stock-selection\scripts\legacy_codex_entry.py", line 144, in command_run
+    command_backtest(lookback_sessions)
+  File "C:\work\260907 掌财智能体\CodeX-st-wsp\zhangcai-demo\harness-skills\quality-track-stock-selection\scripts\legacy_codex_entry.py", line 123, in command_backtest
+    invoke(
+  File "C:\work\260907 掌财智能体\CodeX-st-wsp\zhangcai-demo\harness-skills\quality-track-stock-selection\scripts\legacy_codex_entry.py", line 53, in invoke
+    raise RuntimeError(f"{script} failed with exit code {result.returncode}")
+RuntimeError: verify_backtest_stability.py failed with exit code 1

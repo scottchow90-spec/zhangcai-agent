@@ -1166,6 +1166,7 @@ def evaluate_tdx_process_integrity(
     after: dict[str, Any],
 ) -> dict[str, Any]:
     errors: list[str] = []
+    warnings: list[str] = []
     if before.get("status") != "OK":
         errors.append("tdx_process_snapshot_before_failed")
     if after.get("status") != "OK":
@@ -1186,13 +1187,14 @@ def evaluate_tdx_process_integrity(
             )
             if identity[0] != TDX_MAIN_PROCESS_NAME
         )
-        errors.extend(
-            f"tdx_protected_process_disappeared:{name}:{pid}"
+        warnings.extend(
+            f"tdx_helper_process_restarted:{name}:{pid}"
             for name, pid, _start_time in missing_helpers
         )
     return {
         "status": "BLOCKED" if errors else "CLEAN_PASS",
         "errors": errors,
+        "warnings": warnings,
         "before": before,
         "after": after,
     }

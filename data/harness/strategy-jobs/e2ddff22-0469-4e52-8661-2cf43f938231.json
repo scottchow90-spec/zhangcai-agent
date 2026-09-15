@@ -1,0 +1,15 @@
+{
+  "id": "e2ddff22-0469-4e52-8661-2cf43f938231",
+  "skill_id": "convertible-bond-screening-strategy",
+  "status": "completed",
+  "started_at": 1789010973924,
+  "strategy_status": "DATA_REQUIRED",
+  "output": "{\n  \"status\": \"DATA_REQUIRED\",\n  \"message\": \"可转债筛选需要可转债行情、正股映射和债券条款数据；当前本地快照未提供。\",\n  \"action\": \"先补齐可转债数据源后再启动原始策略。\"\n}",
+  "result": {
+    "status": "DATA_REQUIRED",
+    "skill_id": "convertible-bond-screening-strategy",
+    "output": "{\n  \"status\": \"DATA_REQUIRED\",\n  \"message\": \"可转债筛选需要可转债行情、正股映射和债券条款数据；当前本地快照未提供。\",\n  \"action\": \"先补齐可转债数据源后再启动原始策略。\"\n}"
+  },
+  "elapsed_ms": 1,
+  "completed_at": 1789010973925
+}

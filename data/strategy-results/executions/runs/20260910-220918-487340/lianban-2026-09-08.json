@@ -1,0 +1,100 @@
+{
+  "schema": "LIANBAN_DAILY_SNAPSHOT_V1",
+  "status": "DEGRADED",
+  "requested_at": "2026-09-10T22:09:26+08:00",
+  "requested_date": "2026-09-08",
+  "target_date": "2026-09-08",
+  "latest_requested": false,
+  "source_name": "连板网",
+  "license": "CC BY 4.0, 引用需署名“连板网”并附上行原文链接",
+  "attribution_required": true,
+  "source_role": "supplemental_event_theme_sentiment_cross_validation",
+  "sources": {
+    "open_data": {
+      "url": "https://lianban.net/opendata/2026-09-08.json",
+      "status_code": 200,
+      "content_type": "application/json",
+      "size": 888,
+      "sha256": "c8989b50644f803d4e43dd02a98c4fb363f59ea70714c0dde595fffa6d3ffb94",
+      "error": null
+    },
+    "page": {
+      "url": "https://lianban.net/days/2026-09-08.html",
+      "status_code": 200,
+      "content_type": "text/html; charset=utf-8",
+      "size": 3871,
+      "sha256": "c6734f494e5913bc498fa7ec75b79a9c0ce811a2c929cc1892f17a4080437f2d",
+      "error": null
+    }
+  },
+  "market": {
+    "limit_up": 73,
+    "limit_down": 0,
+    "consecutive": 18,
+    "max_board": 4,
+    "seal_rate": 66.4,
+    "broken_board": 37,
+    "advancers": 3417,
+    "decliners": 2026,
+    "emotion_stage": "降温期"
+  },
+  "topics": [
+    {
+      "name": "农业",
+      "count": 20
+    },
+    {
+      "name": "地产链",
+      "count": 6
+    },
+    {
+      "name": "通信",
+      "count": 6
+    },
+    {
+      "name": "文化传媒",
+      "count": 6
+    },
+    {
+      "name": "芯片",
+      "count": 6
+    },
+    {
+      "name": "医药",
+      "count": 4
+    },
+    {
+      "name": "化工",
+      "count": 3
+    },
+    {
+      "name": "零售",
+      "count": 3
+    },
+    {
+      "name": "AI应用",
+      "count": 2
+    },
+    {
+      "name": "食品饮料",
+      "count": 2
+    },
+    {
+      "name": "其他",
+      "count": 14
+    }
+  ],
+  "note": "逐只涨停/连板名单见 source 页面(近期免登录, 更早需注册登录; 已验证的搜索引擎与AI爬虫不受限)",
+  "page_details": {
+    "title": "2026年9月8日A股复盘：涨停73家 最高4板 主线农业_连板网",
+    "stock_count": 0,
+    "stock_codes": [],
+    "stock_items": [],
+    "event_texts": [
+      "2026年9月8日A股复盘：涨停73家 最高4板 主线农业_连板网 正在打开 2026-09-08 复盘… 首次访问需要一两秒完成浏览器校验，之后 30 天内不再出现。"
+    ]
+  },
+  "errors": [
+    "page_stock_details_missing"
+  ]
+}

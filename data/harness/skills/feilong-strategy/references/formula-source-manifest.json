@@ -1,0 +1,64 @@
+{
+  "schema": "FEILONG_FORMULA_SOURCE_MANIFEST_V1",
+  "payload_encoding": "gbk",
+  "forbidden_formula_names": [
+    "飞龙在天4.0"
+  ],
+  "formulas": {
+    "飞龙在天": {
+      "source_path": "D:\\C盘转移\\日志\\codex\\skills\\feilong-strategy\\references\\formulas\\飞龙在天.tdx.txt",
+      "source_encoding": "utf-8",
+      "source_bom": false,
+      "source_size_bytes": 3353,
+      "source_raw_sha256": "aabcec3d83b2b37d01d53ba4d9c281a745e29f53d941f3704da95dcea114e1e0",
+      "payload_encoding": "gbk",
+      "payload_size_bytes": 3325,
+      "gbk_payload_sha256": "1c53d05809316d4daf2bc283f66e12812a7390636481109f3df9545d9cd6be72",
+      "authority_scope": "verified_migration_formula_authority"
+    },
+    "飞龙在天AI": {
+      "source_path": "C:\\new_tdx_mock\\T0002\\gs_bak\\飞龙在天.txt",
+      "source_encoding": "utf-8",
+      "source_bom": false,
+      "source_size_bytes": 3353,
+      "source_raw_sha256": "aabcec3d83b2b37d01d53ba4d9c281a745e29f53d941f3704da95dcea114e1e0",
+      "payload_encoding": "gbk",
+      "payload_size_bytes": 3325,
+      "gbk_payload_sha256": "1c53d05809316d4daf2bc283f66e12812a7390636481109f3df9545d9cd6be72",
+      "authority_scope": "legacy_tdx_runtime_compatibility"
+    },
+    "飞龙裸三色": {
+      "source_path": "D:\\C盘转移\\日志\\codex\\skills\\feilong-strategy\\references\\formulas\\飞龙裸三色.tdx.txt",
+      "source_encoding": "utf-8",
+      "source_bom": false,
+      "source_size_bytes": 2404,
+      "source_raw_sha256": "3029d0fda387842984f834b41f9849a9a71b933380cc7fedcb79d0d6cc73444b",
+      "payload_encoding": "gbk",
+      "payload_size_bytes": 2396,
+      "gbk_payload_sha256": "167fda25731a6f85da58b484769f4f3df6b0aaee8cc004223532a4dec0d9b263",
+      "authority_scope": "codex_f_drive_canonical_asset"
+    },
+    "飞龙共振实时选股": {
+      "source_path": "D:\\C盘转移\\日志\\codex\\skills\\feilong-strategy\\references\\formulas\\飞龙共振实时选股.tdx.txt",
+      "source_encoding": "utf-8",
+      "source_bom": false,
+      "source_size_bytes": 2728,
+      "source_raw_sha256": "ed526509f7afed185ade2fc3ff70a6702c9bbaf0ab53a69c781c2b0c0cd72df2",
+      "payload_encoding": "gbk",
+      "payload_size_bytes": 2695,
+      "gbk_payload_sha256": "3d95fd3365a2e28caf53ae706fc94f530520a7aab4625e622211a352975b8402",
+      "authority_scope": "codex_f_drive_canonical_asset"
+    },
+    "飞龙在天6": {
+      "source_path": "D:\\C盘转移\\日志\\codex\\skills\\feilong-strategy\\references\\formulas\\飞龙共振实时选股.tdx.txt",
+      "source_encoding": "utf-8",
+      "source_bom": false,
+      "source_size_bytes": 2728,
+      "source_raw_sha256": "ed526509f7afed185ade2fc3ff70a6702c9bbaf0ab53a69c781c2b0c0cd72df2",
+      "payload_encoding": "gbk",
+      "payload_size_bytes": 2695,
+      "gbk_payload_sha256": "3d95fd3365a2e28caf53ae706fc94f530520a7aab4625e622211a352975b8402",
+      "authority_scope": "verified_installed_formula_alias"
+    }
+  }
+}

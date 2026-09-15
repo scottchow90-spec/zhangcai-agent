@@ -1,0 +1,16 @@
+{
+  "status": "CLEAN_PASS",
+  "signal_state": "SIGNAL",
+  "report": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\four-strategy-system\\reports\\four-strategy-current.json",
+  "size": 17348,
+  "sha256": "8090c9f326ebb9c7077d441e7491c96f29e29070bd48f859e2bb2e2b09257c4b",
+  "file_count": 6898,
+  "latest_trade_date": "20260910",
+  "strategy_count": 4,
+  "signal_counts": {
+    "起浪坑": 10,
+    "临空": 10,
+    "接体": 10,
+    "伏虎": 10
+  }
+}

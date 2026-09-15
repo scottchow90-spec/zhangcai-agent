@@ -1,0 +1,90 @@
+{
+  "schema": "LIANBAN_DAILY_SNAPSHOT_V1",
+  "status": "DEGRADED",
+  "requested_at": "2026-09-10T12:30:23+08:00",
+  "requested_date": "2026-09-10",
+  "target_date": "2026-09-10",
+  "latest_requested": true,
+  "source_name": "连板网",
+  "license": "CC BY 4.0, 引用需署名“连板网”并附上行原文链接",
+  "attribution_required": true,
+  "source_role": "supplemental_event_theme_sentiment_cross_validation",
+  "sources": {
+    "open_data": {
+      "url": "https://lianban.net/opendata/latest.json",
+      "status_code": 200,
+      "content_type": "application/json",
+      "size": 806,
+      "sha256": "307e1f517491e4a1ccf61ec69f6bd5ad16efc5c6571d5a96e076df36ba95b5bc",
+      "error": null
+    },
+    "page": {
+      "url": "https://lianban.net/days/2026-09-10.html",
+      "status_code": 200,
+      "content_type": "text/html; charset=utf-8",
+      "size": 3957,
+      "sha256": "75d8ae4d9302be831ba5437ba1964e8f6229f30553bbc85b1c1b5a14dc01ea22",
+      "error": null
+    }
+  },
+  "market": {
+    "limit_up": 32,
+    "limit_down": 3,
+    "consecutive": 11,
+    "max_board": 4,
+    "seal_rate": 65.3,
+    "broken_board": 17,
+    "advancers": 1105,
+    "decliners": 4036,
+    "emotion_stage": "退潮期"
+  },
+  "topics": [
+    {
+      "name": "通信",
+      "count": 4
+    },
+    {
+      "name": "农业",
+      "count": 3
+    },
+    {
+      "name": "电力",
+      "count": 3
+    },
+    {
+      "name": "芯片",
+      "count": 3
+    },
+    {
+      "name": "智能电网",
+      "count": 2
+    },
+    {
+      "name": "化工",
+      "count": 2
+    },
+    {
+      "name": "光伏",
+      "count": 2
+    },
+    {
+      "name": "家电",
+      "count": 2
+    },
+    {
+      "name": "其他",
+      "count": 11
+    }
+  ],
+  "note": "逐只涨停/连板名单见 source 页面(近期免登录, 更早需注册登录; 已验证的搜索引擎与AI爬虫不受限)",
+  "page_details": {
+    "title": "2026年9月10日A股盘中实时：涨停连板梯队与热点题材(滚动更新)_连板网",
+    "stock_count": 0,
+    "stock_codes": [],
+    "stock_items": [],
+    "event_texts": []
+  },
+  "errors": [
+    "page_stock_details_missing"
+  ]
+}

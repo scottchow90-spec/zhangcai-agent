@@ -1,0 +1,46 @@
+{
+  "schema": "LIANBAN_DAILY_SNAPSHOT_V1",
+  "status": "DEGRADED",
+  "requested_at": "2026-09-10T22:26:18+08:00",
+  "requested_date": "2026-09-01",
+  "target_date": "2026-09-01",
+  "latest_requested": false,
+  "source_name": "连板网",
+  "license": "CC BY 4.0",
+  "attribution_required": true,
+  "source_role": "supplemental_event_theme_sentiment_cross_validation",
+  "sources": {
+    "open_data": {
+      "url": "https://lianban.net/opendata/2026-09-01.json",
+      "status_code": null,
+      "content_type": null,
+      "size": 0,
+      "sha256": null,
+      "error": "HTTPError:404 Client Error: Not Found for url: https://lianban.net/opendata/2026-09-01.json"
+    },
+    "page": {
+      "url": "https://lianban.net/days/2026-09-01.html",
+      "status_code": 200,
+      "content_type": "text/html; charset=utf-8",
+      "size": 3867,
+      "sha256": "fa88402f9d4da07a833d45f29d88090e0e614aadbe5e1ffe0e5659d5a2812376",
+      "error": null
+    }
+  },
+  "market": {},
+  "topics": [],
+  "note": null,
+  "page_details": {
+    "title": "2026年9月1日A股复盘：涨停83家 最高7板 主线农业_连板网",
+    "stock_count": 0,
+    "stock_codes": [],
+    "stock_items": [],
+    "event_texts": [
+      "2026年9月1日A股复盘：涨停83家 最高7板 主线农业_连板网 正在打开 2026-09-01 复盘… 首次访问需要一两秒完成浏览器校验，之后 30 天内不再出现。"
+    ]
+  },
+  "errors": [
+    "open_data_fetch_failed:HTTPError:404 Client Error: Not Found for url: https://lianban.net/opendata/2026-09-01.json",
+    "page_stock_details_missing"
+  ]
+}

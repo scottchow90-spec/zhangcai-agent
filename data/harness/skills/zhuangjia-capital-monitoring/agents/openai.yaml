@@ -1,0 +1,6 @@
+interface:
+  display_name: "庄家资金监控"
+  short_description: "本机 C:\\new_tdx_mock 庄家资金监控公式独立执行工作流"
+  default_prompt: "Use $zhuangjia-capital-monitoring to execute the installed local TQ formula 庄家资金监控 without any external fallback."
+policy:
+  allow_implicit_invocation: false

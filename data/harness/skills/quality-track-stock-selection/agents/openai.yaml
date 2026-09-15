@@ -1,0 +1,6 @@
+interface:
+  display_name: "优质赛道选股"
+  short_description: "按事件、赛道强度、主营、财务和风险执行A股纸面选股"
+  default_prompt: "使用 $quality-track-stock-selection 运行今天的优质赛道选股，并给出买入、观察或空仓结果。"
+policy:
+  allow_implicit_invocation: false

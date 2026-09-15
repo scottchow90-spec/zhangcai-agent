@@ -1,0 +1,32 @@
+{
+  "schema": "MERGED_STOCK_SKILL_CONFIG_V1",
+  "display_name": "A股热点舆情研判",
+  "default_mode": "all",
+  "modes": {
+    "sentiment": {
+      "source": "a-share-sentiment-workflow",
+      "display_name": "A股热点舆情研判",
+      "aliases": [
+        "sentiment",
+        "a-share-sentiment",
+        "five-site",
+        "market",
+        "market-intel",
+        "social",
+        "social-finance",
+        "A股舆情分析工作流",
+        "五站A股舆情研判",
+        "市场情报",
+        "三端社媒财经简报"
+      ],
+      "default_args": ["generate", "--out-dir", "{component_output}"]
+    },
+    "data": {
+      "source": "duanxianxia-public-data",
+      "display_name": "短线侠A股数据接口",
+      "aliases": ["data", "duanxianxia", "短线侠A股数据接口", "短线侠 A 股数据接口"],
+      "include_in_all": false,
+      "default_args": []
+    }
+  }
+}

@@ -1,0 +1,1 @@
+{"skill_id": "a-share-15d-selection", "status": "BLOCKED", "errors": ["unsupported_business_arguments:--outdir data/strategy-results/manual-check/a-share-15d-selection"]}

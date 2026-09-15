@@ -1,0 +1,1442 @@
+{
+  "schema": "ZHANGCAI_PUBLIC_MARKET_V1",
+  "date": "2026-09-10",
+  "fetchedAt": "2026-09-10T09:10:59.377Z",
+  "collector": "public_market_sync_node.mjs (python unavailable)",
+  "sources": {
+    "lianban": {
+      "source_name": "lianban",
+      "source_url": "https://lianban.net/opendata/2026-09-10.json",
+      "trade_date": "2026-09-10",
+      "fetched_at": "2026-09-10T09:10:59.379Z",
+      "http_status": 200,
+      "content_type": "application/json",
+      "sha256": "aa3630a8c17bcabbfc572d9436e38f46ce9f78caf940ca80c30c8cb6c391adfc",
+      "bytes": 867,
+      "status": "available",
+      "raw_path": "data/public/20260910/lianban-171059.raw.json",
+      "parse_error": null,
+      "data": {
+        "source": "连板网 https://lianban.net/days/2026-09-10.html",
+        "license": "CC BY 4.0, 引用需署名“连板网”并附上行原文链接",
+        "kpi": {
+          "date": "2026-09-10",
+          "limit_up": 35,
+          "limit_down": 11,
+          "lianban": 9,
+          "max_board": 4,
+          "seal_rate_pct": 61.4,
+          "zhaban": 22,
+          "adv": 955,
+          "dec": 4512,
+          "emotion_phase": "冰点期"
+        },
+        "themes": [
+          {
+            "name": "电力(绿色电力)",
+            "limit_up": 5
+          },
+          {
+            "name": "化工",
+            "limit_up": 4
+          },
+          {
+            "name": "通信",
+            "limit_up": 3
+          },
+          {
+            "name": "农业",
+            "limit_up": 3
+          },
+          {
+            "name": "芯片",
+            "limit_up": 3
+          },
+          {
+            "name": "AI应用",
+            "limit_up": 2
+          },
+          {
+            "name": "海洋经济",
+            "limit_up": 2
+          },
+          {
+            "name": "智能电网",
+            "limit_up": 2
+          },
+          {
+            "name": "金融概念",
+            "limit_up": 2
+          },
+          {
+            "name": "其他",
+            "limit_up": 8
+          }
+        ],
+        "note": "逐只涨停/连板名单见 source 页面(近期免登录, 更早需注册登录; 已验证的搜索引擎与AI爬虫不受限)"
+      }
+    },
+    "eastmoneyLimitUp": {
+      "source_name": "eastmoneyLimitUp",
+      "source_url": "https://push2ex.eastmoney.com/getTopicZTPool?ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wz.ztzt&Pageindex=0&pagesize=10000&sort=fbt%3Aasc&date=20260910",
+      "trade_date": "2026-09-10",
+      "fetched_at": "2026-09-10T09:10:59.644Z",
+      "http_status": 200,
+      "content_type": "application/json; charset=UTF-8",
+      "sha256": "8dfaddbe33f94b8f96464faa504dddce34295b7f8df528ac06cfef4b2d9c19dc",
+      "bytes": 9291,
+      "status": "available",
+      "raw_path": "data/public/20260910/eastmoneyLimitUp-171059.raw.json",
+      "parse_error": null,
+      "data": {
+        "rc": 0,
+        "rt": 110,
+        "svr": 177618275,
+        "lt": 2,
+        "full": 0,
+        "data": {
+          "tc": 35,
+          "qdate": 20260910,
+          "pool": [
+            {
+              "c": "000978",
+              "m": 0,
+              "n": "桂林旅游",
+              "p": 9690,
+              "zdp": 9.988649368286133,
+              "amount": 771858384,
+              "ltsz": 4536097945.469999,
+              "tshare": 4536179700,
+              "hs": 17.269182205200195,
+              "lbc": 4,
+              "fbt": 92500,
+              "lbt": 93803,
+              "fund": 70007963,
+              "zbc": 1,
+              "hybk": "旅游及景",
+              "zttj": {
+                "days": 4,
+                "ct": 4
+              }
+            },
+            {
+              "c": "002790",
+              "m": 0,
+              "n": "瑞尔特",
+              "p": 8460,
+              "zdp": 10.0130033493042,
+              "amount": 65718092,
+              "ltsz": 2205500850,
+              "tshare": 3535199691.84,
+              "hs": 2.9797356128692627,
+              "lbc": 3,
+              "fbt": 92500,
+              "lbt": 92500,
+              "fund": 372712947,
+              "zbc": 0,
+              "hybk": "家居用品",
+              "zttj": {
+                "days": 3,
+                "ct": 3
+              }
+            },
+            {
+              "c": "600318",
+              "m": 1,
+              "n": "新力金融",
+              "p": 8090,
+              "zdp": 10.068026542663574,
+              "amount": 920574928,
+              "ltsz": 4147966542.88,
+              "tshare": 4147966542.88,
+              "hs": 22.459692001342773,
+              "lbc": 1,
+              "fbt": 92501,
+              "lbt": 143946,
+              "fund": 44051668,
+              "zbc": 6,
+              "hybk": "多元金融",
+              "zttj": {
+                "days": 1,
+                "ct": 1
+              }
+            },
+            {
+              "c": "600359",
+              "m": 1,
+              "n": "新农开发",
+              "p": 9640,
+              "zdp": 10.045661926269531,
+              "amount": 385379648,
+              "ltsz": 3677783584.8,
+              "tshare": 3677783546.2400002,
+              "hs": 10.484964370727539,
+              "lbc": 2,
+              "fbt": 92503,
+              "lbt": 132430,
+              "fund": 43204552,
+              "zbc": 1,
+              "hybk": "种植业",
+              "zttj": {
+                "days": 2,
+                "ct": 2
+              }
+            },
+            {
+              "c": "600488",
+              "m": 1,
+              "n": "津药药业",
+              "p": 5900,
+              "zdp": 10.074626922607422,
+              "amount": 1110881584,
+              "ltsz": 6442131412,
+              "tshare": 6442131459.200001,
+              "hs": 17.34731674194336,
+              "lbc": 1,
+              "fbt": 92503,
+              "lbt": 110954,
+              "fund": 40274869,
+              "zbc": 7,
+              "hybk": "化学制药",
+              "zttj": {
+                "days": 1,
+                "ct": 1
+              }
+            },
+            {
+              "c": "002377",
+              "m": 0,
+              "n": "国创高新",
+              "p": 3470,
+              "zdp": 10.158730506896973,
+              "amount": 212451270,
+              "ltsz": 3027394285.8700004,
+              "tshare": 3179648444,
+              "hs": 7.033382415771484,
+              "lbc": 2,
+              "fbt": 93000,
+              "lbt": 93000,
+              "fund": 104476148,
+              "zbc": 0,
+              "hybk": "炼化及贸",
+              "zttj": {
+                "days": 2,
+                "ct": 2
+              }
+            },
+            {
+              "c": "600792",
+              "m": 1,
+              "n": "云煤能源",
+              "p": 5410,
+              "zdp": 9.959349632263184,
+              "amount": 833949008,
+              "ltsz": 6004686676,
+              "tshare": 6004686676,
+              "hs": 14.170308113098145,
+              "lbc": 3,
+              "fbt": 93042,
+              "lbt": 105415,
+              "fund": 33286648,
+              "zbc": 1,
+              "hybk": "焦炭Ⅱ",
+              "zttj": {
+                "days": 8,
+                "ct": 4
+              }
+            },
+            {
+              "c": "600192",
+              "m": 1,
+              "n": "长城电工",
+              "p": 8680,
+              "zdp": 10.012674331665039,
+              "amount": 420774928,
+              "ltsz": 3834372640,
+              "tshare": 3834372640,
+              "hs": 11.044857025146484,
+              "lbc": 2,
+              "fbt": 93045,
+              "lbt": 130406,
+              "fund": 38523576,
+              "zbc": 3,
+              "hybk": "电网设备",
+              "zttj": {
+                "days": 2,
+                "ct": 2
+              }
+            },
+            {
+              "c": "000993",
+              "m": 0,
+              "n": "闽东电力",
+              "p": 12620,
+              "zdp": 10.026155471801758,
+              "amount": 678574304,
+              "ltsz": 5779347362.099999,
+              "tshare": 5779347374.719999,
+              "hs": 12.118818283081055,
+              "lbc": 2,
+              "fbt": 93351,
+              "lbt": 94742,
+              "fund": 122261941,
+              "zbc": 1,
+              "hybk": "电力",
+              "zttj": {
+                "days": 2,
+                "ct": 2
+              }
+            },
+            {
+              "c": "002912",
+              "m": 0,
+              "n": "中新赛克",
+              "p": 21370,
+              "zdp": 9.984560012817383,
+              "amount": 243382977,
+              "ltsz": 3466702005.32,
+              "tshare": 3648970240,
+              "hs": 7.10488748550415,
+              "lbc": 1,
+              "fbt": 93421,
+              "lbt": 143724,
+              "fund": 10231956,
+              "zbc": 4,
+              "hybk": "计算机设",
+              "zttj": {
+                "days": 1,
+                "ct": 1
+              }
+            },
+            {
+              "c": "600667",
+              "m": 1,
+              "n": "太极实业",
+              "p": 19980,
+              "zdp": 10.022026062011719,
+              "amount": 3743778512,
+              "ltsz": 41789012716.44,
+              "tshare": 41789012676.48,
+              "hs": 9.125821113586426,
+              "lbc": 1,
+              "fbt": 93622,
+              "lbt": 93622,
+              "fund": 541973484,
+              "zbc": 0,
+              "hybk": "工程咨询",
+              "zttj": {
+                "days": 1,
+                "ct": 1
+              }
+            },
+            {
+              "c": "002201",
+              "m": 0,
+              "n": "九鼎新材",
+              "p": 10080,
+              "zdp": 10.043667793273926,
+              "amount": 589175792,
+              "ltsz": 6068396073.6,
+              "tshare": 6568493299.2,
+              "hs": 9.854963302612305,
+              "lbc": 1,
+              "fbt": 93836,
+              "lbt": 135106,
+              "fund": 73920036,
+              "zbc": 2,
+              "hybk": "玻璃玻纤",
+              "zttj": {
+                "days": 1,
+                "ct": 1
+              }
+            },
+            {
+              "c": "603318",
+              "m": 1,
+              "n": "水发燃气",
+              "p": 10350,
+              "zdp": 9.989372253417969,
+              "amount": 1116347664,
+              "ltsz": 4751384063.4,
+              "tshare": 5740867785.599999,
+              "hs": 23.957691192626953,
+              "lbc": 1,
+              "fbt": 93842,
+              "lbt": 111518,
+              "fund": 42894353,
+              "zbc": 2,
+              "hybk": "燃气Ⅱ",
+              "zttj": {
+                "days": 1,
+                "ct": 1
+              }
+            },
+            {
+              "c": "002661",
+              "m": 0,
+              "n": "克明食品",
+              "p": 9600,
+              "zdp": 9.965636253356934,
+              "amount": 388581056,
+              "ltsz": 2960807049.6,
+              "tshare": 3108924825.6,
+              "hs": 13.391644477844238,
+              "lbc": 1,
+              "fbt": 94057,
+              "lbt": 105515,
+              "fund": 21744969,
+              "zbc": 4,
+              "hybk": "食品加工",
+              "zttj": {
+                "days": 1,
+                "ct": 1
+              }
+            },
+            {
+              "c": "603421",
+              "m": 1,
+              "n": "鼎信通讯",
+              "p": 7290,
+              "zdp": 9.954751014709473,
+              "amount": 326814896,
+              "ltsz": 4754468825.19,
+              "tshare": 4754468832.4800005,
+              "hs": 7.026731967926025,
+              "lbc": 2,
+              "fbt": 94136,
+              "lbt": 94136,
+              "fund": 65399464,
+              "zbc": 0,
+              "hybk": "通信设备",
+              "zttj": {
+                "days": 2,
+                "ct": 2
+              }
+            },
+            {
+              "c": "000565",
+              "m": 0,
+              "n": "渝三峡Ａ",
+              "p": 7910,
+              "zdp": 10.013908386230469,
+              "amount": 238039702,
+              "ltsz": 3429714460.2000003,
+              "tshare": 3429714491.84,
+              "hs": 7.465679168701172,
+              "lbc": 2,
+              "fbt": 94139,
+              "lbt": 94139,
+              "fund": 48895103,
+              "zbc": 0,
+              "hybk": "化学制品",
+              "zttj": {
+                "days": 2,
+                "ct": 2
+              }
+            },
+            {
+              "c": "603316",
+              "m": 1,
+              "n": "诚邦股份",
+              "p": 15720,
+              "zdp": 10.006998062133789,
+              "amount": 287249280,
+              "ltsz": 4154230080,
+              "tshare": 4244384405.76,
+              "hs": 7.110513210296631,
+              "lbc": 1,
+              "fbt": 94150,
+              "lbt": 94341,
+              "fund": 28771844,
+              "zbc": 2,
+              "hybk": "半导体",
+              "zttj": {
+                "days": 1,
+                "ct": 1
+              }
+            },
+            {
+              "c": "600876",
+              "m": 1,
+              "n": "凯盛新能",
+              "p": 7910,
+              "zdp": 10.013908386230469,
+              "amount": 65438160,
+              "ltsz": 3129788957.33,
+              "tshare": 5107288933.6,
+              "hs": 2.132641553878784,
+              "lbc": 1,
+              "fbt": 94624,
+              "lbt": 94700,
+              "fund": 14763959,
+              "zbc": 1,
+              "hybk": "玻璃玻纤",
+              "zttj": {
+                "days": 1,
+                "ct": 1
+              }
+            },
+            {
+              "c": "601231",
+              "m": 1,
+              "n": "环旭电子",
+              "p": 27920,
+              "zdp": 10.007880210876465,
+              "amount": 1025159552,
+              "ltsz": 66699084129.76,
+              "tshare": 66699084185.600006,
+              "hs": 1.5882574319839478,
+              "lbc": 1,
+              "fbt": 94806,
+              "lbt": 94806,
+              "fund": 113219257,
+              "zbc": 0,
+              "hybk": "消费电子",
+              "zttj": {
+                "days": 1,
+                "ct": 1
+              }
+            },
+            {
+              "c": "603105",
+              "m": 1,
+              "n": "芯能科技",
+              "p": 8380,
+              "zdp": 9.973752975463867,
+              "amount": 256112593,
+              "ltsz": 4190095322.5000005,
+              "tshare": 4190095330.8800006,
+              "hs": 6.191126346588135,
+              "lbc": 1,
+              "fbt": 94819,
+              "lbt": 100137,
+              "fund": 47569070,
+              "zbc": 2,
+              "hybk": "电力",
+              "zttj": {
+                "days": 1,
+                "ct": 1
+              }
+            },
+            {
+              "c": "001299",
+              "m": 0,
+              "n": "美能能源",
+              "p": 11830,
+              "zdp": 10.04651165008545,
+              "amount": 455520992,
+              "ltsz": 3340054730.7400002,
+              "tshare": 3717165626.72,
+              "hs": 13.929463386535645,
+              "lbc": 1,
+              "fbt": 94903,
+              "lbt": 144409,
+              "fund": 9034854,
+              "zbc": 5,
+              "hybk": "燃气Ⅱ",
+              "zttj": {
+                "days": 1,
+                "ct": 1
+              }
+            },
+            {
+              "c": "000722",
+              "m": 0,
+              "n": "湖南发展",
+              "p": 14740,
+              "zdp": 10,
+              "amount": 455220144,
+              "ltsz": 6841693076.68,
+              "tshare": 9430494930.56,
+              "hs": 6.8797831535339355,
+              "lbc": 1,
+              "fbt": 95048,
+              "lbt": 95106,
+              "fund": 69183678,
+              "zbc": 1,
+              "hybk": "电力",
+              "zttj": {
+                "days": 1,
+                "ct": 1
+              }
+            },
+            {
+              "c": "920268",
+              "m": 0,
+              "n": "百迈科",
+              "p": 34940,
+              "zdp": 29.985118865966797,
+              "amount": 261700744,
+              "ltsz": 504817871.84,
+              "tshare": 1893747999.9999998,
+              "hs": 57.09834289550781,
+              "lbc": 1,
+              "fbt": 95315,
+              "lbt": 100727,
+              "fund": 14478961,
+              "zbc": 1,
+              "hybk": "医疗器械",
+              "zttj": {
+                "days": 1,
+                "ct": 1
+              }
+            },
+            {
+              "c": "002543",
+              "m": 0,
+              "n": "万和电气",
+              "p": 7900,
+              "zdp": 10.027854919433594,
+              "amount": 264650634,
+              "ltsz": 5223291987.900001,
+              "tshare": 5874440000,
+              "hs": 5.1432785987854,
+              "lbc": 1,
+              "fbt": 95648,
+              "lbt": 95648,
+              "fund": 15553599,
+              "zbc": 0,
+              "hybk": "厨卫电器",
+              "zttj": {
+                "days": 1,
+                "ct": 1
+              }
+            },
+            {
+              "c": "600744",
+              "m": 1,
+              "n": "华银电力",
+              "p": 7000,
+              "zdp": 10.06289291381836,
+              "amount": 1336745376,
+              "ltsz": 14217869918,
+              "tshare": 14217869904,
+              "hs": 9.694941520690918,
+              "lbc": 1,
+              "fbt": 100947,
+              "lbt": 100947,
+              "fund": 143580367,
+              "zbc": 0,
+              "hybk": "电力",
+              "zttj": {
+                "days": 1,
+                "ct": 1
+              }
+            },
+            {
+              "c": "002636",
+              "m": 0,
+              "n": "金安国纪",
+              "p": 76450,
+              "zdp": 10,
+              "amount": 4791046400,
+              "ltsz": 55444335241.35,
+              "tshare": 55655600000,
+              "hs": 8.958306312561035,
+              "lbc": 1,
+              "fbt": 101351,
+              "lbt": 134433,
+              "fund": 287750919,
+              "zbc": 2,
+              "hybk": "元件",
+              "zttj": {
+                "days": 1,
+                "ct": 1
+              }
+            },
+            {
+              "c": "002204",
+              "m": 0,
+              "n": "大连重工",
+              "p": 5890,
+              "zdp": 10.09345817565918,
+              "amount": 497354240,
+              "ltsz": 11375769488.48,
+              "tshare": 11375769488.48,
+              "hs": 4.513347625732422,
+              "lbc": 1,
+              "fbt": 101818,
+              "lbt": 101818,
+              "fund": 124424989,
+              "zbc": 0,
+              "hybk": "专用设备",
+              "zttj": {
+                "days": 1,
+                "ct": 1
+              }
+            },
+            {
+              "c": "000823",
+              "m": 0,
+              "n": "超声电子",
+              "p": 18700,
+              "zdp": 10,
+              "amount": 2769778928,
+              "ltsz": 11125231522.9,
+              "tshare": 11125656854.4,
+              "hs": 25.93146514892578,
+              "lbc": 1,
+              "fbt": 102854,
+              "lbt": 135036,
+              "fund": 65195025,
+              "zbc": 1,
+              "hybk": "元件",
+              "zttj": {
+                "days": 4,
+                "ct": 2
+              }
+            },
+            {
+              "c": "603601",
+              "m": 1,
+              "n": "再升科技",
+              "p": 9960,
+              "zdp": 10.055248260498047,
+              "amount": 1965507856,
+              "ltsz": 11377716071.160002,
+              "tshare": 11377716120.960001,
+              "hs": 17.702682495117188,
+              "lbc": 1,
+              "fbt": 103715,
+              "lbt": 135445,
+              "fund": 47018371,
+              "zbc": 1,
+              "hybk": "专业工程",
+              "zttj": {
+                "days": 1,
+                "ct": 1
+              }
+            },
+            {
+              "c": "002174",
+              "m": 0,
+              "n": "游族网络",
+              "p": 13640,
+              "zdp": 10,
+              "amount": 1298613680,
+              "ltsz": 13357093332.880001,
+              "tshare": 13364621494.4,
+              "hs": 9.972010612487793,
+              "lbc": 1,
+              "fbt": 130103,
+              "lbt": 144915,
+              "fund": 23844084,
+              "zbc": 2,
+              "hybk": "游戏Ⅱ",
+              "zttj": {
+                "days": 1,
+                "ct": 1
+              }
+            },
+            {
+              "c": "002531",
+              "m": 0,
+              "n": "天顺风能",
+              "p": 6910,
+              "zdp": 10.03184700012207,
+              "amount": 486529232,
+              "ltsz": 12347262019.09,
+              "tshare": 12416431512.960001,
+              "hs": 4.113603591918945,
+              "lbc": 1,
+              "fbt": 130303,
+              "lbt": 130303,
+              "fund": 91847837,
+              "zbc": 0,
+              "hybk": "风电设备",
+              "zttj": {
+                "days": 1,
+                "ct": 1
+              }
+            },
+            {
+              "c": "600712",
+              "m": 1,
+              "n": "南宁百货",
+              "p": 6830,
+              "zdp": 9.98389720916748,
+              "amount": 464736352,
+              "ltsz": 3678968373.93,
+              "tshare": 3719996108.8,
+              "hs": 13.23949146270752,
+              "lbc": 1,
+              "fbt": 130813,
+              "lbt": 130813,
+              "fund": 63135837,
+              "zbc": 0,
+              "hybk": "一般零售",
+              "zttj": {
+                "days": 1,
+                "ct": 1
+              }
+            },
+            {
+              "c": "600644",
+              "m": 1,
+              "n": "乐山电力",
+              "p": 10120,
+              "zdp": 10,
+              "amount": 763723520,
+              "ltsz": 5852606678.16,
+              "tshare": 5852606657.919999,
+              "hs": 13.559819221496582,
+              "lbc": 1,
+              "fbt": 131742,
+              "lbt": 131742,
+              "fund": 64907210,
+              "zbc": 0,
+              "hybk": "电力",
+              "zttj": {
+                "days": 1,
+                "ct": 1
+              }
+            },
+            {
+              "c": "000048",
+              "m": 0,
+              "n": "京基智农",
+              "p": 23200,
+              "zdp": 10.004741668701172,
+              "amount": 624024576,
+              "ltsz": 12279823800,
+              "tshare": 12300703846.4,
+              "hs": 5.3850531578063965,
+              "lbc": 1,
+              "fbt": 142045,
+              "lbt": 143245,
+              "fund": 22317564,
+              "zbc": 2,
+              "hybk": "养殖业",
+              "zttj": {
+                "days": 1,
+                "ct": 1
+              }
+            },
+            {
+              "c": "000532",
+              "m": 0,
+              "n": "华金资本",
+              "p": 12430,
+              "zdp": 10,
+              "amount": 148934013,
+              "ltsz": 4270323342.7799997,
+              "tshare": 4284724616.48,
+              "hs": 3.6304140090942383,
+              "lbc": 1,
+              "fbt": 144703,
+              "lbt": 144703,
+              "fund": 30885094,
+              "zbc": 0,
+              "hybk": "多元金融",
+              "zttj": {
+                "days": 1,
+                "ct": 1
+              }
+            }
+          ]
+        }
+      }
+    },
+    "eastmoneyLhb": {
+      "source_name": "eastmoneyLhb",
+      "source_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?sortColumns=SECURITY_CODE%2CTRADE_DATE&sortTypes=1%2C-1&pageSize=5000&pageNumber=1&reportName=RPT_DAILYBILLBOARD_DETAILSNEW&columns=SECURITY_CODE%2CSECURITY_NAME_ABBR%2CTRADE_DATE%2CBILLBOARD_NET_AMT%2CBILLBOARD_BUY_AMT%2CBILLBOARD_SELL_AMT%2CEXPLAIN&source=WEB&client=WEB&filter=%28TRADE_DATE%3C%3D%272026-09-10%27%29%28TRADE_DATE%3E%3D%272026-09-10%27%29",
+      "trade_date": "2026-09-10",
+      "fetched_at": "2026-09-10T09:10:59.784Z",
+      "http_status": 200,
+      "content_type": "text/plain;charset=UTF-8",
+      "sha256": "caef5ad078eb0640d8bc21d64b171b237e74add1e8511f23257c80f93aad7edc",
+      "bytes": 15573,
+      "status": "available",
+      "raw_path": "data/public/20260910/eastmoneyLhb-171059.raw.json",
+      "parse_error": null,
+      "data": {
+        "version": "6bf38c0852db015d141ba27f49516962",
+        "result": {
+          "pages": 1,
+          "data": [
+            {
+              "SECURITY_CODE": "000017",
+              "SECURITY_NAME_ABBR": "深中华A",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -928631.980000001,
+              "BILLBOARD_BUY_AMT": 31987377.88,
+              "BILLBOARD_SELL_AMT": 32916009.86,
+              "EXPLAIN": "西藏自治区资金卖出，成功率52.37%"
+            },
+            {
+              "SECURITY_CODE": "000523",
+              "SECURITY_NAME_ABBR": "红棉股份",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -122949941.06,
+              "BILLBOARD_BUY_AMT": 283138208.4,
+              "BILLBOARD_SELL_AMT": 406088149.46,
+              "EXPLAIN": "1家机构买入，成功率37.32%"
+            },
+            {
+              "SECURITY_CODE": "000565",
+              "SECURITY_NAME_ABBR": "渝三峡A",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 31077028.8,
+              "BILLBOARD_BUY_AMT": 58814512.8,
+              "BILLBOARD_SELL_AMT": 27737484,
+              "EXPLAIN": "2家机构买入，成功率41.15%"
+            },
+            {
+              "SECURITY_CODE": "000565",
+              "SECURITY_NAME_ABBR": "渝三峡A",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 79571289.61,
+              "BILLBOARD_BUY_AMT": 122234170.79,
+              "BILLBOARD_SELL_AMT": 42662881.18,
+              "EXPLAIN": "买一主买，成功率35.31%"
+            },
+            {
+              "SECURITY_CODE": "000759",
+              "SECURITY_NAME_ABBR": "中百集团",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -61644823.53,
+              "BILLBOARD_BUY_AMT": 184217178.76,
+              "BILLBOARD_SELL_AMT": 245862002.29,
+              "EXPLAIN": "1家机构买入，成功率27.59%"
+            },
+            {
+              "SECURITY_CODE": "000823",
+              "SECURITY_NAME_ABBR": "超声电子",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 92062323.58,
+              "BILLBOARD_BUY_AMT": 508786282.8,
+              "BILLBOARD_SELL_AMT": 416723959.22,
+              "EXPLAIN": "主力做T，成功率36.38%"
+            },
+            {
+              "SECURITY_CODE": "000912",
+              "SECURITY_NAME_ABBR": "泸天化",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -37116514.92,
+              "BILLBOARD_BUY_AMT": 88459801.13,
+              "BILLBOARD_SELL_AMT": 125576316.05,
+              "EXPLAIN": "1家机构卖出，成功率38.80%"
+            },
+            {
+              "SECURITY_CODE": "000978",
+              "SECURITY_NAME_ABBR": "桂林旅游",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -8583435,
+              "BILLBOARD_BUY_AMT": 81799869,
+              "BILLBOARD_SELL_AMT": 90383304,
+              "EXPLAIN": "普通席位买入，成功率43.25%"
+            },
+            {
+              "SECURITY_CODE": "000978",
+              "SECURITY_NAME_ABBR": "桂林旅游",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -31473098.85,
+              "BILLBOARD_BUY_AMT": 134588216.29,
+              "BILLBOARD_SELL_AMT": 166061315.14,
+              "EXPLAIN": "3家机构买入，成功率18.77%"
+            },
+            {
+              "SECURITY_CODE": "000993",
+              "SECURITY_NAME_ABBR": "闽东电力",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 8768598.37999999,
+              "BILLBOARD_BUY_AMT": 79870907.5,
+              "BILLBOARD_SELL_AMT": 71102309.12,
+              "EXPLAIN": "主力做T，成功率32.63%"
+            },
+            {
+              "SECURITY_CODE": "000993",
+              "SECURITY_NAME_ABBR": "闽东电力",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 62242925.6,
+              "BILLBOARD_BUY_AMT": 149240027.6,
+              "BILLBOARD_SELL_AMT": 86997102,
+              "EXPLAIN": "主力做T，成功率31.12%"
+            },
+            {
+              "SECURITY_CODE": "002084",
+              "SECURITY_NAME_ABBR": "海鸥住工",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -1337714,
+              "BILLBOARD_BUY_AMT": 158707771.97,
+              "BILLBOARD_SELL_AMT": 160045485.97,
+              "EXPLAIN": "主力做T，成功率31.15%"
+            },
+            {
+              "SECURITY_CODE": "002162",
+              "SECURITY_NAME_ABBR": "悦心健康",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -11211002.13,
+              "BILLBOARD_BUY_AMT": 92990538.5,
+              "BILLBOARD_SELL_AMT": 104201540.63,
+              "EXPLAIN": "广东资金买入，成功率30.85%"
+            },
+            {
+              "SECURITY_CODE": "002172",
+              "SECURITY_NAME_ABBR": "澳洋健康",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -59254304.2,
+              "BILLBOARD_BUY_AMT": 89232369,
+              "BILLBOARD_SELL_AMT": 148486673.2,
+              "EXPLAIN": "2家机构卖出，成功率28.65%"
+            },
+            {
+              "SECURITY_CODE": "002174",
+              "SECURITY_NAME_ABBR": "游族网络",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 155758106.21,
+              "BILLBOARD_BUY_AMT": 302852016.02,
+              "BILLBOARD_SELL_AMT": 147093909.81,
+              "EXPLAIN": "2家机构买入，成功率40.18%"
+            },
+            {
+              "SECURITY_CODE": "002365",
+              "SECURITY_NAME_ABBR": "永安药业",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -91731310.11,
+              "BILLBOARD_BUY_AMT": 54147070.59,
+              "BILLBOARD_SELL_AMT": 145878380.7,
+              "EXPLAIN": "2家机构卖出，成功率23.98%"
+            },
+            {
+              "SECURITY_CODE": "002377",
+              "SECURITY_NAME_ABBR": "国创高新",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 50300599.8,
+              "BILLBOARD_BUY_AMT": 152374478,
+              "BILLBOARD_SELL_AMT": 102073878.2,
+              "EXPLAIN": "普通席位买入，成功率38.06%"
+            },
+            {
+              "SECURITY_CODE": "002403",
+              "SECURITY_NAME_ABBR": "爱仕达",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -24576460.02,
+              "BILLBOARD_BUY_AMT": 58247060.04,
+              "BILLBOARD_SELL_AMT": 82823520.06,
+              "EXPLAIN": "1家机构卖出，成功率33.34%"
+            },
+            {
+              "SECURITY_CODE": "002636",
+              "SECURITY_NAME_ABBR": "金安国纪",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 548582049.82,
+              "BILLBOARD_BUY_AMT": 890056244.19,
+              "BILLBOARD_SELL_AMT": 341474194.37,
+              "EXPLAIN": "2家机构买入，成功率44.01%"
+            },
+            {
+              "SECURITY_CODE": "002702",
+              "SECURITY_NAME_ABBR": "海欣食品",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -75685233.9,
+              "BILLBOARD_BUY_AMT": 80510802,
+              "BILLBOARD_SELL_AMT": 156196035.9,
+              "EXPLAIN": "5家机构卖出，成功率7.37%"
+            },
+            {
+              "SECURITY_CODE": "002855",
+              "SECURITY_NAME_ABBR": "捷荣技术",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 6455199.48,
+              "BILLBOARD_BUY_AMT": 81407729,
+              "BILLBOARD_SELL_AMT": 74952529.52,
+              "EXPLAIN": "1家机构卖出，成功率29.87%"
+            },
+            {
+              "SECURITY_CODE": "002855",
+              "SECURITY_NAME_ABBR": "捷荣技术",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 12310935,
+              "BILLBOARD_BUY_AMT": 34988340,
+              "BILLBOARD_SELL_AMT": 22677405,
+              "EXPLAIN": "主力做T，成功率37.13%"
+            },
+            {
+              "SECURITY_CODE": "002909",
+              "SECURITY_NAME_ABBR": "集泰股份",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -31257944.81,
+              "BILLBOARD_BUY_AMT": 91544611.18,
+              "BILLBOARD_SELL_AMT": 122802555.99,
+              "EXPLAIN": "4家机构卖出，成功率7.33%"
+            },
+            {
+              "SECURITY_CODE": "003040",
+              "SECURITY_NAME_ABBR": "楚天龙",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -27955955.17,
+              "BILLBOARD_BUY_AMT": 126599110.47,
+              "BILLBOARD_SELL_AMT": 154555065.64,
+              "EXPLAIN": "2家机构卖出，成功率36.66%"
+            },
+            {
+              "SECURITY_CODE": "300290",
+              "SECURITY_NAME_ABBR": "ST荣科",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 5684784.86,
+              "BILLBOARD_BUY_AMT": 51342134.5,
+              "BILLBOARD_SELL_AMT": 45657349.64,
+              "EXPLAIN": "1家机构买入，成功率35.60%"
+            },
+            {
+              "SECURITY_CODE": "300290",
+              "SECURITY_NAME_ABBR": "ST荣科",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 25750521.92,
+              "BILLBOARD_BUY_AMT": 108052307.06,
+              "BILLBOARD_SELL_AMT": 82301785.14,
+              "EXPLAIN": "1家机构买入，成功率29.16%"
+            },
+            {
+              "SECURITY_CODE": "301176",
+              "SECURITY_NAME_ABBR": "逸豪新材",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 72447380.36,
+              "BILLBOARD_BUY_AMT": 234897818.8,
+              "BILLBOARD_SELL_AMT": 162450438.44,
+              "EXPLAIN": "3家机构买入，成功率43.00%"
+            },
+            {
+              "SECURITY_CODE": "301520",
+              "SECURITY_NAME_ABBR": "万邦医药",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 10748592.1,
+              "BILLBOARD_BUY_AMT": 74248300.53,
+              "BILLBOARD_SELL_AMT": 63499708.43,
+              "EXPLAIN": "2家机构卖出，成功率25.10%"
+            },
+            {
+              "SECURITY_CODE": "301689",
+              "SECURITY_NAME_ABBR": "电科思仪",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 304571843.44,
+              "BILLBOARD_BUY_AMT": 352621048.46,
+              "BILLBOARD_SELL_AMT": 48049205.02,
+              "EXPLAIN": "2家机构买入，成功率45.48%"
+            },
+            {
+              "SECURITY_CODE": "600108",
+              "SECURITY_NAME_ABBR": "亚盛集团",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -10554216.89,
+              "BILLBOARD_BUY_AMT": 264582947.33,
+              "BILLBOARD_SELL_AMT": 275137164.22,
+              "EXPLAIN": "普通席位卖出，成功率43.01%"
+            },
+            {
+              "SECURITY_CODE": "600108",
+              "SECURITY_NAME_ABBR": "亚盛集团",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -10554216.89,
+              "BILLBOARD_BUY_AMT": 264582947.33,
+              "BILLBOARD_SELL_AMT": 275137164.22,
+              "EXPLAIN": "普通席位卖出，成功率43.01%"
+            },
+            {
+              "SECURITY_CODE": "600127",
+              "SECURITY_NAME_ABBR": "金健米业",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -81672918.77,
+              "BILLBOARD_BUY_AMT": 258771062.62,
+              "BILLBOARD_SELL_AMT": 340443981.39,
+              "EXPLAIN": "卖一主卖，成功率44.81%"
+            },
+            {
+              "SECURITY_CODE": "600192",
+              "SECURITY_NAME_ABBR": "长城电工",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 21881213.3,
+              "BILLBOARD_BUY_AMT": 91260975.3,
+              "BILLBOARD_SELL_AMT": 69379762,
+              "EXPLAIN": "普通席位买入，成功率45.00%"
+            },
+            {
+              "SECURITY_CODE": "600318",
+              "SECURITY_NAME_ABBR": "新力金融",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 26035949.48,
+              "BILLBOARD_BUY_AMT": 78260184.8,
+              "BILLBOARD_SELL_AMT": 52224235.32,
+              "EXPLAIN": "普通席位买入，成功率45.46%"
+            },
+            {
+              "SECURITY_CODE": "600354",
+              "SECURITY_NAME_ABBR": "敦煌种业",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -67791006.75,
+              "BILLBOARD_BUY_AMT": 316529769.66,
+              "BILLBOARD_SELL_AMT": 384320776.41,
+              "EXPLAIN": "买一主买，成功率45.39%"
+            },
+            {
+              "SECURITY_CODE": "600354",
+              "SECURITY_NAME_ABBR": "敦煌种业",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -139643753.2,
+              "BILLBOARD_BUY_AMT": 728752819.44,
+              "BILLBOARD_SELL_AMT": 868396572.64,
+              "EXPLAIN": "普通席位买入，成功率45.11%"
+            },
+            {
+              "SECURITY_CODE": "600354",
+              "SECURITY_NAME_ABBR": "敦煌种业",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -67791006.75,
+              "BILLBOARD_BUY_AMT": 316529769.66,
+              "BILLBOARD_SELL_AMT": 384320776.41,
+              "EXPLAIN": "买一主买，成功率45.39%"
+            },
+            {
+              "SECURITY_CODE": "600359",
+              "SECURITY_NAME_ABBR": "新农开发",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 59342128.8,
+              "BILLBOARD_BUY_AMT": 92942017,
+              "BILLBOARD_SELL_AMT": 33599888.2,
+              "EXPLAIN": "普通席位买入，成功率43.74%"
+            },
+            {
+              "SECURITY_CODE": "600479",
+              "SECURITY_NAME_ABBR": "千金药业",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -27569168.95,
+              "BILLBOARD_BUY_AMT": 57919688.2,
+              "BILLBOARD_SELL_AMT": 85488857.15,
+              "EXPLAIN": "普通席位卖出，成功率38.47%"
+            },
+            {
+              "SECURITY_CODE": "600488",
+              "SECURITY_NAME_ABBR": "津药药业",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 67772633.1,
+              "BILLBOARD_BUY_AMT": 140158115.45,
+              "BILLBOARD_SELL_AMT": 72385482.35,
+              "EXPLAIN": "普通席位买入，成功率43.68%"
+            },
+            {
+              "SECURITY_CODE": "600491",
+              "SECURITY_NAME_ABBR": "ST龙元",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 3814688,
+              "BILLBOARD_BUY_AMT": 18833665,
+              "BILLBOARD_SELL_AMT": 15018977,
+              "EXPLAIN": "西藏自治区资金买入，成功率35.38%"
+            },
+            {
+              "SECURITY_CODE": "600540",
+              "SECURITY_NAME_ABBR": "新赛股份",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -60327715.64,
+              "BILLBOARD_BUY_AMT": 143052965.02,
+              "BILLBOARD_SELL_AMT": 203380680.66,
+              "EXPLAIN": "普通席位卖出，成功率55.77%"
+            },
+            {
+              "SECURITY_CODE": "600540",
+              "SECURITY_NAME_ABBR": "新赛股份",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -60327715.64,
+              "BILLBOARD_BUY_AMT": 143052965.02,
+              "BILLBOARD_SELL_AMT": 203380680.66,
+              "EXPLAIN": "普通席位卖出，成功率55.77%"
+            },
+            {
+              "SECURITY_CODE": "600722",
+              "SECURITY_NAME_ABBR": "金牛化工",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 39562520.59,
+              "BILLBOARD_BUY_AMT": 330473566.29,
+              "BILLBOARD_SELL_AMT": 290911045.7,
+              "EXPLAIN": "卖一主卖，成功率43.40%"
+            },
+            {
+              "SECURITY_CODE": "600737",
+              "SECURITY_NAME_ABBR": "中粮糖业",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -127518930.15,
+              "BILLBOARD_BUY_AMT": 211135494.69,
+              "BILLBOARD_SELL_AMT": 338654424.84,
+              "EXPLAIN": "普通席位卖出，成功率42.23%"
+            },
+            {
+              "SECURITY_CODE": "600744",
+              "SECURITY_NAME_ABBR": "华银电力",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 222344577.84,
+              "BILLBOARD_BUY_AMT": 304271813.68,
+              "BILLBOARD_SELL_AMT": 81927235.84,
+              "EXPLAIN": "普通席位买入，成功率46.28%"
+            },
+            {
+              "SECURITY_CODE": "603042",
+              "SECURITY_NAME_ABBR": "华脉科技",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -4533926.05,
+              "BILLBOARD_BUY_AMT": 104157304.28,
+              "BILLBOARD_SELL_AMT": 108691230.33,
+              "EXPLAIN": "普通席位卖出，成功率41.97%"
+            },
+            {
+              "SECURITY_CODE": "603090",
+              "SECURITY_NAME_ABBR": "宏盛股份",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -14877084,
+              "BILLBOARD_BUY_AMT": 22698768,
+              "BILLBOARD_SELL_AMT": 37575852,
+              "EXPLAIN": "卖一主卖，成功率33.76%"
+            },
+            {
+              "SECURITY_CODE": "603162",
+              "SECURITY_NAME_ABBR": "海通发展",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -141328045.46,
+              "BILLBOARD_BUY_AMT": 373564903.9,
+              "BILLBOARD_SELL_AMT": 514892949.36,
+              "EXPLAIN": "买一主买，成功率43.31%"
+            },
+            {
+              "SECURITY_CODE": "603191",
+              "SECURITY_NAME_ABBR": "望变电气",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -43628092.3,
+              "BILLBOARD_BUY_AMT": 25838850.57,
+              "BILLBOARD_SELL_AMT": 69466942.87,
+              "EXPLAIN": "1家机构卖出，成功率47.20%"
+            },
+            {
+              "SECURITY_CODE": "603216",
+              "SECURITY_NAME_ABBR": "梦天家居",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 27794369.2,
+              "BILLBOARD_BUY_AMT": 81116801.38,
+              "BILLBOARD_SELL_AMT": 53322432.18,
+              "EXPLAIN": "买一主买，成功率44.95%"
+            },
+            {
+              "SECURITY_CODE": "603421",
+              "SECURITY_NAME_ABBR": "鼎信通讯",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 43005406.56,
+              "BILLBOARD_BUY_AMT": 120502754.4,
+              "BILLBOARD_SELL_AMT": 77497347.84,
+              "EXPLAIN": "普通席位买入，成功率45.28%"
+            },
+            {
+              "SECURITY_CODE": "603601",
+              "SECURITY_NAME_ABBR": "再升科技",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 135695004.27,
+              "BILLBOARD_BUY_AMT": 385985742.27,
+              "BILLBOARD_SELL_AMT": 250290738,
+              "EXPLAIN": "买一主买，成功率46.21%"
+            },
+            {
+              "SECURITY_CODE": "603958",
+              "SECURITY_NAME_ABBR": "哈森股份",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -31572129.11,
+              "BILLBOARD_BUY_AMT": 53973260.01,
+              "BILLBOARD_SELL_AMT": 85545389.12,
+              "EXPLAIN": "卖一主卖，成功率46.30%"
+            },
+            {
+              "SECURITY_CODE": "605177",
+              "SECURITY_NAME_ABBR": "东亚药业",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 857599.099999994,
+              "BILLBOARD_BUY_AMT": 190056589.43,
+              "BILLBOARD_SELL_AMT": 189198990.33,
+              "EXPLAIN": "1家机构买入，成功率44.01%"
+            },
+            {
+              "SECURITY_CODE": "605398",
+              "SECURITY_NAME_ABBR": "新炬网络",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -26079669.16,
+              "BILLBOARD_BUY_AMT": 53615357.72,
+              "BILLBOARD_SELL_AMT": 79695026.88,
+              "EXPLAIN": "1家机构卖出，成功率33.74%"
+            },
+            {
+              "SECURITY_CODE": "688496",
+              "SECURITY_NAME_ABBR": "*ST清越",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -2025423.14,
+              "BILLBOARD_BUY_AMT": 2356780.13,
+              "BILLBOARD_SELL_AMT": 4382203.27,
+              "EXPLAIN": "卖一主卖，成功率43.31%"
+            },
+            {
+              "SECURITY_CODE": "688496",
+              "SECURITY_NAME_ABBR": "*ST清越",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -190527.1,
+              "BILLBOARD_BUY_AMT": 1341514.48,
+              "BILLBOARD_SELL_AMT": 1532041.58,
+              "EXPLAIN": "普通席位卖出，成功率46.31%"
+            },
+            {
+              "SECURITY_CODE": "920071",
+              "SECURITY_NAME_ABBR": "金钛股份",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 16280770.23,
+              "BILLBOARD_BUY_AMT": 55105165.98,
+              "BILLBOARD_SELL_AMT": 38824395.75,
+              "EXPLAIN": "2家机构卖出，成功率26.35%"
+            },
+            {
+              "SECURITY_CODE": "920128",
+              "SECURITY_NAME_ABBR": "胜业电气",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": 706290.480000001,
+              "BILLBOARD_BUY_AMT": 18710358.61,
+              "BILLBOARD_SELL_AMT": 18004068.13,
+              "EXPLAIN": "主力做T，成功率26.99%"
+            },
+            {
+              "SECURITY_CODE": "920268",
+              "SECURITY_NAME_ABBR": "百迈科",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -9764573.29,
+              "BILLBOARD_BUY_AMT": 45295258.13,
+              "BILLBOARD_SELL_AMT": 55059831.42,
+              "EXPLAIN": "1家机构买入，成功率41.76%"
+            },
+            {
+              "SECURITY_CODE": "920268",
+              "SECURITY_NAME_ABBR": "百迈科",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -9764573.29,
+              "BILLBOARD_BUY_AMT": 45295258.13,
+              "BILLBOARD_SELL_AMT": 55059831.42,
+              "EXPLAIN": "1家机构买入，成功率41.76%"
+            },
+            {
+              "SECURITY_CODE": "920269",
+              "SECURITY_NAME_ABBR": "杰锋动力",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -7280189.33,
+              "BILLBOARD_BUY_AMT": 8634125.68,
+              "BILLBOARD_SELL_AMT": 15914315.01,
+              "EXPLAIN": "普通席位买入，成功率39.99%"
+            },
+            {
+              "SECURITY_CODE": "920895",
+              "SECURITY_NAME_ABBR": "花溪科技",
+              "TRADE_DATE": "2026-09-10 00:00:00",
+              "BILLBOARD_NET_AMT": -2823671.05,
+              "BILLBOARD_BUY_AMT": 31947991.9,
+              "BILLBOARD_SELL_AMT": 34771662.95,
+              "EXPLAIN": "西藏自治区资金卖出，成功率37.93%"
+            }
+          ],
+          "count": 64
+        },
+        "success": true,
+        "message": "ok",
+        "code": 0
+      }
+    }
+  }
+}

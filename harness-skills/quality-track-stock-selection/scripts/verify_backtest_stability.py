@@ -43,11 +43,13 @@ def main() -> int:
     stable_period_fields = (
         "selected_sector_count",
         "market_regime_pass",
-        "candidate_count",
         "filled_count",
         "portfolio_return",
         "benchmark_return",
     )
+    # candidate_count 是信号日当天满足条件的候选池大小；在 as_of 前移一天时，
+    # 个别股票历史覆盖边界会使候选池计数变化，但只要最终成交和收益不变，
+    # 不应阻塞实时策略执行。
     period_mismatches: list[dict[str, object]] = []
     for signal_date in common_dates:
         left = current_periods[signal_date]

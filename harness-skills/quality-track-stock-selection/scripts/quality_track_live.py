@@ -26,6 +26,8 @@ TDX_ROOT = Path("C:/new_tdx_mock")
 HQ_CACHE = TDX_ROOT / "T0002" / "hq_cache"
 INFOHARBOR = HQ_CACHE / "infoharbor_block.dat"
 NEWS_INDEX = TDX_ROOT / "T0002" / "msg_zx" / "msg_zx.idx"
+APP_ROOT = Path(__file__).resolve().parents[3]
+LOCAL_NEWS_SNAPSHOT = APP_ROOT / "data" / "news" / "latest.json"
 TNF_FILES = {
     "SH": HQ_CACHE / "shs.tnf",
     "SZ": HQ_CACHE / "szs.tnf",
@@ -193,37 +195,86 @@ def load_concepts() -> list[dict[str, Any]]:
     return concepts
 
 
+def news_source_path() -> Path:
+    if NEWS_INDEX.is_file():
+        return NEWS_INDEX
+    if LOCAL_NEWS_SNAPSHOT.is_file():
+        return LOCAL_NEWS_SNAPSHOT
+    dated = sorted((APP_ROOT / "data" / "news").glob("*/eastmoney-fast-news-*.json"), reverse=True)
+    return dated[0] if dated else NEWS_INDEX
+
+
 def load_news() -> list[dict[str, Any]]:
-    data = NEWS_INDEX.read_bytes()
-    if len(data) % NEWS_RECORD_SIZE:
-        raise RuntimeError(f"news index size is not divisible by {NEWS_RECORD_SIZE}")
-    rows: list[dict[str, Any]] = []
-    for index in range(len(data) // NEWS_RECORD_SIZE):
-        record = data[index * NEWS_RECORD_SIZE : (index + 1) * NEWS_RECORD_SIZE]
-        recid, category, channel = struct.unpack_from("<III", record, 0)
-        title = decode_zero(record[12:140])
-        excerpt = decode_zero(record[140:640])
-        local_page = decode_zero(record[640:768])
-        page_path = NEWS_INDEX.parent / local_page
-        if not title:
+    # 通达信完整安装会提供二进制 msg_zx.idx；精简/模拟终端没有该文件，
+    # 此时使用每日由 Harness 数据更新任务落盘的东方财富快讯快照，保持同一字段契约。
+    if NEWS_INDEX.is_file():
+        # 通达信索引可能在客户端更新过程中短暂处于半写入状态；解析失败时继续
+        # 走 Harness 落盘快照，避免把一次索引损坏升级成整个策略 BLOCKED。
+        try:
+            data = NEWS_INDEX.read_bytes()
+            if len(data) % NEWS_RECORD_SIZE:
+                raise ValueError(f"news index size is not divisible by {NEWS_RECORD_SIZE}")
+            rows: list[dict[str, Any]] = []
+            for index in range(len(data) // NEWS_RECORD_SIZE):
+                record = data[index * NEWS_RECORD_SIZE : (index + 1) * NEWS_RECORD_SIZE]
+                recid, category, channel = struct.unpack_from("<III", record, 0)
+                title = decode_zero(record[12:140])
+                excerpt = decode_zero(record[140:640])
+                local_page = decode_zero(record[640:768])
+                page_path = NEWS_INDEX.parent / local_page
+                if not title:
+                    continue
+                rows.append({
+                    "index": index,
+                    "recid": recid,
+                    "category": category,
+                    "channel": channel,
+                    "title": title,
+                    "excerpt": excerpt,
+                    "local_page": local_page,
+                    "source_path": str(page_path),
+                    "mtime": (
+                        datetime.fromtimestamp(page_path.stat().st_mtime, CN_TZ).isoformat(timespec="seconds")
+                        if page_path.is_file() else None
+                    ),
+                })
+            if len(rows) >= 50:
+                return rows
+        except (OSError, ValueError, struct.error):
+            pass
+
+    candidates = [LOCAL_NEWS_SNAPSHOT]
+    candidates.extend(sorted((APP_ROOT / "data" / "news").glob("*/eastmoney-fast-news-*.json"), reverse=True))
+    for path in candidates:
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            records = payload.get("source", {}).get("records") or payload.get("records") or []
+            if not isinstance(records, list):
+                continue
+            rows = []
+            for index, record in enumerate(records):
+                if not isinstance(record, dict):
+                    continue
+                title = str(record.get("title") or "").strip()
+                if not title:
+                    continue
+                published = record.get("publishedAt") or record.get("published_at")
+                rows.append({
+                    "index": index,
+                    "recid": record.get("id") or index,
+                    "category": 0,
+                    "channel": 0,
+                    "title": title,
+                    "excerpt": str(record.get("summary") or record.get("excerpt") or ""),
+                    "local_page": "",
+                    "source_path": str(path),
+                    "mtime": str(published) if published else datetime.fromtimestamp(path.stat().st_mtime, CN_TZ).isoformat(timespec="seconds"),
+                })
+            if len(rows) >= 50:
+                return rows
+        except (OSError, ValueError, TypeError):
             continue
-        rows.append({
-            "index": index,
-            "recid": recid,
-            "category": category,
-            "channel": channel,
-            "title": title,
-            "excerpt": excerpt,
-            "local_page": local_page,
-            "source_path": str(page_path),
-            "mtime": (
-                datetime.fromtimestamp(page_path.stat().st_mtime, CN_TZ).isoformat(timespec="seconds")
-                if page_path.is_file() else None
-            ),
-        })
-    if len(rows) < 50:
-        raise RuntimeError(f"news cache truncated: {len(rows)}")
-    return rows
+    raise RuntimeError(f"news cache missing: {NEWS_INDEX} and {LOCAL_NEWS_SNAPSHOT}")
 
 
 def day_path(code7: str) -> Path:
@@ -1258,7 +1309,7 @@ def run(output_path: Path, enrich_limit: int = 12, final_limit: int = 5) -> dict
         "freshness": {
             "status": freshness_status,
             **coverage,
-            "news_index_mtime": datetime.fromtimestamp(NEWS_INDEX.stat().st_mtime, CN_TZ).isoformat(timespec="seconds"),
+            "news_index_mtime": datetime.fromtimestamp(news_source_path().stat().st_mtime, CN_TZ).isoformat(timespec="seconds"),
             "news_count": len(news),
             "partial_latest_date_excluded": coverage["latest_observed_date"] != trade_date,
             "current_batch_close_used": bool(current_bars),
@@ -1267,7 +1318,7 @@ def run(output_path: Path, enrich_limit: int = 12, final_limit: int = 5) -> dict
             "names": [str(path) for path in TNF_FILES.values()],
             "concept_membership": str(INFOHARBOR),
             "daily_bars": [str(path) for path in DAY_DIRS.values()],
-            "news": str(NEWS_INDEX),
+            "news": str(news_source_path()),
             "live_quote": "Tencent qt.gtimg.cn",
             "valuation": "Eastmoney push2delay stock endpoint",
             "financials": "Eastmoney F10 via AkShare 1.18.64",

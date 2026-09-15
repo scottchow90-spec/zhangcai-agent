@@ -1,0 +1,6 @@
+interface:
+  display_name: "补涨龙头挖掘"
+  short_description: "从已确认短线主线中筛选低位补涨龙头并给出龙1龙2龙3"
+  default_prompt: "运行补涨龙头挖掘：按最新交易日扫描确认主线，剔除主升高标，输出每条主线的补涨龙1/龙2/龙3、证据、触发与失效条件。"
+policy:
+  allow_implicit_invocation: false

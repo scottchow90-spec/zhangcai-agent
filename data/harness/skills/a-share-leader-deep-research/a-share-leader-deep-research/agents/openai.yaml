@@ -1,0 +1,6 @@
+interface:
+  display_name: "龙头深度研究"
+  short_description: "A股八类投资板块涨停龙头分类与精美Word报告交付"
+  default_prompt: "Use $a-share-leader-deep-research 执行龙头深度研究，使用当前市场数据，按八类一级投资板块及板块内两榜生成并交付Word报告。"
+policy:
+  allow_implicit_invocation: false

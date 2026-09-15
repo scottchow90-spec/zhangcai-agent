@@ -1,0 +1,32 @@
+{
+  "schema": "ZHANGCAI_PUBLIC_MARKET_V1",
+  "date": "2026-09-10",
+  "fetchedAt": "2026-09-10T10:05:02.8637403+08:00",
+  "collector": "powershell-equivalent (python unavailable)",
+  "sources": {
+    "lianban": {
+      "source_name": "lianban",
+      "source_url": "https://lianban.net/opendata/2026-09-10.json",
+      "trade_date": "2026-09-10",
+      "fetched_at": "2026-09-10T10:05:02.8170289+08:00",
+      "status": "missing",
+      "error": "MethodInvocationException: Exception calling \"GetResult\" with \"0\" argument(s): \"The SSL connection could not be established, see inner exception.\""
+    },
+    "eastmoneyLimitUp": {
+      "source_name": "eastmoneyLimitUp",
+      "source_url": "https://push2ex.eastmoney.com/getTopicZTPool?ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wz.ztzt&Pageindex=0&pagesize=10000&sort=fbt%3Aasc&date=20260910",
+      "trade_date": "2026-09-10",
+      "fetched_at": "2026-09-10T10:05:02.8539993+08:00",
+      "status": "missing",
+      "error": "MethodInvocationException: Exception calling \"GetResult\" with \"0\" argument(s): \"The SSL connection could not be established, see inner exception.\""
+    },
+    "eastmoneyLhb": {
+      "source_name": "eastmoneyLhb",
+      "source_url": "https://datacenter-web.eastmoney.com/api/data/v1/get?sortColumns=SECURITY_CODE%2CTRADE_DATE&sortTypes=1%2C-1&pageSize=5000&pageNumber=1&reportName=RPT_DAILYBILLBOARD_DETAILSNEW&columns=SECURITY_CODE%2CSECURITY_NAME_ABBR%2CTRADE_DATE%2CBILLBOARD_NET_AMT%2CBILLBOARD_BUY_AMT%2CBILLBOARD_SELL_AMT%2CEXPLAIN&source=WEB&client=WEB&filter=%28TRADE_DATE%3C%3D%272026-09-10%27%29%28TRADE_DATE%3E%3D%272026-09-10%27%29",
+      "trade_date": "2026-09-10",
+      "fetched_at": "2026-09-10T10:05:02.8630626+08:00",
+      "status": "missing",
+      "error": "MethodInvocationException: Exception calling \"GetResult\" with \"0\" argument(s): \"The SSL connection could not be established, see inner exception.\""
+    }
+  }
+}
