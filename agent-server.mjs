@@ -1,7 +1,7 @@
 import http from 'node:http';
 import { spawn } from 'node:child_process';
 import path from 'node:path';
-import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync } from 'node:fs';
+import { closeSync, cpSync, existsSync, mkdirSync, openSync, readFileSync, readSync, readdirSync, statSync } from 'node:fs';
 import { mkdir, writeFile, unlink } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
 
@@ -22,22 +22,39 @@ function loadLocalEnvFile() {
 }
 loadLocalEnvFile();
 
-// 允许同一局域网的浏览器访问；可通过 ZHANGCAI_HOST 收紧到指定网卡。
-const HOST = process.env.ZHANGCAI_HOST || '0.0.0.0';
-// Harness 桥接端口固定为 4318。网页、桌面启动器和恢复轮询都使用这一端口，
-// 避免环境变量变化后出现任务已启动但状态查询落到另一服务的问题。
-const PORT = Number(process.env.ZHANGCAI_BRIDGE_PORT || 4318);
+// The 14-skill web app is local by default. LAN exposure requires an explicit
+// environment override and an authenticated front door.
+const HOST = process.env.ZHANGCAI_HOST || '127.0.0.1';
+const PORT = Number(process.env.ZHANGCAI_BRIDGE_PORT || 4319);
+const BRIDGE_CAPABILITIES = ['runtime/tdx/open', 'runtime/environment'];
 const APP_ROOT = path.resolve(process.env.ZHANGCAI_APP_ROOT || process.cwd());
-const DATA_ROOT = path.resolve(process.env.ZHANGCAI_DATA_DIR || path.join(APP_ROOT, 'data'));
+// All production data assets stay beside the 3003 program. Do not allow an
+// inherited environment variable to redirect web/Harness reads or writes to
+// another app, a 3002 snapshot, or an external user directory.
+const DATA_ROOT = path.join(APP_ROOT, 'app-data');
 const RUNTIME_ROOT = path.join(DATA_ROOT, 'runtime');
 const HARNESS_ROOT = path.join(DATA_ROOT, 'harness');
 const HARNESS_CONTEXT_ROOT = path.join(HARNESS_ROOT, 'context');
 const HARNESS_JOBS_ROOT = path.join(HARNESS_ROOT, 'jobs');
 const STRATEGY_JOBS_ROOT = path.join(HARNESS_ROOT, 'strategy-jobs');
 const AFTER_CLOSE_SCHEDULE_FILE = path.join(HARNESS_ROOT, 'schedules', 'after-close-daily-refresh.json');
+const RUNTIME_POLICY_FILE = path.join(HARNESS_CONTEXT_ROOT, 'runtime-policy.json');
+const REPORT_ARCHIVE_ROOT = path.join(DATA_ROOT, 'reports', 'archive');
+const REPORT_ARCHIVE_INDEX_FILE = path.join(REPORT_ARCHIVE_ROOT, 'index.json');
+const UNIFIED_ARCHIVE_REPORT_ROOT = path.join(DATA_ROOT, 'reports', 'unified-archive');
+const UNIFIED_ARCHIVE_OUTPUT_ROOT = path.join(DATA_ROOT, 'runtime', 'unified-archive-output');
 const SKILL_SOURCE = path.resolve(process.env.ZHANGCAI_SKILLS_DIR || path.join(APP_ROOT, 'harness-skills'));
 const DAILY_STATE_FILE = path.join(RUNTIME_ROOT, 'daily-refresh-state.json');
 const SUPPLEMENTAL_STATE_FILE = path.join(RUNTIME_ROOT, 'supplemental-refresh-state.json');
+const UNIFIED_ARCHIVE_STATE_FILE = path.join(RUNTIME_ROOT, 'unified-data-archive-state.json');
+const UNIFIED_VERIFY_STATE_FILE = path.join(RUNTIME_ROOT, 'unified-data-verification-state.json');
+const SKILL14_CATALOG_FILE = path.join(APP_ROOT, 'config', 'skill14-catalog.json');
+const TDX_DAY_RECORD_SIZE = 32;
+const TDX_HISTORY_INDEX_FILE = path.join(DATA_ROOT, 'market', 'daily', 'index', 'tdx-symbol-index.json');
+const DAILY_DATA_INDEX_FILE = path.join(DATA_ROOT, 'market', 'daily', 'index', 'daily-data-index.json');
+const DAILY_FALLBACK_ROOT = path.join(DATA_ROOT, 'market', 'daily', 'fallback');
+const SUPPLEMENTAL_ROOT = path.join(DATA_ROOT, 'evidence', 'supplemental');
+const SUPPLEMENTAL_LATEST_FILE = path.join(SUPPLEMENTAL_ROOT, 'latest.json');
 // 复盘任务会携带 TDX 行业/主题、涨停梯队和榜单上下文；完整 JSON
 // 通常超过 128KB。保留本地服务的明确上限，但避免超限时直接 socket hang up。
 const MAX_BODY = 4 * 1024 * 1024;
@@ -47,13 +64,15 @@ const MAX_BODY = 4 * 1024 * 1024;
 const MAX_OUTPUT = 256 * 1024;
 function localPythonExecutable() {
   const configured = process.env.ZHANGCAI_PYTHON || process.env.TDX_PYTHON;
-  if (configured) return configured;
+  if (configured && existsSync(configured)) return configured;
   const candidates = [
     path.join(APP_ROOT, '.runtime', 'python', 'python.exe'),
     path.join(APP_ROOT, 'runtime', 'python', 'python.exe'),
-    process.env.USERPROFILE ? path.join(process.env.USERPROFILE, '.cache', 'codex-runtimes', 'codex-primary-runtime', 'dependencies', 'python', 'python.exe') : '',
   ];
-  return candidates.find((candidate) => candidate && existsSync(candidate)) || 'python';
+  // Prefer a Python runtime carried by the packaged application. If none is
+  // bundled, use the operating-system command; never reach into an agent
+  // cache because that would make the EXE depend on the host agent.
+  return candidates.find((candidate) => candidate && existsSync(candidate)) || (process.platform === 'win32' ? 'python.exe' : 'python3');
 }
 const HARNESS_JSON_SCHEMA = '最终只返回一个严格 JSON 对象，不要 Markdown、代码围栏或前后解释。字段必须为：status(string)、summary(string)、data_date(string)、data_scope(string)、cautions(string[])、findings({title:string,text:string}[])、tables({title:string,columns:string[],rows:string[][]}[])。所有结论只能引用传入数据，缺失项写入 cautions，不得虚构。报告按网页重点摘要标准输出：summary 不超过 120 字，findings 最多 5 条且每条不超过 100 字，tables 只保留最关键的 3 张表、每张最多 10 行；优先保留主线结论、核心指标、Top 候选和风险边界，省略重复解释。';
 // DeepSeek Harness 启动和读取本地技能文件本身通常需要几十秒；复杂复盘
@@ -86,12 +105,23 @@ const CANONICAL_STRATEGY_IDS = new Set([
   'quant-strategy-bundle-chen',
   'quantitative-trading',
 ]);
+// 技能包目录使用带版本的展示 ID，但原始策略脚本保留历史目录名。
+// 所有策略入口在桥接层统一归一化，避免把展示 ID 直接拼成不存在的路径。
+const STRATEGY_ID_ALIASES = new Map([
+  ['golden-ignition-v8', 'golden-ignition'],
+]);
+function canonicalStrategyId(skillId) {
+  return STRATEGY_ID_ALIASES.get(skillId) || skillId;
+}
 const PARAMETER_REQUIRED_STRATEGIES = new Set(['golden-ignition']);
 const SPECIAL_DATA_STRATEGIES = new Set(['convertible-bond-screening-strategy']);
 const harnessJobs = new Map();
 const strategyJobs = new Map();
 const dailyJobs = new Map();
 const supplementalJobs = new Map();
+const supplementalTargetJobs = new Map();
+const unifiedArchiveJobs = new Map();
+const unifiedVerificationJobs = new Map();
 
 function harnessJobFile(id) {
   return path.join(HARNESS_JOBS_ROOT, `${id}.json`);
@@ -153,9 +183,10 @@ function resolveSkillEntry(skillRoot) {
 
 function corsHeaders(req) {
   const requestOrigin = req.headers?.origin;
-  const allowOrigin = typeof requestOrigin === 'string' && /^https?:\/\/[^/]+:\d+$/.test(requestOrigin)
+  const localOrigins = new Set(['http://127.0.0.1:3003', 'http://localhost:3003']);
+  const allowOrigin = typeof requestOrigin === 'string' && localOrigins.has(requestOrigin)
     ? requestOrigin
-    : 'http://localhost:3001';
+    : 'http://127.0.0.1:3003';
   return {
     'Access-Control-Allow-Origin': allowOrigin,
     'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
@@ -208,6 +239,10 @@ function buildPrompt(task, market, skillId, context) {
   const sourceText = market.dataSources ? JSON.stringify(market.dataSources) : '未提供';
   const priorText = market.priorLimitUpStats ? JSON.stringify(market.priorLimitUpStats) : '未提供';
   const dailyContext = readJson(path.join(HARNESS_CONTEXT_ROOT, 'latest-data.json'));
+  const localDataPage = readJson(path.join(HARNESS_CONTEXT_ROOT, 'local-data-page.json'));
+  const dailyDataIndex = readJson(DAILY_DATA_INDEX_FILE);
+  const runtimePolicy = readJson(RUNTIME_POLICY_FILE);
+  const supplementalData = context?.supplementalData || null;
   return [
     '你是掌财智能体的本地研究助手。',
     `当前技能：${skillId || '通用行情研究'}`,
@@ -216,7 +251,7 @@ function buildPrompt(task, market, skillId, context) {
     '',
     isDataReplenishment
       ? '这是数据补全任务。先加载 market-data-replenishment 技能，严格按其公开数据源、交易日校验和保存规则执行。允许访问该技能列出的公开接口与本地项目文件；不得将模型推测写为数据。'
-      : '只允许使用下面的本地通达信摘要。网页已经把可计算的榜单、TDX行业/主题成员聚合和涨停候选表传入，必须引用这些表；不要笼统声称缺少涨幅榜、成交额榜、跌幅榜、板块榜或涨停候选。跌停、前日涨停表现和盘中封板率是日线推导，必须标记为推导候选；TDX行业/主题映射可用于结构化候选，但不能当作交易所或申万官方行业事实。',
+      : '优先使用下面的 3003 本地通达信摘要和本地公开来源快照。网页已经把可计算的榜单、TDX行业/主题成员聚合和涨停候选表传入，必须引用这些表；同时按本地数据落盘页读取当前应用已归档的行情、龙虎榜、连板和新闻快照。不要笼统声称缺少涨幅榜、成交额榜、跌幅榜、板块榜或涨停候选。跌停、前日涨停表现和盘中封板率是日线推导，必须标记为推导候选；TDX行业/主题映射可用于结构化候选，但不能当作交易所或申万官方行业事实。',
     `数据日期：${market.date || '未知'}`,
     `同日股票：${market.currentCount ?? '未知'}；上涨：${market.up ?? '未知'}；下跌：${market.down ?? '未知'}；平盘：${market.flat ?? '未知'}`,
     `样本成交额：${market.amount ?? '未知'}；指数：${indexText || '未提供'}`,
@@ -229,9 +264,15 @@ function buildPrompt(task, market, skillId, context) {
     `TDX主题板块聚合：${conceptText}`,
     `盘中封板/炸板代理（OHLC）：${intradayText}`,
     `数据源状态与新鲜度：${sourceText}`,
+    supplementalData
+      ? `财务/股本/指数日线/龙虎榜/融资融券统一补充快照（必须优先引用，status=missing/unavailable 时按缺失处理，不得用0替代）：${JSON.stringify(supplementalData)}`
+      : '财务/股本/指数日线/龙虎榜/融资融券统一补充快照：未提供；如任务需要，必须在 cautions 中明确缺失。',
     `涨停/连板候选：${limitText}`,
     `主线名称聚类候选：${themeText}`,
     `TDX涨停文件：${Array.isArray(market.tdxLimitUpSource) ? market.tdxLimitUpSource.join('、') : '未提供'}`,
+    localDataPage ? `本地数据落盘页（优先按此页读取应用数据）：${JSON.stringify(localDataPage)}` : '',
+    dailyDataIndex ? `统一日线索引与降级状态（按 source_precedence 使用，不可将 degraded 当成 TDX 全历史）：${JSON.stringify({ path: DAILY_DATA_INDEX_FILE, source_precedence: dailyDataIndex.source_precedence, summary: dailyDataIndex.summary, dates: dailyDataIndex.dates })}` : '统一日线索引：未提供；如任务需要历史日线，必须在 cautions 中说明。',
+    runtimePolicy ? `3003 自包含运行时政策（必须遵守）：${JSON.stringify(runtimePolicy)}` : '',
     dailyContext ? `本地每日更新上下文：${JSON.stringify(dailyContext)}` : '',
     context ? `补充上下文：${JSON.stringify(context)}` : '',
     `如果信息不足，请在 cautions 中明确写出。${HARNESS_JSON_SCHEMA}`,
@@ -240,6 +281,9 @@ function buildPrompt(task, market, skillId, context) {
 
 function findLocalDshEntry() {
   const roots = [
+    path.join(APP_ROOT, '.runtime', 'deepseek-harness'),
+    path.join(APP_ROOT, 'runtime', 'deepseek-harness'),
+    path.join(HARNESS_ROOT, 'runtime', 'deepseek-harness'),
     process.env.LOCALAPPDATA
       ? path.join(process.env.LOCALAPPDATA, 'pnpm', 'store', 'v11', 'links', '@deepseek-ai', 'dsh')
       : '',
@@ -275,13 +319,45 @@ function ensureBundledSkills() {
     const names = readdirSync(source, { withFileTypes: true }).filter((entry) => entry.isDirectory()).map((entry) => entry.name);
     for (const name of names) {
       const target = path.join(destination, name);
-      if (!existsSync(target)) cpSync(path.join(source, name), target, { recursive: true });
+      // This small, app-owned skill contains the local data-page contract.
+      // Always sync it so a packaged/restarted bridge cannot keep an older
+      // runtime copy after the source contract changes. Other bundled skills
+      // remain immutable runtime copies.
+      if (!existsSync(target) || name === 'market-data-replenishment') cpSync(path.join(source, name), target, { recursive: true, force: true });
     }
     return { status: 'ready', source, destination, count: names.length };
   } catch (error) {
     console.error(`[agent] skill bundle unavailable: ${error instanceof Error ? error.message : String(error)}`);
     return { status: 'error', source, destination, count: 0 };
   }
+}
+
+async function persistRuntimePolicy() {
+  const policy = {
+    schema: 'ZHANGCAI_3003_SELF_CONTAINED_RUNTIME_POLICY_V1',
+    generated_at: new Date().toISOString(),
+    application_root: APP_ROOT,
+    data_root: DATA_ROOT,
+    web_runtime: '3003 web scripts',
+    report_runtime: 'DeepSeek Harness headless',
+    local_skill_root: SKILL_SOURCE,
+    allowed_data_roots: [DATA_ROOT, HARNESS_ROOT, RUNTIME_ROOT],
+    disabled_runtime_roots: [
+      'imported-3002/',
+      '3002/',
+      'codex cache/runtime',
+      'external report directories',
+    ],
+    rules: [
+      '数据根目录固定为 application_root/app-data，忽略外部 ZHANGCAI_DATA_DIR 覆盖。',
+      '网页、数据状态、任务回执和报告只读取或写入本应用 app-data。',
+      'DeepSeek Harness 只接收 3003 网页脚本传入的本地结构化证据。',
+      '历史兼容目录保留作人工追溯，但不参与任何生产查询、提示词、数据源清单或报告生成。',
+      '公开源只能补齐明确日期的数据并标记 degraded，不覆盖 TDX 主数据。',
+    ],
+  };
+  await writeRuntimeJson(RUNTIME_POLICY_FILE, policy);
+  return policy;
 }
 
 function commandFor(prompt) {
@@ -319,9 +395,44 @@ function coerceHarnessJson(text) {
       tables: Array.isArray(row.tables) ? row.tables : [],
     };
   };
+  const unwrapNestedRecord = (value) => {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return value;
+    const row = value;
+    if (typeof row.summary !== 'string') return row;
+    let nested;
+    const candidates = [
+      row.summary,
+      row.summary.replace(/([\]}])",(?=\s*["}])/g, '$1,'),
+    ];
+    for (const candidate of candidates) {
+      try {
+        nested = JSON.parse(candidate);
+        break;
+      } catch { /* try the repaired embedded JSON form */ }
+    }
+    if (!nested || typeof nested !== 'object' || Array.isArray(nested)) return row;
+    const isReport = ['status', 'summary', 'data_date', 'data_scope', 'cautions', 'findings', 'tables']
+      .some((key) => Object.prototype.hasOwnProperty.call(nested, key));
+    if (!isReport) return row;
+    const outerCautions = (Array.isArray(row.cautions) ? row.cautions : [])
+      .filter((item) => !String(item).includes('Harness 原始输出未符合严格 JSON'));
+    const nestedCautions = Array.isArray(nested.cautions) ? nested.cautions : [];
+    return {
+      ...row,
+      ...nested,
+      cautions: [...outerCautions, ...nestedCautions]
+        .filter((item, index, values) => values.indexOf(item) === index),
+      findings: Array.isArray(nested.findings) ? nested.findings : row.findings,
+      tables: Array.isArray(nested.tables) ? nested.tables : row.tables,
+    };
+  };
   try {
     const value = JSON.parse(source);
-    if (value && typeof value === 'object' && !Array.isArray(value)) return JSON.stringify(shape(value), null, 2);
+    if (typeof value === 'string') {
+      const decoded = JSON.parse(value);
+      if (decoded && typeof decoded === 'object' && !Array.isArray(decoded)) return JSON.stringify(shape(unwrapNestedRecord(decoded)), null, 2);
+    }
+    if (value && typeof value === 'object' && !Array.isArray(value)) return JSON.stringify(shape(unwrapNestedRecord(value)), null, 2);
   } catch { /* try a JSON object embedded in a short model preamble */ }
   const start = source.indexOf('{');
   if (start >= 0) {
@@ -339,7 +450,7 @@ function coerceHarnessJson(text) {
       else if (char === '}' && --depth === 0) {
         try {
           const value = JSON.parse(source.slice(start, index + 1));
-          if (value && typeof value === 'object' && !Array.isArray(value)) return JSON.stringify(shape(value), null, 2);
+          if (value && typeof value === 'object' && !Array.isArray(value)) return JSON.stringify(shape(unwrapNestedRecord(value)), null, 2);
         } catch { break; }
       }
     }
@@ -361,6 +472,9 @@ function harnessEnvironment() {
   const env = {
     DEEPSEEK_API_KEY: process.env.DEEPSEEK_API_KEY,
     DSH_HOME: process.env.DSH_HOME || HARNESS_ROOT,
+    DSH_SKILLS_ROOT: path.join(HARNESS_ROOT, 'skills'),
+    ZHANGCAI_APP_ROOT: APP_ROOT,
+    ZHANGCAI_DATA_DIR: DATA_ROOT,
     DSH_TELEMETRY_DISABLED: '1',
   };
   const requiredSystemVariables = [
@@ -471,6 +585,12 @@ function startHarnessJob(prompt, skillId = '') {
   void runHarnessWithRetry(prompt, skillId).then((result) => {
     const current = harnessJobs.get(id);
     if (!current) return;
+    void persistHarnessReport({ skillId, output: result.output, diagnostics: result.diagnostics, task: prompt, jobId: id })
+      .then((reportPath) => {
+        const latest = harnessJobs.get(id);
+        if (latest) { latest.report_path = reportPath; persistHarnessJob(latest); }
+      })
+      .catch((error) => console.error(`[agent] Harness 报告本地落盘失败：${error instanceof Error ? error.message : String(error)}`));
     Object.assign(current, {
       status: 'completed',
       output: result.output,
@@ -559,8 +679,84 @@ async function runMarketRefresh(scope = 'indices', codes = '') {
   });
 }
 
-function runCanonicalStrategy(skillId) {
+async function persistLatestMarketSnapshot(result, scope = 'market') {
+  if (!result || result.status !== 'ok') return;
+  const runtimePath = path.join(RUNTIME_ROOT, 'market-latest.json');
+  if (scope === 'indices') {
+    const existing = readJson(runtimePath) || {};
+    const indexRows = Array.isArray(result.indices) ? result.indices : [];
+    if (indexRows.length === 0) return;
+    const persistedAt = new Date().toISOString();
+    await writeRuntimeJson(runtimePath, {
+      ...existing,
+      status: 'ok',
+      indices: indexRows,
+      // An index-only refresh must not erase the last complete market
+      // snapshot.  Its own freshness/source are recorded separately so a
+      // reload cannot silently confuse the two data scopes.
+      stocks: Array.isArray(existing.stocks) ? existing.stocks : [],
+      allStocks: Array.isArray(existing.allStocks) ? existing.allStocks : [],
+      date: existing.date || result.tradeDate || '',
+      tradeDate: existing.tradeDate || result.tradeDate || '',
+      indicesSource: result.source || existing.indicesSource || '',
+      indicesQuality: result.quality || 'primary',
+      indicesFallback: result.fallback === true,
+      indicesLatestDataAt: result.fetchedAt || persistedAt,
+      latestDataAt: result.fetchedAt || existing.latestDataAt || persistedAt,
+      persistedAt,
+      dataSources: { ...(existing.dataSources || {}), ...(result.dataSources || {}) },
+    });
+    return;
+  }
+  const allStocks = Array.isArray(result.allStocks) ? result.allStocks : [];
+  const sourceText = String(result.source || '').toLowerCase();
+  const isLocalTdx = sourceText.includes('tongdaxin');
+  const isPublicFallback = result.fallback === true || result.quality === 'degraded';
+  const hasHomepageSnapshot = Array.isArray(result.stocks) && result.stocks.length > 0
+    && result.marketSummary && Number(result.marketSummary.currentCount || 0) > 0;
+  // A local refresh must contain the complete universe.  A public fallback is
+  // deliberately allowed to persist only its compact homepage payload, so a
+  // refresh never falls back to the previous day's packaged headline values.
+  if ((!isLocalTdx && !isPublicFallback) || (isLocalTdx && allStocks.length < 3000) || (isPublicFallback && !hasHomepageSnapshot)) return;
+  const summary = result.marketSummary && typeof result.marketSummary === 'object' ? result.marketSummary : {};
+  const dailyArchive = readJson(path.join(DATA_ROOT, 'status', 'tdx-daily-history.json')) || {};
+  const existingRuntime = readJson(runtimePath) || {};
+  const persistedAt = new Date().toISOString();
+  const isCompactFallback = !isLocalTdx;
+  await writeRuntimeJson(runtimePath, {
+    ...existingRuntime,
+    ...result,
+    indices: Array.isArray(result.indices) && result.indices.length ? result.indices : (existingRuntime.indices || []),
+    indicesSource: Array.isArray(result.indices) && result.indices.length ? (result.source || '') : (existingRuntime.indicesSource || ''),
+    indicesQuality: Array.isArray(result.indices) && result.indices.length ? (result.quality || 'primary') : (existingRuntime.indicesQuality || 'primary'),
+    indicesFallback: Array.isArray(result.indices) && result.indices.length ? result.fallback === true : existingRuntime.indicesFallback === true,
+    indicesLatestDataAt: Array.isArray(result.indices) && result.indices.length ? (result.fetchedAt || persistedAt) : (existingRuntime.indicesLatestDataAt || persistedAt),
+    dataSources: { ...(existingRuntime.dataSources || {}), ...(result.dataSources || {}) },
+    date: result.tradeDate || result.date || '',
+    total: Number(summary.currentCount || allStocks.length),
+    currentCount: Number(summary.currentCount || allStocks.length),
+    up: Number(summary.up || 0),
+    down: Number(summary.down || 0),
+    flat: Number(summary.flat || 0),
+    amount: Number(summary.amount || 0),
+    bins: Array.isArray(summary.bins) ? summary.bins : [],
+    latestDataAt: result.fetchedAt || persistedAt,
+    persistedAt,
+    persistence: {
+      status: isCompactFallback ? 'degraded-public-homepage-snapshot' : 'complete-local-tdx-universe',
+      dataRoot: DATA_ROOT,
+      archivePath: isCompactFallback
+        ? path.join(RUNTIME_ROOT, 'market-public-fallback.json')
+        : dailyArchive.file
+          ? path.join(DATA_ROOT, dailyArchive.file)
+          : path.join(DATA_ROOT, 'market', 'daily', String(result.tradeDate || '').replace(/-/g, ''), 'tdx-bars.jsonl'),
+    },
+  });
+}
+
+function runCanonicalStrategy(requestedSkillId) {
   return new Promise((resolve, reject) => {
+    const skillId = canonicalStrategyId(requestedSkillId);
     if (!CANONICAL_STRATEGY_IDS.has(skillId)) {
       reject(new Error('该策略未配置原始技能入口'));
       return;
@@ -596,27 +792,38 @@ function runCanonicalStrategy(skillId) {
       return;
     }
     try {
-      const snapshot = JSON.parse(readFileSync(path.join(APP_ROOT, 'lib', 'market.json'), 'utf8'));
+      // Strategy preflight must use the canonical 3003 archive manifest.  The
+      // packaged UI seed and the live TDX source are not valid substitutes for
+      // a locally persisted, date-addressable research dataset.
+      const dailyManifest = readJson(path.join(DATA_ROOT, 'status', 'tdx-daily-history.json')) || {};
+      const dailyIndex = readJson(DAILY_DATA_INDEX_FILE) || {};
+      const currentCount = Number(
+        dailyManifest.current_trade_date_symbols
+          || dailyManifest.latest_date_source_files
+          || dailyIndex.summary?.latest_symbol_count
+          || 0,
+      );
+      const dataDate = String(dailyManifest.trade_date || dailyIndex.latest_trade_date || '').replace(/\D/g, '') || null;
+      const archiveReady = dailyManifest.status === 'available'
+        && dailyManifest.freshness_status !== 'stale'
+        && Boolean(dailyManifest.file);
       const tdxRoot = process.env.ZHANGCAI_TDX_ROOT || 'C:\\new_tdx_mock';
-      const tdxDirs = ['sh', 'sz', 'bj'].map((market) => path.join(tdxRoot, 'vipdoc', market, 'lday'));
-      const dateCounts = new Map();
-      for (const directory of tdxDirs) {
-        if (!existsSync(directory)) continue;
-        for (const name of readdirSync(directory)) {
-          if (!name.toLowerCase().endsWith('.day')) continue;
-          try {
-            const filePath = path.join(directory, name);
-            const bytes = readFileSync(filePath);
-            if (bytes.length >= 32) {
-              const date = String(bytes.readUInt32LE(bytes.length - 32));
-              dateCounts.set(date, (dateCounts.get(date) || 0) + 1);
-            }
-          } catch { /* 单个文件读取失败由原始技能继续审计 */ }
-        }
+      if (!archiveReady) {
+        resolve({
+          status: 'BLOCKED',
+          skill_id: skillId,
+          output: JSON.stringify({
+            status: 'BLOCKED',
+            message: '3003 本地日线归档尚未达到可运行状态，原始策略已阻断。',
+            data_date: dataDate,
+            archive_status: dailyManifest.status || 'missing',
+            archive_file: dailyManifest.file || '',
+            action: '先在数据与设置页执行日线落盘与校验，确认同日归档完成后再运行策略。',
+          }, null, 2),
+          data_date: dataDate,
+        });
+        return;
       }
-      const tdxDateEntry = [...dateCounts.entries()].sort((a, b) => b[1] - a[1])[0];
-      const currentCount = tdxDateEntry ? Number(tdxDateEntry[1]) : Number(snapshot.currentCount || 0);
-      const dataDate = tdxDateEntry ? tdxDateEntry[0] : snapshot.date || null;
       if (currentCount < 3000) {
         resolve({
           status: 'BLOCKED',
@@ -742,29 +949,337 @@ function startStrategyJob(skillId) {
   return job;
 }
 
+function compactDateText(value) {
+  const raw = String(value || '').replace(/\D/g, '');
+  return /^\d{8}$/.test(raw) ? raw : '';
+}
+
+function displayDateText(value) {
+  const raw = compactDateText(value);
+  return raw ? `${raw.slice(0, 4)}-${raw.slice(4, 6)}-${raw.slice(6)}` : '';
+}
+
+function localTradingCalendar() {
+  const calendarFiles = [
+    path.join(DATA_ROOT, 'harness', 'skills', 'a-share-15d-selection', 'references', 'trading-calendar.json'),
+    path.join(APP_ROOT, 'harness-skills', 'a-share-15d-selection', 'references', 'trading-calendar.json'),
+  ];
+  for (const file of calendarFiles) {
+    const value = readJson(file);
+    if (Array.isArray(value?.closed_dates)) {
+      return {
+        closedDates: new Set(value.closed_dates.map((date) => compactDateText(date)).filter(Boolean)),
+        source: file,
+      };
+    }
+  }
+  return { closedDates: new Set(), source: '' };
+}
+
+function isTradingDayDate(value) {
+  const date = compactDateText(value);
+  if (!date) return false;
+  const day = new Date(Date.UTC(Number(date.slice(0, 4)), Number(date.slice(4, 6)) - 1, Number(date.slice(6))));
+  return day.getUTCDay() !== 0 && day.getUTCDay() !== 6 && !localTradingCalendar().closedDates.has(date);
+}
+
+function shanghaiDateParts(now = new Date()) {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit',
+  }).formatToParts(now).reduce((result, item) => ({ ...result, [item.type]: item.value }), {});
+  return { year: Number(parts.year), month: Number(parts.month), day: Number(parts.day) };
+}
+
+function shanghaiDateText(now = new Date()) {
+  const { year, month, day } = shanghaiDateParts(now);
+  return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+}
+
 function localTradeDate() {
-  // 通达信日线可能在收盘后仍以“最近完整交易日”落盘；优先使用补齐回执，
-  // 避免自然日已跨到下一天却把无行情的日期传给龙虎榜/涨停接口。
+  // 日期必须来自应用自己的可核验快照，而不是宿主机自然日。这样在
+  // 16:30 后、周末或节假日重启桥接时，不会把没有行情的日期传给公开接口。
+  const candidates = [];
+  const add = (value, source) => {
+    const date = compactDateText(value);
+    if (date) candidates.push({ date, source });
+  };
+  add(readJson(path.join(DATA_ROOT, 'status', 'tdx-daily-history.json'))?.trade_date, 'tdx-daily-history');
+  add(readJson(path.join(DATA_ROOT, 'runtime', 'market-latest.json'))?.tradeDate, 'market-latest');
+  add(readJson(path.join(DATA_ROOT, 'runtime', 'market-latest.json'))?.trade_date, 'market-latest');
+  add(readJson(path.join(DATA_ROOT, 'public', 'latest.json'))?.date, 'public-latest');
+  add(readJson(path.join(DATA_ROOT, 'news', 'latest.json'))?.date, 'news-latest');
+  add(readJson(SUPPLEMENTAL_LATEST_FILE)?.trade_date, 'supplemental-latest');
+  const dailyIndex = readJson(DAILY_DATA_INDEX_FILE);
+  for (const key of Object.keys(dailyIndex?.dates || {})) add(key, 'daily-data-index');
   try {
     const runtimeDir = path.join(DATA_ROOT, 'runtime');
-    const candidates = readdirSync(runtimeDir)
+    const reports = readdirSync(runtimeDir)
       .filter((name) => /^(?:tdx-daily-replenish|tdx-daily-integrity)-\d{8}-\d{6}\.json$/.test(name))
       .sort()
       .reverse();
-    for (const name of candidates) {
+    for (const name of reports.slice(0, 10)) {
       const value = readJson(path.join(runtimeDir, name));
-      const raw = String(value?.targetDateAfter || value?.targetDate || value?.before?.targetDate || value?.after?.targetDate || '').replace(/\D/g, '');
-      if (/^\d{8}$/.test(raw)) return `${raw.slice(0, 4)}-${raw.slice(4, 6)}-${raw.slice(6)}`;
+      add(value?.targetDateAfter || value?.targetDate || value?.before?.targetDate || value?.after?.targetDate, name);
     }
-  } catch { /* 首次运行尚无补齐回执，回退到本地自然日。 */ }
-  const values = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit',
-  }).formatToParts(new Date()).reduce((result, item) => ({ ...result, [item.type]: item.value }), {});
-  return `${values.year}-${values.month}-${values.day}`;
+  } catch { /* 首次运行尚无本地快照，继续使用自然日作为最后回退。 */ }
+  const latest = candidates.sort((left, right) => right.date.localeCompare(left.date))[0];
+  if (latest) return displayDateText(latest.date);
+  return shanghaiDateText();
 }
 
 function readJson(file) {
   try { return JSON.parse(readFileSync(file, 'utf8')); } catch { return null; }
+}
+
+function supplementalDateKey(value) {
+  const raw = String(value || '').replace(/\D/g, '');
+  return /^\d{8}$/.test(raw) ? raw : localTradeDate().replace(/\D/g, '');
+}
+
+function supplementalStockFile(date, code, market = '') {
+  const key = supplementalDateKey(date);
+  const normalized = normalizeHistorySymbol(`${code}.${market || ''}`) || normalizeHistorySymbol(code);
+  const suffix = normalized?.market || (String(market).toUpperCase() || 'SZ');
+  return path.join(SUPPLEMENTAL_ROOT, key, `${String(code).replace(/\D/g, '').slice(-6)}.${suffix}.json`);
+}
+
+function readSupplementalSnapshot(date, code = '') {
+  const key = supplementalDateKey(date);
+  if (code) {
+    const normalized = normalizeHistorySymbol(code);
+    if (normalized) {
+      const file = supplementalStockFile(key, normalized.code, normalized.market);
+      const value = readJson(file);
+      if (value) return { ...value, snapshot_path: file };
+    }
+  }
+  const file = path.join(SUPPLEMENTAL_ROOT, key, 'market.json');
+  const value = readJson(file);
+  return value ? { ...value, snapshot_path: file } : null;
+}
+
+async function ensureStockSupplemental(rawCode, date) {
+  const normalized = normalizeHistorySymbol(rawCode);
+  if (!normalized) return null;
+  const key = supplementalDateKey(date);
+  const current = readSupplementalSnapshot(key, normalized.code);
+  const currentCoverage = current?.coverage || {};
+  if (current && current.requested_date?.replace(/\D/g, '') === key && currentCoverage.financial && currentCoverage.share_capital) return current;
+  const jobKey = `${key}:${normalized.key}`;
+  const running = supplementalTargetJobs.get(jobKey);
+  if (running) return running;
+  const job = (async () => {
+    try {
+      await runLocalScript('supplemental_data_sync.py', ['--date', key, '--mode', 'stock', '--code', normalized.code], 180000, 0);
+      return readSupplementalSnapshot(key, normalized.code);
+    } catch (error) {
+      console.warn(`[agent] 个股补充数据刷新失败 ${normalized.symbol}: ${error instanceof Error ? error.message : String(error)}`);
+      return current || {
+        schema: 'ZHANGCAI_SUPPLEMENTAL_DATA_V1', requested_date: key, trade_date: key,
+        stock: { code: normalized.code }, coverage: {}, status: 'unavailable', error: error instanceof Error ? error.message : String(error),
+      };
+    } finally {
+      supplementalTargetJobs.delete(jobKey);
+    }
+  })();
+  supplementalTargetJobs.set(jobKey, job);
+  return job;
+}
+
+async function enrichHarnessContext(context) {
+  if (!context || typeof context !== 'object') return context;
+  const targetCode = context?.targetStock?.code;
+  if (!targetCode) return context;
+  const date = context?.targetStock?.date || context?.historyMeta?.lastDate || localTradeDate();
+  const supplementalData = await ensureStockSupplemental(targetCode, date);
+  return { ...context, supplementalData: supplementalData || { status: 'missing', requested_date: date, coverage: {} } };
+}
+
+function normalizeHistorySymbol(value) {
+  const raw = String(value || '').trim().toUpperCase();
+  const codeMatch = raw.match(/(?:^|[^0-9])(\d{6})(?:$|[^0-9])/);
+  const code = codeMatch ? codeMatch[1] : raw.replace(/[^0-9]/g, '').slice(-6);
+  if (!/^\d{6}$/.test(code)) return null;
+  const explicitMarket = raw.match(/(?:^|[.\s])(SH|SZ|BJ|上交所|深交所|北交所)(?:$|[.\s])/i)?.[1]?.toUpperCase();
+  const market = explicitMarket === 'SH' || explicitMarket === '上交所' || /^[569]/.test(code)
+    ? 'SH'
+    : explicitMarket === 'BJ' || explicitMarket === '北交所' || /^(920|[48])/.test(code)
+      ? 'BJ'
+      : 'SZ';
+  return { code, market, key: `${market.toLowerCase()}${code}`, symbol: `${code}.${market}` };
+}
+
+function parseTdxDayRecord(buffer, offset = 0) {
+  if (!buffer || offset < 0 || offset + TDX_DAY_RECORD_SIZE > buffer.length) return null;
+  const dateNumber = buffer.readUInt32LE(offset);
+  const date = String(dateNumber).replace(/^(\d{4})(\d{2})(\d{2})$/, '$1-$2-$3');
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return null;
+  return {
+    date,
+    open: Number((buffer.readUInt32LE(offset + 4) / 100).toFixed(2)),
+    high: Number((buffer.readUInt32LE(offset + 8) / 100).toFixed(2)),
+    low: Number((buffer.readUInt32LE(offset + 12) / 100).toFixed(2)),
+    close: Number((buffer.readUInt32LE(offset + 16) / 100).toFixed(2)),
+    amount: Number(buffer.readFloatLE(offset + 20).toFixed(2)),
+    volume: buffer.readUInt32LE(offset + 24),
+  };
+}
+
+function readTdxDayBoundary(file) {
+  try {
+    const size = statSync(file).size;
+    const recordCount = Math.floor(size / TDX_DAY_RECORD_SIZE);
+    const remainder = size % TDX_DAY_RECORD_SIZE;
+    if (!recordCount || remainder) return null;
+    const handle = openSync(file, 'r');
+    const firstBuffer = Buffer.alloc(TDX_DAY_RECORD_SIZE);
+    const lastBuffer = Buffer.alloc(TDX_DAY_RECORD_SIZE);
+    try {
+      readSync(handle, firstBuffer, 0, TDX_DAY_RECORD_SIZE, 0);
+      readSync(handle, lastBuffer, 0, TDX_DAY_RECORD_SIZE, size - TDX_DAY_RECORD_SIZE);
+    } finally {
+      closeSync(handle);
+    }
+    const first = parseTdxDayRecord(firstBuffer);
+    const last = parseTdxDayRecord(lastBuffer);
+    if (!first || !last) return null;
+    return { record_count: recordCount, first_date: first.date, last_date: last.date };
+  } catch {
+    return null;
+  }
+}
+
+async function buildTdxHistoryIndex(force = false) {
+  const tdxRoot = path.resolve(process.env.ZHANGCAI_TDX_ROOT || 'C:\\new_tdx_mock');
+  const cached = readJson(TDX_HISTORY_INDEX_FILE);
+  if (!force && cached?.schema === 'ZHANGCAI_TDX_SYMBOL_INDEX_V1' && cached.source_root === tdxRoot && cached.symbols && Object.keys(cached.symbols).length) {
+    return { ...cached, cached: true };
+  }
+  const symbols = {};
+  const marketDirs = ['sh', 'sz', 'bj'];
+  for (const marketDir of marketDirs) {
+    const directory = path.join(tdxRoot, 'vipdoc', marketDir, 'lday');
+    if (!existsSync(directory)) continue;
+    for (const name of readdirSync(directory)) {
+      const match = name.match(/^(sh|sz|bj)(\d{6})\.day$/i);
+      if (!match) continue;
+      const normalized = normalizeHistorySymbol(`${match[2]}.${match[1]}`);
+      if (!normalized) continue;
+      const file = path.join(directory, name);
+      const boundary = readTdxDayBoundary(file);
+      if (!boundary) continue;
+      symbols[normalized.key] = {
+        symbol: normalized.symbol,
+        code: normalized.code,
+        market: normalized.market,
+        file: path.relative(tdxRoot, file),
+        ...boundary,
+      };
+    }
+  }
+  // TDX may be closed or disconnected. Never replace a previously verified
+  // symbol index with an empty one: it is still useful for resolving the
+  // fallback layer and for explaining which external source is unavailable.
+  if (!Object.keys(symbols).length && cached?.schema === 'ZHANGCAI_TDX_SYMBOL_INDEX_V1' && cached.symbols && Object.keys(cached.symbols).length) {
+    return { ...cached, cached: true, source_available: false, degraded_reason: '通达信源目录当前不可读，保留上次已生成的索引' };
+  }
+  const index = {
+    schema: 'ZHANGCAI_TDX_SYMBOL_INDEX_V1',
+    generated_at: new Date().toISOString(),
+    source_root: tdxRoot,
+    source_kind: 'Tongdaxin local .day files',
+    symbol_count: Object.keys(symbols).length,
+    symbols,
+  };
+  await writeRuntimeJson(TDX_HISTORY_INDEX_FILE, index);
+  return { ...index, cached: false };
+}
+
+function readPublicDailyFallbackHistory(normalized, limit = 0) {
+  const rows = [];
+  const filename = `${normalized.key}.jsonl`;
+  if (!existsSync(DAILY_FALLBACK_ROOT)) return rows;
+  let dates = [];
+  try {
+    dates = readdirSync(DAILY_FALLBACK_ROOT).filter((name) => /^\d{8}$/.test(name)).sort();
+  } catch { return rows; }
+  for (const date of dates) {
+    const file = path.join(DAILY_FALLBACK_ROOT, date, filename);
+    if (!existsSync(file)) continue;
+    for (const line of readText(file, 2 * 1024 * 1024).split(/\r?\n/)) {
+      if (!line.trim()) continue;
+      try {
+        const value = JSON.parse(line);
+        if (value && value.date && value.symbol === normalized.key) rows.push({
+          date: String(value.date).replace(/^(\d{4})(\d{2})(\d{2})$/, '$1-$2-$3'),
+          open: Number(value.open), high: Number(value.high), low: Number(value.low),
+          close: Number(value.close), amount: value.amount == null ? null : Number(value.amount),
+          volume: Number(value.volume), source: value.source, source_date: value.source_date,
+          status: value.status || 'degraded', missing_fields: value.missing_fields || [],
+        });
+      } catch { /* 跳过损坏的单行，索引仍可用于其他日期 */ }
+    }
+  }
+  const unique = new Map(rows.map((row) => [row.date, row]));
+  const ordered = [...unique.values()].sort((a, b) => a.date.localeCompare(b.date));
+  return limit > 0 ? ordered.slice(-limit) : ordered;
+}
+
+function readTdxDayHistory(file, limit = 0) {
+  const buffer = readFileSync(file);
+  const history = [];
+  const usableLength = buffer.length - (buffer.length % TDX_DAY_RECORD_SIZE);
+  for (let offset = 0; offset < usableLength; offset += TDX_DAY_RECORD_SIZE) {
+    const row = parseTdxDayRecord(buffer, offset);
+    if (row) history.push(row);
+  }
+  history.sort((a, b) => a.date.localeCompare(b.date));
+  return limit > 0 ? history.slice(-limit) : history;
+}
+
+async function queryTdxHistory(rawSymbol, rawLimit, forceIndex = false) {
+  const normalized = normalizeHistorySymbol(rawSymbol);
+  if (!normalized) throw new Error('需要六位股票代码，可附带 .SH、.SZ 或 .BJ');
+  const index = await buildTdxHistoryIndex(forceIndex);
+  let entry = index.symbols?.[normalized.key];
+  if (!entry && !forceIndex) {
+    const refreshed = await buildTdxHistoryIndex(true);
+    entry = refreshed.symbols?.[normalized.key];
+  }
+  const parsedLimit = rawLimit === '0' ? 0 : Math.max(1, Math.min(Number(rawLimit) || 120, 20000));
+  if (entry) {
+    const configuredTdxRoot = path.resolve(process.env.ZHANGCAI_TDX_ROOT || 'C:\\new_tdx_mock');
+    const tdxRoot = path.resolve(index.source_available === false ? configuredTdxRoot : (index.source_root || configuredTdxRoot));
+    const sourceFile = path.resolve(tdxRoot, entry.file);
+    try {
+      if (existsSync(sourceFile)) {
+        const history = readTdxDayHistory(sourceFile, parsedLimit);
+        if (history.length) {
+          return {
+            status: 'ok', quality: 'primary', symbol: entry.symbol, code: entry.code, market: entry.market,
+            source: 'Tongdaxin local .day · indexed lookup', source_root: tdxRoot, source_file: sourceFile,
+            index_path: TDX_HISTORY_INDEX_FILE, daily_data_index_path: DAILY_DATA_INDEX_FILE,
+            history_scope: 'FULL_LOCAL_TDX_FILE', full_history_verified: history.length === entry.record_count || parsedLimit === 0,
+            history_count: entry.record_count, returned_count: history.length, first_date: entry.first_date,
+            last_date: entry.last_date, data_date: entry.last_date, history,
+          };
+        }
+      }
+    } catch { /* TDX 文件在查询期间不可读，继续走公开降级层 */ }
+  }
+  const fallback = readPublicDailyFallbackHistory(normalized, parsedLimit);
+  if (fallback.length) {
+    return {
+      status: 'ok', quality: 'degraded', degraded: true, symbol: normalized.symbol, code: normalized.code, market: normalized.market,
+      source: 'Public daily fallback · indexed lookup', source_root: DATA_ROOT, source_file: null,
+      index_path: TDX_HISTORY_INDEX_FILE, daily_data_index_path: DAILY_DATA_INDEX_FILE,
+      history_scope: 'PUBLIC_FALLBACK_EXACT_DATES', full_history_verified: false, history_count: fallback.length,
+      returned_count: fallback.length, first_date: fallback[0].date, last_date: fallback[fallback.length - 1].date,
+      data_date: fallback[fallback.length - 1].date, history: fallback,
+      cautions: ['通达信源目录当前不可用或目标文件缺失；仅返回已通过日期校验的公开降级记录，不能视为全历史 TDX 数据。'],
+    };
+  }
+  return { status: 'missing', symbol: normalized.symbol, index_path: TDX_HISTORY_INDEX_FILE, daily_data_index_path: DAILY_DATA_INDEX_FILE, error: entry ? '通达信日线文件不可读，且应用内公开降级层没有该股票的已核验记录' : '本地 TDX 日线索引与应用内公开降级索引中都没有该股票' };
 }
 
 function readText(file, limit = 240000) {
@@ -833,18 +1348,6 @@ function collectStrategyStructured(receipt, combined = '', skillId = '') {
       }
     } catch { /* 摘要不是 JSON 时继续使用显式标记或回退报告 */ }
   }
-  // The five-dimension runner writes its canonical JSON report directly to
-  // the skill reports directory and only prints a compact summary to stdout;
-  // there is no REPORT= marker to discover. Expose that report as the same
-  // structured payload used by the other strategy runners so the page can
-  // render the Top10 table instead of only the receipt status.
-  if (!reportMarkdown && !analysis && !derived && skillId === 'five-dimension-resonance') {
-    const fallbackPath = path.join(APP_ROOT, 'reports', '2026-06-03_five_dimension_feilong_block_hardening', 'feilong_block_resonance_scan.json');
-    const fallback = readJson(fallbackPath);
-    if (fallback && typeof fallback === 'object') {
-      return { reportPath: fallbackPath, analysisPath: fallbackPath, derivedPath: '', reportMarkdown: '', analysis: fallback, derived: null };
-    }
-  }
   if (!reportMarkdown && !analysis && !derived) return null;
   return {
     reportPath,
@@ -859,6 +1362,8 @@ function collectStrategyStructured(receipt, combined = '', skillId = '') {
 function dailySnapshotSummary() {
   const publicSnapshot = readJson(path.join(DATA_ROOT, 'public', 'latest.json'));
   const newsSnapshot = readJson(path.join(DATA_ROOT, 'news', 'latest.json'));
+  const supplementalDate = String(publicSnapshot?.date || '').replace(/\D/g, '');
+  const supplementalSnapshot = supplementalDate ? readSupplementalSnapshot(supplementalDate) : readJson(SUPPLEMENTAL_LATEST_FILE);
   const publicSources = publicSnapshot?.sources && typeof publicSnapshot.sources === 'object'
     ? Object.fromEntries(Object.entries(publicSnapshot.sources).map(([name, source]) => {
       const value = source && typeof source === 'object' ? source : {};
@@ -876,7 +1381,11 @@ function dailySnapshotSummary() {
   const up = Number(kpi.adv || 0), down = Number(kpi.dec || 0);
   const newsSource = newsSnapshot?.source && typeof newsSnapshot.source === 'object' ? newsSnapshot.source : {};
   const dailyIntegrity = inspectTdxDailyIntegrity();
+  const localDataPage = readJson(path.join(HARNESS_CONTEXT_ROOT, 'local-data-page.json'));
+  const dailyDataIndex = readJson(DAILY_DATA_INDEX_FILE);
+  const dailyDataSummary = dailyDataIndex?.summary || { symbol_count: 0, fallback_symbol_count: 0, fallback_record_count: 0, date_count: 0 };
   return {
+    localDataPage,
     publicMarket: {
       schema: publicSnapshot?.schema || '', date: publicSnapshot?.date || '', fetchedAt: publicSnapshot?.fetchedAt || '', sources: publicSources,
       marketBreadth: { currentCount: up + down, up, down, flat: 0, limitUp: Number(kpi.limit_up || 0), limitDown: Number(kpi.limit_down || 0), lianban: Number(kpi.lianban || 0) },
@@ -901,6 +1410,13 @@ function dailySnapshotSummary() {
       complete: dailyIntegrity.complete,
       unresolved: [], repairs: [],
     },
+    dailyDataIndex: {
+      path: DAILY_DATA_INDEX_FILE,
+      status: dailyDataIndex?.schema === 'ZHANGCAI_DAILY_DATA_INDEX_V1' ? 'available' : 'missing',
+      sourcePrecedence: dailyDataIndex?.source_precedence || ['tdx_local_day', 'tdx_archive', 'public_daily_fallback'],
+      summary: dailyDataSummary,
+      dates: Object.fromEntries(Object.entries(dailyDataIndex?.dates || {}).slice(-10)),
+    },
     news: {
       schema: newsSnapshot?.schema || '', date: newsSnapshot?.date || '', status: newsSnapshot?.status || 'missing', fetchedAt: newsSnapshot?.fetchedAt || '',
       sameDayRecordCount: newsSnapshot?.sameDayRecordCount || 0, source: {
@@ -908,12 +1424,542 @@ function dailySnapshotSummary() {
         providerCode: newsSource.providerCode ?? null, recordCount: Array.isArray(newsSource.records) ? newsSource.records.length : 0,
       },
     },
+    supplemental: supplementalSnapshot ? {
+      status: supplementalSnapshot.status === 'completed' ? 'available' : supplementalSnapshot.status || 'available',
+      path: supplementalSnapshot.snapshot_path || path.join(SUPPLEMENTAL_ROOT, supplementalDate, 'market.json'),
+      date: supplementalSnapshot.trade_date || supplementalSnapshot.requested_date || '',
+      generatedAt: supplementalSnapshot.generated_at || '',
+      coverage: supplementalSnapshot.coverage || {},
+      indexSymbolCount: supplementalSnapshot.market?.index_daily?.data?.symbol_count || 0,
+      lhbRecordCount: supplementalSnapshot.market?.longhubang?.data?.record_count || 0,
+      lhbMarketRecordCount: supplementalSnapshot.market?.longhubang?.data?.market_record_count || 0,
+      marginRecordCount: supplementalSnapshot.market?.margin?.data?.record_count || 0,
+      marginExactDate: supplementalSnapshot.market?.margin?.data?.exact_record_count || 0,
+      marginLatestAvailableDate: supplementalSnapshot.market?.margin?.latest_available_date || '',
+    } : { status: 'missing', path: path.join(SUPPLEMENTAL_ROOT, supplementalDate, 'market.json'), date: supplementalDate, coverage: {} },
   };
+}
+
+function archiveDateKey(value) {
+  return compactDateText(value) || shanghaiDateText().replace(/-/g, '');
+}
+
+function archiveStateSteps(state) {
+  return Array.isArray(state?.steps)
+    ? state.steps.map(({ name, status, script, code, partial, finishedAt, error }) => ({ name, status, script, code, partial, finishedAt, error }))
+    : [];
+}
+
+function buildHarnessArchiveContext(date, state, archiveType, stateFile) {
+  const dateKey = archiveDateKey(date);
+  const dateText = displayDateText(dateKey);
+  const dailyManifestPath = path.join(DATA_ROOT, 'market', 'daily', dateKey, 'manifest.json');
+  const snapshots = dailySnapshotSummary();
+  const context = {
+    schema: 'ZHANGCAI_HARNESS_DATA_ARCHIVE_CONTEXT_V1',
+    archive_type: archiveType,
+    date: dateText,
+    date_key: dateKey,
+    generatedAt: new Date().toISOString(),
+    dataRoot: DATA_ROOT,
+    stateFile,
+    state: state ? { schema: state.schema, status: state.status, date: state.date, startedAt: state.startedAt, finishedAt: state.finishedAt } : null,
+    paths: {
+      localDataPage: path.join(HARNESS_CONTEXT_ROOT, 'local-data-page.json'),
+      tdxDailyHistory: path.join(DATA_ROOT, 'status', 'tdx-daily-history.json'),
+      dailyManifest: dailyManifestPath,
+      dailyAggregate: path.join(DATA_ROOT, 'market', 'daily', dateKey, 'tdx-bars.jsonl'),
+      tdxDailyIndex: TDX_HISTORY_INDEX_FILE,
+      dailyDataIndex: DAILY_DATA_INDEX_FILE,
+      dailyJsonlIntegrity: path.join(DATA_ROOT, 'runtime', `daily-jsonl-integrity-${dateKey}.json`),
+      publicLatest: path.join(DATA_ROOT, 'public', 'latest.json'),
+      newsLatest: path.join(DATA_ROOT, 'news', 'latest.json'),
+      supplemental: path.join(DATA_ROOT, 'evidence', 'supplemental', dateKey, 'market.json'),
+      unifiedManifest: path.join(DATA_ROOT, 'evidence', 'sources', 'latest.json'),
+      unifiedVerification: path.join(DATA_ROOT, 'evidence', 'sources', 'latest-verification.json'),
+      packageSourceInventory: path.join(HARNESS_CONTEXT_ROOT, 'package-source-inventory.json'),
+      packageSourceGaps: path.join(HARNESS_CONTEXT_ROOT, 'package-source-gap-report.json'),
+      state: stateFile,
+    },
+    localDataPage: readJson(path.join(HARNESS_CONTEXT_ROOT, 'local-data-page.json')),
+    tdxDailyHistory: readJson(path.join(DATA_ROOT, 'status', 'tdx-daily-history.json')),
+    dailyManifest: readJson(dailyManifestPath),
+    dailyJsonlIntegrity: readJson(path.join(DATA_ROOT, 'runtime', `daily-jsonl-integrity-${dateKey}.json`)),
+    unifiedManifest: readJson(path.join(DATA_ROOT, 'evidence', 'sources', 'latest.json')),
+    unifiedVerification: readJson(path.join(DATA_ROOT, 'evidence', 'sources', 'latest-verification.json')),
+    packageSourceInventory: readJson(path.join(HARNESS_CONTEXT_ROOT, 'package-source-inventory.json')),
+    packageSourceGaps: readJson(path.join(HARNESS_CONTEXT_ROOT, 'package-source-gap-report.json')),
+    snapshots,
+    steps: archiveStateSteps(state),
+    rules: {
+      sourcePrecedence: ['tdx_local_day', 'tdx_archive', 'public_daily_fallback'],
+      localArchiveIsPrimary: true,
+      fallbackMustBeMarkedDegraded: true,
+      allWritesStayUnderAppData: true,
+    },
+  };
+  return { dateKey, dateText, context };
+}
+
+async function persistHarnessArchiveContext({ date, state, archiveType, stateFile, runValidation = true }) {
+  let built = buildHarnessArchiveContext(date, state, archiveType, stateFile);
+  const contextFile = path.join(HARNESS_CONTEXT_ROOT, `data-archive-${built.dateKey}.json`);
+  const legacyContextFile = archiveType === 'daily'
+    ? path.join(HARNESS_CONTEXT_ROOT, `daily-data-${built.dateKey}.json`)
+    : archiveType === 'supplemental'
+      ? path.join(HARNESS_CONTEXT_ROOT, `supplemental-data-${built.dateKey}.json`)
+      : '';
+  await writeRuntimeJson(contextFile, built.context);
+  if (legacyContextFile) await writeRuntimeJson(legacyContextFile, built.context);
+  await writeRuntimeJson(path.join(HARNESS_CONTEXT_ROOT, 'latest-archive.json'), built.context);
+  await writeRuntimeJson(path.join(HARNESS_CONTEXT_ROOT, 'latest-data.json'), built.context);
+  // The archive files themselves are runtime assets. Refresh the local data
+  // page after creating them so its asset status cannot lag behind the
+  // Harness context that points to those files.
+  try { await runLocalScript('skill14_data_runtime.py', ['status'], 120000, 4000); } catch { /* 归档上下文已落盘，状态页下次刷新可恢复 */ }
+  built = buildHarnessArchiveContext(date, state, archiveType, stateFile);
+  await writeRuntimeJson(contextFile, built.context);
+  if (legacyContextFile) await writeRuntimeJson(legacyContextFile, built.context);
+  await writeRuntimeJson(path.join(HARNESS_CONTEXT_ROOT, 'latest-archive.json'), built.context);
+  await writeRuntimeJson(path.join(HARNESS_CONTEXT_ROOT, 'latest-data.json'), built.context);
+
+  // When the final context is rebuilt after the Harness call, keep the
+  // existing receipt instead of replacing it with a misleading "skipped".
+  // This is important because the unified archive state and its context are
+  // written in two phases: first while the run is active, then once more
+  // after the final status/report has been committed.
+  let harness = !runValidation && state?.harness && state.harness.status !== 'pending'
+    ? state.harness
+    : { status: 'skipped', finishedAt: new Date().toISOString() };
+  if (runValidation) {
+    try {
+      if (!process.env.DEEPSEEK_API_KEY) throw new Error('未设置 DEEPSEEK_API_KEY，已完成本地数据归档但无法进行 Harness 校验');
+      const snapshots = built.context.snapshots || {};
+      const breadth = snapshots.publicMarket?.marketBreadth || {};
+      const output = await runHarnessWithRetry(buildPrompt(
+        `这是本地数据源归档后的统一 Harness 校验。归档类型为 ${archiveType}，日期为 ${built.dateText}。以下是本机已经落盘的结构化证据：${JSON.stringify(built.context)}。只能依据这些字段核验文件、日期、来源、哈希、条数、索引、降级层和未覆盖项；禁止重新抓取、执行命令、读取未传入的文件或把历史兼容目录当作当前事实。日线按 sourcePrecedence 使用，public_daily_fallback 必须标记 degraded。${HARNESS_JSON_SCHEMA}`,
+        {
+          date: built.dateKey,
+          currentCount: breadth.currentCount || 0,
+          up: breadth.up || 0,
+          down: breadth.down || 0,
+          flat: breadth.flat || 0,
+          amount: 0,
+          dataSources: { archiveContext: contextFile, dailyManifest: built.context.paths.dailyManifest, unifiedManifest: built.context.paths.unifiedManifest, dailyIndex: built.context.paths.dailyDataIndex },
+          limitCandidates: [{ count: breadth.limitUp || 0, lianban: breadth.lianban || 0 }],
+        },
+        'market-data-replenishment',
+        { contextFile },
+      ), 'market-data-replenishment', { inline: true });
+      harness = { status: 'completed', finishedAt: new Date().toISOString(), output: output.output, elapsedMs: output.elapsedMs };
+    } catch (error) {
+      harness = { status: 'failed', finishedAt: new Date().toISOString(), error: error instanceof Error ? error.message : String(error) };
+    }
+  }
+  const finalContext = { ...built.context, harness };
+  await writeRuntimeJson(contextFile, finalContext);
+  if (legacyContextFile) await writeRuntimeJson(legacyContextFile, finalContext);
+  await writeRuntimeJson(path.join(HARNESS_CONTEXT_ROOT, 'latest-archive.json'), finalContext);
+  await writeRuntimeJson(path.join(HARNESS_CONTEXT_ROOT, 'latest-data.json'), finalContext);
+  await writeRuntimeJson(path.join(HARNESS_CONTEXT_ROOT, `data-archive-validation-${built.dateKey}.json`), finalContext);
+  if (archiveType === 'daily') await writeRuntimeJson(path.join(HARNESS_CONTEXT_ROOT, `daily-validation-${built.dateKey}.json`), finalContext);
+  if (state) state.harness = harness;
+  return { ...built, context: finalContext, contextFile, harness };
 }
 
 async function writeRuntimeJson(file, value) {
   await mkdir(path.dirname(file), { recursive: true });
   await writeFile(file, JSON.stringify(value, null, 2), 'utf8');
+}
+
+function compactDateKey(value) {
+  const raw = String(value || '').replace(/\D/g, '');
+  return /^\d{8}$/.test(raw) ? raw : shanghaiDateText().replace(/-/g, '');
+}
+
+function dataRelativePath(file) {
+  return path.relative(DATA_ROOT, file).replace(/\\/g, '/');
+}
+
+function htmlEscape(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function unifiedArchiveReportDescriptor(date) {
+  const dateKey = compactDateKey(date);
+  const directory = path.join(UNIFIED_ARCHIVE_REPORT_ROOT, dateKey);
+  return {
+    date: dateKey,
+    directory,
+    htmlFile: path.join(directory, 'index.html'),
+    jsonFile: path.join(directory, 'report.json'),
+    latestHtmlFile: path.join(UNIFIED_ARCHIVE_REPORT_ROOT, 'latest.html'),
+    latestJsonFile: path.join(UNIFIED_ARCHIVE_REPORT_ROOT, 'latest.json'),
+    htmlUrl: `/data/archive/report?date=${dateKey}`,
+    jsonUrl: `/data/archive/report?date=${dateKey}&format=json`,
+  };
+}
+
+function parseHarnessOutput(output) {
+  try {
+    const parsed = JSON.parse(String(output || ''));
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function unifiedArchiveOutputFile(date, index, name, suffix = 'json') {
+  const safeName = String(name || 'step').replace(/[^a-zA-Z0-9._\u4e00-\u9fff-]+/g, '_').slice(0, 80);
+  const dateKey = compactDateKey(date);
+  return path.join(UNIFIED_ARCHIVE_OUTPUT_ROOT, dateKey, `${String(index).padStart(2, '0')}-${safeName}.${suffix}`);
+}
+
+async function persistUnifiedStepOutput(date, step, index, result) {
+  const output = String(result?.output || '').trim();
+  if (!output) return null;
+  const file = unifiedArchiveOutputFile(date, index, step?.name, 'json');
+  await writeRuntimeJson(file, {
+    schema: 'ZHANGCAI_UNIFIED_DATA_ARCHIVE_STEP_OUTPUT_V1',
+    date: compactDateKey(date),
+    step: step?.name || null,
+    script: result?.script || step?.script || null,
+    code: result?.code ?? null,
+    partial: result?.partial === true,
+    generatedAt: new Date().toISOString(),
+    output,
+  });
+  return dataRelativePath(file);
+}
+
+function compactUnifiedArchiveState(state) {
+  if (!state || typeof state !== 'object') return state;
+  const rawHarness = state.harness && typeof state.harness === 'object' ? state.harness : {};
+  const parsedHarness = parseHarnessOutput(rawHarness.output);
+  const { output: _harnessOutput, ...harnessWithoutOutput } = rawHarness;
+  const compactHarness = {
+    ...harnessWithoutOutput,
+    summary: String(harnessWithoutOutput.summary || parsedHarness.summary || ''),
+    dataDate: String(harnessWithoutOutput.dataDate || parsedHarness.data_date || ''),
+    cautionCount: Array.isArray(parsedHarness.cautions) ? parsedHarness.cautions.length : Number(harnessWithoutOutput.cautionCount || 0),
+    findingCount: Array.isArray(parsedHarness.findings) ? parsedHarness.findings.length : Number(harnessWithoutOutput.findingCount || 0),
+    tableCount: Array.isArray(parsedHarness.tables) ? parsedHarness.tables.length : Number(harnessWithoutOutput.tableCount || 0),
+  };
+  const steps = Array.isArray(state.steps) ? state.steps : [];
+  return {
+    ...state,
+    steps: steps.map((step) => {
+      const { output: _stepOutput, ...stepWithoutOutput } = step || {};
+      return {
+        ...stepWithoutOutput,
+        resultStored: Boolean(step?.outputPath || step?.resultPath || step?.output),
+      };
+    }),
+    harness: compactHarness,
+  };
+}
+
+async function persistUnifiedHarnessOutput(date, harness) {
+  const output = String(harness?.output || '').trim();
+  if (!output) return null;
+  const file = unifiedArchiveOutputFile(date, 99, 'harness', 'json');
+  await writeRuntimeJson(file, {
+    schema: 'ZHANGCAI_UNIFIED_DATA_ARCHIVE_HARNESS_OUTPUT_V1',
+    date: compactDateKey(date),
+    generatedAt: new Date().toISOString(),
+    status: harness?.status || 'unknown',
+    elapsedMs: harness?.elapsedMs ?? null,
+    output,
+  });
+  return dataRelativePath(file);
+}
+
+function unifiedArchiveProgress(state) {
+  const steps = Array.isArray(state?.steps) ? state.steps : [];
+  // The unified pipeline has nine stable stages. Keep that denominator while
+  // the next stage has not yet been appended, otherwise 1/1 would briefly
+  // look like 100% after the first step.
+  const total = Math.max(9, steps.length);
+  const completed = steps.filter((step) => ['completed', 'partial', 'failed'].includes(String(step?.status || ''))).length;
+  const active = steps.find((step) => step?.status === 'running');
+  const failed = steps.filter((step) => ['partial', 'failed'].includes(String(step?.status || ''))).length;
+  return {
+    completed,
+    total,
+    percent: Math.min(100, Math.round((completed / total) * 100)),
+    currentStep: active?.name || (state?.status === 'running' ? '正在准备下一步' : ''),
+    failed,
+  };
+}
+
+function unifiedArchiveReportPayload(state, context) {
+  const report = unifiedArchiveReportDescriptor(state?.date);
+  const progress = unifiedArchiveProgress(state);
+  const steps = Array.isArray(state?.steps) ? state.steps : [];
+  const harness = state?.harness && typeof state.harness === 'object' ? state.harness : {};
+  const harnessOutput = parseHarnessOutput(harness.output);
+  const manifest = context?.unifiedManifest && typeof context.unifiedManifest === 'object' ? context.unifiedManifest : {};
+  const sources = Array.isArray(manifest.sources) ? manifest.sources : [];
+  const missingSources = sources
+    .filter((source) => !['available', 'partial'].includes(String(source?.status || '')))
+    .map((source) => String(source?.name || source?.id || '未命名来源'));
+  const cautions = Array.isArray(harnessOutput.cautions) ? harnessOutput.cautions.map(String).slice(0, 20) : [];
+  const stepRows = steps.map((step) => ({
+    name: String(step?.name || ''),
+    status: String(step?.status || 'pending'),
+    code: step?.code ?? null,
+    startedAt: step?.startedAt || null,
+    finishedAt: step?.finishedAt || null,
+    error: step?.error ? String(step.error) : '',
+    resultPath: step?.resultPath || step?.outputPath || null,
+  }));
+  const message = state?.status === 'completed'
+    ? '统一数据落盘完成，全部步骤已结束。'
+    : state?.status === 'partial'
+      ? '统一数据落盘完成，但存在降级来源或未通过步骤，请查看缺失项和步骤明细。'
+      : state?.status === 'failed'
+        ? '统一数据落盘失败，请查看错误步骤和桥接服务日志。'
+        : '统一数据落盘正在后台运行，页面会持续更新本报告。';
+  return {
+    schema: 'ZHANGCAI_UNIFIED_DATA_ARCHIVE_REPORT_V1',
+    generatedAt: new Date().toISOString(),
+    status: String(state?.status || 'missing'),
+    message,
+    date: String(state?.date || report.date),
+    startedAt: state?.startedAt || null,
+    finishedAt: state?.finishedAt || null,
+    progress,
+    steps: stepRows,
+    harness: {
+      status: String(harness.status || 'pending'),
+      finishedAt: harness.finishedAt || null,
+      summary: String(harness.summary || harnessOutput.summary || ''),
+      dataDate: String(harness.dataDate || harnessOutput.data_date || ''),
+      cautions: Array.isArray(harness.cautions) ? harness.cautions.map(String).slice(0, 20) : cautions,
+      cautionCount: Number(harness.cautionCount || cautions.length || 0),
+      findingCount: Number(harness.findingCount || (Array.isArray(harnessOutput.findings) ? harnessOutput.findings.length : 0)),
+      tableCount: Number(harness.tableCount || (Array.isArray(harnessOutput.tables) ? harnessOutput.tables.length : 0)),
+    },
+    sources: {
+      total: sources.length,
+      available: sources.filter((source) => source?.status === 'available').length,
+      partial: sources.filter((source) => source?.status === 'partial').length,
+      missing: missingSources,
+    },
+    artifacts: {
+      dataRoot: DATA_ROOT,
+      reportJson: dataRelativePath(report.jsonFile),
+      reportHtml: dataRelativePath(report.htmlFile),
+      state: dataRelativePath(UNIFIED_ARCHIVE_STATE_FILE),
+      harnessContext: dataRelativePath(path.join(HARNESS_CONTEXT_ROOT, 'latest-archive.json')),
+    },
+    context: { paths: context?.paths || {} },
+    urls: { html: report.htmlUrl, json: report.jsonUrl },
+  };
+}
+
+function unifiedArchiveReportHtml(payload) {
+  const statusClass = payload.status === 'completed' ? 'ok' : payload.status === 'running' ? 'running' : 'warn';
+  const statusText = payload.status === 'completed' ? '已完成' : payload.status === 'running' ? '运行中' : payload.status === 'partial' ? '部分完成' : '失败/缺失';
+  const fmt = (value) => value ? new Date(value).toLocaleString('zh-CN', { hour12: false }) : '—';
+  const stepRows = payload.steps.map((step) => `<tr><td>${htmlEscape(step.name)}</td><td><span class="pill ${step.status === 'completed' ? 'ok' : step.status === 'running' ? 'running' : 'warn'}">${htmlEscape(step.status)}</span></td><td>${htmlEscape(step.code ?? '—')}</td><td>${htmlEscape(step.error || (step.resultPath ? '详细结果已单独落盘' : '—'))}</td></tr>`).join('');
+  const missing = payload.sources.missing.length ? payload.sources.missing.map((item) => `<li>${htmlEscape(item)}</li>`).join('') : '<li>当前来源清单没有标记为缺失的来源</li>';
+  const cautions = payload.harness.cautions.length ? payload.harness.cautions.map((item) => `<li>${htmlEscape(item)}</li>`).join('') : '<li>无 Harness 结构化提示</li>';
+  return `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>统一数据落盘报告 · ${htmlEscape(payload.date)}</title><style>
+body{margin:0;background:#f7f8fa;color:#1f2937;font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif}.wrap{max-width:1180px;margin:28px auto;padding:0 20px}.hero,.card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 2px 8px rgba(15,23,42,.04)}.hero{padding:24px 28px;margin-bottom:16px}.hero h1{margin:0 0 6px;font-size:24px}.meta{color:#64748b}.status{display:inline-block;padding:3px 12px;border-radius:999px;font-weight:600}.status.ok,.pill.ok{color:#047857;background:#d1fae5}.status.running,.pill.running{color:#1d4ed8;background:#dbeafe}.status.warn,.pill.warn{color:#b45309;background:#fef3c7}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}.card{padding:16px}.card b{display:block;color:#64748b;font-size:12px;margin-bottom:4px}.card strong{font-size:20px}.section{padding:20px 22px;margin-bottom:16px}.section h2{margin:0 0 12px;font-size:17px}table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{text-align:left;vertical-align:top;border-bottom:1px solid #eef2f7;padding:9px 8px;overflow-wrap:anywhere}th{color:#64748b;background:#f8fafc;font-weight:600}th:nth-child(1){width:25%}th:nth-child(2){width:12%}th:nth-child(3){width:10%}.pill{display:inline-block;border-radius:999px;padding:1px 8px;font-size:12px}.columns{display:grid;grid-template-columns:1fr 1fr;gap:16px}.columns ul{margin:6px 0 0;padding-left:20px}.path{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;overflow-wrap:anywhere;color:#475569}@media(max-width:800px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.columns{grid-template-columns:1fr}}
+</style></head><body><main class="wrap"><section class="hero"><h1>统一数据落盘运行报告</h1><div class="meta">数据日期：${htmlEscape(payload.date)} · 生成时间：${fmt(payload.generatedAt)} · <span class="status ${statusClass}">${statusText}</span></div><p>${htmlEscape(payload.message)}</p></section><section class="grid"><div class="card"><b>步骤进度</b><strong>${payload.progress.completed}/${payload.progress.total}</strong><div>${payload.progress.percent}%${payload.progress.currentStep ? ` · ${htmlEscape(payload.progress.currentStep)}` : ''}</div></div><div class="card"><b>Harness 校验</b><strong>${htmlEscape(payload.harness.status)}</strong><div>${fmt(payload.harness.finishedAt)}</div></div><div class="card"><b>来源清单</b><strong>${payload.sources.available}/${payload.sources.total}</strong><div>可用 · 部分 ${payload.sources.partial}</div></div><div class="card"><b>运行时间</b><strong>${fmt(payload.startedAt)}</strong><div>结束：${fmt(payload.finishedAt)}</div></div></section><section class="card section"><h2>步骤状态</h2><table><thead><tr><th>步骤</th><th>状态</th><th>退出码</th><th>结果</th></tr></thead><tbody>${stepRows || '<tr><td colspan="4">尚未开始执行</td></tr>'}</tbody></table></section><section class="columns"><section class="card section"><h2>来源缺失或降级</h2><ul>${missing}</ul></section><section class="card section"><h2>Harness 摘要</h2><div>${htmlEscape(payload.harness.summary || '暂无结构化摘要')}</div><ul>${cautions}</ul></section></section><section class="card section"><h2>本地资产</h2><p>以下路径均位于 3003 的 app-data 内，供后续 EXE 和 Harness 独立读取：</p><div class="path">报告 JSON：${htmlEscape(payload.artifacts.reportJson)}<br>运行状态：${htmlEscape(payload.artifacts.state)}<br>Harness 上下文：${htmlEscape(payload.artifacts.harnessContext)}<br>数据目录：${htmlEscape(payload.artifacts.dataRoot)}</div></section></main></body></html>`;
+}
+
+async function writeUnifiedArchiveReport(state, context = null) {
+  const descriptor = unifiedArchiveReportDescriptor(state?.date);
+  const payload = unifiedArchiveReportPayload(state, context || readJson(path.join(HARNESS_CONTEXT_ROOT, 'latest-archive.json')) || {});
+  const html = unifiedArchiveReportHtml(payload);
+  await mkdir(descriptor.directory, { recursive: true });
+  await writeRuntimeJson(descriptor.jsonFile, payload);
+  await writeFile(descriptor.htmlFile, html, 'utf8');
+  await writeRuntimeJson(descriptor.latestJsonFile, payload);
+  await writeFile(descriptor.latestHtmlFile, html, 'utf8');
+  return {
+    date: descriptor.date,
+    htmlUrl: descriptor.htmlUrl,
+    jsonUrl: descriptor.jsonUrl,
+    htmlPath: descriptor.htmlFile,
+    jsonPath: descriptor.jsonFile,
+    relativeHtml: dataRelativePath(descriptor.htmlFile),
+    relativeJson: dataRelativePath(descriptor.jsonFile),
+    generatedAt: payload.generatedAt,
+  };
+}
+
+async function saveUnifiedArchiveState(state, context = null) {
+  const compacted = compactUnifiedArchiveState(state);
+  for (const key of Object.keys(state)) delete state[key];
+  Object.assign(state, compacted);
+  const report = await writeUnifiedArchiveReport(state, context);
+  state.report = report;
+  await writeRuntimeJson(UNIFIED_ARCHIVE_STATE_FILE, state);
+  return report;
+}
+
+async function ensureUnifiedArchiveReport(state) {
+  if (!state || typeof state !== 'object') return null;
+  const compacted = compactUnifiedArchiveState(state);
+  const wasVerbose = JSON.stringify(compacted) !== JSON.stringify(state);
+  if (wasVerbose) {
+    for (const key of Object.keys(state)) delete state[key];
+    Object.assign(state, compacted);
+    await writeRuntimeJson(UNIFIED_ARCHIVE_STATE_FILE, state);
+  }
+  const descriptor = unifiedArchiveReportDescriptor(state.date);
+  let report = state.report;
+  if (wasVerbose || !existsSync(descriptor.htmlFile) || !existsSync(descriptor.jsonFile)) {
+    report = await writeUnifiedArchiveReport(state);
+  } else if (!report) {
+    report = {
+      date: descriptor.date,
+      htmlUrl: descriptor.htmlUrl,
+      jsonUrl: descriptor.jsonUrl,
+      htmlPath: descriptor.htmlFile,
+      jsonPath: descriptor.jsonFile,
+      relativeHtml: dataRelativePath(descriptor.htmlFile),
+      relativeJson: dataRelativePath(descriptor.jsonFile),
+    };
+  }
+  if (report && JSON.stringify(state.report) !== JSON.stringify(report)) {
+    state.report = report;
+    await writeRuntimeJson(UNIFIED_ARCHIVE_STATE_FILE, state);
+  }
+  return report;
+}
+
+async function persistHarnessReport({ skillId = '', output = '', diagnostics = '', task = '', dataDate = '', jobId = '' }) {
+  const date = compactDateText(dataDate) || compactDateText(localTradeDate()) || shanghaiDateText().replace(/-/g, '');
+  const safeSkill = String(skillId || 'general').replace(/[^a-zA-Z0-9._-]+/g, '_').slice(0, 80);
+  const file = path.join(DATA_ROOT, 'reports', 'daily', date, 'harness', `${safeSkill}-${Date.now()}-${jobId || randomUUID()}.json`);
+  const record = {
+    schema: 'ZHANGCAI_DEEPSEEK_HARNESS_REPORT_V1',
+    generated_at: new Date().toISOString(),
+    engine: 'DeepSeek Harness headless',
+    application_root: APP_ROOT,
+    data_root: DATA_ROOT,
+    skill_id: skillId || null,
+    data_date: date,
+    task,
+    diagnostics,
+    output,
+  };
+  await writeRuntimeJson(file, record);
+  return file;
+}
+
+function safeReportArchiveId(value) {
+  const id = String(value || '').trim();
+  return /^[a-zA-Z0-9._-]{1,180}$/.test(id) ? id : '';
+}
+
+function isHarnessTaskRecord(record) {
+  return record?.content?.kind === 'harness-task' || record?.reportType === 'Harness任务';
+}
+
+function reportArchiveSlot(record) {
+  const content = record?.content && typeof record.content === 'object' ? record.content : {};
+  const kind = String(content.kind || record?.reportType || 'report');
+  let subject = String(record?.title || record?.reportType || 'report');
+  if (kind === 'harness-skill') subject = String(content.skillId || subject);
+  else if (kind === 'strategy-selection-harness' || kind === 'strategy-run') subject = String(content.strategyId || subject);
+  else if (kind === 'stock-research') {
+    const stock = content.stock && typeof content.stock === 'object' ? content.stock : {};
+    subject = `${String(stock.code || '')}|${record?.reportType || subject}`;
+  }
+  return `${String(record?.date || '')}|${kind}|${subject}`;
+}
+
+function collapseReportArchiveRows(records) {
+  const seen = new Set();
+  return [...records]
+    .filter((item) => item && typeof item.id === 'string' && !isHarnessTaskRecord(item))
+    .sort((a, b) => String(b.updatedAt || '').localeCompare(String(a.updatedAt || '')))
+    .filter((item) => {
+      const slot = reportArchiveSlot(item);
+      if (seen.has(slot)) return false;
+      seen.add(slot);
+      return true;
+    })
+    .slice(0, 100);
+}
+
+function readLocalReportArchive() {
+  const indexed = readJson(REPORT_ARCHIVE_INDEX_FILE, []);
+  if (Array.isArray(indexed)) return collapseReportArchiveRows(indexed);
+  if (!existsSync(REPORT_ARCHIVE_ROOT)) return [];
+  try {
+    const rows = readdirSync(REPORT_ARCHIVE_ROOT)
+      .filter((name) => name.toLowerCase().endsWith('.json') && name !== 'index.json')
+      .map((name) => readJson(path.join(REPORT_ARCHIVE_ROOT, name)))
+      .filter((item) => item && typeof item.id === 'string');
+    return collapseReportArchiveRows(rows);
+  } catch { return []; }
+}
+
+async function compactLocalReportArchive() {
+  const indexed = readJson(REPORT_ARCHIVE_INDEX_FILE, []);
+  if (!Array.isArray(indexed)) return { reports: [], removed: 0 };
+  const reports = collapseReportArchiveRows(indexed);
+  const keepIds = new Set(reports.map((item) => item.id));
+  const removedIds = [...new Set(indexed
+    .filter((item) => item && typeof item.id === 'string' && !keepIds.has(item.id))
+    .map((item) => item.id))];
+  // Older versions could leave an unindexed failed/running task mirror on
+  // disk. It is not a report and must not survive the one-report policy.
+  try {
+    for (const name of readdirSync(REPORT_ARCHIVE_ROOT)) {
+      if (!name.toLowerCase().endsWith('.json') || name === 'index.json') continue;
+      const item = readJson(path.join(REPORT_ARCHIVE_ROOT, name), null);
+      if (isHarnessTaskRecord(item) && item?.id && !removedIds.includes(item.id)) removedIds.push(item.id);
+    }
+  } catch { /* index cleanup remains valid even if an orphan file disappears */ }
+  for (const id of removedIds) {
+    const safeId = safeReportArchiveId(id);
+    if (!safeId) continue;
+    try { await unlink(path.join(REPORT_ARCHIVE_ROOT, `${safeId}.json`)); } catch { /* 已不存在 */ }
+  }
+  await writeRuntimeJson(REPORT_ARCHIVE_INDEX_FILE, reports);
+  return { reports, removed: removedIds.length };
+}
+
+async function persistLocalReportArchive(record) {
+  const id = safeReportArchiveId(record?.id);
+  if (!id) throw new Error('报告缺少合法 ID');
+  if (isHarnessTaskRecord(record)) {
+    return { status: 'ignored', id, reason: '任务状态只保留在后台任务缓存，不作为第二份报告归档', count: readLocalReportArchive().length };
+  }
+  const existing = readLocalReportArchive().filter((item) => item.id !== id);
+  const slot = reportArchiveSlot(record);
+  const replaced = existing.filter((item) => reportArchiveSlot(item) === slot);
+  for (const old of replaced) {
+    const oldId = safeReportArchiveId(old.id);
+    if (oldId && oldId !== id) {
+      try { await unlink(path.join(REPORT_ARCHIVE_ROOT, `${oldId}.json`)); } catch { /* 已不存在 */ }
+    }
+  }
+  const next = collapseReportArchiveRows([record, ...existing.filter((item) => reportArchiveSlot(item) !== slot)]);
+  await writeRuntimeJson(path.join(REPORT_ARCHIVE_ROOT, `${id}.json`), record);
+  await writeRuntimeJson(REPORT_ARCHIVE_INDEX_FILE, next);
+  return { status: 'ok', id, path: path.join(DATA_ROOT, 'reports', 'archive', `${id}.json`), count: next.length };
+}
+
+async function deleteLocalReportArchive(id) {
+  const safeId = safeReportArchiveId(id);
+  if (!safeId) throw new Error('报告 ID 无效');
+  const next = readLocalReportArchive().filter((item) => item.id !== safeId);
+  try { await unlink(path.join(REPORT_ARCHIVE_ROOT, `${safeId}.json`)); } catch { /* 文件已不存在 */ }
+  await writeRuntimeJson(REPORT_ARCHIVE_INDEX_FILE, next);
+  return { status: 'ok', id: safeId, count: next.length };
 }
 
 function readableScriptError(scriptName, raw, code = 1) {
@@ -954,6 +2000,58 @@ function runLocalScript(scriptName, args = [], timeoutMs = 120000, outputLimit =
       resolve({ script: scriptName, code, partial: code !== 0, output: outputLimit > 0 ? stdout.trim().slice(-outputLimit) : stdout.trim() });
     });
   });
+}
+
+async function runSelectionScoreRuntime(payload) {
+  const runId = randomUUID();
+  const requestPath = path.join(DATA_ROOT, 'strategy-results', 'selection-runtime', 'requests', `${runId}.json`);
+  const artifactPath = path.join(
+    DATA_ROOT,
+    'strategy-results',
+    'selection-runtime',
+    String(payload?.strategyId || 'unknown'),
+    `${String(payload?.date || localTradeDate()).replace(/[^0-9]/g, '').slice(0, 8)}-${runId}.json`,
+  );
+  await writeRuntimeJson(requestPath, payload);
+  try {
+    const result = await runLocalScript('selection_score_runtime.py', [requestPath], 180000, 4 * 1024 * 1024);
+    let value;
+    try { value = JSON.parse(result.output || '{}'); } catch { throw new Error('原始策略评分运行时返回了无效 JSON'); }
+    if (!value || value.status !== 'ok') throw new Error(String(value?.error || '原始策略评分运行时失败'));
+    value.artifact_path = artifactPath;
+    value.persisted_at = new Date().toISOString();
+    await writeRuntimeJson(artifactPath, value);
+    return value;
+  } finally {
+    await unlink(requestPath).catch(() => {});
+  }
+}
+
+function skill14Catalog() {
+  const value = readJson(SKILL14_CATALOG_FILE);
+  if (!value || !Array.isArray(value.skills)) throw new Error('14 技能目录不可读取');
+  return value;
+}
+
+async function runSkill14Runtime(command, args = [], timeoutMs = 120000) {
+  const result = await runLocalScript('skill14_data_runtime.py', [command, ...args], timeoutMs, 2 * 1024 * 1024);
+  let value;
+  try { value = JSON.parse(result.output || '{}'); } catch { throw new Error('14 技能运行时返回了无效 JSON'); }
+  if (value?.status === 'error') throw new Error(String(value.error || '14 技能运行时失败'));
+  if (command === 'archive-daily') {
+    const date = displayDateText(value?.trade_date || value?.tradeDate || localTradeDate());
+    const stateFile = path.join(RUNTIME_ROOT, 'skill14-archive-harness-state.json');
+    const state = {
+      schema: 'ZHANGCAI_SKILL14_ARCHIVE_RUN_V1', date, startedAt: new Date().toISOString(),
+      finishedAt: new Date().toISOString(), status: value?.status === 'error' ? 'partial' : 'completed',
+      steps: [{ name: '14技能本地日线归档', status: 'completed', script: 'skill14_data_runtime.py', code: result.code }],
+      harness: { status: 'pending' },
+    };
+    const archived = await persistHarnessArchiveContext({ date, state, archiveType: 'skill14', stateFile });
+    await writeRuntimeJson(stateFile, state);
+    value.harness_archive = { status: archived.harness.status, contextFile: archived.contextFile, latest: path.join(HARNESS_CONTEXT_ROOT, 'latest-archive.json') };
+  }
+  return value;
 }
 
 function inspectTdxDailyIntegrity(tdxRoot = process.env.ZHANGCAI_TDX_ROOT || 'C:\\new_tdx_mock') {
@@ -1033,10 +2131,68 @@ function inspectTdxDailyIntegrity(tdxRoot = process.env.ZHANGCAI_TDX_ROOT || 'C:
   };
 }
 
+function dailyFreshnessSnapshot(daily, now = new Date()) {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Shanghai',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
+  }).formatToParts(now).reduce((result, item) => ({ ...result, [item.type]: item.value }), {});
+  const year = Number(parts.year);
+  const month = Number(parts.month);
+  const day = Number(parts.day);
+  const hour = Number(parts.hour);
+  const minute = Number(parts.minute);
+  const today = `${parts.year}${parts.month}${parts.day}`;
+  const latestDate = String(daily?.latestDate || '').replace(/\D/g, '');
+  const isTradingDay = isTradingDayDate(today);
+  const afterClose = hour > 16 || (hour === 16 && minute >= 30);
+  const updateDue = afterClose && isTradingDay && (!/^\d{8}$/.test(latestDate) || latestDate < today);
+  return {
+    currentDate: today,
+    afterClose,
+    isTradingDay,
+    latestDate,
+    updateDue,
+    freshnessStatus: updateDue ? 'update_due' : 'current_or_not_trading_day',
+    freshnessMessage: updateDue
+      ? `已过 16:30，最新日线 ${latestDate || '无'}，请更新至 ${today}`
+      : afterClose && !isTradingDay
+        ? '今日为非交易日，不要求生成新日线'
+        : `日线检查截止 ${today} ${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`,
+  };
+}
+
 // 个股详情页的“五公式”走同一个本地桥接端口，避免前端再依赖一个
 // 未启动的 4320 服务。tdx_hub.py 的 five 命令即使某一公式失败也会
 // 返回完整 JSON（退出码 2），因此这里按 JSON 响应解析并把单项失败
 // 交给页面展示，而不是把它误报成网络错误。
+async function persistFormulaReceipt(result, requestedSymbol, startedAt) {
+  const executedAt = new Date().toISOString();
+  let dataDate = '';
+  try { dataDate = String(inspectTdxDailyIntegrity().latestDate || ''); } catch { /* 日线扫描失败不应吞掉公式结果 */ }
+  const receiptDate = /^\d{8}$/.test(dataDate)
+    ? dataDate
+    : executedAt.slice(0, 10).replace(/-/g, '');
+  const safeSymbol = String(result.symbol || requestedSymbol || 'unknown')
+    .replace(/[^A-Za-z0-9._-]/g, '_');
+  const receipt = {
+    schema: 'ZHANGCAI_TDX_TQ_FORMULA_RECEIPT_V1',
+    asset: 'tdx_tq_formula',
+    executed_at: executedAt,
+    data_date: dataDate,
+    symbol: result.symbol || requestedSymbol,
+    source: result.source || '通达信 TQ · tdx-local-hub',
+    source_root: process.env.ZHANGCAI_TDX_ROOT || 'C:\\new_tdx_mock',
+    formulas: Array.isArray(result.formulas) ? result.formulas : [],
+    failed_formulas: Array.isArray(result.failed_formulas) ? result.failed_formulas : [],
+    elapsed_ms: result.elapsed_ms || Math.max(0, Date.now() - startedAt),
+    bridge_exit_code: result.bridge_exit_code,
+  };
+  const receiptPath = path.join(DATA_ROOT, 'evidence', 'formulas', receiptDate, `tdx-tq-${safeSymbol}-${Date.now()}.json`);
+  await writeRuntimeJson(receiptPath, receipt);
+  return path.relative(DATA_ROOT, receiptPath).replace(/\\/g, '/');
+}
+
 function runFiveFormulas(symbol, timeoutMs = 120000) {
   return new Promise((resolve, reject) => {
     const python = localPythonExecutable();
@@ -1064,7 +2220,7 @@ function runFiveFormulas(symbol, timeoutMs = 120000) {
     child.stdout.on('data', (chunk) => { stdout += chunk.toString(); });
     child.stderr.on('data', (chunk) => { stderr += chunk.toString(); });
     child.on('error', (error) => { clearTimeout(timer); reject(error); });
-    child.on('close', (code) => {
+    child.on('close', async (code) => {
       clearTimeout(timer);
       const text = stdout.trim();
       let payload;
@@ -1074,7 +2230,7 @@ function runFiveFormulas(symbol, timeoutMs = 120000) {
         reject(new Error((stderr || text || `公式桥接退出码 ${code}`).trim().slice(-2000)));
         return;
       }
-      resolve({
+      const result = {
         status: 'ok',
         symbol: payload.symbol || symbol,
         source: '通达信 TQ · tdx-local-hub',
@@ -1093,9 +2249,231 @@ function runFiveFormulas(symbol, timeoutMs = 120000) {
         })) : [],
         failed_formulas: Array.isArray(payload.failed_formulas) ? payload.failed_formulas : [],
         bridge_exit_code: code,
+      };
+      try {
+        result.receipt_path = await persistFormulaReceipt(result, symbol, startedAt);
+      } catch (error) {
+        result.receipt_error = error instanceof Error ? error.message : String(error);
+        console.error(`[agent] 无法保存 TQ 公式回执：${result.receipt_error}`);
+      }
+      resolve(result);
+    });
+  });
+}
+
+function runFiveFormulasBatch(symbols, timeoutMs = 180000) {
+  return new Promise((resolve, reject) => {
+    const python = localPythonExecutable();
+    const script = path.join(SKILL_SOURCE, 'tdx-local-hub', 'scripts', 'tdx_hub.py');
+    if (!existsSync(script)) {
+      reject(new Error(`未找到通达信公式桥接脚本：${script}`));
+      return;
+    }
+    const child = spawn(python, [script, 'batch', ...symbols], {
+      cwd: APP_ROOT,
+      windowsHide: true,
+      env: {
+        ...process.env,
+        TDX_ROOT: process.env.ZHANGCAI_TDX_ROOT || 'C:\\new_tdx_mock',
+        ONESTOCK_STOCK_DATA_ROOT: DATA_ROOT,
+      },
+    });
+    let stdout = '';
+    let stderr = '';
+    const startedAt = Date.now();
+    const timer = setTimeout(() => {
+      if (child.pid) spawn('taskkill', ['/pid', String(child.pid), '/t', '/f'], { windowsHide: true });
+      reject(new Error(`批量五公式计算超时（${Math.round(timeoutMs / 1000)} 秒）`));
+    }, timeoutMs);
+    child.stdout.on('data', (chunk) => { stdout += chunk.toString(); });
+    child.stderr.on('data', (chunk) => { stderr += chunk.toString(); });
+    child.on('error', (error) => { clearTimeout(timer); reject(error); });
+    child.on('close', async (code) => {
+      clearTimeout(timer);
+      let payload;
+      try {
+        payload = JSON.parse(stdout.trim());
+      } catch {
+        reject(new Error((stderr || stdout || `批量公式桥接退出码 ${code}`).trim().slice(-2000)));
+        return;
+      }
+      const requested = Array.isArray(symbols) ? symbols : [];
+      const formulas = Array.isArray(payload.items) ? payload.items.map((item) => ({
+        formula: item.formula,
+        tq_formula: item.tq_formula,
+        ok: Boolean(item.ok),
+        elapsed_ms: item.elapsed_ms,
+        results: item.results && typeof item.results === 'object' ? item.results : {},
+        error: item.error,
+      })) : [];
+      const result = {
+        status: payload.ok ? 'ok' : 'partial',
+        symbols: requested,
+        source: '通达信 TQ · tdx-local-hub / batch',
+        elapsed_ms: payload.elapsed_ms || Date.now() - startedAt,
+        formulas,
+        failed_formulas: Array.isArray(payload.failed_formulas) ? payload.failed_formulas : [],
+        bridge_exit_code: code,
+      };
+      try {
+        // 每只股票保留一份独立回执，供 Harness 和后续 exe 运行时按股票复用。
+        await Promise.all(requested.map(async (symbol) => {
+          const perSymbol = {
+            ...result,
+            symbol,
+            formulas: formulas.map((item) => ({
+              formula: item.formula,
+              tq_formula: item.tq_formula,
+              ok: item.ok,
+              elapsed_ms: item.elapsed_ms,
+              result: item.results[symbol] || {},
+              error: item.error,
+            })),
+          };
+          return persistFormulaReceipt(perSymbol, symbol, startedAt);
+        }));
+      } catch (error) {
+        result.receipt_error = error instanceof Error ? error.message : String(error);
+      }
+      resolve(result);
+    });
+  });
+}
+
+function normalizeSingleSignalSymbol(value) {
+  const raw = String(value || '').trim().toUpperCase();
+  const digits = raw.replace(/\D/g, '');
+  if (!/^\d{6}$/.test(digits)) return '';
+  const explicitMarket = raw.match(/\.(SH|SZ|BJ)$/i)?.[1]?.toUpperCase();
+  const market = explicitMarket || (/^(920|[48])/.test(digits)
+    ? 'BJ'
+    : /^[569]/.test(digits)
+      ? 'SH'
+      : 'SZ');
+  return `${digits}.${market}`;
+}
+
+function parseLastJsonLine(output) {
+  const lines = String(output || '').split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+  for (let index = lines.length - 1; index >= 0; index -= 1) {
+    try { return JSON.parse(lines[index]); } catch { /* 继续向前找最终回执 */ }
+  }
+  return null;
+}
+
+function runGoldenIgnitionSymbol(symbol, lookback = 5, timeoutMs = 180000) {
+  return new Promise((resolve, reject) => {
+    const normalized = normalizeSingleSignalSymbol(symbol);
+    if (!normalized) {
+      reject(new Error('需要六位股票代码，可带 .SH、.SZ 或 .BJ 后缀'));
+      return;
+    }
+    const script = path.join(SKILL_SOURCE, 'golden-ignition', 'scripts', 'entry_golden_ignition.py');
+    if (!existsSync(script)) {
+      reject(new Error(`未找到黄金点火单股入口：${script}`));
+      return;
+    }
+    const python = localPythonExecutable();
+    const safeLookback = Math.max(1, Math.min(30, Number(lookback) || 5));
+    const startedAt = Date.now();
+    const child = spawn(python, [script, normalized, '--lookback', String(safeLookback)], {
+      cwd: path.join(SKILL_SOURCE, 'golden-ignition'),
+      windowsHide: true,
+      env: {
+        ...process.env,
+        ZHANGCAI_APP_ROOT: APP_ROOT,
+        ZHANGCAI_DATA_DIR: DATA_ROOT,
+        ZHANGCAI_TDX_ROOT: process.env.ZHANGCAI_TDX_ROOT || 'C:\\new_tdx_mock',
+        TDX_ROOT: process.env.ZHANGCAI_TDX_ROOT || 'C:\\new_tdx_mock',
+        TDX_HUB_PATH: path.join(SKILL_SOURCE, 'tdx-local-hub', 'scripts', 'tdx_hub.py'),
+        TDX_BOND_MAP_PATH: path.join(process.env.ZHANGCAI_TDX_ROOT || 'C:\\new_tdx_mock', 'T0002', 'hq_cache', 'speckzzdata.txt'),
+        ZHANGCAI_STRATEGY_RESULTS_DIR: path.join(DATA_ROOT, 'strategy-results'),
+        ONESTOCK_STOCK_DATA_ROOT: path.join(DATA_ROOT, 'strategy-results'),
+        ONESTOCK_STOCK_CANONICAL_CHILD: '1',
+        PYTHONPATH: [
+          path.join(APP_ROOT, 'scripts'),
+          path.join(SKILL_SOURCE, 'stock-unified', 'scripts'),
+          process.env.PYTHONPATH || '',
+        ].filter(Boolean).join(path.delimiter),
+      },
+    });
+    let stdout = '';
+    let stderr = '';
+    let settled = false;
+    const finishError = (error) => {
+      if (settled) return;
+      settled = true;
+      reject(error);
+    };
+    const timer = setTimeout(() => {
+      if (child.pid) spawn('taskkill', ['/pid', String(child.pid), '/t', '/f'], { windowsHide: true });
+      finishError(new Error(`黄金点火单股执行超时（${Math.round(timeoutMs / 1000)} 秒）`));
+    }, timeoutMs);
+    child.stdout.on('data', (chunk) => { stdout += chunk.toString(); });
+    child.stderr.on('data', (chunk) => { stderr += chunk.toString(); });
+    child.on('error', (error) => { clearTimeout(timer); finishError(error); });
+    child.on('close', async (code) => {
+      clearTimeout(timer);
+      if (settled) return;
+      const summary = parseLastJsonLine(stdout);
+      if (!summary || typeof summary !== 'object') {
+        finishError(new Error((stderr || stdout || `黄金点火单股入口退出码 ${code}`).trim().slice(-3000)));
+        return;
+      }
+      const resultPath = typeof summary.result_path === 'string' ? summary.result_path : '';
+      const artifact = resultPath ? readJson(resultPath) : null;
+      const result = artifact && typeof artifact === 'object'
+        ? artifact
+        : summary;
+      resolve({
+        status: result.status === 'PASS' ? 'ok' : 'blocked',
+        skill_id: 'golden-ignition',
+        input_symbol: result.input_symbol || summary.input_symbol || normalized,
+        analysis_symbol: result.analysis_symbol || summary.analysis_symbol || normalized,
+        latest_trading_date: result.latest_trading_date || summary.latest_trading_date || '',
+        signal_status: result.signal_status || summary.signal_status || '',
+        ignition_signal: Boolean(result.ignition_signal),
+        lookback_trading_days: Number(result.lookback_trading_days || safeLookback),
+        local_daily: result.local_daily && typeof result.local_daily === 'object' ? result.local_daily : {},
+        tdx_formula: result.tdx_formula && typeof result.tdx_formula === 'object' ? result.tdx_formula : {},
+        data_sources: result.data_sources && typeof result.data_sources === 'object' ? result.data_sources : {},
+        risk_boundary: Array.isArray(result.risk_boundary) ? result.risk_boundary : [],
+        error: result.error || undefined,
+        result_path: resultPath,
+        artifact: result,
+        raw_summary: summary,
+        bridge_exit_code: code,
+        elapsed_ms: Date.now() - startedAt,
       });
     });
   });
+}
+
+async function runDailyRecovery(date, codes = '', maxSymbols = 0) {
+  const args = ['--date', date];
+  if (codes) args.push('--codes', codes);
+  if (Number(maxSymbols) > 0) args.push('--max-symbols', String(Math.min(Number(maxSymbols), 10000)));
+  const result = await runLocalScript(
+    'daily_data_recovery.py', args,
+    Number(process.env.ZHANGCAI_PUBLIC_DAILY_RECOVERY_TIMEOUT_MS || 300000),
+    12000,
+    [2],
+  );
+  let local = null;
+  try { local = JSON.parse(String(result.output || '').trim()); } catch { local = parseLastJsonLine(result.output); }
+  if (!local || typeof local !== 'object' || Array.isArray(local)) local = { status: result.partial ? 'degraded' : 'available', output: result.output };
+  try { await runLocalScript('skill14_data_runtime.py', ['status'], 120000, 4000); } catch { /* 日线索引已先落盘，状态页下次刷新可恢复 */ }
+  try { await runLocalScript('unified_data_archive.py', ['snapshot', '--date', date], 180000, 4000); } catch { /* 不阻断公开降级层本身 */ }
+  const stateFile = path.join(RUNTIME_ROOT, `daily-fallback-recovery-${archiveDateKey(date)}.json`);
+  const state = {
+    schema: 'ZHANGCAI_DAILY_FALLBACK_RECOVERY_V1', date, startedAt: new Date().toISOString(),
+    finishedAt: new Date().toISOString(), status: result.partial ? 'partial' : 'completed',
+    steps: [{ name: '公开日线降级补齐', status: result.partial ? 'partial' : 'completed', script: 'daily_data_recovery.py', code: result.code }],
+    recovery: local, harness: { status: 'pending' },
+  };
+  const archived = await persistHarnessArchiveContext({ date, state, archiveType: 'daily-fallback', stateFile });
+  await writeRuntimeJson(stateFile, state);
+  return { ...local, bridge: { partial: Boolean(result.partial), exitCode: result.code }, harness_archive: { status: archived.harness.status, contextFile: archived.contextFile } };
 }
 
 async function runDailyRefresh(date) {
@@ -1126,58 +2504,24 @@ async function runDailyRefresh(date) {
   // 完整性脚本用退出码 2 表示“报告已生成但仍有缺口”。这不是进程故障，
   // 必须保留其完整 stdout 交给 Harness，而不是只留下截断的错误尾部。
   const tdxRefresh = await execute('通达信日线完整性检查与补齐', 'tdx_daily_integrity.py', ['--refresh'], Number(process.env.ZHANGCAI_TDX_REFRESH_TIMEOUT_MS || 180000), [2]);
-  let refreshedDate = '';
-  try {
-    const integrity = JSON.parse(String(tdxRefresh?.output || '{}'));
-    refreshedDate = String(integrity?.after?.targetDate || integrity?.targetDateAfter || integrity?.targetDate || '').replace(/\D/g, '');
-  } catch {
-    refreshedDate = String(tdxRefresh?.output || '').match(/"targetDateAfter"\s*:\s*"(\d{8})"/)?.[1] || '';
-  }
-  const effectiveDate = /^\d{8}$/.test(refreshedDate)
-    ? `${refreshedDate.slice(0, 4)}-${refreshedDate.slice(4, 6)}-${refreshedDate.slice(6)}`
-    : date;
+  await execute('14技能日线归档', 'skill14_data_runtime.py', ['archive-daily'], Number(process.env.ZHANGCAI_DAILY_ARCHIVE_TIMEOUT_MS || 300000));
+  const effectiveDate = targetDateFromTdxResult(tdxRefresh, localTradeDate());
   state.date = effectiveDate;
   await writeRuntimeJson(DAILY_STATE_FILE, state);
+  // TDX 正常时只检查真正缺口；TDX 关闭/源目录不可读时，脚本把明确返回
+  // 目标交易日的公开 OHLCV 写入应用可写 fallback 层，不触碰 TDX 目录。
+  await execute('公开日线缺口降级补齐', 'daily_data_recovery.py', ['--date', effectiveDate], Number(process.env.ZHANGCAI_PUBLIC_DAILY_RECOVERY_TIMEOUT_MS || 300000), [2]);
   await Promise.all([
     execute('公开行情补齐', 'public_market_sync.py', ['--date', effectiveDate], 90000),
     execute('新闻快讯补齐', 'news_sync.py', ['--date', effectiveDate], 90000),
   ]);
+  await execute('财务、股本、指数、龙虎榜、融资融券统一落盘', 'supplemental_data_sync.py', ['--date', effectiveDate, '--mode', 'daily'], 240000);
+  await execute('行情资讯能力包来源补充', 'package_source_sync.py', ['--date', effectiveDate], 360000);
+  // 先刷新会变化的状态页，再生成哈希清单，避免清单刚生成就被状态页覆盖。
+  await execute('统一数据状态刷新', 'skill14_data_runtime.py', ['status'], 120000);
+  await execute('统一数据源清单生成', 'unified_data_archive.py', ['snapshot', '--date', effectiveDate], 180000);
 
-  const contextFile = path.join(HARNESS_CONTEXT_ROOT, `daily-data-${effectiveDate.replace(/-/g, '')}.json`);
-  const snapshots = dailySnapshotSummary();
-  const context = {
-    schema: 'ZHANGCAI_HARNESS_DAILY_CONTEXT_V1',
-    date: effectiveDate,
-    generatedAt: new Date().toISOString(),
-    runtimeRoot: RUNTIME_ROOT,
-    publicSnapshot: path.join(DATA_ROOT, 'public', 'latest.json'),
-    newsSnapshot: path.join(DATA_ROOT, 'news', 'latest.json'),
-    dailyState: DAILY_STATE_FILE,
-    steps: state.steps.map(({ name, status, script, code, finishedAt, error }) => ({ name, status, script, code, finishedAt, error })),
-    snapshots,
-  };
-  await writeRuntimeJson(contextFile, context);
-  await writeRuntimeJson(path.join(HARNESS_CONTEXT_ROOT, 'latest-data.json'), context);
-  try {
-    if (!process.env.DEEPSEEK_API_KEY) throw new Error('未设置 DEEPSEEK_API_KEY，已完成本地快照但无法进行 Harness 校验');
-    const output = await runHarnessWithRetry(buildPrompt(
-      `这是每日首次打开后的数据更新校验。以下是本机脚本已提取的紧凑元数据：${JSON.stringify(context)}。仅依据这些字段核验来源、日期、哈希、条数与缺失项。日线有效完整率以 snapshots.tdxDailyIntegrity.effectiveCompleteCount 和 complete 为准；其中 nonTrading 列出的未上市/停牌/目标日无交易证券按用户规则计入完整，repairAttempts 只是补齐尝试记录，不得把其中的 nonTrading 项重新计入缺失。禁止读取文件、执行命令、访问网络、重新抓取或猜测数据。${HARNESS_JSON_SCHEMA}`,
-      { date: effectiveDate.replace(/-/g, ''), currentCount: snapshots.publicMarket.marketBreadth.currentCount, up: snapshots.publicMarket.marketBreadth.up, down: snapshots.publicMarket.marketBreadth.down, flat: snapshots.publicMarket.marketBreadth.flat, amount: 0, dataSources: { dailyContext: contextFile, publicSources: snapshots.publicMarket.sources }, limitCandidates: [{ count: snapshots.publicMarket.marketBreadth.limitUp, lianban: snapshots.publicMarket.marketBreadth.lianban }] },
-      'market-data-replenishment',
-      { contextFile },
-    ), 'market-data-replenishment', { inline: true });
-    state.harness = { status: 'completed', finishedAt: new Date().toISOString(), output: output.output, elapsedMs: output.elapsedMs };
-    await writeRuntimeJson(path.join(HARNESS_CONTEXT_ROOT, `daily-validation-${effectiveDate.replace(/-/g, '')}.json`), {
-      ...context,
-      harness: state.harness,
-    });
-    await writeRuntimeJson(path.join(HARNESS_CONTEXT_ROOT, 'latest-data.json'), {
-      ...context,
-      harness: state.harness,
-    });
-  } catch (error) {
-    state.harness = { status: 'failed', finishedAt: new Date().toISOString(), error: error instanceof Error ? error.message : String(error) };
-  }
+  await persistHarnessArchiveContext({ date: effectiveDate, state, archiveType: 'daily', stateFile: DAILY_STATE_FILE });
   state.finishedAt = new Date().toISOString();
   state.status = state.steps.some((step) => ['failed', 'partial'].includes(step.status)) || state.harness.status === 'failed' ? 'partial' : 'completed';
   await writeRuntimeJson(DAILY_STATE_FILE, state);
@@ -1208,25 +2552,196 @@ async function runSupplementalRefresh(date) {
     execute('公开行情补齐', 'public_market_sync.py', ['--date', date], 90000),
     execute('新闻快讯补齐', 'news_sync.py', ['--date', date], 90000),
   ]);
-  const contextFile = path.join(HARNESS_CONTEXT_ROOT, `supplemental-data-${date.replace(/-/g, '')}.json`);
-  const snapshots = dailySnapshotSummary();
-  const context = { schema: 'ZHANGCAI_HARNESS_SUPPLEMENTAL_CONTEXT_V1', date, generatedAt: new Date().toISOString(), dailyState: SUPPLEMENTAL_STATE_FILE, snapshots };
+  await execute('财务、股本、指数、龙虎榜、融资融券统一落盘', 'supplemental_data_sync.py', ['--date', date, '--mode', 'daily'], 240000);
+  await execute('行情资讯能力包来源补充', 'package_source_sync.py', ['--date', date], 360000);
+  await execute('统一数据状态刷新', 'skill14_data_runtime.py', ['status'], 120000);
+  await execute('统一数据源清单生成', 'unified_data_archive.py', ['snapshot', '--date', date], 180000);
+  await persistHarnessArchiveContext({ date, state, archiveType: 'supplemental', stateFile: SUPPLEMENTAL_STATE_FILE });
+  state.finishedAt = new Date().toISOString();
+  state.status = state.steps.some((step) => step.status === 'failed') || state.harness.status === 'failed' ? 'partial' : 'completed';
+  await writeRuntimeJson(SUPPLEMENTAL_STATE_FILE, state);
+  return state;
+}
+
+function targetDateFromTdxResult(result, fallback) {
+  try {
+    const value = JSON.parse(String(result?.output || '{}'));
+    const raw = String(value?.after?.targetDate || value?.targetDateAfter || value?.targetDate || '').replace(/\D/g, '');
+    if (/^\d{8}$/.test(raw)) return `${raw.slice(0, 4)}-${raw.slice(4, 6)}-${raw.slice(6)}`;
+  } catch { /* 保留回退日期 */ }
+  const match = String(result?.output || '').match(/"targetDateAfter"\s*:\s*"(\d{8})"/);
+  if (match) return `${match[1].slice(0, 4)}-${match[1].slice(4, 6)}-${match[1].slice(6)}`;
+  return fallback;
+}
+
+async function runUnifiedDataArchive(date) {
+  const state = {
+    schema: 'ZHANGCAI_UNIFIED_DATA_ARCHIVE_RUN_V1',
+    date,
+    startedAt: new Date().toISOString(),
+    status: 'running',
+    steps: [],
+    harness: { status: 'pending' },
+  };
+  await saveUnifiedArchiveState(state);
+  const execute = async (name, script, args, timeout, acceptedExitCodes = []) => {
+    const step = { name, status: 'running', startedAt: new Date().toISOString(), script };
+    state.steps.push(step);
+    await saveUnifiedArchiveState(state);
+    try {
+      const result = await runLocalScript(script, args, timeout, 12000, acceptedExitCodes);
+      const resultPath = await persistUnifiedStepOutput(state.date, step, state.steps.length, result);
+      Object.assign(step, {
+        status: result.partial ? 'partial' : 'completed',
+        finishedAt: new Date().toISOString(),
+        code: result.code,
+        partial: result.partial === true,
+        resultPath,
+        resultStored: Boolean(resultPath),
+      });
+      return result;
+    } catch (error) {
+      Object.assign(step, { status: 'failed', finishedAt: new Date().toISOString(), error: error instanceof Error ? error.message : String(error) });
+      return null;
+    } finally {
+      await saveUnifiedArchiveState(state);
+    }
+  };
+
+  const tdxRefresh = await execute(
+    '通达信日线完整性检查与补齐',
+    'tdx_daily_integrity.py',
+    ['--refresh'],
+    Number(process.env.ZHANGCAI_TDX_REFRESH_TIMEOUT_MS || 180000),
+    [2],
+  );
+  const effectiveDate = targetDateFromTdxResult(tdxRefresh, localTradeDate());
+  state.date = effectiveDate;
+  await saveUnifiedArchiveState(state);
+  await execute('通达信日线与证券资料归档', 'skill14_data_runtime.py', ['archive-daily'], Number(process.env.ZHANGCAI_DAILY_ARCHIVE_TIMEOUT_MS || 300000));
+  await execute('公开日线缺口降级补齐', 'daily_data_recovery.py', ['--date', effectiveDate], Number(process.env.ZHANGCAI_PUBLIC_DAILY_RECOVERY_TIMEOUT_MS || 300000), [2]);
+  await execute('财务、股本、指数、龙虎榜、融资融券统一落盘', 'supplemental_data_sync.py', ['--date', effectiveDate, '--mode', 'daily'], 240000);
+  await execute('行情资讯能力包来源补充', 'package_source_sync.py', ['--date', effectiveDate], 360000);
+  await Promise.all([
+    execute('公开行情、涨停池与龙虎榜归档', 'public_market_sync.py', ['--date', effectiveDate], 90000),
+    execute('东方财富 7×24 新闻归档', 'news_sync.py', ['--date', effectiveDate], 90000),
+  ]);
+  await execute('统一数据状态刷新', 'skill14_data_runtime.py', ['status'], 120000);
+  await execute('统一数据源清单生成', 'unified_data_archive.py', ['snapshot', '--date', effectiveDate], 180000);
+
+  // Commit a terminal local status before writing the Harness context. The
+  // first context write must never contain the stale "running" state that
+  // used to remain in latest-archive.json after a completed run.
+  state.finishedAt = new Date().toISOString();
+  state.status = state.steps.some((step) => ['failed', 'partial'].includes(step.status)) ? 'partial' : 'completed';
+  await saveUnifiedArchiveState(state);
+  const archived = await persistHarnessArchiveContext({ date: effectiveDate, state, archiveType: 'unified', stateFile: UNIFIED_ARCHIVE_STATE_FILE });
+  const harnessOutputPath = await persistUnifiedHarnessOutput(effectiveDate, archived.harness);
+  state.harness = compactUnifiedArchiveState({ harness: { ...archived.harness, outputPath: harnessOutputPath } }).harness;
+  state.finishedAt = new Date().toISOString();
+  state.status = state.steps.some((step) => ['failed', 'partial'].includes(step.status)) || state.harness.status === 'failed' ? 'partial' : 'completed';
+  // Rebuild the context once after the Harness receipt and terminal status
+  // are known, so the context, state JSON, and HTML report agree exactly.
+  await persistHarnessArchiveContext({ date: effectiveDate, state, archiveType: 'unified', stateFile: UNIFIED_ARCHIVE_STATE_FILE, runValidation: false });
+  await saveUnifiedArchiveState(state, readJson(path.join(HARNESS_CONTEXT_ROOT, 'latest-archive.json')) || {});
+  return state;
+}
+
+async function runUnifiedDataVerification(date) {
+  const state = {
+    schema: 'ZHANGCAI_UNIFIED_DATA_VERIFICATION_RUN_V1',
+    date,
+    startedAt: new Date().toISOString(),
+    status: 'running',
+    local: { status: 'pending' },
+    harness: { status: 'pending' },
+  };
+  await writeRuntimeJson(UNIFIED_VERIFY_STATE_FILE, state);
+  try {
+    const local = await runLocalScript('unified_data_archive.py', ['verify', '--date', date], 300000, 12000, [2]);
+    try { state.local = JSON.parse(local.output || '{}'); } catch { state.local = { status: 'error', error: '统一校验脚本返回了无效 JSON', output: local.output }; }
+  } catch (error) {
+    state.local = { status: 'error', error: error instanceof Error ? error.message : String(error) };
+  }
+  await writeRuntimeJson(UNIFIED_VERIFY_STATE_FILE, state);
+  const contextFile = path.join(HARNESS_CONTEXT_ROOT, `unified-verification-${String(date).replace(/-/g, '')}.json`);
+  const context = {
+    schema: 'ZHANGCAI_HARNESS_UNIFIED_VERIFICATION_CONTEXT_V1',
+    date,
+    generatedAt: new Date().toISOString(),
+    localVerification: state.local,
+    manifest: path.join(DATA_ROOT, 'evidence', 'sources', String(date).replace(/-/g, ''), 'manifest.json'),
+    localDataPage: path.join(HARNESS_CONTEXT_ROOT, 'local-data-page.json'),
+    packageSourceInventory: path.join(HARNESS_CONTEXT_ROOT, 'package-source-inventory.json'),
+  };
   await writeRuntimeJson(contextFile, context);
   try {
-    if (!process.env.DEEPSEEK_API_KEY) throw new Error('未设置 DEEPSEEK_API_KEY，已完成公开数据快照但无法进行 Harness 校验');
+    if (!process.env.DEEPSEEK_API_KEY) throw new Error('未设置 DEEPSEEK_API_KEY，已完成本地文件校验但无法进行 Harness 复核');
     const output = await runHarnessWithRetry(buildPrompt(
-      `这是公开行情与新闻数据补齐校验。以下是本机脚本提取的元数据：${JSON.stringify(context)}。仅核验来源、日期、哈希、条数和缺失项，不得读取文件、执行命令、访问网络或猜测数据。${HARNESS_JSON_SCHEMA}`,
-      { date: date.replace(/-/g, ''), currentCount: snapshots.publicMarket.marketBreadth.currentCount, up: snapshots.publicMarket.marketBreadth.up, down: snapshots.publicMarket.marketBreadth.down, flat: snapshots.publicMarket.marketBreadth.flat, amount: 0, dataSources: { dailyContext: contextFile, publicSources: snapshots.publicMarket.sources, news: snapshots.news }, limitCandidates: [{ count: snapshots.publicMarket.marketBreadth.limitUp, lianban: snapshots.publicMarket.marketBreadth.lianban }] },
-      'market-data-replenishment', { contextFile },
+      `这是统一数据落盘校验任务。仅依据以下本地校验结果、统一来源清单和本地数据页，核对文件存在性、哈希、交易日、来源状态及未快照来源。禁止重新抓取、执行命令、读取未传入的文件或猜测缺失数据：${JSON.stringify(context)}。${HARNESS_JSON_SCHEMA}`,
+      { date: String(date).replace(/-/g, ''), dataSources: { unifiedManifest: context.manifest, localDataPage: context.localDataPage, packageSourceInventory: context.packageSourceInventory } },
+      'market-data-replenishment',
+      { contextFile, inline: true },
     ), 'market-data-replenishment', { inline: true });
     state.harness = { status: 'completed', finishedAt: new Date().toISOString(), output: output.output, elapsedMs: output.elapsedMs };
   } catch (error) {
     state.harness = { status: 'failed', finishedAt: new Date().toISOString(), error: error instanceof Error ? error.message : String(error) };
   }
   state.finishedAt = new Date().toISOString();
-  state.status = state.steps.some((step) => step.status === 'failed') || state.harness.status === 'failed' ? 'partial' : 'completed';
-  await writeRuntimeJson(SUPPLEMENTAL_STATE_FILE, state);
+  state.status = state.local.status === 'CLEAN_PASS' && state.harness.status === 'completed' ? 'completed' : 'partial';
+  await writeRuntimeJson(contextFile, { ...context, verification: state });
+  await writeRuntimeJson(UNIFIED_VERIFY_STATE_FILE, state);
   return state;
+}
+
+function startUnifiedDataArchive(date, force = false) {
+  const existing = readJson(UNIFIED_ARCHIVE_STATE_FILE);
+  if (!force && existing?.date === date && ['completed', 'partial'].includes(existing.status)) {
+    return {
+      status: 'current',
+      state: existing,
+      progress: unifiedArchiveProgress(existing),
+      report: existing.report || unifiedArchiveReportDescriptor(existing.date),
+      message: '当前日期已经存在统一落盘结果，未重复启动。',
+    };
+  }
+  const running = [...unifiedArchiveJobs.values()].find((job) => job.date === date && job.status === 'running');
+  if (running) {
+    const runningState = readJson(UNIFIED_ARCHIVE_STATE_FILE);
+    return {
+      status: 'accepted',
+      job: running,
+      state: runningState,
+      progress: unifiedArchiveProgress(runningState),
+      report: runningState?.report || unifiedArchiveReportDescriptor(date),
+      message: '统一数据落盘任务已经在后台运行。',
+    };
+  }
+  const job = { id: randomUUID(), date, status: 'running', started_at: Date.now() };
+  unifiedArchiveJobs.set(job.id, job);
+  void runUnifiedDataArchive(date).then((state) => Object.assign(job, { status: state.status, completed_at: Date.now(), state }))
+    .catch((error) => Object.assign(job, { status: 'failed', completed_at: Date.now(), error: error instanceof Error ? error.message : String(error) }));
+  const initialState = readJson(UNIFIED_ARCHIVE_STATE_FILE);
+  return {
+    status: 'accepted',
+    job,
+    state: initialState,
+    progress: unifiedArchiveProgress(initialState),
+    report: initialState?.report || unifiedArchiveReportDescriptor(date),
+    message: '统一数据落盘任务已受理，正在后台执行；状态和报告会持续写入 app-data。',
+  };
+}
+
+function startUnifiedDataVerification(date, force = false) {
+  const existing = readJson(UNIFIED_VERIFY_STATE_FILE);
+  if (!force && existing?.date === date && ['completed', 'partial'].includes(existing.status)) return { status: 'current', state: existing };
+  const running = [...unifiedVerificationJobs.values()].find((job) => job.date === date && job.status === 'running');
+  if (running) return { status: 'accepted', job: running };
+  const job = { id: randomUUID(), date, status: 'running', started_at: Date.now() };
+  unifiedVerificationJobs.set(job.id, job);
+  void runUnifiedDataVerification(date).then((state) => Object.assign(job, { status: state.status, completed_at: Date.now(), state }))
+    .catch((error) => Object.assign(job, { status: 'failed', completed_at: Date.now(), error: error instanceof Error ? error.message : String(error) }));
+  return { status: 'accepted', job };
 }
 
 function startSupplementalRefresh(date, force = false) {
@@ -1253,25 +2768,19 @@ function startDailyRefresh(date, force = false) {
   return { status: 'accepted', job };
 }
 
-function shanghaiDateParts(now = new Date()) {
-  const parts = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit',
-  }).formatToParts(now).reduce((result, item) => ({ ...result, [item.type]: item.value }), {});
-  return { year: Number(parts.year), month: Number(parts.month), day: Number(parts.day) };
-}
-
 function nextAfterCloseTime(now = new Date()) {
   const { year, month, day } = shanghaiDateParts(now);
   // Asia/Shanghai 固定 UTC+8；用 UTC 构造避免宿主机时区影响计划时间。
-  let target = new Date(Date.UTC(year, month - 1, day, 8, 50, 0, 0));
+  let target = new Date(Date.UTC(year, month - 1, day, 8, 30, 0, 0));
+  const today = `${year}${String(month).padStart(2, '0')}${String(day).padStart(2, '0')}`;
+  const afterClose = now.getTime() >= target.getTime();
+  const existing = readJson(DAILY_STATE_FILE);
+  // 服务若在当天 16:30 后才启动，立即补跑当天交易日；否则不要等到
+  // 第二天，避免“重启后计划已存在但当天数据一直没刷新”。
+  if (afterClose && isTradingDayDate(today) && existing?.date !== displayDateText(today)) return new Date(now.getTime() + 1000);
   if (target.getTime() <= now.getTime()) target = new Date(target.getTime() + 24 * 60 * 60 * 1000);
-  while (target.getUTCDay() === 0 || target.getUTCDay() === 6) target = new Date(target.getTime() + 24 * 60 * 60 * 1000);
+  while (!isTradingDayDate(target.toISOString().slice(0, 10).replace(/-/g, ''))) target = new Date(target.getTime() + 24 * 60 * 60 * 1000);
   return target;
-}
-
-function shanghaiDateText(now = new Date()) {
-  const { year, month, day } = shanghaiDateParts(now);
-  return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 }
 
 function scheduleAfterCloseDailyRefresh() {
@@ -1281,19 +2790,24 @@ function scheduleAfterCloseDailyRefresh() {
       schema: 'ZHANGCAI_HARNESS_AFTER_CLOSE_SCHEDULE_V1',
       enabled: true,
       timezone: 'Asia/Shanghai',
-      schedule: '每个工作日 16:50',
+      schedule: '每个交易日收盘后 16:30',
+      guard: '本地交易日历；周末和闭市日跳过；日期以本地可核验数据为准',
       nextRunAt: next.toISOString(),
-      pipeline: ['通达信日线补齐', '公开行情与新闻同步', 'DeepSeek Harness 数据校验'],
+      pipeline: ['通达信日线补齐', '公开行情与新闻同步', '统一数据源落盘', 'DeepSeek Harness 数据校验'],
     });
     const delay = Math.max(1000, next.getTime() - Date.now());
     setTimeout(() => {
       const date = shanghaiDateText();
-      const started = startDailyRefresh(date);
+      const dateKey = date.replace(/-/g, '');
+      const started = isTradingDayDate(dateKey)
+        ? startDailyRefresh(date)
+        : { status: 'skipped_non_trading_day', date, calendar: localTradingCalendar().source };
       void writeRuntimeJson(AFTER_CLOSE_SCHEDULE_FILE, {
         schema: 'ZHANGCAI_HARNESS_AFTER_CLOSE_SCHEDULE_V1', enabled: true,
-        timezone: 'Asia/Shanghai', schedule: '每个工作日 16:50',
+        timezone: 'Asia/Shanghai', schedule: '每个交易日收盘后 16:30',
+        guard: '本地交易日历；周末和闭市日跳过；日期以本地可核验数据为准',
         lastTriggeredAt: new Date().toISOString(), lastTradeDate: date, result: started,
-        pipeline: ['通达信日线补齐', '公开行情与新闻同步', 'DeepSeek Harness 数据校验'],
+        pipeline: ['通达信日线补齐', '公开行情与新闻同步', '统一数据源落盘', 'DeepSeek Harness 数据校验'],
       });
       console.log(`[agent] 收盘后静默刷新触发：${date} · ${started.status}`);
       arm();
@@ -1303,9 +2817,89 @@ function scheduleAfterCloseDailyRefresh() {
 }
 
 const server = http.createServer(async (req, res) => {
+  // 浏览器、旧版网页或手工配置可能把根地址和接口路径拼成
+  // `//agent/start`。Node 不会自动折叠重复斜杠，原来会直接落到
+  // “路径不存在”；在路由前只规范化 URL 路径，不改变查询参数。
+  const rawRequestUrl = typeof req.url === 'string' && req.url ? req.url : '/';
+  try {
+    // URL("//agent/start", base) treats the first segment as a host, so
+    // collapse leading slashes before constructing the absolute URL.
+    const requestTarget = rawRequestUrl.replace(/^\/{2,}/, '/');
+    const parsedRequestUrl = new URL(requestTarget, `http://${req.headers.host || `${HOST}:${PORT}`}`);
+    const normalizedPath = parsedRequestUrl.pathname.replace(/\/{2,}/g, '/');
+    req.url = `${normalizedPath}${parsedRequestUrl.search}`;
+  } catch {
+    req.url = rawRequestUrl.replace(/^\/{2,}/, '/');
+  }
   if (req.method === 'OPTIONS') { res.writeHead(204, corsHeaders(req)); res.end(); return; }
-  if (req.method === 'GET' && req.url === '/health') {
-    json(res, 200, { status: 'ok', service: 'zhangcai-local-bridge', port: PORT, appRoot: APP_ROOT, dataRoot: DATA_ROOT, skills: SKILL_SOURCE });
+if (req.method === 'GET' && req.url === '/health') {
+    json(res, 200, { status: 'ok', service: 'zhangcai-local-bridge', port: PORT, appRoot: APP_ROOT, dataRoot: DATA_ROOT, skills: SKILL_SOURCE, harness: 'DeepSeek Harness headless', runtimePolicy: RUNTIME_POLICY_FILE, capabilities: BRIDGE_CAPABILITIES });
+    return;
+  }
+  if (req.method === 'GET' && req.url === '/reports/archive') {
+    const compacted = await compactLocalReportArchive();
+    json(res, 200, { status: 'ok', root: path.join(DATA_ROOT, 'reports', 'archive'), index: path.join(DATA_ROOT, 'reports', 'archive', 'index.json'), reports: compacted.reports, compacted: compacted.removed });
+    return;
+  }
+  if (req.method === 'POST' && req.url === '/reports/archive') {
+    try {
+      const record = JSON.parse(await readBody(req) || '{}');
+      const saved = await persistLocalReportArchive(record);
+      json(res, 200, saved);
+    } catch (error) {
+      json(res, 400, { status: 'error', error: error instanceof Error ? error.message : '报告本地落盘失败' });
+    }
+    return;
+  }
+  if (req.method === 'DELETE' && req.url.startsWith('/reports/archive/')) {
+    try {
+      const id = decodeURIComponent(req.url.slice('/reports/archive/'.length).split('?')[0]);
+      json(res, 200, await deleteLocalReportArchive(id));
+    } catch (error) {
+      json(res, 400, { status: 'error', error: error instanceof Error ? error.message : '报告本地删除失败' });
+    }
+    return;
+  }
+  if (req.method === 'GET' && req.url === '/skill14/catalog') {
+    try { json(res, 200, { status: 'ok', catalog: skill14Catalog() }); } catch (error) { json(res, 500, { status: 'error', error: error instanceof Error ? error.message : '目录读取失败' }); }
+    return;
+  }
+  if (req.method === 'GET' && req.url === '/skill14/status') {
+    try { json(res, 200, await runSkill14Runtime('status')); } catch (error) { json(res, 502, { status: 'error', error: error instanceof Error ? error.message : '数据状态读取失败' }); }
+    return;
+  }
+  if (req.method === 'GET' && req.url === '/skill14/reports') {
+    try { json(res, 200, await runSkill14Runtime('list-reports')); } catch (error) { json(res, 502, { status: 'error', error: error instanceof Error ? error.message : '报告目录读取失败' }); }
+    return;
+  }
+  if (req.method === 'POST' && req.url === '/skill14/archive-daily') {
+    try { json(res, 200, await runSkill14Runtime('archive-daily', [], Number(process.env.ZHANGCAI_DAILY_ARCHIVE_TIMEOUT_MS || 300000))); } catch (error) { json(res, 502, { status: 'error', error: error instanceof Error ? error.message : '日线归档失败' }); }
+    return;
+  }
+  if (req.method === 'POST' && req.url === '/skill14/prepare-packages') {
+    try { json(res, 200, await runSkill14Runtime('prepare-packages', [], Number(process.env.ZHANGCAI_SKILL14_PREPARE_TIMEOUT_MS || 600000))); } catch (error) { json(res, 502, { status: 'error', error: error instanceof Error ? error.message : '技能包部署失败' }); }
+    return;
+  }
+  if (req.method === 'POST' && req.url === '/skill14/preflight') {
+    try {
+      const payload = JSON.parse(await readBody(req) || '{}');
+      const skillId = typeof payload?.skillId === 'string' ? payload.skillId.slice(0, 100) : '';
+      if (!skill14Catalog().skills.some((skill) => skill?.id === skillId)) { json(res, 422, { status: 'error', error: '未知的 14 技能 ID' }); return; }
+      json(res, 200, await runSkill14Runtime('preflight', ['--skill-id', skillId]));
+    } catch (error) {
+      json(res, 502, { status: 'error', error: error instanceof Error ? error.message : '技能预检失败' });
+    }
+    return;
+  }
+  if (req.method === 'POST' && req.url === '/runtime/tdx/open') {
+    try {
+      const result = await runLocalScript('tdx_runtime_bridge.py', ['open'], 60000, 12000);
+      const payload = JSON.parse(result.output || '{}');
+      const accepted = ['accepted', 'already_open'].includes(String(payload?.status));
+      json(res, accepted ? 200 : 503, payload);
+    } catch (error) {
+      json(res, 502, { status: 'error', error: error instanceof Error ? error.message : '打开通达信失败' });
+    }
     return;
   }
   if (req.method === 'GET' && req.url === '/runtime/environment') {
@@ -1314,8 +2908,13 @@ const server = http.createServer(async (req, res) => {
       const tdxStatusResult = await runLocalScript('tdx_runtime_bridge.py', ['status'], 60000, 0);
       const tdxStatus = JSON.parse(tdxStatusResult.output || '{}');
       const daily = inspectTdxDailyIntegrity(tdxRoot);
+      const dailyFreshness = dailyFreshnessSnapshot(daily);
       const snapshots = dailySnapshotSummary();
       const dailyState = readJson(DAILY_STATE_FILE) || {};
+      const unifiedArchive = compactUnifiedArchiveState(readJson(UNIFIED_ARCHIVE_STATE_FILE) || {});
+      const unifiedVerification = readJson(UNIFIED_VERIFY_STATE_FILE) || {};
+      const unifiedManifest = readJson(path.join(DATA_ROOT, 'evidence', 'sources', 'latest.json')) || {};
+      const dailyArchive = readJson(path.join(DATA_ROOT, 'status', 'tdx-daily-history.json')) || {};
       const harnessOutput = String(dailyState?.harness?.output || '');
       let harnessValidation = { status: dailyState?.harness?.status || 'missing', dataDate: '', summary: '', sourceCount: 0 };
       try {
@@ -1355,14 +2954,100 @@ const server = http.createServer(async (req, res) => {
         bridge: { status: 'ok', host: HOST, port: PORT },
         harness: { status: harnessReady ? 'ready' : 'missing_credentials', launcher, credentialsConfigured: harnessReady, base: 'DeepSeek Harness' },
         tdx: { status: Array.isArray(tdxStatus.processes) && tdxStatus.processes.length > 0 ? 'open' : 'closed', processes: tdxStatus.processes || [], root: tdxRoot, formulas: tdxStatus.formulaRegistry || {}, freshness: tdxStatus.freshness || {} },
-        daily,
+        daily: { ...daily, ...dailyFreshness },
+        dailyArchive,
+        dailyDataIndex: snapshots.dailyDataIndex,
         sources: publicSources,
         harnessValidation,
+        supplemental: snapshots.supplemental,
         dailyRefresh: dailyState,
         supplementalRefresh: readJson(SUPPLEMENTAL_STATE_FILE),
+        unifiedArchive,
+        unifiedVerification,
+        unifiedSourceManifest: {
+          status: unifiedManifest.status || 'missing',
+          tradeDate: unifiedManifest.trade_date || '',
+          manifest: unifiedManifest.manifest || 'evidence/sources/latest.json',
+          sourceCount: Array.isArray(unifiedManifest.sources) ? unifiedManifest.sources.length : 0,
+          availableSourceCount: Array.isArray(unifiedManifest.sources) ? unifiedManifest.sources.filter((source) => source?.status === 'available').length : 0,
+          sources: Array.isArray(unifiedManifest.sources) ? unifiedManifest.sources : [],
+        },
       });
     } catch (error) {
       json(res, 502, { status: 'error', error: error instanceof Error ? error.message : '运行环境检测失败' });
+    }
+    return;
+  }
+  if (req.method === 'GET' && req.url === '/data/archive/status') {
+    const state = readJson(UNIFIED_ARCHIVE_STATE_FILE);
+    let report = null;
+    try { report = await ensureUnifiedArchiveReport(state); } catch (error) { console.warn(`[agent] 统一落盘报告生成失败：${error instanceof Error ? error.message : String(error)}`); }
+    const progress = unifiedArchiveProgress(state);
+    const runningJob = [...unifiedArchiveJobs.values()].find((job) => job.status === 'running');
+    const message = runningJob
+      ? `统一数据落盘正在运行：${progress.currentStep || '准备下一步'}（${progress.completed}/${progress.total}）`
+      : state?.status === 'completed'
+        ? '统一数据落盘已完成，报告和 Harness 上下文已写入 app-data。'
+        : state?.status === 'partial'
+          ? '统一数据落盘已结束，但存在降级来源或未通过步骤，详见报告。'
+          : state?.status === 'failed'
+            ? '统一数据落盘失败，详见报告中的错误步骤。'
+            : '尚未执行统一数据落盘。';
+    json(res, 200, { status: 'ok', state, progress, report, message, jobs: [...unifiedArchiveJobs.values()].slice(-3) });
+    return;
+  }
+  if (req.method === 'GET' && req.url === '/data/archive/verify/status') {
+    json(res, 200, { status: 'ok', state: readJson(UNIFIED_VERIFY_STATE_FILE), jobs: [...unifiedVerificationJobs.values()].slice(-3) });
+    return;
+  }
+  if (req.method === 'GET' && req.url === '/data/archive/manifest') {
+    const manifest = readJson(path.join(DATA_ROOT, 'evidence', 'sources', 'latest.json'));
+    json(res, manifest ? 200 : 404, manifest || { status: 'missing', error: '尚未生成统一数据源清单' });
+    return;
+  }
+  if (req.method === 'GET' && (req.url.startsWith('/data/archive/report') || req.url.startsWith('/data/archive/report.json'))) {
+    try {
+      const requested = new URL(req.url, `http://${HOST}:${PORT}`);
+      const dateKey = compactDateKey(requested.searchParams.get('date') || 'latest');
+      const descriptor = unifiedArchiveReportDescriptor(dateKey);
+      const wantsJson = requested.pathname === '/data/archive/report.json' || requested.searchParams.get('format') === 'json';
+      const reportFile = wantsJson ? descriptor.jsonFile : descriptor.htmlFile;
+      const fallbackFile = wantsJson ? descriptor.latestJsonFile : descriptor.latestHtmlFile;
+      const file = existsSync(reportFile) ? reportFile : fallbackFile;
+      if (!existsSync(file)) {
+        json(res, 404, { status: 'missing', error: '统一数据落盘报告尚未生成', date: dateKey });
+        return;
+      }
+      res.writeHead(200, {
+        'Content-Type': wantsJson ? 'application/json; charset=utf-8' : 'text/html; charset=utf-8',
+        'Cache-Control': 'no-store',
+        ...corsHeaders(req),
+      });
+      res.end(readFileSync(file, 'utf8'));
+    } catch (error) {
+      json(res, 500, { status: 'error', error: error instanceof Error ? error.message : '统一数据落盘报告读取失败' });
+    }
+    return;
+  }
+  if (req.method === 'POST' && req.url === '/data/archive/start') {
+    try {
+      const payload = JSON.parse(await readBody(req) || '{}');
+      const rawDate = typeof payload?.date === 'string' ? payload.date.replace(/[^0-9]/g, '') : '';
+      const date = rawDate.length === 8 ? `${rawDate.slice(0, 4)}-${rawDate.slice(4, 6)}-${rawDate.slice(6)}` : localTradeDate();
+      json(res, 202, startUnifiedDataArchive(date, payload?.force === true));
+    } catch (error) {
+      json(res, 400, { status: 'error', error: error instanceof Error ? error.message : '统一数据落盘启动失败' });
+    }
+    return;
+  }
+  if (req.method === 'POST' && req.url === '/data/archive/verify') {
+    try {
+      const payload = JSON.parse(await readBody(req) || '{}');
+      const rawDate = typeof payload?.date === 'string' ? payload.date.replace(/[^0-9]/g, '') : '';
+      const date = rawDate.length === 8 ? `${rawDate.slice(0, 4)}-${rawDate.slice(4, 6)}-${rawDate.slice(6)}` : localTradeDate();
+      json(res, 202, startUnifiedDataVerification(date, payload?.force === true));
+    } catch (error) {
+      json(res, 400, { status: 'error', error: error instanceof Error ? error.message : '统一数据校验启动失败' });
     }
     return;
   }
@@ -1384,6 +3069,23 @@ const server = http.createServer(async (req, res) => {
     }
     return;
   }
+  if (req.method === 'GET' && req.url.startsWith('/data/daily/index')) {
+    const index = readJson(DAILY_DATA_INDEX_FILE);
+    json(res, index ? 200 : 404, index || { status: 'missing', path: DAILY_DATA_INDEX_FILE, error: '统一日线可用性索引不存在' });
+    return;
+  }
+  if (req.method === 'POST' && req.url === '/data/daily/recover') {
+    try {
+      const payload = JSON.parse(await readBody(req) || '{}');
+      const rawDate = typeof payload?.date === 'string' ? payload.date.replace(/[^0-9]/g, '') : '';
+      const date = rawDate.length === 8 ? `${rawDate.slice(0, 4)}-${rawDate.slice(4, 6)}-${rawDate.slice(6)}` : localTradeDate();
+      const codes = typeof payload?.codes === 'string' ? payload.codes : Array.isArray(payload?.codes) ? payload.codes.join(',') : '';
+      json(res, 200, await runDailyRecovery(date, codes, payload?.maxSymbols));
+    } catch (error) {
+      json(res, 502, { status: 'error', error: error instanceof Error ? error.message : '公开日线降级补齐失败' });
+    }
+    return;
+  }
   if (req.method === 'GET' && req.url === '/data/public/status') {
     json(res, 200, { status: 'ok', state: readJson(SUPPLEMENTAL_STATE_FILE), jobs: [...supplementalJobs.values()].slice(-3) });
     return;
@@ -1393,9 +3095,44 @@ const server = http.createServer(async (req, res) => {
     json(res, snapshot ? 200 : 404, snapshot || { status: 'missing', error: '公开行情快照不存在' });
     return;
   }
+  if (req.method === 'GET' && req.url.startsWith('/data/supplemental')) {
+    try {
+      const url = new URL(req.url, `http://${HOST}:${PORT}`);
+      const requested = url.searchParams.get('date') || localTradeDate();
+      const snapshot = readSupplementalSnapshot(requested);
+      if (!snapshot) {
+        json(res, 404, { status: 'missing', date: supplementalDateKey(requested), error: '统一补充数据快照不存在' });
+        return;
+      }
+      const market = snapshot.market && typeof snapshot.market === 'object' ? snapshot.market : {};
+      const index = market.index_daily || {};
+      const lhb = market.longhubang || {};
+      const margin = market.margin || {};
+      json(res, 200, {
+        status: 'ok',
+        schema: snapshot.schema,
+        date: snapshot.trade_date || snapshot.requested_date,
+        generatedAt: snapshot.generated_at,
+        snapshotPath: snapshot.snapshot_path,
+        coverage: snapshot.coverage || {},
+        market: {
+          indexDaily: { status: index.status || 'missing', source: index.source || '', symbolCount: index.data?.symbol_count || 0, sourceDate: index.source_date || '' },
+          longhubang: { status: lhb.status || 'missing', source: lhb.source || '', snapshotExists: lhb.data?.snapshot_exists === true, recordCount: lhb.data?.record_count || 0, marketRecordCount: lhb.data?.market_record_count || 0, sourceDate: lhb.source_date || '' },
+          margin: { status: margin.status || 'missing', source: margin.source || '', exactDate: margin.exact_date === true, latestAvailableDate: margin.latest_available_date || '', recordCount: margin.data?.record_count || 0, exactRecordCount: margin.data?.exact_record_count || 0, sourceDate: margin.source_date || '' },
+        },
+      });
+    } catch (error) {
+      json(res, 502, { status: 'error', error: error instanceof Error ? error.message : '统一补充数据读取失败' });
+    }
+    return;
+  }
   if (req.method === 'GET' && req.url === '/data/harness/daily') {
     const context = readJson(path.join(HARNESS_CONTEXT_ROOT, 'latest-data.json'));
-    json(res, context ? 200 : 404, context || { status: 'missing', error: 'Harness 每日校验结果不存在' });
+    if (!context) { json(res, 404, { status: 'missing', error: 'Harness 每日校验结果不存在' }); return; }
+    // Context files are immutable run receipts; refresh the lightweight index
+    // view so the page/Harness sees newly added fallback coverage immediately.
+    const snapshots = dailySnapshotSummary();
+    json(res, 200, { ...context, snapshots, dailyDataIndex: snapshots.dailyDataIndex });
     return;
   }
   if (req.method === 'GET' && req.url.startsWith('/data/harness/skill/')) {
@@ -1426,12 +3163,77 @@ const server = http.createServer(async (req, res) => {
     }
     return;
   }
+  if (req.method === 'GET' && req.url.startsWith('/stock/supplemental')) {
+    try {
+      const url = new URL(req.url, `http://${HOST}:${PORT}`);
+      const normalized = normalizeHistorySymbol(url.searchParams.get('symbol') || url.searchParams.get('code') || '');
+      if (!normalized) {
+        json(res, 400, { status: 'error', error: '需要六位股票代码，可附带 .SH、.SZ 或 .BJ' });
+        return;
+      }
+      const requested = url.searchParams.get('date') || localTradeDate();
+      const data = await ensureStockSupplemental(normalized.symbol, requested);
+      json(res, data ? 200 : 404, data || { status: 'missing', code: normalized.code, date: requested, error: '补充数据快照不存在' });
+    } catch (error) {
+      json(res, 502, { status: 'error', error: error instanceof Error ? error.message : '个股补充数据读取失败' });
+    }
+    return;
+  }
+  if (req.method === 'GET' && req.url.startsWith('/market/history')) {
+    try {
+      const url = new URL(req.url, `http://${HOST}:${PORT}`);
+      if (url.pathname === '/market/history/index') {
+        const index = await buildTdxHistoryIndex(url.searchParams.get('refresh') === '1');
+        const symbol = url.searchParams.get('symbol');
+        const normalized = symbol ? normalizeHistorySymbol(symbol) : null;
+        json(res, 200, {
+          status: 'ok',
+          schema: index.schema,
+          source_root: index.source_root,
+          source_kind: index.source_kind,
+          index_path: TDX_HISTORY_INDEX_FILE,
+          daily_data_index_path: DAILY_DATA_INDEX_FILE,
+          generated_at: index.generated_at,
+          cached: index.cached === true,
+          source_available: index.source_available !== false,
+          degraded_reason: index.degraded_reason || '',
+          symbol_count: index.symbol_count,
+          fallback_index_summary: (() => { const daily = readJson(DAILY_DATA_INDEX_FILE); return daily?.summary || { symbol_count: 0, fallback_symbol_count: 0, fallback_record_count: 0, date_count: 0 }; })(),
+          entry: normalized ? index.symbols?.[normalized.key] || null : undefined,
+        });
+        return;
+      }
+      if (url.pathname === '/market/history') {
+        const result = await queryTdxHistory(
+          url.searchParams.get('symbol') || '',
+          url.searchParams.get('limit'),
+          url.searchParams.get('refresh') === '1',
+        );
+        json(res, result.status === 'missing' ? 404 : 200, result);
+        return;
+      }
+    } catch (error) {
+      json(res, 502, { status: 'error', error: error instanceof Error ? error.message : '本地日线索引读取失败' });
+    }
+    return;
+  }
   if (req.method === 'GET' && (req.url === '/market' || req.url.startsWith('/market?scope='))) {
     try {
       const url = new URL(req.url, `http://${HOST}:${PORT}`);
-      const scope = url.searchParams.get('scope') === 'market' ? 'market' : url.searchParams.get('scope') === 'watchlist' ? 'watchlist' : 'indices';
+      const requestedScope = url.searchParams.get('scope') || '';
+      if (requestedScope === 'latest') {
+        const latest = readJson(path.join(RUNTIME_ROOT, 'market-latest.json'));
+        if (!latest || latest.status !== 'ok') {
+          json(res, 404, { status: 'missing', error: '尚无本地最新完整日线快照，请先执行一次市场数据刷新' });
+          return;
+        }
+        json(res, 200, latest);
+        return;
+      }
+      const scope = requestedScope === 'market' ? 'market' : requestedScope === 'watchlist' ? 'watchlist' : 'indices';
       const codes = url.searchParams.get('codes') || '';
       const result = await runMarketRefresh(scope, codes);
+      if (scope === 'market' || scope === 'indices') await persistLatestMarketSnapshot(result, scope);
       json(res, 200, result);
     } catch (error) {
       json(res, 502, { status: 'error', error: error instanceof Error ? error.message : '实时行情刷新失败' });
@@ -1461,17 +3263,84 @@ const server = http.createServer(async (req, res) => {
     }
     return;
   }
+  if (req.method === 'POST' && req.url === '/stock/quick/batch') {
+    try {
+      const payload = JSON.parse(await readBody(req) || '{}');
+      const rawSymbols = Array.isArray(payload?.symbols) ? payload.symbols : [];
+      const symbols = [...new Set(rawSymbols.map((value) => String(value || '').trim().toUpperCase()))]
+        .filter((value) => /^\d{6}\.(SH|SZ|BJ)$/.test(value))
+        .slice(0, 10);
+      if (!symbols.length) {
+        json(res, 400, { status: 'error', error: '需要至少一只六位代码和市场后缀的股票' });
+        return;
+      }
+      const result = await runFiveFormulasBatch(symbols);
+      json(res, result.status === 'ok' ? 200 : 207, result);
+    } catch (error) {
+      json(res, 502, { status: 'error', error: error instanceof Error ? error.message : '批量五公式桥接执行失败' });
+    }
+    return;
+  }
+  if (req.method === 'POST' && req.url === '/strategy/golden-ignition/single') {
+    try {
+      const payload = JSON.parse(await readBody(req) || '{}');
+      const normalized = normalizeSingleSignalSymbol(payload?.symbol);
+      if (!normalized) {
+        json(res, 400, { status: 'error', error: '需要六位股票代码，可带 .SH、.SZ 或 .BJ 后缀' });
+        return;
+      }
+      const lookback = Math.max(1, Math.min(30, Number(payload?.lookback) || 5));
+      const result = await runGoldenIgnitionSymbol(normalized, lookback);
+      json(res, 200, result);
+    } catch (error) {
+      json(res, 502, { status: 'error', error: error instanceof Error ? error.message : '黄金点火单股执行失败' });
+    }
+    return;
+  }
+  if (req.method === 'POST' && req.url === '/strategy/selection/scored') {
+    try {
+      const payload = JSON.parse(await readBody(req) || '{}');
+      const strategyId = String(payload?.strategyId || '');
+      const allowed = new Set(['golden-ignition-v8', 'short-burst-score-v5', 'quant-production-v65']);
+      if (!allowed.has(strategyId)) {
+        json(res, 422, { status: 'error', error: '该策略未配置原始评分入口', strategy_id: strategyId });
+        return;
+      }
+      const candidates = Array.isArray(payload?.candidates) ? payload.candidates.slice(0, 30) : [];
+      if (!candidates.length) {
+        json(res, 400, { status: 'error', error: '需要至少一只本地条件候选' });
+        return;
+      }
+      const result = await runSelectionScoreRuntime({
+        strategyId,
+        date: String(payload?.date || localTradeDate()).replace(/[^0-9]/g, '').slice(0, 8),
+        candidates,
+      });
+      json(res, 200, result);
+    } catch (error) {
+      json(res, 502, { status: 'error', error: error instanceof Error ? error.message : '原始策略评分执行失败' });
+    }
+    return;
+  }
   if (req.method === 'POST' && req.url === '/strategy/start') {
     try {
       const payload = JSON.parse(await readBody(req) || '{}');
-      const skillId = typeof payload?.skillId === 'string' ? payload.skillId.slice(0, 160) : '';
+      const requestedSkillId = typeof payload?.skillId === 'string' ? payload.skillId.slice(0, 160) : '';
+      const skillId = canonicalStrategyId(requestedSkillId);
       if (!CANONICAL_STRATEGY_IDS.has(skillId)) {
-        json(res, 422, { status: 'error', error: '该策略未配置原始技能入口', skill_id: skillId });
+        json(res, 422, { status: 'error', error: '该策略未配置原始技能入口', skill_id: requestedSkillId });
         return;
       }
       const job = startStrategyJob(skillId);
       console.log(`[agent] strategy start ${job.id.slice(0, 8)} skill=${skillId}`);
-      json(res, 202, { status: 'accepted', job_id: job.id, skill_id: skillId, started_at: job.started_at, timeout_seconds: 22 * 60 });
+      json(res, 202, {
+        status: 'accepted',
+        job_id: job.id,
+        skill_id: requestedSkillId,
+        canonical_skill_id: skillId,
+        started_at: job.started_at,
+        timeout_seconds: 22 * 60,
+      });
     } catch (error) {
       json(res, 500, { status: 'error', error: error instanceof Error ? error.message : '策略后台任务启动失败' });
     }
@@ -1491,8 +3360,8 @@ const server = http.createServer(async (req, res) => {
   if (req.method === 'POST' && req.url === '/strategy') {
     try {
       const payload = JSON.parse(await readBody(req));
-      const skillId = typeof payload?.skillId === 'string' ? payload.skillId.slice(0, 160) : '';
-      const result = await runCanonicalStrategy(skillId);
+      const requestedSkillId = typeof payload?.skillId === 'string' ? payload.skillId.slice(0, 160) : '';
+      const result = await runCanonicalStrategy(requestedSkillId);
       json(res, 200, result);
     } catch (error) {
       json(res, 500, { status: 'error', error: error instanceof Error ? error.message : '原始策略执行失败' });
@@ -1533,7 +3402,8 @@ const server = http.createServer(async (req, res) => {
         return;
       }
       const skillId = typeof payload.skillId === 'string' ? payload.skillId.slice(0, 160) : '';
-      const job = startHarnessJob(buildPrompt(payload.task.trim(), payload.market, skillId, payload.context), skillId);
+      const context = await enrichHarnessContext(payload.context);
+      const job = startHarnessJob(buildPrompt(payload.task.trim(), payload.market, skillId, context), skillId);
       console.log(`[agent] start ${job.id.slice(0, 8)} skill=${skillId || 'generic'}`);
       json(res, 202, { status: 'accepted', job_id: job.id, skill_id: skillId || null, started_at: job.started_at, timeout_seconds: Math.round(timeoutForSkill(skillId) / 1000) });
     } catch (error) {
@@ -1556,8 +3426,10 @@ const server = http.createServer(async (req, res) => {
       return;
     }
     const skillId = typeof payload.skillId === 'string' ? payload.skillId.slice(0, 160) : '';
-    const result = await runHarnessWithRetry(buildPrompt(payload.task.trim(), payload.market, skillId, payload.context), skillId);
-    json(res, 200, { status: 'ok', output: result.output, diagnostics: result.diagnostics, elapsed_ms: result.elapsedMs, timeout_seconds: Math.round(result.timeoutMs / 1000), model: 'DeepSeek Harness headless', skill_id: skillId || null, data_date: payload.market.date || null });
+    const context = await enrichHarnessContext(payload.context);
+    const result = await runHarnessWithRetry(buildPrompt(payload.task.trim(), payload.market, skillId, context), skillId);
+    const reportPath = await persistHarnessReport({ skillId, output: result.output, diagnostics: result.diagnostics, task: payload.task.trim(), dataDate: payload.market.date || '', jobId: randomUUID() });
+    json(res, 200, { status: 'ok', output: result.output, diagnostics: result.diagnostics, elapsed_ms: result.elapsedMs, timeout_seconds: Math.round(result.timeoutMs / 1000), model: 'DeepSeek Harness headless', skill_id: skillId || null, data_date: payload.market.date || null, report_path: reportPath });
   } catch (error) {
     json(res, 500, { status: 'error', error: error instanceof Error ? error.message : '桥接服务失败' });
   }
@@ -1566,5 +3438,6 @@ const server = http.createServer(async (req, res) => {
 const skillBundle = ensureBundledSkills();
 server.listen(PORT, HOST, () => {
   console.log(`掌财智能体 DeepSeek Harness bridge listening at http://${HOST}:${PORT} · skills ${skillBundle.status} (${skillBundle.count})`);
+  void persistRuntimePolicy().catch((error) => console.error(`[agent] 无法写入自包含运行时政策：${error instanceof Error ? error.message : String(error)}`));
   scheduleAfterCloseDailyRefresh();
 });

@@ -19,6 +19,7 @@ import importlib.util
 import io
 import json
 import math
+import os
 import statistics
 import sys
 from datetime import datetime
@@ -27,11 +28,28 @@ from typing import Any
 
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
-TDX_HUB_PATH = Path(r"D:\C盘转移\日志\codex\skills\tdx-local-hub\scripts\tdx_hub.py")
-BACKTEST_RUNTIME_PATH = Path(r"D:\C盘转移\日志\codex\skills\stock-unified\scripts\stock_strategy_backtest.py")
-BOND_MAP_PATH = Path(r"C:\new_tdx_mock\T0002\hq_cache\speckzzdata.txt")
-FORMULA_STORE_PATH = Path(r"C:\new_tdx_mock\T0002\PriGS.dat")
-RESULTS_DIR = SKILL_ROOT / "reports" / "results"
+APP_ROOT = Path(os.environ.get("ZHANGCAI_APP_ROOT", str(SKILL_ROOT.parent.parent))).resolve()
+TDX_ROOT = Path(os.environ.get("ZHANGCAI_TDX_ROOT", r"C:\new_tdx_mock")).resolve()
+TDX_HUB_PATH = Path(os.environ.get(
+    "TDX_HUB_PATH",
+    str(APP_ROOT / "harness-skills" / "tdx-local-hub" / "scripts" / "tdx_hub.py"),
+)).resolve()
+BACKTEST_RUNTIME_PATH = Path(os.environ.get(
+    "STOCK_BACKTEST_RUNTIME_PATH",
+    str(APP_ROOT / "harness-skills" / "stock-unified" / "scripts" / "stock_strategy_backtest.py"),
+)).resolve()
+BOND_MAP_PATH = Path(os.environ.get(
+    "TDX_BOND_MAP_PATH",
+    str(TDX_ROOT / "T0002" / "hq_cache" / "speckzzdata.txt"),
+)).resolve()
+FORMULA_STORE_PATH = Path(os.environ.get(
+    "TDX_FORMULA_STORE_PATH",
+    str(TDX_ROOT / "T0002" / "PriGS.dat"),
+)).resolve()
+RESULTS_DIR = Path(os.environ.get(
+    "ZHANGCAI_STRATEGY_RESULTS_DIR",
+    os.environ.get("ONESTOCK_STOCK_DATA_ROOT", str(APP_ROOT / "app-data" / "strategy-results")),
+)).resolve() / "golden-ignition"
 FORMULA_NAME = "大牛线4.0"
 FORMULA_CALL_NAME = "大牛线撑压版"
 AI_FORMULA_NAME = "黄金点火AI"

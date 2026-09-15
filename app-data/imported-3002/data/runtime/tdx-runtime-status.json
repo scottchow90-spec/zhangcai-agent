@@ -1,0 +1,70 @@
+{
+  "generatedAt": "2026-09-12T20:16:29+08:00",
+  "tdxRoot": "C:\\new_tdx_mock",
+  "processes": [
+    {
+      "Name": "tdxcef",
+      "Id": 18284,
+      "StartTime": "/Date(1789213178504)/",
+      "Path": "C:\\new_tdx_mock\\chrome\\tdxcef.exe"
+    },
+    {
+      "Name": "tdxcef",
+      "Id": 42804,
+      "StartTime": "/Date(1789213178635)/",
+      "Path": "C:\\new_tdx_mock\\chrome\\tdxcef.exe"
+    },
+    {
+      "Name": "tdxcef",
+      "Id": 44084,
+      "StartTime": "/Date(1789213178409)/",
+      "Path": "C:\\new_tdx_mock\\chrome\\tdxcef.exe"
+    },
+    {
+      "Name": "TdxW",
+      "Id": 53784,
+      "StartTime": "/Date(1789213162005)/",
+      "Path": "C:\\new_tdx_mock\\TdxW.exe"
+    }
+  ],
+  "formulaRegistry": {
+    "directory": "C:\\new_tdx_mock\\T0002\\gs_bak",
+    "formulaFiles": [
+      "大牛线.txt",
+      "大牛线撑压版.txt",
+      "机构资金.txt",
+      "游资资金.txt",
+      "飞龙在天.txt",
+      "飞龙在天选股.txt"
+    ]
+  },
+  "freshness": {
+    "indexDay": {
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh000001.day",
+      "updatedAt": "2026-09-11T22:57:09",
+      "size": 279168
+    },
+    "marketCache": {
+      "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\tdxhy.cfg",
+      "updatedAt": "2026-09-12T10:40:11",
+      "size": 150332
+    },
+    "blockPools": {
+      "path": "C:\\new_tdx_mock\\T0002\\blocknew\\ZTC.blk",
+      "updatedAt": "2026-09-08T17:20:16",
+      "size": 351
+    },
+    "intradayAvailable": true
+  },
+  "tq": {
+    "tqcenter": "C:\\new_tdx_mock\\PYPlugins\\user\\tqcenter.py",
+    "strategyConfig": "[Strategy]\nNum=0\n[Writer]\npath=\n",
+    "formulas": [
+      "大牛线4.0",
+      "飞龙在天",
+      "游资资金监控",
+      "机构资金监控",
+      "庄家资金监控"
+    ]
+  }
+}

@@ -1,0 +1,223 @@
+{
+  "engine": "A股量化生产定型工程 V6.5 WorkBuddy双路容灾最终生产版",
+  "version": "6.5.0-final",
+  "route": "CONSENSUS_RESCUE",
+  "trade_date": "2026-09-11",
+  "status": "AUTHORIZED",
+  "generated_at": "2026-09-12T01:25:25+08:00",
+  "workflow_trace": [
+    {
+      "step": 1,
+      "name": "包完整性/决策时点锁定",
+      "status": "完成",
+      "detail": "2026-09-11；after-market；CONSENSUS_RESCUE"
+    },
+    {
+      "step": 2,
+      "name": "主板候选池与风险名称过滤",
+      "status": "完成",
+      "detail": "输入5；主板有效5"
+    },
+    {
+      "step": 3,
+      "name": "模型级历史证据门",
+      "status": "完成",
+      "detail": "主模型滚动历史≥200日 5/5；本路径不伪装为V6.3原生四模型"
+    },
+    {
+      "step": 4,
+      "name": "主源候选数据质量/流动性完整性",
+      "status": "完成",
+      "detail": "检查未复权展示价、成交额、换手率、日涨跌"
+    },
+    {
+      "step": 5,
+      "name": "独立二源证券身份与收盘价准备",
+      "status": "完成",
+      "detail": "二源报价5只"
+    },
+    {
+      "step": 6,
+      "name": "主模型阈值/流动性/过热硬门",
+      "status": "完成",
+      "detail": "初筛后5只"
+    },
+    {
+      "step": 7,
+      "name": "行业/消息/事件风险门",
+      "status": "完成",
+      "detail": "HIGH风险事件一票否决；正面只做增量不替代价格确认"
+    },
+    {
+      "step": 8,
+      "name": "双源共识综合评分与排序",
+      "status": "完成",
+      "detail": "候选5只"
+    },
+    {
+      "step": 9,
+      "name": "UNKNOWN传播与数据门禁",
+      "status": "完成",
+      "detail": "阻断0项"
+    },
+    {
+      "step": 10,
+      "name": "独立第二行情源逐只核验",
+      "status": "完成",
+      "detail": "匹配5/5；冲突0；未知0"
+    },
+    {
+      "step": 11,
+      "name": "候选证据归档",
+      "status": "完成",
+      "detail": "保留主模型证据/二源价格/事件证据/来源标识"
+    },
+    {
+      "step": 12,
+      "name": "生产授权验证",
+      "status": "完成",
+      "detail": "AUTHORIZED；候选5"
+    },
+    {
+      "step": 13,
+      "name": "完整JSON/Markdown/HTML/运行哈希输出",
+      "status": "完成",
+      "detail": "13/13"
+    }
+  ],
+  "candidate_count": 5,
+  "candidates": [
+    {
+      "code": "603663",
+      "name": "三祥新材",
+      "trade_date": "2026-09-11",
+      "close": 41.54,
+      "price_type": "raw_unadjusted",
+      "source_score": 1.856624,
+      "pred_win": 0.917376,
+      "pred_ret": 0.18785,
+      "amount": 1120662791.0,
+      "turnover": 0.045375,
+      "daily_return": -0.037981,
+      "source_history_days": 220,
+      "source_model": "QLIB-Peak20",
+      "cross_scanner_confirmed": false,
+      "candidate_tier": "B_CONSENSUS_PRODUCTION",
+      "authorized_candidate": true,
+      "production_score": 95.35,
+      "secondary_close": 41.54,
+      "secondary_diff": 0.0,
+      "event_state": "negative",
+      "event_summary": "非金属材料板块当日走弱，保留行业逆风惩罚",
+      "data_route": "independent_cross_provider_consensus"
+    },
+    {
+      "code": "003036",
+      "name": "泰坦股份",
+      "trade_date": "2026-09-11",
+      "close": 51.13,
+      "price_type": "raw_unadjusted",
+      "source_score": 1.836513,
+      "pred_win": 0.927317,
+      "pred_ret": 0.181839,
+      "amount": 345681369.0,
+      "turnover": 0.031544,
+      "daily_return": -0.02591,
+      "source_history_days": 220,
+      "source_model": "QLIB-Peak20",
+      "cross_scanner_confirmed": false,
+      "candidate_tier": "B_CONSENSUS_PRODUCTION",
+      "authorized_candidate": true,
+      "production_score": 95.07,
+      "secondary_close": 51.13,
+      "secondary_diff": 0.0,
+      "event_state": "neutral",
+      "event_summary": "未检出可证实的当日重大负面事件",
+      "data_route": "independent_cross_provider_consensus"
+    },
+    {
+      "code": "603256",
+      "name": "宏和科技",
+      "trade_date": "2026-09-11",
+      "close": 129.8,
+      "price_type": "raw_unadjusted",
+      "source_score": 1.815505,
+      "pred_win": 0.910642,
+      "pred_ret": 0.180973,
+      "amount": 2032863930.0,
+      "turnover": 0.017649,
+      "daily_return": 0.005422,
+      "source_history_days": 220,
+      "source_model": "QLIB-Peak20",
+      "cross_scanner_confirmed": false,
+      "candidate_tier": "B_CONSENSUS_PRODUCTION",
+      "authorized_candidate": true,
+      "production_score": 94.42,
+      "secondary_close": 129.8,
+      "secondary_diff": 0.0,
+      "event_state": "positive",
+      "event_summary": "电子化学品/PCB材料链存在价格与景气驱动，且进入当日五连涨名单",
+      "data_route": "independent_cross_provider_consensus"
+    },
+    {
+      "code": "002484",
+      "name": "江海股份",
+      "trade_date": "2026-09-11",
+      "close": 58.02,
+      "price_type": "raw_unadjusted",
+      "source_score": 1.77646,
+      "pred_win": 0.91686,
+      "pred_ret": 0.17192,
+      "amount": 2082186451.0,
+      "turnover": 0.044306,
+      "daily_return": 0.000172,
+      "source_history_days": 220,
+      "source_model": "QLIB-Peak20",
+      "cross_scanner_confirmed": false,
+      "candidate_tier": "B_CONSENSUS_PRODUCTION",
+      "authorized_candidate": true,
+      "production_score": 92.08,
+      "secondary_close": 58.02,
+      "secondary_diff": 0.0,
+      "event_state": "neutral",
+      "event_summary": "盘中波动偏大但收盘恢复，保留波动风险标记",
+      "data_route": "independent_cross_provider_consensus"
+    },
+    {
+      "code": "002897",
+      "name": "意华股份",
+      "trade_date": "2026-09-11",
+      "close": 64.9,
+      "price_type": "raw_unadjusted",
+      "source_score": 1.755628,
+      "pred_win": 0.906045,
+      "pred_ret": 0.169917,
+      "amount": 1289360680.0,
+      "turnover": 0.109693,
+      "daily_return": 0.024791,
+      "source_history_days": 220,
+      "source_model": "QLIB-Peak20",
+      "cross_scanner_confirmed": true,
+      "candidate_tier": "B_CONSENSUS_PRODUCTION",
+      "authorized_candidate": true,
+      "production_score": 90.4,
+      "secondary_close": 64.9,
+      "secondary_diff": 0.0,
+      "event_state": "neutral",
+      "event_summary": "无确认重大负面；另一独立技术扫描器给出“启动+拉升”确认",
+      "data_route": "independent_cross_provider_consensus"
+    }
+  ],
+  "candidate_preview_when_blocked": [],
+  "rejected": [],
+  "block_reasons": [],
+  "audit": {
+    "primary_provider": "prince121212/ashare via akshare",
+    "secondary_provider": "bigdata.com market data",
+    "source_independent": true,
+    "price_match_rate": 1.0,
+    "no_synthetic": true,
+    "native_four_model_claimed": false,
+    "consensus_route_contract": "主模型真实候选 + 独立二源收盘价 + 事件风险门；不得冒充V6.3原生四模型结果"
+  }
+}

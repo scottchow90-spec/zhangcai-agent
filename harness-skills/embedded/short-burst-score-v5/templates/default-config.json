@@ -1,0 +1,121 @@
+{
+  "schema_version": "5.0",
+  "mode": "post_market_short_burst_scoring",
+  "market_gate": {
+    "attack_up_ratio": 0.55,
+    "attack_limit_ratio": 2.5,
+    "normal_up_ratio": 0.4,
+    "normal_limit_ratio": 1.5,
+    "extreme_up_ratio": 0.1,
+    "retreat_up_ratio": 0.25,
+    "extreme_index_avg_pct": -1.5,
+    "retreat_index_avg_pct": -1.2
+  },
+  "sector": {
+    "strong_up_ratio": 0.5,
+    "weak_up_ratio": 0.35,
+    "strong_limit_up_count": 2,
+    "strong_day_change_pct": 0.0,
+    "weak_day_change_pct": 0.0
+  },
+  "overheat": {
+    "r20_high": 50.0,
+    "r20_extreme": 80.0,
+    "r10_high": 45.0,
+    "r5_high": 30.0,
+    "turnover_high": 25.0,
+    "turnover_extreme": 35.0,
+    "streak_high": 3,
+    "streak_extreme": 5,
+    "volume_ratio_high": 3.5,
+    "volume_ratio_extreme": 5.0,
+    "prev20_extension_high_pct": 8.0,
+    "prev20_extension_extreme_pct": 15.0,
+    "atr_extension_high": 2.0,
+    "atr_extension_extreme": 3.5
+  },
+  "lhb": {
+    "confirm_net_ratio": 0.03,
+    "confirm_buy_sell_ratio": 1.2,
+    "negative_net_ratio": -0.03,
+    "extreme_institution_sell_ratio": -0.05,
+    "concentration_risk": 0.7
+  },
+  "scoring": {
+    "component_weights": {
+      "technical": 0.28,
+      "structure": 0.25,
+      "capital": 0.22,
+      "elasticity": 0.10,
+      "catalyst": 0.05,
+      "history": 0.10
+    },
+    "technical_weights": {
+      "rs20": 0.20,
+      "ma20_slope": 0.15,
+      "breakout20": 0.20,
+      "close_location": 0.10,
+      "volume_health": 0.15,
+      "startup_location": 0.10,
+      "ma_structure": 0.10
+    },
+    "structure_weights": {
+      "position": 0.34,
+      "stage_market_fit": 0.26,
+      "sector_state": 0.16,
+      "sector_rs": 0.14,
+      "sector_activity": 0.10
+    },
+    "capital_weights": {
+      "net_impact": 0.25,
+      "participation": 0.10,
+      "institution": 0.15,
+      "broker": 0.10,
+      "buy_sell_balance": 0.15,
+      "net_ratio": 0.15,
+      "seat_quality": 0.05,
+      "lifecycle": 0.05
+    },
+    "elasticity_weights": {
+      "free_mcap_fit": 0.35,
+      "turnover_fit": 0.25,
+      "net_to_free_mcap": 0.40
+    },
+    "risk_penalty": {
+      "normal_acceleration": 2.0,
+      "crowded": 9.0,
+      "terminal": 18.0,
+      "event_medium": 8.0,
+      "event_high": 18.0,
+      "event_severe": 35.0,
+      "lhb_negative": 8.0,
+      "lhb_concentration": 4.0,
+      "market_climax": 5.0,
+      "downward_anomaly": 8.0,
+      "surge_climax": 6.0,
+      "weak_relay": 8.0,
+      "continuous_event_risk_max": 12.0
+    },
+    "conclusion_thresholds": {
+      "core": 82.0,
+      "candidate_a": 76.0,
+      "candidate_b": 67.0,
+      "watch": 57.0,
+      "secondary": 47.0
+    }
+  },
+  "history": {
+    "min_sample": 50,
+    "medium_sample": 100,
+    "high_sample": 300,
+    "strong_min_t5_burst_lower90": 0.30,
+    "positive_min_t5_burst_rate": 0.40,
+    "negative_max_t5_burst_rate": 0.25,
+    "max_acceptable_avg_mae_5d": -0.10,
+    "allowed_validation_schemes": [
+      "walk_forward_oos",
+      "rolling_oos"
+    ],
+    "production_validation_scheme": "walk_forward_oos"
+  }
+}

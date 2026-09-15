@@ -6,8 +6,16 @@
  */
 export function bridgeUrl(path = ''): string {
   const suffix = path.startsWith('/') ? path : `/${path}`;
-  if (typeof window === 'undefined') return `http://127.0.0.1:4318${suffix}`;
-  const protocol = window.location.protocol === 'https:' ? 'https:' : 'http:';
-  const host = window.location.hostname || '127.0.0.1';
-  return `${protocol}//${host}:4318${suffix}`;
+  // When the app is published through the remote /test2/ prefix, route the
+  // browser back through Nginx and the SSH tunnel. A browser on another
+  // computer cannot resolve its own 127.0.0.1 to the workstation running the
+  // bridge service.
+  if (typeof window !== 'undefined' && /^\/test2(?:\/|$)/.test(window.location.pathname)) {
+    return `/test2/bridge${suffix}`;
+  }
+  // Vinext's development proxy is unavailable in production builds. The
+  // worker remains loopback-only and whitelists port 3003 in CORS, so local
+  // development and packaged production use the same private endpoint.
+  if (typeof window !== 'undefined') return `http://127.0.0.1:4319${suffix}`;
+  return `http://127.0.0.1:4319${suffix}`;
 }

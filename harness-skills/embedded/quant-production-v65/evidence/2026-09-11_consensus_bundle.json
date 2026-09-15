@@ -1,0 +1,157 @@
+{
+  "schema": "a_share_quant_consensus_bundle_v2",
+  "mode": "after-market",
+  "trade_date": "2026-09-11",
+  "decision_asof": "2026-09-11T15:10:00+08:00",
+  "provenance": {
+    "primary": {
+      "provider": "prince121212/Ashare via AkShare",
+      "kind": "github_public_dataset",
+      "retrieved_at": "2026-09-12T01:17:00+08:00",
+      "source_model": "QLIB-Peak20",
+      "source_history_window": 220,
+      "price_type": "raw_unadjusted"
+    },
+    "secondary": {
+      "provider": "Bigdata.com market data",
+      "kind": "financial_connector",
+      "retrieved_at": "2026-09-12T01:19:20+08:00"
+    }
+  },
+  "primary_candidates": [
+    {
+      "code": "603663",
+      "name": "三祥新材",
+      "trade_date": "2026-09-11",
+      "close": 41.54,
+      "price_type": "raw_unadjusted",
+      "source_score": 1.856624,
+      "pred_win": 0.917376,
+      "pred_ret": 0.18785,
+      "amount": 1120662791.0,
+      "turnover": 0.045375,
+      "daily_return": -0.037981,
+      "source_history_days": 220,
+      "source_model": "QLIB-Peak20",
+      "cross_scanner_confirmed": false
+    },
+    {
+      "code": "003036",
+      "name": "泰坦股份",
+      "trade_date": "2026-09-11",
+      "close": 51.13,
+      "price_type": "raw_unadjusted",
+      "source_score": 1.836513,
+      "pred_win": 0.927317,
+      "pred_ret": 0.181839,
+      "amount": 345681369.0,
+      "turnover": 0.031544,
+      "daily_return": -0.02591,
+      "source_history_days": 220,
+      "source_model": "QLIB-Peak20",
+      "cross_scanner_confirmed": false
+    },
+    {
+      "code": "603256",
+      "name": "宏和科技",
+      "trade_date": "2026-09-11",
+      "close": 129.8,
+      "price_type": "raw_unadjusted",
+      "source_score": 1.815505,
+      "pred_win": 0.910642,
+      "pred_ret": 0.180973,
+      "amount": 2032863930.0,
+      "turnover": 0.017649,
+      "daily_return": 0.005422,
+      "source_history_days": 220,
+      "source_model": "QLIB-Peak20",
+      "cross_scanner_confirmed": false
+    },
+    {
+      "code": "002484",
+      "name": "江海股份",
+      "trade_date": "2026-09-11",
+      "close": 58.02,
+      "price_type": "raw_unadjusted",
+      "source_score": 1.77646,
+      "pred_win": 0.91686,
+      "pred_ret": 0.17192,
+      "amount": 2082186451.0,
+      "turnover": 0.044306,
+      "daily_return": 0.000172,
+      "source_history_days": 220,
+      "source_model": "QLIB-Peak20",
+      "cross_scanner_confirmed": false
+    },
+    {
+      "code": "002897",
+      "name": "意华股份",
+      "trade_date": "2026-09-11",
+      "close": 64.9,
+      "price_type": "raw_unadjusted",
+      "source_score": 1.755628,
+      "pred_win": 0.906045,
+      "pred_ret": 0.169917,
+      "amount": 1289360680.0,
+      "turnover": 0.109693,
+      "daily_return": 0.024791,
+      "source_history_days": 220,
+      "source_model": "QLIB-Peak20",
+      "cross_scanner_confirmed": true
+    }
+  ],
+  "secondary_quotes": {
+    "603663": {
+      "trade_date": "2026-09-11",
+      "close": 41.54,
+      "currency": "CNY"
+    },
+    "003036": {
+      "trade_date": "2026-09-11",
+      "close": 51.13,
+      "currency": "CNY"
+    },
+    "603256": {
+      "trade_date": "2026-09-11",
+      "close": 129.8,
+      "currency": "CNY"
+    },
+    "002484": {
+      "trade_date": "2026-09-11",
+      "close": 58.02,
+      "currency": "CNY"
+    },
+    "002897": {
+      "trade_date": "2026-09-11",
+      "close": 64.9,
+      "currency": "CNY"
+    }
+  },
+  "events": {
+    "603663": {
+      "state": "negative",
+      "risk": "MEDIUM",
+      "summary": "非金属材料板块当日走弱，保留行业逆风惩罚"
+    },
+    "003036": {
+      "state": "neutral",
+      "risk": "LOW",
+      "summary": "未检出可证实的当日重大负面事件"
+    },
+    "603256": {
+      "state": "positive",
+      "risk": "LOW",
+      "summary": "电子化学品/PCB材料链存在价格与景气驱动，且进入当日五连涨名单"
+    },
+    "002484": {
+      "state": "neutral",
+      "risk": "MEDIUM",
+      "summary": "盘中波动偏大但收盘恢复，保留波动风险标记"
+    },
+    "002897": {
+      "state": "neutral",
+      "risk": "LOW",
+      "summary": "无确认重大负面；另一独立技术扫描器给出“启动+拉升”确认"
+    }
+  }
+}

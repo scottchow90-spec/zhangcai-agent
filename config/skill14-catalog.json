@@ -1,0 +1,174 @@
+{
+  "schema": "ZHANGCAI_SKILL14_CATALOG_V1",
+  "version": "2026-09-12",
+  "dataRoot": "app-data",
+  "skills": [
+    {
+      "id": "individual-stock-analysis-v31",
+      "name": "个股分析 V3.1",
+      "archive": "个股分析_WorkBuddy电脑版_通达信版_V3.1_生产验收版.zip",
+      "mode": "windows_formula_worker",
+      "category": "个股研究",
+      "summary": "指定个股的研究、关键价位与大牛线/飞龙公式证据。",
+      "required": ["tdx_daily_history", "tdx_tq_formula"],
+      "optional": ["public_research"],
+      "degrade": "研究资料缺失可交付 DEGRADED 报告；公式现场证据、身份或日期不一致必须 BLOCKED。"
+    },
+    {
+      "id": "golden-ignition-v8",
+      "name": "黄金点火策略 V8",
+      "archive": "黄金点火策略_WorkBuddy最终版.zip",
+      "mode": "python_batch",
+      "category": "盘后选股",
+      "summary": "平台突破、龙回头和首次黄金点火的确定性盘后筛选。",
+      "required": ["tdx_daily_history", "security_master", "tdx_tq_formula"],
+      "optional": ["public_research"],
+      "degrade": "可降级到已声明覆盖范围的候选池，不能把候选池结果写成全市场筛选。"
+    },
+    {
+      "id": "limit-advance-v44",
+      "name": "连板晋级量化决策 V4.4",
+      "archive": "连板晋级量化决策系统_V4.4_深度审计与训练交付包.zip",
+      "mode": "python_batch",
+      "category": "连板晋级",
+      "summary": "一进二至多进阶的盘后量化决策与前向验证。",
+      "required": ["tdx_daily_history", "limit_up_pool"],
+      "optional": ["public_research"],
+      "degrade": "缺完整涨停池或交易日历时阻断；可缺少辅助研报但必须保留缺失项。"
+    },
+    {
+      "id": "leader-deep-research",
+      "name": "龙头深度分析",
+      "archive": "龙头深度分析_WorkBuddy电脑版.zip",
+      "mode": "data_service",
+      "category": "龙头研究",
+      "summary": "涨停池、板块归属、封板时间与可复算龙虎榜研究。",
+      "required": ["limit_up_pool", "public_research"],
+      "optional": ["tdx_daily_history", "lhb_data"],
+      "degrade": "本地通达信仅为旁证；主公开源冲突、日期不一致或龙虎榜不可复算时必须 BLOCKED。"
+    },
+    {
+      "id": "unified-shortterm-score-v4",
+      "name": "统一短线个股评分 V4",
+      "archive": "统一短线个股评分系统_WorkBuddy电脑版_通达信版_V4.zip",
+      "mode": "windows_formula_worker",
+      "category": "个股评分",
+      "summary": "基于通达信 TQ、两项公式和研究证据的 14 项评分。",
+      "required": ["tdx_daily_history", "tdx_tq_formula", "public_research"],
+      "optional": [],
+      "degrade": "任何评分必需项缺失都不能补数或输出完整总分；仅允许保留未完成诊断。"
+    },
+    {
+      "id": "limit-up-review",
+      "name": "涨停板深度复盘",
+      "archive": "涨停板深度复盘_WorkBuddy电脑版.zip",
+      "mode": "data_service",
+      "category": "涨停复盘",
+      "summary": "完整涨停池、基线、题材、资金、结构与次日情景复盘。",
+      "required": ["limit_up_pool", "public_research"],
+      "optional": ["tdx_daily_history", "lhb_data"],
+      "degrade": "允许明确标注辅助数据降级；正式涨停名单与关键日期缺失时阻断。"
+    },
+    {
+      "id": "short-burst-score-v5",
+      "name": "A股短线爆发力评分 V5",
+      "archive": "A股短线爆发力评分系统_V5.0_优化版.zip",
+      "mode": "python_batch",
+      "category": "盘后评分",
+      "summary": "纯盘后强势股评分、龙虎榜资金分析、数据审计和样本外研究。",
+      "required": ["tdx_daily_history", "limit_up_pool"],
+      "optional": ["lhb_data", "public_research"],
+      "degrade": "辅助维度缺失应降低候选资格并说明，不得把相对评分解释为上涨概率。"
+    },
+    {
+      "id": "short-term-sentiment-v22",
+      "name": "A股短线市场情绪 V2.2",
+      "archive": "A股短线市场情绪研判系统_实战固化版_V2.2_WorkBuddy.zip",
+      "mode": "data_service",
+      "category": "市场情绪",
+      "summary": "至少 3 日、目标 5 日的情绪周期、题材和梯队研判。",
+      "required": ["tdx_daily_history", "limit_up_pool"],
+      "optional": ["public_research"],
+      "degrade": "历史不足、跨源严重冲突或日期冲突必须 BLOCKED，不能用单日快照替代时序。"
+    },
+    {
+      "id": "quant-production-v65",
+      "name": "A股量化生产定型 V6.5",
+      "archive": "A股量化生产定型工程_V6.5_WorkBuddy双路容灾最终生产版.zip",
+      "mode": "python_batch",
+      "category": "量化选股",
+      "summary": "主板四模型、行业六维、三态与双提供商共识容灾。",
+      "required": ["tdx_daily_history", "security_master"],
+      "optional": ["public_research"],
+      "degrade": "单源可生成研究性结果；双源共识缺失时不得声明最终生产资格。"
+    },
+    {
+      "id": "lhb-postmarket-v43",
+      "name": "盘后龙虎榜强势股决策 V4.3",
+      "archive": "A股盘后龙虎榜强势股决策系统_WorkBuddy彻底优化版_V4.3.zip",
+      "mode": "python_batch",
+      "category": "龙虎榜决策",
+      "summary": "盘后龙虎榜、因果市场闸门、席位成熟度和样本外验证。",
+      "required": ["tdx_daily_history", "lhb_data"],
+      "optional": ["public_research", "limit_up_pool"],
+      "degrade": "龙虎榜、历史时点或市场因果数据缺失时只能输出降级诊断，不得生成正式候选。"
+    },
+    {
+      "id": "market-environment-v5",
+      "name": "A股市场环境决策 V5",
+      "archive": "A股市场环境决策系统_WorkBuddy技能包_5.0防回归版.zip",
+      "mode": "windows_formula_worker",
+      "category": "市场总闸门",
+      "summary": "八大指数、全市场公式广度、风险闸门与次交易日权限分析。",
+      "required": ["tdx_daily_history", "tdx_tq_formula"],
+      "optional": ["public_research"],
+      "degrade": "可输出研究性风险报告；公式无法现场复核或核心风险未知时禁止正式新增权限。"
+    },
+    {
+      "id": "market-data-capabilities",
+      "name": "A股行情资讯全接口与数据能力大全",
+      "archive": "A股行情资讯全接口与数据能力大全_WorkBuddy电脑版_20260908-014459.zip",
+      "mode": "connector_catalog",
+      "category": "数据底座",
+      "summary": "公开行情、资讯、本地通达信、公告和网页采集能力的来源策略。",
+      "required": ["security_master"],
+      "optional": ["tdx_daily_history", "public_research", "lhb_data"],
+      "degrade": "只展示每个来源的现场状态；包内存在源码或接口说明不等于接口已经可用。"
+    },
+    {
+      "id": "morning-intelligence-plan",
+      "name": "A股早盘资讯与盘前计划",
+      "archive": "A股早盘资讯与盘前计划（电脑版）_a-share-morning-intelligence-plan.zip",
+      "mode": "data_service",
+      "category": "盘前报告",
+      "summary": "跨日市场数据、行业结构和开盘验证条件的研究报告。",
+      "required": ["tdx_daily_history", "public_research"],
+      "optional": ["limit_up_pool"],
+      "degrade": "缺最近两个闭市交易日的同口径数据时停止，不生成占位盘前结论。"
+    },
+    {
+      "id": "workbuddy-evolution-v22",
+      "name": "WorkBuddy 自我进化 V2.2",
+      "archive": "WorkBuddy_自我进化_V2.2_深度适配版_单文件.zip",
+      "mode": "internal_quality_gate",
+      "category": "质量控制",
+      "summary": "用户纠错、硬规则、回归验证和交付闸门的内部质量内核。",
+      "required": ["execution_evidence"],
+      "optional": [],
+      "degrade": "没有真实任务证据时只显示待检，不把计划或说明当作已通过验收。"
+    }
+  ],
+  "dataAssets": [
+    {"id": "tdx_daily_history", "name": "本地日线快照", "path": "market/daily/<trade-date>/tdx-bars.jsonl", "requiredFor": "历史策略与公式类技能"},
+    {"id": "security_master", "name": "证券基础资料", "path": "market/security-master/", "requiredFor": "代码身份、ST/退市与市场识别"},
+    {"id": "limit_up_pool", "name": "涨停池快照", "path": "public/limit-up/", "requiredFor": "涨停、连板、情绪和龙头类技能"},
+    {"id": "lhb_data", "name": "龙虎榜原始快照", "path": "public/lhb/", "requiredFor": "龙虎榜与资金类技能"},
+    {"id": "public_research", "name": "公开资讯与公告证据", "path": "evidence/public/", "requiredFor": "资讯、题材与研究辅助"},
+    {"id": "tdx_tq_formula", "name": "通达信 TQ 公式现场证据", "path": "evidence/formulas/", "requiredFor": "公式类技能"},
+    {"id": "tdx_formula_source_archive", "name": "通达信公式可移植镜像", "path": "evidence/formulas/package/", "requiredFor": "EXE 打包与路径恢复"},
+    {"id": "unified_source_manifest", "name": "统一数据源落盘清单", "path": "evidence/sources/latest.json", "requiredFor": "Harness 与 EXE 数据索引"},
+    {"id": "unified_source_verification", "name": "统一数据源落盘校验", "path": "evidence/sources/latest-verification.json", "requiredFor": "本地数据完整性校验"},
+    {"id": "package_source_inventory", "name": "行情能力包来源目录", "path": "harness/context/package-source-inventory.json", "requiredFor": "Harness 来源路由与降级说明"},
+    {"id": "execution_evidence", "name": "任务回执与报告", "path": "reports/daily/<trade-date>/", "requiredFor": "质量控制"}
+  ]
+}

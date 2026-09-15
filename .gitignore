@@ -29,6 +29,7 @@ yarn-error.log*
 # local environment
 .env*
 .dsh*/
+.tmp-interface-skill/
 
 # deployment and generated files
 .vercel
@@ -66,6 +67,8 @@ next-env.d.ts
 /reports/
 /**/reports/
 /data/strategy-results/
+/app-data/
+/skill-archives/
 /data/dev-server*.log
 **/__pycache__/
 *.log

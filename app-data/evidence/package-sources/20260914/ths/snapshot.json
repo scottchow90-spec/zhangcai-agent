@@ -1,0 +1,11 @@
+{
+  "schema": "ZHANGCAI_PACKAGE_SOURCE_BATCH_V1",
+  "provider": "ths",
+  "requested_date": "2026-09-14",
+  "fetched_at": "2026-09-15T12:51:08+08:00",
+  "scope": "target_codes",
+  "codes": [],
+  "status": "missing",
+  "results": [],
+  "record_count": 0
+}

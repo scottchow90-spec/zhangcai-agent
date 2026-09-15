@@ -1,0 +1,4 @@
+interface:
+  display_name: "A股短线爆发力评分系统"
+  short_description: "盘后龙虎榜候选评分、风险核验和可追溯报告"
+  default_prompt: "使用 $a-share-short-burst-score 按完整盘后流程处理指定输入；没有真实数据则明确缺口。"

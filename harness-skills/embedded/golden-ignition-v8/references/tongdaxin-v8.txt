@@ -1,0 +1,359 @@
+{高胜率短线选股——黄金点火深度审计优化版 V8}
+{目标：保留A平台突破/B龙回头框架，重点将C模型升级为“第一次有效黄金点火”}
+{三模型：A平台突破 / B龙回头 / C黄金点火}
+{原则：结构性条件尽量评分化，真正决定可交易性的条件才做硬门槛}
+{不使用DYNAINFO、CONST、BACKSET、XMA、BARSNEXT、REFX等即时/未来污染函数}
+
+{==================== 一、基础股票池 ====================}
+BASE:=BARSCOUNT(C)>=130
+AND NOT(NAMEINCLUDE('ST'))
+AND NOT(NAMEINCLUDE('退'))
+AND NOT(INBLOCK('北交所'))
+AND C>2
+AND V>0;
+
+{==================== 二、统一板块强度 ====================}
+LIM:=IF(INBLOCK('科创板'),0.20,
+     IF(INBLOCK('创业板'),IF(DATE>=1200824,0.20,0.10),0.10));
+
+NS:=(C/REF(C,1)-1)/LIM;
+CPOS:=(C-L)/MAX(H-L,0.01);
+
+{历史强势身份：不再只认近涨停}
+HSTR:=NS>=0.70 AND C>O AND CPOS>=0.70;
+HZT:=NS>=0.985 AND C=H;
+
+{流动性仅加分，不做硬门槛}
+LIQ:=REF(MA(AMOUNT,5),1)>=50000000;
+
+{==================== 三、趋势与公共变量 ====================}
+TR10:=EMA(EMA(C,10),10);
+T1:=TR10>REF(TR10,1);
+T2:=EMA(C,5)>EMA(C,20);
+T3:=EMA(C,20)>=REF(EMA(C,20),1);
+T4:=C>EMA(C,89);
+
+R5:=REF(HHV(H,5),1);
+R10:=REF(HHV(H,10),1);
+R20:=REF(HHV(H,20),1);
+R60:=REF(HHV(H,60),1);
+R120:=REF(HHV(H,120),1);
+
+BRK5:=C>R5;
+BRK10:=C>R10;
+BRK20:=C>R20;
+BRK60:=C>R60;
+
+VR:=V/MAX(REF(MA(V,5),1),1);
+
+EXTN:=(C/EMA(C,20)-1)/LIM;
+EXTOK:=EXTN<=2.50;
+
+SPACE60:=C>=R60 OR (R60-C)/MAX(C,0.01)>=LIM*0.35;
+SPACE120:=C>=R120 OR (R120-C)/MAX(C,0.01)>=LIM*0.50;
+
+{========================================================
+ 模型A：平台/蓄势后的突破
+ 关键修正：四K重叠、缩量、波动收缩、靠近20日高点全部降为评分项
+=========================================================}
+
+BT:=MAX(O,C);
+BB:=MIN(O,C);
+
+OV4:=REF(LLV(BT,4),1)>=REF(HHV(BB,4),1);
+
+P5H:=REF(HHV(H,5),1);
+P5L:=REF(LLV(L,5),1);
+P20H:=REF(HHV(H,20),1);
+P20L:=REF(LLV(L,20),1);
+
+W5:=(P5H-P5L)/MAX(P5L,0.01);
+W20:=(P20H-P20L)/MAX(P20L,0.01);
+
+COMP:=W5<=W20*0.75;
+VCON:=REF(MA(V,3),1)<=REF(MA(V,10),1)*1.05;
+
+D20:=(R20-REF(C,1))/MAX(REF(C,1),0.01);
+NEAR20:=D20>=0 AND D20<=LIM*1.20;
+
+FIRST20:=REF(COUNT(BRK20,5),1)=0;
+
+{A硬条件：只保留趋势、突破、价格质量、量能合理}
+AHARD:=BASE
+AND (T1 OR T2)
+AND C>EMA(C,20)
+AND (BRK10 OR BRK20)
+AND C>O
+AND CPOS>=0.70
+AND NS>=0.35
+AND VR>=0.80
+AND VR<=4.00
+AND EXTOK;
+
+{A评分，总分100}
+ASCORE:=
+ IF(T1,6,0)
++IF(T2,6,0)
++IF(T3,4,0)
++IF(T4,4,0)
+
++IF(OV4,7,0)
++IF(COMP,7,0)
++IF(VCON,5,0)
++IF(NEAR20,4,0)
++IF(FIRST20,1,0)
+
++IF(BRK10,6,0)
++IF(BRK20,8,0)
++IF(BRK60,3,0)
+
++IF(NS>=0.80,10,IF(NS>=0.55,7,IF(NS>=0.35,4,0)))
++IF(CPOS>=0.90,6,IF(CPOS>=0.80,4,IF(CPOS>=0.70,2,0)))
+
++IF(VR>=1.10 AND VR<=2.80,8,IF(VR>=0.80 AND VR<=4.00,5,0))
++IF(LIQ,3,0)
+
++IF(EXTN<=1.60,4,IF(EXTOK,2,0))
++IF(SPACE60,4,0)
++IF(SPACE120,4,0);
+
+SIGA:=AHARD AND ASCORE>=70;
+
+{========================================================
+ 模型B：强股洗盘后的龙回头
+ 关键修正：洗盘窗口5日→8日；强势身份不再只认涨停；
+ RS2重新站45、突破昨日高点改为评分，不再全部硬门槛
+=========================================================}
+
+LC:=REF(C,1);
+RSDEN:=SMA(ABS(C-LC),2,1);
+RS2:=SMA(MAX(C-LC,0),2,1)/MAX(RSDEN,0.0001)*100;
+
+W45:=CROSS(45,RS2);
+W20D:=CROSS(20,RS2);
+WASH:=W45 OR W20D;
+
+{严格先强后洗：
+ BW=距最近一次“昨日及以前洗盘”的天数
+ BS=距最近一次“昨日及以前强势身份”的天数
+ 洗盘必须比强势身份更近}
+BW:=BARSLAST(REF(WASH,1));
+BS:=BARSLAST(REF(HSTR,1));
+
+SEQB:=BW<=7
+AND BS>BW
+AND BS<=30;
+
+DEEPW:=BARSLAST(REF(W20D,1))<=7;
+
+REC1:=RS2>REF(RS2,1);
+REC2:=RS2>=35;
+REC3:=C>REF(C,1) AND C>O;
+REC4:=C>REF(H,1);
+
+DDB:=(R20-C)/MAX(R20,0.01);
+
+BHARD:=BASE
+AND SEQB
+AND (T1 OR T2)
+AND C>=EMA(C,20)*0.98
+AND REC1
+AND REC2
+AND REC3
+AND CPOS>=0.65
+AND NS>=0.20
+AND VR>=0.70
+AND VR<=3.20
+AND DDB<=0.25
+AND EXTOK;
+
+BSCORE:=
+ IF(HZT,8,IF(HSTR,5,0))
++IF(SEQB,10,0)
++IF(DEEPW,7,3)
+
++IF(T1,6,0)
++IF(T2,6,0)
++IF(T3,4,0)
++IF(T4,4,0)
+
++IF(RS2>=45,7,IF(RS2>=35,4,0))
++IF(REC4,8,0)
++IF(CPOS>=0.90,7,IF(CPOS>=0.75,5,IF(CPOS>=0.65,3,0)))
++IF(NS>=0.50,8,IF(NS>=0.30,5,IF(NS>=0.20,3,0)))
+
++IF(VR>=0.90 AND VR<=2.30,10,IF(VR>=0.70 AND VR<=3.20,6,0))
++IF(LIQ,4,0)
+
++IF(DDB<=0.12,5,IF(DDB<=0.25,3,0))
++IF(SPACE60,3,0)
++IF(SPACE120,3,0);
+
+SIGB:=BHARD AND BSCORE>=70;
+
+{========================================================
+ 模型C：黄金点火 V8
+ 定义：EMA3上穿EMA21只是“点火事件”，真正信号必须是该次点火后的第一次有效确认。
+ 因果链：金叉事件→点火前位置合理→慢线未恶化→金叉保持有效→
+         第一次价格确认→量能确认→不过热→仍有上方空间。
+=========================================================}
+
+{C1 核心均线与交叉}
+E3:=EMA(C,3);
+E21:=EMA(C,21);
+EDIF:=E3-E21;
+
+F0:=CROSS(E3,E21);
+DEADF:=CROSS(E21,E3);
+
+{C2 当日K线质量}
+BODYR:=(C-O)/MAX(H-L,0.01);
+GAPN:=(O/REF(C,1)-1)/LIM;
+
+{C3 “有效确认”的基础定义
+ 注意：这里不要求当天一定是金叉日，只判断价格/量能是否已完成点火确认，
+ 用于阻止同一次金叉被F0/F1/F2重复识别}
+PCONF:=C>O
+AND BODYR>=0.25
+AND CPOS>=0.72
+AND NS>=0.25
+AND (BRK5 OR NS>=0.50)
+AND VR>=0.75
+AND VR<=3.50;
+
+{C4 金叉新鲜度与第一次确认机制
+ F0：今天刚金叉；
+ F1：昨天金叉，但昨天尚未完成有效确认，今天才首次确认；
+ F2：两天前金叉，昨天仍保持E3>E21，且前两天都没有完成有效确认。
+ 这样同一次金叉不会连续三天重复输出。}
+F1:=REF(F0,1)
+AND REF(PCONF,1)=0;
+
+F2:=REF(F0,2)
+AND REF(E3,1)>REF(E21,1)
+AND REF(COUNT(PCONF,2),1)=0;
+
+FRESHF:=F0 OR F1 OR F2;
+
+{C5 真正的“点火前位置”
+ 不再固定使用昨天位置，而是统一取“金叉发生前一日”相对EMA21的位置，
+ 避免F1/F2把金叉后的上涨错误当成点火前结构。}
+PREEXTF:=
+IF(F0,(REF(C,1)/REF(E21,1)-1)/LIM,
+IF(F1,(REF(C,2)/REF(E21,2)-1)/LIM,
+      (REF(C,3)/REF(E21,3)-1)/LIM));
+
+PREPOS:=PREEXTF>=-0.50 AND PREEXTF<=0.40;
+
+{C6 真正的“金叉前慢线状态”
+ 同样回到金叉前观察EMA21斜率，并按板块涨停幅度归一化。
+ 主板SLOPEF=-0.15约等于3日慢线下滑1.5%；20%板约3%。}
+SLOPEF:=
+IF(F0,(REF(E21,1)/REF(E21,4)-1)/LIM,
+IF(F1,(REF(E21,2)/REF(E21,5)-1)/LIM,
+      (REF(E21,3)/REF(E21,6)-1)/LIM));
+
+SLOWOK:=SLOPEF>=-0.15;
+
+{C7 金叉必须继续扩张，不能只是“刚交叉就钝化”}
+SPUP:=E3>REF(E3,1)
+AND EDIF>REF(EDIF,1);
+
+{C8 当前均线张口
+ 张口过大意味着“点火”已经演变成追高，V8直接限制。}
+FGAP:=(E3/E21-1)/LIM;
+FGAPOK:=FGAP<=0.60;
+
+{C9 新鲜度/过热控制}
+HOT3C:=REF(COUNT(NS>=0.70,3),1)=0;
+HOT5C:=REF(COUNT(NS>=0.70,5),1)=0;
+
+RUN10N:=(REF(C,1)/REF(C,11)-1)/LIM;
+RUNOK:=RUN10N<=1.80;
+
+{C10 近5日未发生快速死叉作为稳定性加分，不做硬门槛}
+STABLE5:=REF(COUNT(DEADF,5),1)=0;
+
+{C11 一字板不进入黄金点火}
+TRADEOK:=H>L;
+
+{C12 黄金点火硬门槛
+ 仅保留不可缺的因果与交易质量条件。
+ 与V7相比：
+ 1）最低强度从0.30降到0.25，避免再次过度过滤；
+ 2）但新增实体强度、金叉扩张、10日过热、均线张口与跳空上限；
+ 3）因此不是简单放宽，而是用更有信息量的条件替换重复条件。}
+CHARD:=BASE
+AND FRESHF
+AND SLOWOK
+AND PREPOS
+AND E3>E21
+AND SPUP
+AND FGAPOK
+AND C>E21
+AND C>O
+AND BODYR>=0.25
+AND CPOS>=0.72
+AND NS>=0.25
+AND (BRK5 OR NS>=0.50)
+AND VR>=0.75
+AND VR<=3.50
+AND HOT3C
+AND RUNOK
+AND TRADEOK
+AND EXTN<=1.60
+AND GAPN>=-0.50
+AND GAPN<=0.75;
+
+{C13 黄金点火评分，总分100}
+
+{一、点火结构30分}
+CSCORE:=
+ IF(F0,10,IF(F1,8,6))
++IF(SLOPEF>=0,6,IF(SLOPEF>=-0.08,4,2))
++IF(ABS(PREEXTF)<=0.15,6,IF(ABS(PREEXTF)<=0.30,4,2))
++IF(FGAP<=0.12,4,IF(FGAP<=0.30,3,1))
++IF(SPUP,2,0)
++IF(STABLE5,2,0)
+
+{二、价格确认30分
+ 突破层级互斥，避免5/10/20日突破重复加分}
++IF(BRK20,12,IF(BRK10,9,IF(BRK5,6,IF(NS>=0.50,4,0))))
++IF(NS>=0.85,8,IF(NS>=0.65,6,IF(NS>=0.45,4,IF(NS>=0.25,2,0))))
++IF(CPOS>=0.95,5,IF(CPOS>=0.85,4,IF(CPOS>=0.72,2,0)))
++IF(BODYR>=0.70,5,IF(BODYR>=0.50,4,IF(BODYR>=0.25,2,0)))
+
+{三、量能与可交易质量15分}
++IF(VR>=1.05 AND VR<=2.80,8,IF(VR>=0.75 AND VR<=3.50,5,0))
++IF(LIQ,4,0)
++IF(ABS(GAPN)<=0.20,3,IF(ABS(GAPN)<=0.45,2,0))
+
+{四、新鲜度与过热控制15分}
++IF(HOT5C,5,IF(HOT3C,3,0))
++IF(RUN10N<=0.70,5,IF(RUN10N<=1.20,3,IF(RUN10N<=1.80,1,0)))
++IF(EXTN<=0.70,5,IF(EXTN<=1.10,3,IF(EXTN<=1.60,1,0)))
+
+{五、上方空间10分}
++IF(SPACE60,5,0)
++IF(SPACE120,5,0);
+
+{C14 原始合格信号}
+SIGC0:=CHARD AND CSCORE>=70;
+
+{C15 五日内只保留第一次黄金点火
+ 即使随后出现新的短周期反复金叉，也不连续追着发信号。}
+SIGC:=SIGC0
+AND REF(COUNT(SIGC0,5),1)=0;
+
+{==================== 四、最终输出 ====================}
+{三模型分别通过即可，不互相借分}
+XG:SIGA OR SIGB OR SIGC;
+
+{==================== 五、生产使用说明 ====================}
+{1 V8继承V6去过度过滤框架，并将黄金点火升级为第一次有效确认状态机}
+{2 平台结构由硬门槛改成评分，避免好股票只因不满足四K重叠被误杀}
+{3 黄金点火最低归一化强度0.25：主板约2.5%、20%板约5%；同时新增实体、金叉扩张、跳空与过热约束}
+{4 龙回头允许8日洗盘窗口，且历史强势身份不只认涨停}
+{5 模型C升级为第一次有效黄金点火：同一次金叉只允许首次有效确认，避免F0/F1/F2重复出信号}
+{6 70分为可实跑门槛，不代表历史最优值；后续仍应进行全市场滚动样本外回测}
+{7 严格历史回测还需外部逐日ST状态、停牌、一字板及次日可成交性过滤}

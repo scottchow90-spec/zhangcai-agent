@@ -1,0 +1,561 @@
+{
+  "receipt_version": 4,
+  "runtime": "stock-canonical-runtime-v3",
+  "runtime_surface": "Codex",
+  "skill_id": "five-dimension-resonance",
+  "entry": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\five-dimension-resonance\\scripts\\codex_entry.py",
+  "run_dir": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\strategy-results\\executions\\runs\\20260912-002329-327287",
+  "command": [
+    "C:\\Users\\Scott\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\five-dimension-resonance\\scripts\\canonical_business_adapter.py",
+    "--run-dir",
+    "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\strategy-results\\executions\\runs\\20260912-002329-327287",
+    "--timeout",
+    "900"
+  ],
+  "extra_args": [],
+  "cwd": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\five-dimension-resonance",
+  "started_at": "2026-09-12T00:23:31+08:00",
+  "finished_at": "2026-09-12T00:34:18+08:00",
+  "elapsed_seconds": 647.125,
+  "returncode": 2,
+  "status": "BLOCKED",
+  "execution_purpose": "readiness_validation",
+  "request_fingerprint": "9ab1969bf06bcd7442f8c31d85ee6a831b1276abe42cc85869c982b848c8b79b",
+  "failure_class": "BUSINESS_REJECTED",
+  "production_policy_sha256": "f44fa31a3cf8477e52e80cbd2d18e26d6459cdedf22ffdb1000538004dd2bf85",
+  "production_readiness": {
+    "schema": "STOCK_PRODUCTION_READINESS_V1",
+    "status": "BLOCKED",
+    "execution_purpose": "readiness_validation",
+    "conclusion_eligible": false,
+    "request_fingerprint": "9ab1969bf06bcd7442f8c31d85ee6a831b1276abe42cc85869c982b848c8b79b",
+    "policy_sha256": "f44fa31a3cf8477e52e80cbd2d18e26d6459cdedf22ffdb1000538004dd2bf85",
+    "data_gate": null,
+    "failure_class": "BUSINESS_REJECTED",
+    "output_bytes": {
+      "stdout": 3956,
+      "stderr": 0,
+      "limit": 16777216,
+      "limited": false
+    },
+    "persistence": "atomic_replace_with_verified_readback",
+    "errors": [
+      "business_failure_tokens_not_empty",
+      "business_returncode_not_zero",
+      "business_status_not_clean",
+      "semantic_or_artifact_assertion_failed"
+    ]
+  },
+  "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
+  "executor_sha256": "ed0f4c38be970cdb9ff4ea03de7caef1e79a015408f23121c38c67a64a821600",
+  "contract_sha256": "dc73e1c2203417c1f2e273af889e3dc3f0a31a5ca453300b5bb0ea2dc2d81960",
+  "production_surface_signature": "664c143e52744a41d51aedc9b0bfc3686e44705dcace45e462b31365b13f1dc3",
+  "business_bindings": [
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\five-dimension-resonance\\scripts\\canonical_business_adapter.py",
+      "sha256": "c6b67f0263562619add41fd1ce5dc0a101822694047bcee08cc7d43d8fcd452d"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\five-dimension-resonance\\scripts\\legacy_codex_entry.py",
+      "sha256": "d9af1ccb32158d43171a4a36272deaddb7d16d165b92ad8f825811614c777d0a"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\five-dimension-resonance\\SKILL.md",
+      "sha256": "c30da399e8f8d46345128ef7f31d5060e683711afb1c9f2a9833dc51d90fba87"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\five-dimension-resonance\\references\\workflow.md",
+      "sha256": "c244598ce70c2c7d57ce67a1ebaeca6dcc1486054278478f49d4781209db053e"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\five-dimension-resonance\\scripts\\run_feilong_block_resonance.py",
+      "sha256": "2c438ac7d1f9420b280d3d22018d6289d4344b79715ccce63eaf4ae3c00fec0d"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\scripts\\lianban_daily_client.py",
+      "sha256": "7d6a51fc1efa1472b7e3bee49b208e581732f7108b64ecbaef446fb5749be51a"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\five-dimension-resonance\\scripts\\mainline_scoring.py",
+      "sha256": "8dfc17cb3c16678e981cb817eb07540c9fb75329a589199bc94c2ed987ce7538"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\a-share-hotspot-sentiment-analysis\\scripts\\duanxianxia_client.ps1",
+      "sha256": "e86bf63ce6959baa112c8a331866be66135e5611feb4b871ddca205ebc65ec2f"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\five-dimension-resonance\\scripts\\validate_feilong_block_resonance_skill.py",
+      "sha256": "979307644b94f40676b1bc2f7dc6e1eda4e0d057615e5e91c368ed1b6a77f5a0"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\five-dimension-resonance\\tests\\test_mainline_scoring.py",
+      "sha256": "7797ba287b58a808e93ad7514a8950a05bc3aca73a28a34a9db9ae11b23efb04"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\five-dimension-resonance\\references\\scoring-model.md",
+      "sha256": "8d7b7ca1f5689dac5f1b439ea2761cda87db2600ea3b2b58269c9028cf623848"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\core-mainline-scoring-system\\scripts\\mainline_scoring.py",
+      "sha256": "357e7d6fcc2fd1b4527eb651c5d5517eba957a6207a3d38d9531a73e0d77afce"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\scripts\\stock_evidence_set.py",
+      "sha256": "3cad995bf4d464e7747ba9123cb85b69dfef87058545e0cf087b2b3c91e4f82f"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\scripts\\stock_runtime_bootstrap\\sitecustomize.py",
+      "sha256": "b101151ab8a66d264bad58bc82f8cb5d2e971d193f0d0b28799a7b882c3eba27"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\scripts\\stock_runtime_bootstrap\\tdx_process_guard.py",
+      "sha256": "884c84e8e69bdac0f35ba7f06c6f6e97925698a8af4a06d514b0631b3060f834"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
+      "sha256": "980cb0ea2988cabf245498891cac99184767296abb79186a732764c1ec299625"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
+      "sha256": "b97a0f145f8d0e176116a8f280f6b2a86af64ccb0f36a9fecb9fb67a3f43fa8a"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\audit_stock_production_readiness.py",
+      "sha256": "8afedf67fe22437a0b897be606e9b3c37a75b48fe4d7a4774d940eadcd5e2519"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\sync_stock_execution_contracts.py",
+      "sha256": "04249a89e4124c83e82e7a54d6ba4c9d50ce1a5b4c8838202b20ea08a55663fb"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\scripts\\stock_adapter_io.py",
+      "sha256": "517513f77e10de91fbe01a37c47b4234741fbe75dcecad7fa38a971d68fd9393"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\references\\short_term_strong_stock_scoring_contract.json",
+      "sha256": "4af3aab7946b1f7877c5fc6f2f866a75842d80e5898ecaeafa4145425c765791"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\stock-unified\\scripts\\short_term_strong_score_contract.py",
+      "sha256": "d6e1e0e684c5a18393ae429b6a7828df18da4c2b9f9dab15c7bc9dca898ab3e7"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\a-share-15d-selection\\scripts\\run_a_share_15d.py",
+      "sha256": "3b2e44ee63d1fc6e8c43bbd0179b7780999972ebd1014b13e2ede9810f1d7456"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\five-dimension-resonance\\references\\workflow-chain.md",
+      "sha256": "007ea68fc63afda3bd159eee9fb119d25c53fd20bc64e0c963210ea6bf07bdde"
+    }
+  ],
+  "contract_preflight": {
+    "status": "CLEAN_PASS",
+    "catalog_count": null,
+    "contract_count": null,
+    "surface_signature": "664c143e52744a41d51aedc9b0bfc3686e44705dcace45e462b31365b13f1dc3"
+  },
+  "contract_postflight": {
+    "status": "CLEAN_PASS",
+    "catalog_count": null,
+    "contract_count": null,
+    "surface_signature_before": "664c143e52744a41d51aedc9b0bfc3686e44705dcace45e462b31365b13f1dc3",
+    "surface_signature_after": "664c143e52744a41d51aedc9b0bfc3686e44705dcace45e462b31365b13f1dc3",
+    "errors": []
+  },
+  "stock_business_lease": {
+    "status": "ACQUIRED",
+    "lease_id": "40904-1789143802310459700",
+    "root_lease_id": "40904-1789143802310459700",
+    "root_skill_id": "five-dimension-resonance",
+    "skill_id": "five-dimension-resonance",
+    "pid": 40904,
+    "lock_path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\.runtime\\stock-business-runtime.five-dimension-resonance.lock",
+    "acquired_at": "2026-09-12T00:23:22+08:00",
+    "waited_seconds": 0.016
+  },
+  "workflow_telemetry": [
+    {
+      "name": "request_validation",
+      "status": "CLEAN_PASS",
+      "elapsed_seconds": 0.0,
+      "error_count": 0
+    },
+    {
+      "name": "global_contract_preflight",
+      "status": "CLEAN_PASS",
+      "elapsed_seconds": 3.891,
+      "surface_stable": true
+    },
+    {
+      "name": "workflow_queue_wait",
+      "status": "CLEAN_PASS",
+      "elapsed_seconds": 0.031,
+      "waited_seconds": 0.016,
+      "lock_path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\.runtime\\stock-business-runtime.five-dimension-resonance.lock"
+    },
+    {
+      "name": "binding_validation",
+      "status": "CLEAN_PASS",
+      "elapsed_seconds": 0.015,
+      "error_count": 0
+    },
+    {
+      "name": "tdx_control_scan",
+      "status": "CLEAN_PASS",
+      "elapsed_seconds": 6.5,
+      "finding_count": 0
+    },
+    {
+      "name": "evidence_set",
+      "status": "DISABLED",
+      "elapsed_seconds": 0.0,
+      "mode": null
+    },
+    {
+      "name": "supplemental_target_date",
+      "status": "CLEAN_PASS",
+      "elapsed_seconds": 0.0,
+      "mode": "runtime_date"
+    },
+    {
+      "name": "supplemental_lianban",
+      "status": "DEGRADED",
+      "elapsed_seconds": 1.719,
+      "mode": "direct_fetch",
+      "cache_hit": false
+    },
+    {
+      "name": "business_process",
+      "status": "BLOCKED",
+      "elapsed_seconds": 647.562,
+      "returncode": 2
+    },
+    {
+      "name": "contract_surface_postflight",
+      "status": "CLEAN_PASS",
+      "elapsed_seconds": 4.61,
+      "surface_stable": true,
+      "error_count": 0
+    },
+    {
+      "name": "result_validation",
+      "status": "BLOCKED",
+      "elapsed_seconds": 0.015,
+      "semantic_check_count": 8
+    },
+    {
+      "name": "production_gate",
+      "status": "BLOCKED",
+      "elapsed_seconds": 0.015,
+      "execution_purpose": "readiness_validation",
+      "conclusion_eligible": false,
+      "error_count": 4
+    },
+    {
+      "name": "runtime_inside_lease",
+      "status": "BLOCKED",
+      "elapsed_seconds": 660.906
+    },
+    {
+      "name": "total_runtime_to_receipt",
+      "status": "BLOCKED",
+      "elapsed_seconds": 664.828
+    }
+  ],
+  "tdx_process_integrity": {
+    "status": "CLEAN_PASS",
+    "errors": [],
+    "warnings": [],
+    "before": {
+      "status": "OK",
+      "captured_at": "2026-09-12T00:23:31+08:00",
+      "processes": [
+        {
+          "name": "tdxcef",
+          "pid": 42352,
+          "start_time": "/Date(1789135467850)/"
+        },
+        {
+          "name": "tdxcef",
+          "pid": 44004,
+          "start_time": "/Date(1789135467971)/"
+        },
+        {
+          "name": "TdxW",
+          "pid": 6576,
+          "start_time": "/Date(1789135442629)/"
+        }
+      ],
+      "errors": []
+    },
+    "after": {
+      "status": "OK",
+      "captured_at": "2026-09-12T00:34:18+08:00",
+      "processes": [
+        {
+          "name": "tdxcef",
+          "pid": 42352,
+          "start_time": "/Date(1789135467850)/"
+        },
+        {
+          "name": "tdxcef",
+          "pid": 44004,
+          "start_time": "/Date(1789135467971)/"
+        },
+        {
+          "name": "TdxW",
+          "pid": 6576,
+          "start_time": "/Date(1789135442629)/"
+        }
+      ],
+      "errors": []
+    }
+  },
+  "tdx_process_guard": {
+    "schema": "TDX_PROCESS_GUARD_AUDIT_V1",
+    "status": "CLEAN_PASS",
+    "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\strategy-results\\executions\\runs\\20260912-002329-327287\\tdx_process_guard.jsonl",
+    "exists": false,
+    "event_count": 0,
+    "events": [],
+    "errors": [],
+    "artifact": null
+  },
+  "evidence_set": {
+    "enabled": false,
+    "status": "DISABLED",
+    "environment": {},
+    "errors": []
+  },
+  "supplemental_sources": {
+    "lianban_daily": {
+      "enabled": true,
+      "required": false,
+      "status": "DEGRADED",
+      "mode": "direct_fetch",
+      "cache_hit": false,
+      "cache_manifest": null,
+      "client": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\scripts\\lianban_daily_client.py",
+      "command": [
+        "C:\\Users\\Scott\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\scripts\\lianban_daily_client.py",
+        "--latest",
+        "--output",
+        "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\strategy-results\\executions\\runs\\20260912-002329-327287\\lianban-daily.json"
+      ],
+      "snapshot": {
+        "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\strategy-results\\executions\\runs\\20260912-002329-327287\\lianban-daily.json",
+        "size": 2421,
+        "sha256": "eb0c70f5561a557c1190208a1953a304997cfa795ec5b66572d178903a1f01cf"
+      },
+      "source_url": "https://lianban.net/days/2026-09-11.html",
+      "open_data_url": "https://lianban.net/opendata/latest.json",
+      "target_date_resolution": {
+        "status": "CLEAN_PASS",
+        "mode": "runtime_date",
+        "target_date": "2026-09-12",
+        "fallback_date": "2026-09-12",
+        "errors": []
+      },
+      "child": {
+        "started_at": "2026-09-12T00:23:29+08:00",
+        "finished_at": "2026-09-12T00:23:30+08:00",
+        "elapsed_seconds": 1.297,
+        "returncode": 2,
+        "stdout": "{\"schema\": \"LIANBAN_DAILY_SNAPSHOT_V1\", \"status\": \"DEGRADED\", \"requested_at\": \"2026-09-12T00:23:30+08:00\", \"requested_date\": \"2026-09-12\", \"target_date\": \"2026-09-11\", \"latest_requested\": true, \"source_name\": \"连板网\", \"license\": \"CC BY 4.0, 引用需署名“连板网”并附上行原文链接\", \"attribution_required\": true, \"source_role\": \"supplemental_event_theme_sentiment_cross_validation\", \"sources\": {\"open_data\": {\"url\": \"https://lianban.net/opendata/latest.json\", \"status_code\": 200, \"content_type\": \"application/json\", \"size\": 818, \"sha256\": \"f7de1e0830736b41e79133e39e2402e2aab4f0814064a07f97c8411a0d18a104\", \"error\": null}, \"page\": {\"url\": \"https://lianban.net/days/2026-09-11.html\", \"status_code\": 200, \"content_type\": \"text/html; charset=utf-8\", \"size\": 3923, \"sha256\": \"e339506dfcc2f004fdb77fe1b709943e6338db17e5d31e5600767cac974a7e90\", \"error\": null}}, \"market\": {\"limit_up\": 40, \"limit_down\": 21, \"consecutive\": 7, \"max_board\": 4, \"seal_rate\": 69.0, \"broken_board\": 18, \"advancers\": 643, \"decliners\": 4870, \"emotion_stage\": \"冰点期\"}, \"topics\": [{\"name\": \"通信\", \"count\": 11}, {\"name\": \"AI应用\", \"count\": 5}, {\"name\": \"电力(绿色电力)\", \"count\": 3}, {\"name\": \"元器件(电阻电容)\", \"count\": 3}, {\"name\": \"光伏\", \"count\": 3}, {\"name\": \"智能电网(电气设备)\", \"count\": 2}, {\"name\": \"军工\", \"count\": 2}, {\"name\": \"其他\", \"count\": 11}], \"note\": \"逐只涨停/连板名单见 source 页面(近期免登录, 更早需注册登录; 已验证的搜索引擎与AI爬虫不受限)\", \"page_details\": {\"title\": \"2026年9月11日A股复盘：涨停40家 最高4板 主线通信_连板网\", \"stock_count\": 0, \"stock_codes\": [], \"stock_items\": [], \"event_texts\": [\"2026年9月11日A股复盘：涨停40家 最高4板 主线通信_连板网 正在打开 2026-09-11 复盘… 首次访问需要一两秒完成浏览器校验，之后 30 天内不再出现。\"]}, \"errors\": [\"page_stock_details_missing\"]}\r\n",
+        "stderr": "",
+        "stdout_bytes": 1940,
+        "stderr_bytes": 0,
+        "output_limited": false,
+        "timed_out": false,
+        "effective_command": [
+          "C:\\Users\\Scott\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+          "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\scripts\\stock_runtime_bootstrap\\sitecustomize.py",
+          "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\scripts\\lianban_daily_client.py",
+          "--latest",
+          "--output",
+          "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\strategy-results\\executions\\runs\\20260912-002329-327287\\lianban-daily.json"
+        ],
+        "tdx_process_integrity": {
+          "status": "CLEAN_PASS",
+          "errors": [],
+          "warnings": [],
+          "before": {
+            "status": "OK",
+            "captured_at": "2026-09-12T00:23:29+08:00",
+            "processes": [
+              {
+                "name": "tdxcef",
+                "pid": 42352,
+                "start_time": "/Date(1789135467850)/"
+              },
+              {
+                "name": "tdxcef",
+                "pid": 44004,
+                "start_time": "/Date(1789135467971)/"
+              },
+              {
+                "name": "TdxW",
+                "pid": 6576,
+                "start_time": "/Date(1789135442629)/"
+              }
+            ],
+            "errors": []
+          },
+          "after": {
+            "status": "OK",
+            "captured_at": "2026-09-12T00:23:30+08:00",
+            "processes": [
+              {
+                "name": "tdxcef",
+                "pid": 42352,
+                "start_time": "/Date(1789135467850)/"
+              },
+              {
+                "name": "tdxcef",
+                "pid": 44004,
+                "start_time": "/Date(1789135467971)/"
+              },
+              {
+                "name": "TdxW",
+                "pid": 6576,
+                "start_time": "/Date(1789135442629)/"
+              }
+            ],
+            "errors": []
+          }
+        },
+        "failure_class": "BUSINESS_REJECTED"
+      },
+      "environment": {
+        "CODEX_LIANBAN_STATUS": "DEGRADED",
+        "CODEX_LIANBAN_SNAPSHOT": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\strategy-results\\executions\\runs\\20260912-002329-327287\\lianban-daily.json",
+        "CODEX_LIANBAN_SOURCE_URL": "https://lianban.net/days/2026-09-11.html",
+        "CODEX_LIANBAN_OPEN_DATA_URL": "https://lianban.net/opendata/latest.json",
+        "CODEX_LIANBAN_ATTRIBUTION": "连板网"
+      },
+      "errors": [
+        "lianban_source_degraded"
+      ]
+    }
+  },
+  "binding_errors": [],
+  "contract_stability_errors": [],
+  "business_stdout_validation": {
+    "ok": false,
+    "errors": [
+      "business_failure_tokens_not_empty",
+      "business_returncode_not_zero",
+      "business_status_not_clean"
+    ],
+    "data_gate": null,
+    "output_size": 3956,
+    "output_sha256": "2095e11292de67445d20ecc49af6263faf900472a73a2a3922edd12e579d79c4"
+  },
+  "semantic_assertions": [
+    {
+      "type": "returncode_zero",
+      "actual": 2,
+      "ok": false
+    },
+    {
+      "type": "stdout_nonempty",
+      "actual_size": 3956,
+      "ok": true
+    },
+    {
+      "type": "output_contains_any",
+      "values": [
+        "\"schema\": \"STOCK_CANONICAL_BUSINESS_RESULT_V1\"",
+        "\"schema\":\"STOCK_CANONICAL_BUSINESS_RESULT_V1\""
+      ],
+      "found": [
+        "\"schema\": \"STOCK_CANONICAL_BUSINESS_RESULT_V1\""
+      ],
+      "ok": true
+    },
+    {
+      "type": "output_contains_any",
+      "values": [
+        "\"status\": \"CLEAN_PASS\"",
+        "\"status\":\"CLEAN_PASS\""
+      ],
+      "found": [
+        "\"status\": \"CLEAN_PASS\""
+      ],
+      "ok": true
+    },
+    {
+      "type": "output_not_contains",
+      "values": [
+        "\"status\": \"BLOCKED\"",
+        "\"status\":\"BLOCKED\"",
+        "\"status\": \"FAILED\"",
+        "\"status\":\"FAILED\"",
+        "\"status\": \"PROCEDURAL\"",
+        "\"status\":\"PROCEDURAL\"",
+        "\"status\": \"DATA_REQUIRED\"",
+        "\"status\":\"DATA_REQUIRED\"",
+        "Traceback (most recent call last)",
+        "TIMEOUT after ",
+        "\"decision_status\": \"DATA_REQUIRED\"",
+        "\"decision_status\":\"DATA_REQUIRED\""
+      ],
+      "found": [
+        "\"status\": \"BLOCKED\"",
+        "\"decision_status\": \"DATA_REQUIRED\""
+      ],
+      "ok": false
+    },
+    {
+      "type": "required_artifact",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\strategy-results\\executions\\runs\\20260912-002329-327287\\business_child.stdout.txt",
+      "minimum_size": 0,
+      "matched": 1,
+      "ok": true
+    },
+    {
+      "type": "required_artifact",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\strategy-results\\executions\\runs\\20260912-002329-327287\\business_child.stderr.txt",
+      "minimum_size": 0,
+      "matched": 1,
+      "ok": true
+    },
+    {
+      "type": "required_artifact",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\strategy-results\\executions\\runs\\20260912-002329-327287\\business_result.json",
+      "minimum_size": 100,
+      "matched": 1,
+      "ok": true
+    }
+  ],
+  "required_artifacts": [
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\strategy-results\\executions\\runs\\20260912-002329-327287\\business_child.stderr.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\strategy-results\\executions\\runs\\20260912-002329-327287\\business_child.stdout.txt",
+      "size": 7685,
+      "sha256": "f87d959c91a6f34b1fe1e84d984d111784ea4b72f78804ee01caeda0009f0ef2"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\strategy-results\\executions\\runs\\20260912-002329-327287\\business_result.json",
+      "size": 4905,
+      "sha256": "a3147d38425303b3c525501a9ff7008c2a25a41c66f7f21b7ef26b6f71cc1939"
+    }
+  ],
+  "stdout_artifact": {
+    "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\strategy-results\\executions\\five-dimension-resonance-20260912-003423-236079.stdout.txt",
+    "size": 3956,
+    "sha256": "2095e11292de67445d20ecc49af6263faf900472a73a2a3922edd12e579d79c4"
+  },
+  "stderr_artifact": {
+    "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\strategy-results\\executions\\five-dimension-resonance-20260912-003423-236079.stderr.txt",
+    "size": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "receipt_integrity": "eba130701fe6b13656f9d6b305e3fcbdcdb1d88b895f49c2beb76c44e0c04ec3"
+}

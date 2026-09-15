@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read-only bridge for a running Tongdaxin client and its public data feeds."""
+"""Local bridge for Tongdaxin process state, launch, and public data feeds."""
 from __future__ import annotations
 
 import argparse
@@ -7,6 +7,7 @@ import json
 import os
 import subprocess
 import sys
+import time
 from datetime import datetime
 from pathlib import Path
 
@@ -22,6 +23,82 @@ def process_rows():
         return rows if isinstance(rows, list) else [rows]
     except json.JSONDecodeError:
         return []
+
+def executable_candidates():
+    configured = os.environ.get("ZHANGCAI_TDX_EXE") or os.environ.get("TDX_EXE")
+    candidates = []
+    if configured:
+        candidates.append(Path(configured))
+    candidates.extend([
+        ROOT / "TdxW.exe",
+        ROOT / "TdxW" / "TdxW.exe",
+        ROOT / "tdx.exe",
+    ])
+    seen = set()
+    result = []
+    for candidate in candidates:
+        value = str(candidate)
+        if value in seen:
+            continue
+        seen.add(value)
+        result.append(candidate)
+    return result
+
+def open_tongdaxin():
+    running = process_rows()
+    if running:
+        return {"status": "already_open", "processes": running, "tdxRoot": str(ROOT)}
+
+    candidates = executable_candidates()
+    executable = next((candidate for candidate in candidates if candidate.is_file()), None)
+    if executable is None:
+        return {
+            "status": "missing_executable",
+            "tdxRoot": str(ROOT),
+            "candidates": [str(candidate) for candidate in candidates],
+            "error": "未找到通达信客户端 TdxW.exe，请检查通达信安装目录或设置 ZHANGCAI_TDX_EXE",
+        }
+
+    creation_flags = getattr(subprocess, "DETACHED_PROCESS", 0) | getattr(subprocess, "CREATE_NEW_PROCESS_GROUP", 0)
+    try:
+        child = subprocess.Popen(
+            [str(executable)],
+            cwd=str(executable.parent),
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            close_fds=True,
+            creationflags=creation_flags,
+        )
+    except OSError as error:
+        return {
+            "status": "launch_failed",
+            "tdxRoot": str(ROOT),
+            "executable": str(executable),
+            "error": f"通达信启动失败：{error}",
+        }
+
+    # 启动器只负责拉起客户端，不等待客户端登录；短暂轮询用于区分
+    # “已请求启动”和“进程根本没有拉起”，避免页面显示假成功。
+    for _ in range(12):
+        time.sleep(0.25)
+        running = process_rows()
+        if running:
+            return {
+                "status": "accepted",
+                "pid": child.pid,
+                "executable": str(executable),
+                "processes": running,
+                "tdxRoot": str(ROOT),
+            }
+    return {
+        "status": "accepted",
+        "pid": child.pid,
+        "executable": str(executable),
+        "verified": False,
+        "tdxRoot": str(ROOT),
+        "message": "已请求打开通达信，进程尚未在短轮询内出现，请稍后重新检测",
+    }
 
 def latest(paths):
     rows = [p for p in paths if p.exists()]
@@ -51,16 +128,18 @@ def quote(symbol):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("command", choices=["status", "quote"])
+    parser.add_argument("command", choices=["status", "quote", "open"])
     parser.add_argument("--symbol")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     if args.command == "quote" and not args.symbol: parser.error("quote requires --symbol")
-    payload = quote(args.symbol) if args.command == "quote" else status()
+    payload = quote(args.symbol) if args.command == "quote" else open_tongdaxin() if args.command == "open" else status()
     if args.output:
         output = args.output
     elif args.command == "status":
         output = OUT / "tdx-runtime-status.json"
+    elif args.command == "open":
+        output = OUT / "tdx-open-result.json"
     else:
         # 行情查询保留为独立快照，不能覆盖客户端连接状态。
         stamp = datetime.now().strftime("%Y%m%d/%H%M%S")

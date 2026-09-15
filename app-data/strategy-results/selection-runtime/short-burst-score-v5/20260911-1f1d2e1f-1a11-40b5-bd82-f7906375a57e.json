@@ -1,0 +1,210 @@
+{
+  "status": "ok",
+  "strategy_id": "short-burst-score-v5",
+  "trade_date": "20260911",
+  "score_status": "DEGRADED",
+  "score_source": {
+    "kind": "embedded_original_engine",
+    "root": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\harness-skills\\embedded",
+    "tdx_daily": {
+      "status": "available",
+      "kind": "tdx-native-day",
+      "root": "C:\\new_tdx_mock",
+      "paths": [
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh000001.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz300563.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz399001.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz399006.day"
+      ],
+      "records": 1280
+    },
+    "candidate_scope": 1
+  },
+  "candidate_count": 1,
+  "missing": [
+    "完整V5.0生产快照（market_full_features、industry_pit、event_feed、seat_detail）",
+    "龙虎榜席位/机构/营业部资金分项与生命周期",
+    "V5历史样本外模型（history_model）",
+    "全市场策略扫描（当前按网页条件候选评分）"
+  ],
+  "results": [
+    {
+      "code": "300563",
+      "name": "神宇股份",
+      "stage": "首板",
+      "sector": "未知行业",
+      "context_basis": "行业",
+      "context_name": "未知行业",
+      "sector_state": "中性/轮动",
+      "position": "板块前排",
+      "lhb_role": "无龙虎榜",
+      "overheat": "正常加速",
+      "event_risk_level": 0,
+      "model_bucket": "退潮|首板|核心前排|中性/轮动|低中位|非正向",
+      "short_burst_score": 54.31,
+      "score_before_risk": 56.31,
+      "score_risk_penalty": 2,
+      "score_components": {
+        "技术动量": 54.57,
+        "结构地位": 63.48,
+        "资金质量": 50,
+        "资金弹性": 66.58,
+        "事件驱动": 50,
+        "历史验证": 50
+      },
+      "score_risk_details": {
+        "价格透支": 2
+      },
+      "score_meaning": "0-100短线爆发力相对评分；不是未经校准的上涨概率",
+      "evidence_grade": "B-",
+      "conclusion": "次级观察",
+      "positive_evidence": [
+        "市场/板块地位: 板块前排"
+      ],
+      "negative_evidence": [
+        "评分特征缺失，使用中性占位且降级：broker_net_impact_pctile,buy_sell_balance,event_feed,free_mcap_pctile,history_model,industry_pit,inst_net_impact_pctile,lhb_net_free_float_pctile,lhb_net_impact_pctile,lhb_participation_pctile,turnover_rate_pctile",
+        "价格透支扣分 2.0"
+      ],
+      "hard_reject_reasons": [],
+      "history_stats": {
+        "available": false,
+        "strength": "不可用",
+        "history_score": 0.5
+      },
+      "audit": {
+        "context_reasons": [
+          "采用历史时点行业上下文",
+          "板块当日 19.98%",
+          "上涨占比 100.0%",
+          "板块涨停 1 家",
+          "2板及以上 0 家",
+          "3日相对强度 19.52",
+          "5日相对强度 20.55"
+        ],
+        "overheat_reasons": [
+          "成交额/过去20日中位数 4.08 倍，明显放量"
+        ],
+        "lhb_reasons": [
+          "未提供龙虎榜明细"
+        ],
+        "event_reasons": [],
+        "lhb_metrics": {},
+        "context": {
+          "state": "中性/轮动",
+          "reasons": [
+            "采用历史时点行业上下文",
+            "板块当日 19.98%",
+            "上涨占比 100.0%",
+            "板块涨停 1 家",
+            "2板及以上 0 家",
+            "3日相对强度 19.52",
+            "5日相对强度 20.55"
+          ],
+          "basis": "行业",
+          "name": "未知行业",
+          "core_rank": 1,
+          "leader": true,
+          "capacity_core": false
+        },
+        "score_factor_details": {
+          "technical": {
+            "rs20": 0.5,
+            "ma20_slope": 0.5,
+            "breakout20": 0.5819,
+            "close_location": 1,
+            "volume_health": 0.1399,
+            "startup_location": 1,
+            "ma_structure": 0.3333
+          },
+          "structure": {
+            "position": 0.84,
+            "stage_market_fit": 0.5,
+            "sector_state": 0.62,
+            "sector_rs": 0.5,
+            "sector_activity": 0.5
+          },
+          "capital": {
+            "net_impact": 0.5,
+            "participation": 0.5,
+            "institution": 0.5,
+            "broker": 0.5,
+            "buy_sell_balance": 0.5,
+            "net_ratio": 0.5,
+            "seat_quality": 0.5,
+            "lifecycle": 0.5
+          },
+          "elasticity": {
+            "free_mcap_fit": 0.7714,
+            "turnover_fit": 0.7833,
+            "net_to_free_mcap": 0.5
+          }
+        },
+        "score_top_positive_components": [
+          "结构地位",
+          "技术动量",
+          "资金质量"
+        ],
+        "score_weak_components": [],
+        "raw_stock_feature_provenance": {
+          "source": "app-data/market/daily/<trade_date>/tdx-bars.jsonl",
+          "derived_fields": [
+            "change_pct",
+            "days_return",
+            "close_location",
+            "volume_ratio20",
+            "breakout_20d_strength",
+            "board_streak"
+          ],
+          "not_available": [
+            "turnover_rate",
+            "free_float_mcap",
+            "lhb",
+            "event_feed",
+            "industry_pit",
+            "history_model"
+          ]
+        }
+      },
+      "rank": 1,
+      "score": 54.31,
+      "final_score": 54.31,
+      "model_scores": {
+        "short_burst_score": 54.31
+      },
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始短线爆发力 V5 core.py · 本地通达信日线适配",
+      "missing": [
+        "完整V5.0生产快照（market_full_features、industry_pit、event_feed、seat_detail）",
+        "龙虎榜席位/机构/营业部资金分项与生命周期",
+        "V5历史样本外模型（history_model）",
+        "全市场策略扫描（当前按网页条件候选评分）",
+        "turnover_rate",
+        "free_float_mcap",
+        "lhb",
+        "event_feed",
+        "industry_pit",
+        "history_model"
+      ]
+    }
+  ],
+  "audit": {
+    "no_future_data": true,
+    "data_date": "20260911",
+    "tdx_daily": {
+      "status": "available",
+      "kind": "tdx-native-day",
+      "root": "C:\\new_tdx_mock",
+      "paths": [
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh000001.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz300563.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz399001.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz399006.day"
+      ],
+      "records": 1280
+    },
+    "full_market_scan": false,
+    "note": "数值字段来自原始策略评分函数；缺失辅助数据只影响生产授权/候选等级，不用涨幅或成交额替代策略分。"
+  },
+  "artifact_path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\strategy-results\\selection-runtime\\short-burst-score-v5\\20260911-1f1d2e1f-1a11-40b5-bd82-f7906375a57e.json",
+  "persisted_at": "2026-09-13T06:13:15.105Z"
+}

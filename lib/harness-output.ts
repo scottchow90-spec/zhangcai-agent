@@ -60,6 +60,60 @@ function asStringArray(value: unknown): string[] {
   return value.map(cleanText).filter(Boolean);
 }
 
+function parseJsonRecord(value: unknown): Record<string, unknown> | null {
+  let current = value;
+  for (let depth = 0; depth < 3; depth += 1) {
+    if (current && typeof current === 'object' && !Array.isArray(current)) {
+      return current as Record<string, unknown>;
+    }
+    if (typeof current !== 'string') return null;
+    const text = current.trim();
+    if (!text) return null;
+    const repaired = text.replace(/([\]}])",(?=\s*["}])/g, '$1,');
+    for (const candidate of [text, repaired]) {
+      try {
+        current = JSON.parse(candidate);
+        break;
+      } catch {
+        try {
+          current = JSON.parse(extractJson(candidate));
+          break;
+        } catch {
+          current = null;
+        }
+      }
+    }
+    if (current == null) return null;
+  }
+  return current && typeof current === 'object' && !Array.isArray(current)
+    ? current as Record<string, unknown>
+    : null;
+}
+
+function unwrapNestedHarnessRecord(row: Record<string, unknown>): Record<string, unknown> {
+  let current = row;
+  for (let depth = 0; depth < 2; depth += 1) {
+    const nested = parseJsonRecord(current.summary);
+    if (!nested) break;
+    const isReport = [
+      'status', 'summary', 'data_date', 'data_scope', 'cautions', 'findings', 'tables',
+    ].some((key) => Object.prototype.hasOwnProperty.call(nested, key));
+    if (!isReport) break;
+    const cautions = [
+      ...asStringArray(current.cautions).filter((item) => !item.includes('Harness 原始输出未符合严格 JSON')),
+      ...asStringArray(nested.cautions),
+    ].filter((item, index, values) => values.indexOf(item) === index);
+    current = {
+      ...current,
+      ...nested,
+      cautions,
+      findings: Array.isArray(nested.findings) ? nested.findings : current.findings,
+      tables: Array.isArray(nested.tables) ? nested.tables : current.tables,
+    };
+  }
+  return current;
+}
+
 function normalizeFindings(value: unknown): HarnessFinding[] {
   if (!Array.isArray(value)) return [];
   return value.map((item, index) => {
@@ -153,7 +207,7 @@ export function normalizeHarnessOutput(raw: string): HarnessOutput {
   try {
     const parsed = JSON.parse(extractJson(raw));
     const value = Array.isArray(parsed) ? { rows: parsed } : (parsed && typeof parsed === 'object' ? parsed : fallbackValue);
-    const row = value as Record<string, unknown>;
+    const row = unwrapNestedHarnessRecord(value as Record<string, unknown>);
     const findings = normalizeFindings(row.findings || row.conclusions || row.insights);
     const tables = normalizeTables(row.tables || row.data_tables || row.table);
     return {

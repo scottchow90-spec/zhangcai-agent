@@ -1,0 +1,92 @@
+{
+  "schema": "ZHANGCAI_SKILL14_PREFLIGHT_V1",
+  "report_id": "20260915-120057-limit-advance-v44-33a3a634",
+  "skill": {
+    "id": "limit-advance-v44",
+    "name": "连板晋级量化决策 V4.4",
+    "archive": "连板晋级量化决策系统_V4.4_深度审计与训练交付包.zip",
+    "mode": "python_batch",
+    "category": "连板晋级",
+    "summary": "一进二至多进阶的盘后量化决策与前向验证。",
+    "required": [
+      "tdx_daily_history",
+      "limit_up_pool"
+    ],
+    "optional": [
+      "public_research"
+    ],
+    "degrade": "缺完整涨停池或交易日历时阻断；可缺少辅助研报但必须保留缺失项。"
+  },
+  "status": "READY_FOR_VALIDATED_RUN",
+  "created_at": "2026-09-15T12:00:57+08:00",
+  "data_root": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data",
+  "required_missing": [],
+  "optional_missing": [],
+  "assets": {
+    "tdx_daily_history": {
+      "schema": "ZHANGCAI_TDX_DAILY_ARCHIVE_V1",
+      "status": "available",
+      "asset": "tdx_daily_history",
+      "trade_date": "20260914",
+      "archived_at": "2026-09-15T12:00:38+08:00",
+      "source_root": "C:\\new_tdx_mock",
+      "history_days_requested": 0,
+      "history_scope": "all_available_source_history",
+      "current_trade_date_symbols": 9473,
+      "archived_symbols": 9490,
+      "security_master_records": 9473,
+      "security_master_named_records": 9473,
+      "bar_records": 15731736,
+      "file": "market/daily/20260914/tdx-bars.jsonl",
+      "sha256": "6f45ef6c5175ec598728634bb59eb37ddad4448610db331895941c2cc1913aaa",
+      "archive_mode": "full_rebuild_all_history",
+      "incremental_from": "",
+      "incremental_records": 0,
+      "incremental_trade_dates": [],
+      "incremental_base_file": "",
+      "delta_file": "",
+      "delta_records": 0,
+      "source_file_count": 9490,
+      "latest_date_source_files": 9473,
+      "storage_rule": "首次读取本地 .day 全部可用历史（或显式指定窗口）；后续交易日只向 market/daily/aggregate/tdx-bars.jsonl 追加新增记录，并在交易日目录保存 delta，历史目录和原文件保留。",
+      "reason": ""
+    },
+    "limit_up_pool": {
+      "status": "available",
+      "asset": "limit_up_pool",
+      "checked_at": "2026-09-15T12:00:57+08:00",
+      "path": "public/limit-up",
+      "file_count": 2,
+      "reason": ""
+    },
+    "public_research": {
+      "status": "available",
+      "asset": "public_research",
+      "checked_at": "2026-09-15T12:00:57+08:00",
+      "path": "evidence/public/",
+      "target_date": "2026-09-14",
+      "file_count": 2,
+      "candidate_count": 6,
+      "same_date_file_count": 4,
+      "same_day_record_count": 212,
+      "multi_source_records": {
+        "cls": 42,
+        "eastmoney": 100,
+        "sina": 50,
+        "ths": 20
+      },
+      "providers_succeeded": [
+        "cls",
+        "eastmoney",
+        "sina",
+        "ths"
+      ],
+      "news_snapshot_count": 6,
+      "selected_snapshot": "news/20260914/multi-source-news-163158.json",
+      "historical_fallback": false,
+      "reason": ""
+    }
+  },
+  "degrade_policy": "缺完整涨停池或交易日历时阻断；可缺少辅助研报但必须保留缺失项。",
+  "execution_note": "本报告是网页适配层的真实数据预检与落盘运行单；未调用原始策略入口，因此不构成策略已执行或投资结论。"
+}

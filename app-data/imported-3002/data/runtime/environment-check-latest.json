@@ -1,0 +1,531 @@
+{
+  "status": "ok",
+  "checkedAt": "2026-09-12T12:16:33.891Z",
+  "bridge": {
+    "status": "ok",
+    "host": "0.0.0.0",
+    "port": 4318
+  },
+  "harness": {
+    "status": "ready",
+    "launcher": "C:\\Users\\Scott\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+    "credentialsConfigured": true,
+    "base": "DeepSeek Harness"
+  },
+  "tdx": {
+    "status": "open",
+    "processes": [
+      {
+        "Name": "tdxcef",
+        "Id": 18284,
+        "StartTime": "2026-09-12T11:39:38.504Z",
+        "Path": "C:\\new_tdx_mock\\chrome\\tdxcef.exe"
+      },
+      {
+        "Name": "tdxcef",
+        "Id": 42804,
+        "StartTime": "2026-09-12T11:39:38.635Z",
+        "Path": "C:\\new_tdx_mock\\chrome\\tdxcef.exe"
+      },
+      {
+        "Name": "tdxcef",
+        "Id": 44084,
+        "StartTime": "2026-09-12T11:39:38.409Z",
+        "Path": "C:\\new_tdx_mock\\chrome\\tdxcef.exe"
+      },
+      {
+        "Name": "TdxW",
+        "Id": 53784,
+        "StartTime": "2026-09-12T11:39:22.005Z",
+        "Path": "C:\\new_tdx_mock\\TdxW.exe"
+      }
+    ],
+    "root": "C:\\new_tdx_mock",
+    "formulas": {
+      "directory": "C:\\new_tdx_mock\\T0002\\gs_bak",
+      "formulaFiles": [
+        "��ţ��.txt",
+        "��ţ�߳�ѹ��.txt",
+        "�����ʽ�.txt",
+        "�����ʽ�.txt",
+        "��������.txt",
+        "��������ѡ��.txt"
+      ]
+    },
+    "freshness": {
+      "indexDay": {
+        "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh000001.day",
+        "updatedAt": "2026-09-11T22:57:09",
+        "size": 279168
+      },
+      "marketCache": {
+        "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\tdxhy.cfg",
+        "updatedAt": "2026-09-12T10:40:11",
+        "size": 150332
+      },
+      "blockPools": {
+        "path": "C:\\new_tdx_mock\\T0002\\blocknew\\ZTC.blk",
+        "updatedAt": "2026-09-08T17:20:16",
+        "size": 351
+      },
+      "intradayAvailable": true
+    }
+  },
+  "daily": {
+    "root": "C:\\new_tdx_mock",
+    "directories": {
+      "SH": {
+        "fileCount": 4817,
+        "latestDate": "20260911",
+        "latestCount": 4810
+      },
+      "SZ": {
+        "fileCount": 4321,
+        "latestDate": "20260911",
+        "latestCount": 4316
+      },
+      "BJ": {
+        "fileCount": 347,
+        "latestDate": "20260911",
+        "latestCount": 345
+      }
+    },
+    "fileCount": 9485,
+    "latestDate": "20260911",
+    "latestCount": 5570,
+    "fileLatestCount": 9471,
+    "stockListCount": 5570,
+    "stockCompleteCount": 5570,
+    "stockFileCompleteCount": 5563,
+    "stockNonTradingCount": 7,
+    "stockMissingCount": 0,
+    "integrityReportPath": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\runtime\\tdx-daily-integrity-20260912-201101.json",
+    "integrity": {
+      "schema": "ZHANGCAI_TDX_DAILY_INTEGRITY_V1",
+      "targetDate": "20260911",
+      "before": {
+        "targetDate": "20260911",
+        "stockCount": 5570,
+        "completeCount": 5563,
+        "nonTradingCount": 0,
+        "effectiveCompleteCount": 5563,
+        "staleCount": 0,
+        "missingFileCount": 7,
+        "corruptCount": 0,
+        "effectiveMissingCount": 7,
+        "dateDistribution": {
+          "20260911": 5563
+        },
+        "byMarket": {
+          "SH": {
+            "stockCount": 2320,
+            "completeCount": 2318,
+            "nonTradingCount": 0,
+            "effectiveCompleteCount": 2318,
+            "staleCount": 0,
+            "missingFileCount": 2,
+            "corruptCount": 0
+          },
+          "SZ": {
+            "stockCount": 2904,
+            "completeCount": 2902,
+            "nonTradingCount": 0,
+            "effectiveCompleteCount": 2902,
+            "staleCount": 0,
+            "missingFileCount": 2,
+            "corruptCount": 0
+          },
+          "BJ": {
+            "stockCount": 346,
+            "completeCount": 343,
+            "nonTradingCount": 0,
+            "effectiveCompleteCount": 343,
+            "staleCount": 0,
+            "missingFileCount": 3,
+            "corruptCount": 0
+          }
+        }
+      },
+      "after": {
+        "targetDate": "20260911",
+        "stockCount": 5570,
+        "completeCount": 5563,
+        "nonTradingCount": 7,
+        "effectiveCompleteCount": 5570,
+        "staleCount": 0,
+        "missingFileCount": 7,
+        "corruptCount": 0,
+        "effectiveMissingCount": 0,
+        "dateDistribution": {
+          "20260911": 5563
+        },
+        "byMarket": {
+          "SH": {
+            "stockCount": 2320,
+            "completeCount": 2318,
+            "nonTradingCount": 2,
+            "effectiveCompleteCount": 2320,
+            "staleCount": 0,
+            "missingFileCount": 2,
+            "corruptCount": 0
+          },
+          "SZ": {
+            "stockCount": 2904,
+            "completeCount": 2902,
+            "nonTradingCount": 2,
+            "effectiveCompleteCount": 2904,
+            "staleCount": 0,
+            "missingFileCount": 2,
+            "corruptCount": 0
+          },
+          "BJ": {
+            "stockCount": 346,
+            "completeCount": 343,
+            "nonTradingCount": 3,
+            "effectiveCompleteCount": 346,
+            "staleCount": 0,
+            "missingFileCount": 3,
+            "corruptCount": 0
+          }
+        }
+      },
+      "repairs": [
+        {
+          "code": "001246.SZ",
+          "before": "missing_file",
+          "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz001246.day",
+          "status": "unresolved",
+          "sourcesTried": [
+            "Tongdaxin TQ get_market_data"
+          ],
+          "reason": "KeyError: 'before'"
+        },
+        {
+          "code": "301716.SZ",
+          "before": "missing_file",
+          "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz301716.day",
+          "status": "unresolved",
+          "sourcesTried": [
+            "Tongdaxin TQ get_market_data"
+          ],
+          "reason": "KeyError: 'before'"
+        },
+        {
+          "code": "601091.SH",
+          "before": "missing_file",
+          "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh601091.day",
+          "status": "unresolved",
+          "sourcesTried": [
+            "Tongdaxin TQ get_market_data"
+          ],
+          "reason": "KeyError: 'before'"
+        },
+        {
+          "code": "688837.SH",
+          "before": "missing_file",
+          "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh688837.day",
+          "status": "unresolved",
+          "sourcesTried": [
+            "Tongdaxin TQ get_market_data"
+          ],
+          "reason": "KeyError: 'before'"
+        },
+        {
+          "code": "920201.BJ",
+          "before": "missing_file",
+          "path": "C:\\new_tdx_mock\\vipdoc\\bj\\lday\\bj920201.day",
+          "status": "unresolved",
+          "sourcesTried": [
+            "Tongdaxin TQ get_market_data"
+          ],
+          "reason": "KeyError: 'before'"
+        },
+        {
+          "code": "920229.BJ",
+          "before": "missing_file",
+          "path": "C:\\new_tdx_mock\\vipdoc\\bj\\lday\\bj920229.day",
+          "status": "unresolved",
+          "sourcesTried": [
+            "Tongdaxin TQ get_market_data"
+          ],
+          "reason": "KeyError: 'before'"
+        },
+        {
+          "code": "920298.BJ",
+          "before": "missing_file",
+          "path": "C:\\new_tdx_mock\\vipdoc\\bj\\lday\\bj920298.day",
+          "status": "unresolved",
+          "sourcesTried": [
+            "Tongdaxin TQ get_market_data"
+          ],
+          "reason": "KeyError: 'before'"
+        }
+      ],
+      "repairsCount": 7,
+      "nonTrading": [
+        {
+          "code": "001246.SZ",
+          "status": "non_trading",
+          "type": "suspended",
+          "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+          "quoteEvidence": {
+            "provider": "Tongdaxin base.dbf",
+            "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+            "listingDate": "20260910"
+          }
+        },
+        {
+          "code": "301716.SZ",
+          "status": "non_trading",
+          "type": "suspended",
+          "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+          "quoteEvidence": {
+            "provider": "Tongdaxin base.dbf",
+            "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+            "listingDate": "20260908"
+          }
+        },
+        {
+          "code": "601091.SH",
+          "status": "non_trading",
+          "type": "suspended",
+          "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+          "quoteEvidence": {
+            "provider": "Tongdaxin base.dbf",
+            "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+            "listingDate": "20260909"
+          }
+        },
+        {
+          "code": "688837.SH",
+          "status": "non_trading",
+          "type": "suspended",
+          "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+          "quoteEvidence": {
+            "provider": "Tongdaxin base.dbf",
+            "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+            "listingDate": "20260909"
+          }
+        },
+        {
+          "code": "920201.BJ",
+          "status": "non_trading",
+          "type": "suspended",
+          "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+          "quoteEvidence": {
+            "provider": "Tongdaxin base.dbf",
+            "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+            "listingDate": "20260904"
+          }
+        },
+        {
+          "code": "920229.BJ",
+          "status": "non_trading",
+          "type": "suspended",
+          "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+          "quoteEvidence": {
+            "provider": "Tongdaxin base.dbf",
+            "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+            "listingDate": "20260908"
+          }
+        },
+        {
+          "code": "920298.BJ",
+          "status": "non_trading",
+          "type": "suspended",
+          "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+          "quoteEvidence": {
+            "provider": "Tongdaxin base.dbf",
+            "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+            "listingDate": "20260904"
+          }
+        }
+      ],
+      "nonTradingCount": 7,
+      "unresolved": [],
+      "unresolvedCount": 0,
+      "refreshSubmissionCount": 0,
+      "writtenCount": 0,
+      "manualActionRequired": false,
+      "manualAction": "",
+      "complete": true
+    },
+    "requiredMinimum": 3000,
+    "complete": true
+  },
+  "sources": [
+    {
+      "name": "lianban",
+      "status": "available",
+      "date": "2026-09-11",
+      "fetchedAt": "2026-09-11T23:05:28+08:00",
+      "recordCount": 9,
+      "providerSuccess": true,
+      "fresh": true
+    },
+    {
+      "name": "eastmoneyLimitUp",
+      "status": "available",
+      "date": "2026-09-11",
+      "fetchedAt": "2026-09-11T23:05:28+08:00",
+      "recordCount": 40,
+      "providerSuccess": true,
+      "fresh": true
+    },
+    {
+      "name": "eastmoneyLhb",
+      "status": "available",
+      "date": "2026-09-11",
+      "fetchedAt": "2026-09-11T23:05:28+08:00",
+      "recordCount": 68,
+      "providerSuccess": true,
+      "fresh": true
+    },
+    {
+      "name": "akshareLhb",
+      "status": "available",
+      "date": "2026-09-11",
+      "fetchedAt": "2026-09-11T23:05:28+08:00",
+      "recordCount": 68,
+      "providerSuccess": true,
+      "fresh": true
+    },
+    {
+      "name": "akshareLhbSina",
+      "status": "available",
+      "date": "2026-09-11",
+      "fetchedAt": "2026-09-11T23:05:28+08:00",
+      "recordCount": 68,
+      "providerSuccess": true,
+      "fresh": true
+    },
+    {
+      "name": "akshareLhbStockStatistic",
+      "status": "available",
+      "date": "2026-09-11",
+      "fetchedAt": "2026-09-11T23:05:28+08:00",
+      "recordCount": 647,
+      "providerSuccess": true,
+      "fresh": false
+    },
+    {
+      "name": "akshareLimitUpPool",
+      "status": "available",
+      "date": "2026-09-11",
+      "fetchedAt": "2026-09-11T23:05:28+08:00",
+      "recordCount": 40,
+      "providerSuccess": true,
+      "fresh": true
+    },
+    {
+      "name": "akshareLhbStockDetail",
+      "status": "available",
+      "date": "2026-09-11",
+      "fetchedAt": "2026-09-11T23:05:28+08:00",
+      "recordCount": 20,
+      "providerSuccess": true,
+      "fresh": true
+    },
+    {
+      "name": "news",
+      "status": "available",
+      "date": "2026-09-11",
+      "fetchedAt": "2026-09-11T23:05:23+08:00",
+      "recordCount": 100,
+      "providerSuccess": true,
+      "fresh": true
+    }
+  ],
+  "harnessValidation": {
+    "status": "partial",
+    "dataDate": "2026-09-11",
+    "summary": "2026-09-11公开源全部可用：涨停40家、连板7家、龙虎榜68条、同日新闻100条；通达信日线5570/5570完整，缺失0。成交额、指数、领先候选与行业主题聚合未提供，为部分补齐。",
+    "sourceCount": 23
+  },
+  "dailyRefresh": {
+    "schema": "ZHANGCAI_DAILY_REFRESH_V1",
+    "date": "2026-09-11",
+    "startedAt": "2026-09-11T15:05:12.861Z",
+    "status": "completed",
+    "steps": [
+      {
+        "name": "通达信运行状态",
+        "status": "completed",
+        "startedAt": "2026-09-11T15:05:12.863Z",
+        "script": "tdx_runtime_bridge.py",
+        "finishedAt": "2026-09-11T15:05:13.577Z",
+        "code": 0,
+        "partial": false,
+        "output": "{\"generatedAt\": \"2026-09-11T23:05:13+08:00\", \"tdxRoot\": \"C:\\\\new_tdx_mock\", \"processes\": [{\"Name\": \"tdxcef\", \"Id\": 37628, \"StartTime\": \"/Date(1789135468132)/\", \"Path\": \"C:\\\\new_tdx_mock\\\\chrome\\\\tdxcef.exe\"}, {\"Name\": \"tdxcef\", \"Id\": 42352, \"StartTime\": \"/Date(1789135467850)/\", \"Path\": \"C:\\\\new_tdx_mock\\\\chrome\\\\tdxcef.exe\"}, {\"Name\": \"tdxcef\", \"Id\": 44004, \"StartTime\": \"/Date(1789135467971)/\", \"Path\": \"C:\\\\new_tdx_mock\\\\chrome\\\\tdxcef.exe\"}, {\"Name\": \"TdxW\", \"Id\": 6576, \"StartTime\": \"/Date(1789135442629)/\", \"Path\": \"C:\\\\new_tdx_mock\\\\TdxW.exe\"}], \"formulaRegistry\": {\"directory\": \"C:\\\\new_tdx_mock\\\\T0002\\\\gs_bak\", \"formulaFiles\": [\"��ţ��.txt\", \"��ţ�߳�ѹ��.txt\", \"�����ʽ�.txt\", \"�����ʽ�.txt\", \"��������.txt\", \"��������ѡ��.txt\"]}, \"freshness\": {\"indexDay\": {\"path\": \"C:\\\\new_tdx_mock\\\\vipdoc\\\\sh\\\\lday\\\\sh000001.day\", \"updatedAt\": \"2026-09-11T22:57:09\", \"size\": 279168}, \"marketCache\": {\"path\": \"C:\\\\new_tdx_mock\\\\T0002\\\\hq_cache\\\\tdxhy.cfg\", \"updatedAt\": \"2026-09-11T11:15:00\", \"size\": 150304}, \"blockPools\": {\"path\": \"C:\\\\new_tdx_mock\\\\T0002\\\\blocknew\\\\ZTC.blk\", \"updatedAt\": \"2026-09-08T17:20:16\", \"size\": 351}, \"intradayAvailable\": true}, \"tq\": {\"tqcenter\": \"C:\\\\new_tdx_mock\\\\PYPlugins\\\\user\\\\tqcenter.py\", \"strategyConfig\": \"[Strategy]\\nNum=0\\n[Writer]\\npath=\\n\", \"formulas\": [\"��ţ��4.0\", \"��������\", \"�����ʽ���\", \"�����ʽ���\", \"ׯ���ʽ���\"]}}"
+      },
+      {
+        "name": "通达信日线完整性检查与补齐",
+        "status": "completed",
+        "startedAt": "2026-09-11T15:05:13.579Z",
+        "script": "tdx_daily_integrity.py",
+        "finishedAt": "2026-09-11T15:05:23.046Z",
+        "code": 0,
+        "partial": false,
+        "output": "TQ���ݽӿڳ�ʼ���ɹ���ʹ��·��: C:\\work\\260907 �Ʋ�������\\CodeX-st-wsp\\zhangcai-demo\\data\\runtime\\tq-sessions\\tdxdata_integrity_list_35192_1789139114836894900.py\r\nTQ���������ѹر�\r\nTQ���ݽӿڳ�ʼ���ɹ���ʹ��·��: C:\\work\\260907 �Ʋ�������\\CodeX-st-wsp\\zhangcai-demo\\data\\runtime\\tq-sessions\\tdxdata_integrity_repair_35192_1789139117770954100.py\r\nTQ���������ѹر�\r\n{\r\n  \"status\": \"COMPLETE\",\r\n  \"targetDate\": \"20260911\",\r\n  \"before\": {\r\n    \"targetDate\": \"20260911\",\r\n    \"stockCount\": 5570,\r\n    \"completeCount\": 5563,\r\n    \"nonTradingCount\": 0,\r\n    \"effectiveCompleteCount\": 5563,\r\n    \"staleCount\": 0,\r\n    \"missingFileCount\": 7,\r\n    \"corruptCount\": 0,\r\n    \"effectiveMissingCount\": 7,\r\n    \"dateDistribution\": {\r\n      \"20260911\": 5563\r\n    },\r\n    \"byMarket\": {\r\n      \"SH\": {\r\n        \"stockCount\": 2320,\r\n        \"completeCount\": 2318,\r\n        \"nonTradingCount\": 0,\r\n        \"effectiveCompleteCount\": 2318,\r\n        \"staleCount\": 0,\r\n        \"missingFileCount\": 2,\r\n        \"corruptCount\": 0\r\n      },\r\n      \"SZ\": {\r\n        \"stockCount\": 2904,\r\n        \"completeCount\": 2902,\r\n        \"nonTradingCount\": 0,\r\n        \"effectiveCompleteCount\": 2902,\r\n        \"staleCount\": 0,\r\n        \"missingFileCount\": 2,\r\n        \"corruptCount\": 0\r\n      },\r\n      \"BJ\": {\r\n        \"stockCount\": 346,\r\n        \"completeCount\": 343,\r\n        \"nonTradingCount\": 0,\r\n        \"effectiveCompleteCount\": 343,\r\n        \"staleCount\": 0,\r\n        \"missingFileCount\": 3,\r\n        \"corruptCount\": 0\r\n      }\r\n    }\r\n  },\r\n  \"repairs\": [\r\n    {\r\n      \"code\": \"001246.SZ\",\r\n      \"before\": \"missing_file\",\r\n      \"path\": \"C:\\\\new_tdx_mock\\\\vipdoc\\\\sz\\\\lday\\\\sz001246.day\",\r\n      \"status\": \"unresolved\",\r\n      \"sourcesTried\": [\r\n        \"Tongdaxin TQ get_market_data\"\r\n      ],\r\n      \"reason\": \"KeyError: 'before'\"\r\n    },\r\n    {\r\n      \"code\": \"301716.SZ\",\r\n      \"before\": \"missing_file\",\r\n      \"path\": \"C:\\\\new_tdx_mock\\\\vipdoc\\\\sz\\\\lday\\\\sz301716.day\",\r\n      \"status\": \"unresolved\",\r\n      \"sourcesTried\": [\r\n        \"Tongdaxin TQ get_market_data\"\r\n      ],\r\n      \"reason\": \"KeyError: 'before'\"\r\n    },\r\n    {\r\n      \"code\": \"601091.SH\",\r\n      \"before\": \"missing_file\",\r\n      \"path\": \"C:\\\\new_tdx_mock\\\\vipdoc\\\\sh\\\\lday\\\\sh601091.day\",\r\n      \"status\": \"unresolved\",\r\n      \"sourcesTried\": [\r\n        \"Tongdaxin TQ get_market_data\"\r\n      ],\r\n      \"reason\": \"KeyError: 'before'\"\r\n    },\r\n    {\r\n      \"code\": \"688837.SH\",\r\n      \"before\": \"missing_file\",\r\n      \"path\": \"C:\\\\new_tdx_mock\\\\vipdoc\\\\sh\\\\lday\\\\sh688837.day\",\r\n      \"status\": \"unresolved\",\r\n      \"sourcesTried\": [\r\n        \"Tongdaxin TQ get_market_data\"\r\n      ],\r\n      \"reason\": \"KeyError: 'before'\"\r\n    },\r\n    {\r\n      \"code\": \"920201.BJ\",\r\n      \"before\": \"missing_file\",\r\n      \"path\": \"C:\\\\new_tdx_mock\\\\vipdoc\\\\bj\\\\lday\\\\bj920201.day\",\r\n      \"status\": \"unresolved\",\r\n      \"sourcesTried\": [\r\n        \"Tongdaxin TQ get_market_data\"\r\n      ],\r\n      \"reason\": \"KeyError: 'before'\"\r\n    },\r\n    {\r\n      \"code\": \"920229.BJ\",\r\n      \"before\": \"missing_file\",\r\n      \"path\": \"C:\\\\new_tdx_mock\\\\vipdoc\\\\bj\\\\lday\\\\bj920229.day\",\r\n      \"status\": \"unresolved\",\r\n      \"sourcesTried\": [\r\n        \"Tongdaxin TQ get_market_data\"\r\n      ],\r\n      \"reason\": \"KeyError: 'before'\"\r\n    },\r\n    {\r\n      \"code\": \"920298.BJ\",\r\n      \"before\": \"missing_file\",\r\n      \"path\": \"C:\\\\new_tdx_mock\\\\vipdoc\\\\bj\\\\lday\\\\bj920298.day\",\r\n      \"status\": \"unresolved\",\r\n      \"sourcesTried\": [\r\n        \"Tongdaxin TQ get_market_data\"\r\n      ],\r\n      \"reason\": \"KeyError: 'before'\"\r\n    }\r\n  ],\r\n  \"after\": {\r\n    \"targetDate\": \"20260911\",\r\n    \"stockCount\": 5570,\r\n    \"completeCount\": 5563,\r\n    \"nonTradingCount\": 7,\r\n    \"effectiveCompleteCount\": 5570,\r\n    \"staleCount\": 0,\r\n    \"missingFileCount\": 7,\r\n    \"corruptCount\": 0,\r\n    \"effectiveMissingCount\": 0,\r\n    \"dateDistribution\": {\r\n      \"20260911\": 5563\r\n    },\r\n    \"byMarket\": {\r\n      \"SH\": {\r\n        \"stockCount\": 2320,\r\n        \"completeCount\": 2318,\r\n        \"nonTradingCount\": 2,\r\n        \"effectiveCompleteCount\": 2320,\r\n        \"staleCount\": 0,\r\n        \"missingFileCount\": 2,\r\n        \"corruptCount\": 0\r\n      },\r\n      \"SZ\": {\r\n        \"stockCount\": 2904,\r\n        \"completeCount\": 2902,\r\n        \"nonTradingCount\": 2,\r\n        \"effectiveCompleteCount\": 2904,\r\n        \"staleCount\": 0,\r\n        \"missingFileCount\": 2,\r\n        \"corruptCount\": 0\r\n      },\r\n      \"BJ\": {\r\n        \"stockCount\": 346,\r\n        \"completeCount\": 343,\r\n        \"nonTradingCount\": 3,\r\n        \"effectiveCompleteCount\": 346,\r\n        \"staleCount\": 0,\r\n        \"missingFileCount\": 3,\r\n        \"corruptCount\": 0\r\n      }\r\n    }\r\n  },\r\n  \"unresolved\": [],\r\n  \"output\": \"C:\\\\work\\\\260907 �Ʋ�������\\\\CodeX-st-wsp\\\\zhangcai-demo\\\\data\\\\runtime\\\\tdx-daily-integrity-20260911-230522.json\",\r\n  \"markdown\": \"C:\\\\work\\\\260907 �Ʋ�������\\\\CodeX-st-wsp\\\\zhangcai-demo\\\\data\\\\runtime\\\\tdx-daily-integrity-20260911-230522.md\"\r\n}"
+      },
+      {
+        "name": "公开行情补齐",
+        "status": "completed",
+        "startedAt": "2026-09-11T15:05:23.049Z",
+        "script": "public_market_sync.py",
+        "finishedAt": "2026-09-11T15:05:28.666Z",
+        "code": 0,
+        "partial": false,
+        "output": "{\"output\": \"C:\\\\work\\\\260907 �Ʋ�������\\\\CodeX-st-wsp\\\\zhangcai-demo\\\\data\\\\public\\\\20260911\\\\market-230528.json\", \"statuses\": {\"lianban\": \"available\", \"eastmoneyLimitUp\": \"available\", \"eastmoneyLhb\": \"available\", \"akshareLhb\": \"available\", \"akshareLhbSina\": \"available\", \"akshareLhbStockStatistic\": \"available\", \"akshareLimitUpPool\": \"available\", \"akshareLhbStockDetail\": \"available\"}}"
+      },
+      {
+        "name": "新闻快讯补齐",
+        "status": "completed",
+        "startedAt": "2026-09-11T15:05:23.049Z",
+        "script": "news_sync.py",
+        "finishedAt": "2026-09-11T15:05:23.525Z",
+        "code": 0,
+        "partial": false,
+        "output": "{\"output\": \"C:\\\\work\\\\260907 �Ʋ�������\\\\CodeX-st-wsp\\\\zhangcai-demo\\\\data\\\\news\\\\20260911\\\\eastmoney-fast-news-230523.json\", \"status\": \"available\", \"sameDayRecordCount\": 100}"
+      }
+    ],
+    "harness": {
+      "status": "completed",
+      "finishedAt": "2026-09-11T15:06:01.383Z",
+      "output": "{\n  \"status\": \"partial\",\n  \"summary\": \"2026-09-11公开源全部可用：涨停40家、连板7家、龙虎榜68条、同日新闻100条；通达信日线5570/5570完整，缺失0。成交额、指数、领先候选与行业主题聚合未提供，为部分补齐。\",\n  \"data_date\": \"2026-09-11\",\n  \"data_scope\": \"公开涨停池、连板梯队、龙虎榜、同日快讯，以及本地通达信日线完整性校验；不含个股涨跌幅/成交额榜单、指数、板块聚合与盘口数据（未提供）\",\n  \"cautions\": [\n    \"样本成交额=0，指数未提供，无法核验量能与大盘环境。\",\n    \"涨幅领先候选、成交额领先候选、跌幅/负反馈候选、跌停阈值候选均未提供。\",\n    \"前日涨停表现（日线推导）、TDX行业板块聚合、TDX主题板块聚合、盘中封板/炸板代理（OHLC）、主线名称聚类候选、TDX涨停文件均未提供。\",\n    \"akshare系列来源标记available但url为空、bytes=0、sha256为空，无独立原始快照与哈希，不能作为独立第二来源校验。\",\n    \"a_share利空：akshareLhbStockStatistic记录647条、akshareLhbStockDetail记录20条，无日期与哈希，未参与同日校验。\",\n    \"snapshots.tdxDailyIntegrity未给出effectiveCompleteCount字段，仅有complete=true与stockMissingCount=0，有效完整率无法按该字段复核。\",\n    \"repairAttempts中7项(001246.SZ、301716.SZ、601091.SH、688837.SH、920201.BJ、920229.BJ、920298.BJ)均属nonTrading停牌/新上市，按规则计入完整，不重新计为缺失；其reason为KeyError:'before'，仅为尝试记录。\",\n    \"连板网记录数9与涨停40/连板7口径不同，仅作公开字段留档，未用于口径合并。\"\n  ],\n  \"findings\": [\n    {\n      \"title\": \"交易日与来源核验\",\n      \"text\": \"连板网、东财涨停池、东财龙虎榜的日期均为2026-09-11，与目标交易日一致，三源状态均为available。\"\n    },\n    {\n      \"title\": \"涨停与连板\",\n      \"text\": \"涨停40家、连板7家；东财涨停池40条与akshare涨停池40条一致，无空响应或跨日数据。\"\n    },\n    {\n      \"title\": \"龙虎榜\",\n      \"text\": \"东财龙虎榜68条，akshare两镜像同为68条，providerMessage为ok，含代码、名称、交易日、净买额最低有效字段。\"\n    },\n    {\n      \"title\": \"日线完整性\",\n      \"text\": \"通达信日线5570/5570完整，缺失0、未解决0、complete=true；7只停牌或无交易证券按规则计入完整。\"\n    },\n    {\n      \"title\": \"未提供字段\",\n      \"text\": \"成交额、指数、涨跌幅与成交额领先候选、跌停阈值、前日涨停表现、行业与主题聚合、封板代理均未提供，结论仅限已核验数据。\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"title\": \"公开数据源核验\",\n      \"columns\": [\n        \"来源\",\n        \"状态\",\n        \"记录数\",\n        \"字节\",\n        \"校验\"\n      ],\n      \"rows\": [\n        [\n          \"连板网开放数据\",\n          \"available\",\n          \"9\",\n          \"818\",\n          \"sha256:f7de1e08…a104\"\n        ],\n        [\n          \"东方财富涨停池\",\n          \"available\",\n          \"40\",\n          \"10663\",\n          \"sha256:cf86d274…c221d\"\n        ],\n        [\n          \"东方财富龙虎榜\",\n          \"available\",\n          \"68\",\n          \"16553\",\n          \"sha256:6cefe5d8…653f7\"\n        ],\n        [\n          \"akshare龙虎榜镜像\",\n          \"available\",\n          \"68\",\n          \"0\",\n          \"无URL/哈希\"\n        ],\n        [\n          \"akshare龙虎榜(新浪)镜像\",\n          \"available\",\n          \"68\",\n          \"0\",\n          \"无URL/哈希\"\n        ],\n        [\n          \"akshare涨停池镜像\",\n          \"available\",\n          \"40\",\n          \"0\",\n          \"无URL/哈希\"\n        ],\n        [\n          \"akshare龙虎榜统计\",\n          \"available\",\n          \"647\",\n          \"0\",\n          \"无URL/哈希\"\n        ]\n      ]\n    },\n    {\n      \"title\": \"市场宽度核心指标(2026-09-11)\",\n      \"columns\": [\n        \"指标\",\n        \"数值\"\n      ],\n      \"rows\": [\n        [\n          \"同日股票数\",\n          \"5513\"\n        ],\n        [\n          \"上涨\",\n          \"643\"\n        ],\n        [\n          \"下跌\",\n          \"4870\"\n        ],\n        [\n          \"平盘\",\n          \"0\"\n        ],\n        [\n          \"涨停\",\n          \"40\"\n        ],\n        [\n          \"跌停\",\n          \"21\"\n        ],\n        [\n          \"连板\",\n          \"7\"\n        ],\n        [\n          \"同日新闻条数\",\n          \"100\"\n        ]\n      ]\n    },\n    {\n      \"title\": \"通达信日线完整性\",\n      \"columns\": [\n        \"项目\",\n        \"数值\",\n        \"说明\"\n      ],\n      \"rows\": [\n        [\n          \"目标交易日\",\n          \"20260911\",\n          \"与公开源一致\"\n        ],\n        [\n          \"证券清单\",\n          \"5570\",\n          \"\"\n        ],\n        [\n          \"完整\",\n          \"5570\",\n          \"\"\n        ],\n        [\n          \"缺失\",\n          \"0\",\n          \"complete=true\"\n        ],\n        [\n          \"未解决\",\n          \"0\",\n          \"unresolvedCount=0\"\n        ],\n        [\n          \"停牌/目标日无交易\",\n          \"7\",\n          \"计入完整，非缺失\"\n        ],\n        [\n          \"补齐写入\",\n          \"0\",\n          \"writtenCount=0\"\n        ],\n        [\n          \"补齐尝试\",\n          \"7\",\n          \"KeyError:'before'，均为非交易日项\"\n        ]\n      ]\n    }\n  ]\n}",
+      "elapsedMs": 30978
+    },
+    "finishedAt": "2026-09-11T15:06:01.385Z"
+  },
+  "supplementalRefresh": {
+    "schema": "ZHANGCAI_SUPPLEMENTAL_REFRESH_V1",
+    "date": "2026-09-10",
+    "startedAt": "2026-09-10T14:43:47.865Z",
+    "status": "completed",
+    "steps": [
+      {
+        "name": "新闻快讯补齐",
+        "status": "completed",
+        "finishedAt": "2026-09-10T14:43:48.362Z",
+        "script": "news_sync.py",
+        "code": 0,
+        "output": "{\"output\": \"C:\\\\work\\\\260907 �Ʋ�������\\\\CodeX-st-wsp\\\\zhangcai-demo\\\\data\\\\news\\\\20260910\\\\eastmoney-fast-news-224348.json\", \"status\": \"available\", \"sameDayRecordCount\": 100}"
+      },
+      {
+        "name": "公开行情补齐",
+        "status": "completed",
+        "finishedAt": "2026-09-10T14:43:54.885Z",
+        "script": "public_market_sync.py",
+        "code": 0,
+        "output": "{\"output\": \"C:\\\\work\\\\260907 �Ʋ�������\\\\CodeX-st-wsp\\\\zhangcai-demo\\\\data\\\\public\\\\20260910\\\\market-224354.json\", \"statuses\": {\"lianban\": \"available\", \"eastmoneyLimitUp\": \"available\", \"eastmoneyLhb\": \"available\", \"akshareLhb\": \"available\", \"akshareLhbSina\": \"available\", \"akshareLhbStockStatistic\": \"available\", \"akshareLimitUpPool\": \"available\", \"akshareLhbStockDetail\": \"available\"}}"
+      }
+    ],
+    "harness": {
+      "status": "completed",
+      "finishedAt": "2026-09-10T14:46:48.086Z",
+      "output": "{\n  \"status\": \"available\",\n  \"summary\": \"2026-09-10 三个必备公开源全部 available 且交易日一致，19 项交叉校验 0 失败：涨停 35 家、连板 9 只、最高 4 板；龙虎榜 64 条覆盖 53 只；哈希可复现，未写入 lib/market.json。\",\n  \"data_date\": \"2026-09-10\",\n  \"data_scope\": \"仅覆盖 market-data-replenishment 技能第 1-3 步列举的三个必备公开源及其本机 AkShare 增强源，不生成荐股或推测数据。连板网 https://lianban.net/opendata/2026-09-10.json（867 字节，sha256 aa3630a8c17b…，KPI 1 组+主题 10 条）；东方财富涨停池 getTopicZTPool date=20260910（9291 字节，sha256 dab2cd57bfc6…，35 条，qdate=20260910，tc=35）；东方财富龙虎榜 RPT_DAILYBILLBOARD_DETAILSNEW TRADE_DATE=2026-09-10（15573 字节，sha256 caef5ad078eb…，64 条覆盖 53 只）。本会话独立重取快照 data/public/20260910/market-224452.json（lianban 与 eastmoneyLhb 逐字节一致，eastmoneyLimitUp 仅服务端 svr 字段不同、35 条业务字段 0 差异），原始字节按源落盘 data/public/20260910/{lianban,eastmoneyLimitUp,eastmoneyLhb}-224452.raw.json；校验结果写入 data/runtime/harness-data-fill-result.json（status=available，failed_checks=[]）；未写入或修改 lib/market.json 与通达信目录。\",\n  \"cautions\": [\n    \"lib/market.json 的唯一交易日为 20260908，与目标交易日 2026-09-10 不一致；按技能第 1 步与第 6 步，本次未写入或修改该文件（wrote_lib_market_json=false）。\",\n    \"akshareLhbStockStatistic 为滚动“近一月”统计（652 条，最近上榜日跨 24 个交易日，2026-08-10 至 2026-09-10），已标记 rejected，不得用作 2026-09-10 当日龙虎榜结论。\",\n    \"akshareLhbSina 64 条的字段为 序号/股票代码/股票名称/收盘价/对应值/成交量/成交额/指标，无净买额列、无日期列，不能作为资金方向或净买额证据。\",\n    \"akshareLhbStockDetail 记录内无独立日期列，交易日由查询参数 date=20260910 绑定，且仅覆盖净买额靠前的 10 只标的×买入/卖出两向，非全量席位数据。\",\n    \"AkShare 系来源不落原始响应字节、无 sha256 与 bytes 字段，审计强度低于三个 HTTP 原始源；其条数由解析后记录数给出。\",\n    \"东方财富涨停池 sha256 非字节稳定：任务快照 dab2cd57bfc6…、本会话重取 b6a5d092ebfb…，但两次同为 9291 字节、pool 35 条业务字段逐一比对 0 处差异，唯一差异为服务端请求标识字段 svr；跨次判等应比对业务字段而非哈希。\",\n    \"东方财富龙虎榜 64 条覆盖 53 只：10 只命中多种“上榜原因”而多行（600354 为 3 行，000565/000978/000993/002855/300290/600108/600540/688496/920268 各 2 行），非重复数据；不可把 64 当作个股家数，也不能对 64 条净买额直接求和（按代码聚合后两源合计一致，均为 598100407.32 元）。\",\n    \"连板网开放数据仅含 KPI 与主题聚合（note 说明逐只名单在源页面），不含逐只涨停/连板名单，无法由该源校验代码集合；代码集合校验由东方财富涨停池与 AkShare stock_zt_pool_em 完成。\",\n    \"封板率口径差异：连板网 seal_rate_pct=61.4 等于 35/(35+22)×100；若按 (涨停35-炸板22)/35 计算得 37.1%。两者定义不同，属口径差异而非数据矛盾，引用时须注明口径。\",\n    \"任务上下文中明确标注“未提供/为 0”的字段（样本成交额 0、指数未提供、涨幅/成交额/跌幅领先候选、跌停阈值候选、前日涨停表现、TDX 行业与主题板块聚合、盘中封板/炸板代理 OHLC、TDX 涨停文件）本次未随公开源取得，未做任何推算或补造。\",\n    \"本机无可用 Python（仅 WindowsApps 存根），scripts/public_market_sync.py 未执行；改用等效只读采集器 data/runtime/public_market_sync_node.mjs，保存字段（source_name/source_url/trade_date/fetched_at/sha256/status/records）与技能要求一致。\",\n    \"本地通达信 ZTC.blk 非 2026-09-10 涨停池（更新于 2026-09-08），仅作旁证，未用于任何涨停家数结论；本次未修改通达信目录、公式或策略配置。\"\n  ],\n  \"findings\": [\n    {\n      \"title\": \"三个必备公开源同日可用、校验零失败\",\n      \"text\": \"连板网 kpi.date、东财涨停池 qdate=20260910、东财龙虎榜 TRADE_DATE 均为 2026-09-10，三源 available，19 项交叉校验 0 失败。\"\n    },\n    {\n      \"title\": \"涨停与连板结构（收盘）\",\n      \"text\": \"涨停 35 只=首板26+2板6+3板2+4板1；连板9只与连板网 lianban=9 一致，最高4板为000978桂林旅游；炸板22只一致；东财与AkShare涨停代码逐码相同。\"\n    },\n    {\n      \"title\": \"市场情绪与宽度\",\n      \"text\": \"连板网 KPI 标 emotion_phase=冰点期：涨停35、跌停11、连板9、最高4板、炸板22、封板率61.4%；上涨955、下跌4512，与任务上下文宽度逐项一致。\"\n    },\n    {\n      \"title\": \"龙虎榜资金结构\",\n      \"text\": \"64条覆盖53只；净买额≥1亿5只：002636金安国纪5.49亿、301689电科思仪3.05亿、600744华银电力2.22亿、002174游族网络1.56亿、603601再升科技1.36亿。\"\n    },\n    {\n      \"title\": \"哈希可复现性与落盘边界\",\n      \"text\": \"连板网与东财龙虎榜本次独立重取逐字节可复现；东财涨停池哈希仅随服务端 svr 字段变化、35条业务字段0差异；原始字节已按源落盘，未写入 lib/market.json。\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"title\": \"公开源状态与交易日校验（2026-09-10）\",\n      \"columns\": [\n        \"来源\",\n        \"状态\",\n        \"交易日证据\",\n        \"记录数\",\n        \"哈希/字节\"\n      ],\n      \"rows\": [\n        [\n          \"lianban（连板网开放数据）\",\n          \"available\",\n          \"kpi.date=2026-09-10\",\n          \"KPI 1组+主题10条\",\n          \"aa3630a8c17b…/867字节\"\n        ],\n        [\n          \"eastmoneyLimitUp（东财涨停池）\",\n          \"available\",\n          \"qdate=20260910, tc=35\",\n          \"35\",\n          \"dab2cd57bfc6…/9291字节\"\n        ],\n        [\n          \"eastmoneyLhb（东财龙虎榜）\",\n          \"available\",\n          \"TRADE_DATE 全部=2026-09-10\",\n          \"64（覆盖53只）\",\n          \"caef5ad078eb…/15573字节\"\n        ],\n        [\n          \"akshareLimitUpPool（stock_zt_pool_em）\",\n          \"available\",\n          \"接口 date=20260910\",\n          \"35\",\n          \"无sha256（不落原始字节）\"\n        ],\n        [\n          \"akshareLhb（stock_lhb_detail_em）\",\n          \"available\",\n          \"上榜日=2026-09-10\",\n          \"64\",\n          \"无sha256\"\n        ],\n        [\n          \"akshareLhbSina（stock_lhb_detail_daily_sina）\",\n          \"available\",\n          \"无日期列，接口按日查询\",\n          \"64\",\n          \"无sha256\"\n        ],\n        [\n          \"akshareLhbStockDetail（席位明细）\",\n          \"available\",\n          \"接口 date=20260910（记录内无日期列）\",\n          \"20块（10只×2向）\",\n          \"无sha256\"\n        ],\n        [\n          \"akshareLhbStockStatistic（近一月统计）\",\n          \"rejected\",\n          \"最近上榜日跨24个交易日\",\n          \"652\",\n          \"无sha256\"\n        ],\n        [\n          \"lib/market.json（本地旁证）\",\n          \"rejected\",\n          \"date=20260908 ≠ 20260910\",\n          \"—\",\n          \"未写入、未修改\"\n        ]\n      ]\n    },\n    {\n      \"title\": \"涨停与连板结构关键指标（2026-09-10）\",\n      \"columns\": [\n        \"指标\",\n        \"数值\",\n        \"来源\"\n      ],\n      \"rows\": [\n        [\n          \"涨停家数\",\n          \"35\",\n          \"连板网KPI / 东财涨停池tc=35 / AkShare涨停池\"\n        ],\n        [\n          \"首板 / 2板 / 3板 / 4板\",\n          \"26 / 6 / 2 / 1\",\n          \"东财涨停池 lbc 分布\"\n        ],\n        [\n          \"连板家数（≥2板）\",\n          \"9\",\n          \"东财涨停池 / 连板网 lianban=9\"\n        ],\n        [\n          \"最高连板\",\n          \"4板（000978 桂林旅游）\",\n          \"东财涨停池 / 连板网 max_board=4\"\n        ],\n        [\n          \"炸板家数（zbc>0）\",\n          \"22\",\n          \"东财涨停池 / 连板网 zhaban=22\"\n        ],\n        [\n          \"封板率\",\n          \"61.4%（连板网口径 35/(35+22)）\",\n          \"连板网 seal_rate_pct\"\n        ],\n        [\n          \"跌停家数\",\n          \"11\",\n          \"连板网KPI / 任务上下文 limitDown=11\"\n        ],\n        [\n          \"上涨 / 下跌家数\",\n          \"955 / 4512\",\n          \"连板网KPI / 任务上下文\"\n        ],\n        [\n          \"情绪相位\",\n          \"冰点期\",\n          \"连板网 KPI emotion_phase\"\n        ]\n      ]\n    },\n    {\n      \"title\": \"龙虎榜净买额≥1亿元名单（2026-09-10）\",\n      \"columns\": [\n        \"代码\",\n        \"名称\",\n        \"净买额（亿元）\"\n      ],\n      \"rows\": [\n        [\n          \"002636\",\n          \"金安国纪\",\n          \"5.49\"\n        ],\n        [\n          \"301689\",\n          \"电科思仪\",\n          \"3.05\"\n        ],\n        [\n          \"600744\",\n          \"华银电力\",\n          \"2.22\"\n        ],\n        [\n          \"002174\",\n          \"游族网络\",\n          \"1.56\"\n        ],\n        [\n          \"603601\",\n          \"再升科技\",\n          \"1.36\"\n        ]\n      ]\n    }\n  ]\n}",
+      "elapsedMs": 173153
+    },
+    "finishedAt": "2026-09-10T14:46:48.086Z"
+  }
+}

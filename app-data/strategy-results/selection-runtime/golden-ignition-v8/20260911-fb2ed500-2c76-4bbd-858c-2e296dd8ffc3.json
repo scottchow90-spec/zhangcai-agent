@@ -1,0 +1,90 @@
+{
+  "status": "ok",
+  "strategy_id": "golden-ignition-v8",
+  "trade_date": "20260911",
+  "score_status": "DEGRADED",
+  "score_source": {
+    "kind": "embedded_original_engine",
+    "root": "C:\\work\\260907 �Ʋ�������\\CodeX-st-wsp\\zhangcai-web-3003\\harness-skills\\embedded",
+    "tdx_daily": {
+      "status": "available",
+      "kind": "tdx-native-day",
+      "root": "C:\\new_tdx_mock",
+      "paths": [
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh000001.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz300563.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz399001.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz399006.day"
+      ],
+      "records": 1280
+    },
+    "candidate_scope": 1
+  },
+  "candidate_count": 1,
+  "missing": [],
+  "results": [
+    {
+      "date": "2026-09-11",
+      "code": "300563",
+      "name": "����ɷ�",
+      "board": "��ҵ��",
+      "open": 22.99,
+      "high": 27.92,
+      "low": 22.81,
+      "close": 27.92,
+      "volume": 22877764,
+      "amount": 611894720,
+      "is_st": false,
+      "is_delist": false,
+      "model_a_score": 94,
+      "model_a_pass": true,
+      "model_b_score": 80,
+      "model_b_pass": false,
+      "model_c_score": 88,
+      "model_c_pass": true,
+      "golden_stage": "���ս��",
+      "final_pass": true,
+      "VR": 3.2982751622007482,
+      "NS": 0.9991405242801898,
+      "CPOS": 1,
+      "BODYR": 0.964774951076321,
+      "PREEXTF": -0.16416369643266315,
+      "SLOPEF": -0.03327153765137092,
+      "FGAP": 0.27225344436735743,
+      "EXTN": 0.7150495574035709,
+      "golden_fail_reasons": "",
+      "score": 94,
+      "final_score": 94,
+      "model_scores": {
+        "Aƽ̨": 94,
+        "B��תǿ": 80,
+        "C�ƽ���": 88
+      },
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "ԭʼ�ƽ��� V8 run_v8.py �� ����ͨ��������",
+      "missing": [
+        "tdx_tq_formula��V8��ֵ���ֲ������ֳ�TQ���ֳ���ʽ֤��δ���룩"
+      ]
+    }
+  ],
+  "audit": {
+    "no_future_data": true,
+    "data_date": "20260911",
+    "tdx_daily": {
+      "status": "available",
+      "kind": "tdx-native-day",
+      "root": "C:\\new_tdx_mock",
+      "paths": [
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh000001.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz300563.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz399001.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz399006.day"
+      ],
+      "records": 1280
+    },
+    "full_market_scan": false,
+    "note": "��ֵ�ֶ�����ԭʼ�������ֺ�����ȱʧ��������ֻӰ��������Ȩ/��ѡ�ȼ��������Ƿ���ɽ���������Է֡�"
+  },
+  "artifact_path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\strategy-results\\selection-runtime\\golden-ignition-v8\\20260911-fb2ed500-2c76-4bbd-858c-2e296dd8ffc3.json",
+  "persisted_at": "2026-09-13T05:51:40.594Z"
+}

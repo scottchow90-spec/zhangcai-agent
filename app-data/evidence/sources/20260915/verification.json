@@ -1,0 +1,136 @@
+{
+  "schema": "ZHANGCAI_UNIFIED_DATA_ARCHIVE_VERIFICATION_V1",
+  "status": "BLOCKED",
+  "generated_at": "2026-09-15T17:23:18+08:00",
+  "trade_date": "20260915",
+  "manifest": "evidence/sources/20260915/manifest.json",
+  "checks": [
+    {
+      "path": "market/daily/aggregate/tdx-bars.jsonl",
+      "status": "pass",
+      "exists": true,
+      "sha256": "pass"
+    },
+    {
+      "path": "market/daily/20260915/manifest.json",
+      "status": "pass",
+      "exists": true,
+      "sha256": "pass"
+    },
+    {
+      "path": "market/daily/index/daily-data-index.json",
+      "status": "pass",
+      "exists": true,
+      "sha256": "pass"
+    },
+    {
+      "path": "market/daily/20260915/daily-data-index.json",
+      "status": "pass",
+      "exists": true,
+      "sha256": "pass"
+    },
+    {
+      "path": "market/daily/index/tdx-symbol-index.json",
+      "status": "pass",
+      "exists": true,
+      "sha256": "pass"
+    },
+    {
+      "path": "runtime/daily-jsonl-integrity-20260915.json",
+      "status": "fail",
+      "exists": false,
+      "sha256": "not_checked"
+    },
+    {
+      "path": "market/security-master/20260915.jsonl",
+      "status": "pass",
+      "exists": true,
+      "sha256": "pass"
+    },
+    {
+      "path": "public/latest.json",
+      "status": "pass",
+      "exists": true,
+      "sha256": "pass"
+    },
+    {
+      "path": "public/limit-up/2026-09-15.json",
+      "status": "fail",
+      "exists": true,
+      "sha256": "fail"
+    },
+    {
+      "path": "public/lhb/2026-09-15.json",
+      "status": "fail",
+      "exists": true,
+      "sha256": "fail"
+    },
+    {
+      "path": "news/latest.json",
+      "status": "pass",
+      "exists": true,
+      "sha256": "pass"
+    },
+    {
+      "path": "evidence/public/news-2026-09-15.json",
+      "status": "fail",
+      "exists": true,
+      "sha256": "fail"
+    },
+    {
+      "path": "evidence/supplemental/20260915/market.json",
+      "status": "pass",
+      "exists": true,
+      "sha256": "pass"
+    },
+    {
+      "path": "evidence/formulas/package/manifest.json",
+      "status": "fail",
+      "exists": true,
+      "sha256": "fail"
+    },
+    {
+      "path": "harness/context/local-data-page.json",
+      "status": "fail",
+      "exists": true,
+      "sha256": "fail"
+    },
+    {
+      "path": "harness/context/package-source-inventory.json",
+      "status": "pass",
+      "exists": true,
+      "sha256": "pass"
+    },
+    {
+      "path": "harness/context/package-source-gap-report.json",
+      "status": "fail",
+      "exists": true,
+      "sha256": "fail"
+    },
+    {
+      "path": "harness/context/package-data-routing.json",
+      "status": "fail",
+      "exists": true,
+      "sha256": "fail"
+    }
+  ],
+  "failed_count": 8,
+  "declared_sources_not_currently_snapshotted": [
+    "public-daily-fallback",
+    "akshare",
+    "tencent",
+    "sina",
+    "baidu",
+    "ths",
+    "iwencai",
+    "baostock",
+    "cninfo",
+    "exchange-official",
+    "macro",
+    "public-web",
+    "sina-financial",
+    "tencent-share-capital",
+    "eastmoney-margin"
+  ],
+  "note": "本地文件与哈希校验通过不代表所有压缩包端点已现场取数；未集中快照来源已在 manifest.sources 中显式列出。"
+}

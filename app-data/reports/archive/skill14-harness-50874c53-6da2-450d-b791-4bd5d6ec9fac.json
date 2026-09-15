@@ -1,0 +1,213 @@
+{
+  "id": "skill14-harness-50874c53-6da2-450d-b791-4bd5d6ec9fac",
+  "createdAt": "2026-09-14T08:28:59.011Z",
+  "updatedAt": "2026-09-14T08:28:59.011Z",
+  "date": "20260911",
+  "title": "A股市场环境决策 V5 · Harness 报告 · 2026-09-11",
+  "reportType": "14技能 Harness",
+  "generatedBy": "DeepSeek Harness · market-environment-v5",
+  "summary": "20260911六大指数全跌（上证3888.11 -1.18%），涨637、跌4869；涨幅前列神宇股份+19.98%；涨停候选30只均为首板；龙虎榜净买+21.1亿，有色负反馈；TDX聚合涨跌幅与当日实价不符，仅作结构参考。",
+  "dataScope": "20260911本地TDX日线归档（9485只/15722263条）+ 20260911融资融券与龙虎榜补充快照（4445/58条）+ 网页传入涨幅、成交额、跌幅、涨停候选四类榜单 + TDX行业主题映射结构 + 3002只读新闻单一来源降级证据",
+  "content": {
+    "kind": "harness-skill",
+    "skillId": "market-environment-v5",
+    "skillName": "A股市场环境决策 V5",
+    "preflight": {
+      "schema": "ZHANGCAI_SKILL14_PREFLIGHT_V1",
+      "report_id": "20260914-162546-market-environment-v5-ee9356ed",
+      "skill": {
+        "id": "market-environment-v5",
+        "name": "A股市场环境决策 V5",
+        "archive": "A股市场环境决策系统_WorkBuddy技能包_5.0防回归版.zip",
+        "mode": "windows_formula_worker",
+        "category": "市场总闸门",
+        "summary": "八大指数、全市场公式广度、风险闸门与次交易日权限分析。",
+        "required": [
+          "tdx_daily_history",
+          "tdx_tq_formula"
+        ],
+        "optional": [
+          "public_research"
+        ],
+        "degrade": "可输出研究性风险报告；公式无法现场复核或核心风险未知时禁止正式新增权限。"
+      },
+      "status": "READY_FOR_VALIDATED_RUN",
+      "created_at": "2026-09-14T16:25:46+08:00",
+      "data_root": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data",
+      "required_missing": [],
+      "optional_missing": [],
+      "assets": {
+        "tdx_daily_history": {
+          "schema": "ZHANGCAI_TDX_DAILY_ARCHIVE_V1",
+          "status": "available",
+          "asset": "tdx_daily_history",
+          "trade_date": "20260911",
+          "archived_at": "2026-09-13T11:56:00+08:00",
+          "source_root": "C:\\new_tdx_mock",
+          "history_days_requested": 0,
+          "history_scope": "all_available_source_history",
+          "current_trade_date_symbols": 9471,
+          "archived_symbols": 9485,
+          "security_master_records": 9471,
+          "security_master_named_records": 9471,
+          "bar_records": 15722263,
+          "file": "market/daily/20260911/tdx-bars.jsonl",
+          "sha256": "766e39a5ade66ec05eada4c9afc90a2d9d03b0867fef5975c47396ed10628cc8",
+          "archive_mode": "full_rebuild_all_history",
+          "incremental_from": "",
+          "incremental_records": 0,
+          "incremental_trade_dates": [],
+          "incremental_base_file": "",
+          "delta_file": "",
+          "delta_records": 0,
+          "source_file_count": 9485,
+          "latest_date_source_files": 9471,
+          "storage_rule": "首次读取本地 .day 全部可用历史（或显式指定窗口）；后续交易日只向 market/daily/aggregate/tdx-bars.jsonl 追加新增记录，并在交易日目录保存 delta，历史目录和原文件保留。",
+          "reason": ""
+        },
+        "tdx_tq_formula": {
+          "status": "available",
+          "asset": "tdx_tq_formula",
+          "checked_at": "2026-09-14T16:25:45+08:00",
+          "source_root": "C:\\new_tdx_mock",
+          "registry": "C:\\new_tdx_mock\\T0002\\PriLoc.dat",
+          "formula_files": [
+            "大牛线撑压版.tn6",
+            "庄家资金监控.tn6",
+            "机构资金监控.tn6",
+            "游资资金监控.tn6",
+            "飞龙在天.tn6",
+            "黄金点火选股.tn6"
+          ],
+          "receipt_root": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\evidence\\formulas",
+          "receipt_count": 41,
+          "valid_receipt_count": 40,
+          "latest_receipt": "evidence/formulas/20260911/tdx-tq-300502.SZ-1789363886241.json",
+          "latest_receipt_executed_at": "2026-09-14T05:31:19.501Z",
+          "source_archive": {
+            "schema": "ZHANGCAI_TDX_TQ_FORMULA_SOURCE_ARCHIVE_V1",
+            "archived_at": "2026-09-14T16:25:45+08:00",
+            "source_root": "C:\\new_tdx_mock",
+            "path": "evidence/formulas/package",
+            "required_files": [
+              "T0002/PriLoc.dat",
+              "T0002/PriGS.dat",
+              "T0002/PriCS.dat",
+              "T0002/PriPack.dat",
+              "T0002/gs_bak/大牛线撑压版.tn6",
+              "T0002/gs_bak/飞龙在天.tn6",
+              "T0002/gs_bak/游资资金监控.tn6",
+              "T0002/gs_bak/机构资金监控.tn6",
+              "T0002/gs_bak/庄家资金监控.tn6",
+              "T0002/gs_bak/黄金点火选股.tn6",
+              "PYPlugins/user/tdxdata_test.py"
+            ],
+            "copied_files": [
+              {
+                "path": "evidence/formulas/package/T0002/PriLoc.dat",
+                "source": "C:\\new_tdx_mock\\T0002\\PriLoc.dat",
+                "bytes": 360,
+                "sha256": "1f0290add670d3de082bb6402276250a648e50f2580a067c23e8bcc7be0b1d8e"
+              },
+              {
+                "path": "evidence/formulas/package/T0002/PriGS.dat",
+                "source": "C:\\new_tdx_mock\\T0002\\PriGS.dat",
+                "bytes": 53121,
+                "sha256": "66b0770b831d9eb254f5614abc12bcf74d772279297027cd3d0a173a483ac93b"
+              },
+              {
+                "path": "evidence/formulas/package/T0002/PriCS.dat",
+                "source": "C:\\new_tdx_mock\\T0002\\PriCS.dat",
+                "bytes": 806828,
+                "sha256": "4a392cf88248344463ace0167a2046bf5eda1e5fbbb23af7cd305f037d5d53f0"
+              },
+              {
+                "path": "evidence/formulas/package/T0002/PriPack.dat",
+                "source": "C:\\new_tdx_mock\\T0002\\PriPack.dat",
+                "bytes": 1424,
+                "sha256": "24ea8180997f3bfe4e75185f777053a1d2dbdb1ad0e7a70abe5420289063f168"
+              },
+              {
+                "path": "evidence/formulas/package/T0002/gs_bak/大牛线撑压版.tn6",
+                "source": "C:\\new_tdx_mock\\T0002\\gs_bak\\大牛线撑压版.tn6",
+                "bytes": 20912,
+                "sha256": "5ce11a2f3973141791d79052dc9f37a06b77ab941c455beb9443d3dd0a2bd0dc"
+              },
+              {
+                "path": "evidence/formulas/package/T0002/gs_bak/飞龙在天.tn6",
+                "source": "C:\\new_tdx_mock\\T0002\\gs_bak\\飞龙在天.tn6",
+                "bytes": 9456,
+                "sha256": "e46558892d724d581c7fafea9b51453cb90cc927f30a7b9f41b48cb735b26d87"
+              },
+              {
+                "path": "evidence/formulas/package/T0002/gs_bak/游资资金监控.tn6",
+                "source": "C:\\new_tdx_mock\\T0002\\gs_bak\\游资资金监控.tn6",
+                "bytes": 6680,
+                "sha256": "ca4a989405e1182ade9140cec2a0bebe37ea204811730321c091bd1fa3a19894"
+              },
+              {
+                "path": "evidence/formulas/package/T0002/gs_bak/机构资金监控.tn6",
+                "source": "C:\\new_tdx_mock\\T0002\\gs_bak\\机构资金监控.tn6",
+                "bytes": 6936,
+                "sha256": "39150345094e2030c4f4357c911feee0a15342490f817f60339e04aef372cc9c"
+              },
+              {
+                "path": "evidence/formulas/package/T0002/gs_bak/庄家资金监控.tn6",
+                "source": "C:\\new_tdx_mock\\T0002\\gs_bak\\庄家资金监控.tn6",
+                "bytes": 6600,
+                "sha256": "a1a2c0d1c7091512174a806719a5dd93135f8be93c2e3dd662b3a4f8066a8adc"
+              },
+              {
+                "path": "evidence/formulas/package/T0002/gs_bak/黄金点火选股.tn6",
+                "source": "C:\\new_tdx_mock\\T0002\\gs_bak\\黄金点火选股.tn6",
+                "bytes": 8784,
+                "sha256": "e5b1a6e16dca4ab2f71ac05c63eed710ba3c31027d9183543d0ee99777fa2656"
+              },
+              {
+                "path": "evidence/formulas/package/PYPlugins/user/tdxdata_test.py",
+                "source": "C:\\new_tdx_mock\\PYPlugins\\user\\tdxdata_test.py",
+                "bytes": 18657,
+                "sha256": "892932960920d51da18431db0dbc86e95680d918676e39ad19bab515604dc319"
+              }
+            ],
+            "missing_files": [],
+            "status": "available"
+          },
+          "required_formulas": [
+            "大牛线4.0",
+            "飞龙在天",
+            "游资资金监控",
+            "机构资金监控",
+            "庄家资金监控"
+          ],
+          "reason": ""
+        },
+        "public_research": {
+          "status": "available",
+          "asset": "public_research",
+          "checked_at": "2026-09-14T16:25:45+08:00",
+          "path": "evidence/public/",
+          "target_date": "2026-09-11",
+          "file_count": 1,
+          "candidate_count": 23,
+          "same_date_file_count": 18,
+          "same_day_record_count": 100,
+          "multi_source_records": {
+            "eastmoney": 100
+          },
+          "providers_succeeded": [
+            "eastmoney"
+          ],
+          "news_snapshot_count": 23,
+          "selected_snapshot": "imported-3002/data/news/latest.json",
+          "historical_fallback": true,
+          "reason": "使用 3002 导入的只读历史同日快照作为公开资讯备援；当前仅确认单一公开源，保留单源降级标记。"
+        }
+      },
+      "degrade_policy": "可输出研究性风险报告；公式无法现场复核或核心风险未知时禁止正式新增权限。",
+      "execution_note": "本报告是网页适配层的真实数据预检与落盘运行单；未调用原始策略入口，因此不构成策略已执行或投资结论。"
+    },
+    "raw": "{\n  \"status\": \"READY_FOR_VALIDATED_RUN_DEGRADED\",\n  \"summary\": \"20260911六大指数全跌（上证3888.11 -1.18%），涨637、跌4869；涨幅前列神宇股份+19.98%；涨停候选30只均为首板；龙虎榜净买+21.1亿，有色负反馈；TDX聚合涨跌幅与当日实价不符，仅作结构参考。\",\n  \"data_date\": \"20260911\",\n  \"data_scope\": \"20260911本地TDX日线归档（9485只/15722263条）+ 20260911融资融券与龙虎榜补充快照（4445/58条）+ 网页传入涨幅、成交额、跌幅、涨停候选四类榜单 + TDX行业主题映射结构 + 3002只读新闻单一来源降级证据\",\n  \"cautions\": [\n    \"预检总状态为READY_FOR_VALIDATED_RUN，required_missing与optional_missing均为空，可执行研究性风险报告；但公开资讯仅单一来源（eastmoney）且historical_fallback=true，只按降级证据使用。\",\n    \"TDX行业/主题成员聚合的涨跌幅与成交额经20260911融资融券快照实价交叉核对不一致（江西铜业+5.45%对实价-7.78%、中粮糖业+9.99%对-9.03%、剑桥科技+7.28%对-4.25%、华锦股份+10.02%对-3.63%、新安股份12.08对12.49），其交易日无法确认，仅作映射结构候选，不视为交易所或申万官方行业事实。\",\n    \"跌停、前日涨停表现（previousDate=20260907）与盘中封板率均为日线OHLC推导候选，非逐笔数据，无首封时刻与封单额；封板代理日期为20260908、dataFresh=false、lc5最新仅20260904，不作为20260911当日事实。\",\n    \"网页文本称财务/股本/指数日线/龙虎榜/融资融券统一补充快照未提供，但本地evidence/supplemental/20260911/market.json实际可用（status=completed，coverage中financial、share_capital、index_daily、longhubang_snapshot、margin_snapshot均为true），本报告的龙虎榜与指数交叉核对即取自该快照。\",\n    \"网页数据源状态中lhb与financing登记为adapter_only、snapshotExists=false，与本地补充快照实际可用不一致；本报告以实际可读快照为准，并保留该口径冲突提示。\",\n    \"capitaFlow标记formula_unavailable；公式回执41份、有效40份，最新回执仅覆盖个别标的（如300502.SZ），未形成全市场广度复核，按degrade_policy不出具新增权限结论。\",\n    \"新闻快照imported-3002/data/news/latest.json日期为2026-09-11，来源东方财富7x24，文件内未展开同日记录明细；TDX speczsevent.txt最新事件日期为20260513，均不能作为当日事件结论。\",\n    \"龙虎榜58条中26条净买入、32条净卖出，席位描述字段（如机构家数、成功率）为数据源原始标注，未经独立验证；本报告为只读研究性风险摘要，不含任何买卖建议。\",\n    \"caps：本次未核对分时逐笔、龙虎榜席位明细（seat_detail_count=20）与个股财务字段，相关维度结论缺失。\"\n  ],\n  \"findings\": [\n    {\n      \"title\": \"指数与市场广度\",\n      \"text\": \"六大指数全线下跌，上证3888.11（-1.18%）、北证50最弱（-2.66%）；同日5556只中涨637、跌4869、平50，跌幅面87.6%，样本成交额约1.98万亿元。\"\n    },\n    {\n      \"title\": \"相对强势与涨幅榜\",\n      \"text\": \"涨幅候选前列神宇股份+19.98%、昀冢科技+18.68%、长盈通+15.49%；成交额前列集中于光模块与电子（中际旭创299.7亿、新易盛177.3亿、东山精密144.2亿）。\"\n    },\n    {\n      \"title\": \"涨停结构无连板高度\",\n      \"text\": \"涨停/连板候选30只，streak全部为1、无连板；成交额居前为风华高科99.8亿、超声电子35.2亿、博敏电子23.0亿、崇达技术20.1亿，电子链占多数。\"\n    },\n    {\n      \"title\": \"龙虎榜资金与负反馈\",\n      \"text\": \"龙虎榜58条净额合计+21.1亿元，净买前位金安国纪+8.12亿、长盈通+5.21亿、博云新材+4.03亿；净卖前列金健米业-2.31亿、红棉股份-1.30亿。\"\n    },\n    {\n      \"title\": \"结构与数据一致性\",\n      \"text\": \"跌幅候选以有色与糖业为主（江西铜业-7.78%、西部矿业-7.12%、中粮糖业-9.03%）；TDX聚合板块涨跌幅与当日实价不符，仅可作行业主题映射，不作当日事实。\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"title\": \"市场核心指标（20260911）\",\n      \"columns\": [\n        \"项目\",\n        \"数值\",\n        \"涨跌幅/说明\"\n      ],\n      \"rows\": [\n        [\n          \"上证指数\",\n          \"3888.11\",\n          \"-1.18%\"\n        ],\n        [\n          \"深证成指\",\n          \"13471.26\",\n          \"-1.08%\"\n        ],\n        [\n          \"创业板指\",\n          \"3322.04\",\n          \"-0.49%\"\n        ],\n        [\n          \"科创50\",\n          \"1553.39\",\n          \"-1.01%\"\n        ],\n        [\n          \"上证50\",\n          \"2868.32\",\n          \"-1.24%\"\n        ],\n        [\n          \"北证50\",\n          \"1023.46\",\n          \"-2.66%\"\n        ],\n        [\n          \"同期股票/上涨/下跌/平盘\",\n          \"5556/637/4869/50\",\n          \"下跌占比约87.6%\"\n        ],\n        [\n          \"样本成交额（元）\",\n          \"1981034226669\",\n          \"约1.98万亿元\"\n        ]\n      ]\n    },\n    {\n      \"title\": \"TDX行业/主题成员聚合Top10（涨跌幅与0911实价不符，仅作结构候选）\",\n      \"columns\": [\n        \"类型\",\n        \"板块\",\n        \"成员数\",\n        \"均涨幅%\",\n        \"涨停家数\",\n        \"领涨股\"\n      ],\n      \"rows\": [\n        [\n          \"TDX行业\",\n          \"石油\",\n          \"23\",\n          \"4.31\",\n          \"3\",\n          \"华锦股份\"\n        ],\n        [\n          \"TDX主题\",\n          \"磷概念\",\n          \"23\",\n          \"3.41\",\n          \"3\",\n          \"潞化科技\"\n        ],\n        [\n          \"TDX行业\",\n          \"煤炭\",\n          \"26\",\n          \"2.95\",\n          \"1\",\n          \"云煤能源\"\n        ],\n        [\n          \"TDX行业\",\n          \"传媒\",\n          \"48\",\n          \"2.87\",\n          \"4\",\n          \"出版传媒\"\n        ],\n        [\n          \"TDX主题\",\n          \"天然气\",\n          \"73\",\n          \"2.74\",\n          \"4\",\n          \"潞化科技\"\n        ],\n        [\n          \"TDX主题\",\n          \"土地流转\",\n          \"19\",\n          \"2.72\",\n          \"2\",\n          \"亚盛集团\"\n        ],\n        [\n          \"TDX行业\",\n          \"综合\",\n          \"12\",\n          \"2.68\",\n          \"1\",\n          \"亚泰集团\"\n        ],\n        [\n          \"TDX行业\",\n          \"钢铁\",\n          \"26\",\n          \"2.54\",\n          \"0\",\n          \"抚顺特钢\"\n        ],\n        [\n          \"TDX行业\",\n          \"农林牧渔\",\n          \"45\",\n          \"2.20\",\n          \"3\",\n          \"亚盛集团\"\n        ],\n        [\n          \"TDX主题\",\n          \"AI营销\",\n          \"12\",\n          \"2.10\",\n          \"1\",\n          \"博瑞传播\"\n        ]\n      ]\n    },\n    {\n      \"title\": \"龙虎榜净额Top10（20260911本地快照，58条/净额合计+21.1亿元）\",\n      \"columns\": [\n        \"方向\",\n        \"代码\",\n        \"名称\",\n        \"净额(亿元)\",\n        \"买入(亿元)\",\n        \"卖出(亿元)\",\n        \"席位说明\"\n      ],\n      \"rows\": [\n        [\n          \"净买入\",\n          \"002636\",\n          \"金安国纪\",\n          \"8.12\",\n          \"20.87\",\n          \"12.75\",\n          \"4家机构买入\"\n        ],\n        [\n          \"净买入\",\n          \"688143\",\n          \"长盈通\",\n          \"5.21\",\n          \"8.12\",\n          \"2.91\",\n          \"1家机构买入\"\n        ],\n        [\n          \"净买入\",\n          \"002297\",\n          \"博云新材\",\n          \"4.03\",\n          \"7.14\",\n          \"3.11\",\n          \"2家机构买入\"\n        ],\n        [\n          \"净买入\",\n          \"000636\",\n          \"风华高科\",\n          \"2.92\",\n          \"15.64\",\n          \"12.71\",\n          \"3家机构买入\"\n        ],\n        [\n          \"净买入\",\n          \"603466\",\n          \"风语筑\",\n          \"1.96\",\n          \"2.61\",\n          \"0.65\",\n          \"买一主买\"\n        ],\n        [\n          \"净卖出\",\n          \"600127\",\n          \"金健米业\",\n          \"-2.31\",\n          \"3.27\",\n          \"5.58\",\n          \"卖一主卖\"\n        ],\n        [\n          \"净卖出\",\n          \"000523\",\n          \"红棉股份\",\n          \"-1.30\",\n          \"1.31\",\n          \"2.61\",\n          \"1家机构卖出\"\n        ],\n        [\n          \"净卖出\",\n          \"301176\",\n          \"逸豪新材\",\n          \"-1.25\",\n          \"4.42\",\n          \"5.67\",\n          \"4家机构买入（净卖出）\"\n        ],\n        [\n          \"净卖出\",\n          \"000737\",\n          \"北方铜业\",\n          \"-1.15\",\n          \"1.66\",\n          \"2.81\",\n          \"3家机构卖出\"\n        ],\n        [\n          \"净卖出\",\n          \"603366\",\n          \"日出东方\",\n          \"-0.60\",\n          \"0.27\",\n          \"0.86\",\n          \"普通席位卖出\"\n        ]\n      ]\n    }\n  ]\n}"
+  },
+  "raw": "{\n  \"status\": \"READY_FOR_VALIDATED_RUN_DEGRADED\",\n  \"summary\": \"20260911六大指数全跌（上证3888.11 -1.18%），涨637、跌4869；涨幅前列神宇股份+19.98%；涨停候选30只均为首板；龙虎榜净买+21.1亿，有色负反馈；TDX聚合涨跌幅与当日实价不符，仅作结构参考。\",\n  \"data_date\": \"20260911\",\n  \"data_scope\": \"20260911本地TDX日线归档（9485只/15722263条）+ 20260911融资融券与龙虎榜补充快照（4445/58条）+ 网页传入涨幅、成交额、跌幅、涨停候选四类榜单 + TDX行业主题映射结构 + 3002只读新闻单一来源降级证据\",\n  \"cautions\": [\n    \"预检总状态为READY_FOR_VALIDATED_RUN，required_missing与optional_missing均为空，可执行研究性风险报告；但公开资讯仅单一来源（eastmoney）且historical_fallback=true，只按降级证据使用。\",\n    \"TDX行业/主题成员聚合的涨跌幅与成交额经20260911融资融券快照实价交叉核对不一致（江西铜业+5.45%对实价-7.78%、中粮糖业+9.99%对-9.03%、剑桥科技+7.28%对-4.25%、华锦股份+10.02%对-3.63%、新安股份12.08对12.49），其交易日无法确认，仅作映射结构候选，不视为交易所或申万官方行业事实。\",\n    \"跌停、前日涨停表现（previousDate=20260907）与盘中封板率均为日线OHLC推导候选，非逐笔数据，无首封时刻与封单额；封板代理日期为20260908、dataFresh=false、lc5最新仅20260904，不作为20260911当日事实。\",\n    \"网页文本称财务/股本/指数日线/龙虎榜/融资融券统一补充快照未提供，但本地evidence/supplemental/20260911/market.json实际可用（status=completed，coverage中financial、share_capital、index_daily、longhubang_snapshot、margin_snapshot均为true），本报告的龙虎榜与指数交叉核对即取自该快照。\",\n    \"网页数据源状态中lhb与financing登记为adapter_only、snapshotExists=false，与本地补充快照实际可用不一致；本报告以实际可读快照为准，并保留该口径冲突提示。\",\n    \"capitaFlow标记formula_unavailable；公式回执41份、有效40份，最新回执仅覆盖个别标的（如300502.SZ），未形成全市场广度复核，按degrade_policy不出具新增权限结论。\",\n    \"新闻快照imported-3002/data/news/latest.json日期为2026-09-11，来源东方财富7x24，文件内未展开同日记录明细；TDX speczsevent.txt最新事件日期为20260513，均不能作为当日事件结论。\",\n    \"龙虎榜58条中26条净买入、32条净卖出，席位描述字段（如机构家数、成功率）为数据源原始标注，未经独立验证；本报告为只读研究性风险摘要，不含任何买卖建议。\",\n    \"caps：本次未核对分时逐笔、龙虎榜席位明细（seat_detail_count=20）与个股财务字段，相关维度结论缺失。\"\n  ],\n  \"findings\": [\n    {\n      \"title\": \"指数与市场广度\",\n      \"text\": \"六大指数全线下跌，上证3888.11（-1.18%）、北证50最弱（-2.66%）；同日5556只中涨637、跌4869、平50，跌幅面87.6%，样本成交额约1.98万亿元。\"\n    },\n    {\n      \"title\": \"相对强势与涨幅榜\",\n      \"text\": \"涨幅候选前列神宇股份+19.98%、昀冢科技+18.68%、长盈通+15.49%；成交额前列集中于光模块与电子（中际旭创299.7亿、新易盛177.3亿、东山精密144.2亿）。\"\n    },\n    {\n      \"title\": \"涨停结构无连板高度\",\n      \"text\": \"涨停/连板候选30只，streak全部为1、无连板；成交额居前为风华高科99.8亿、超声电子35.2亿、博敏电子23.0亿、崇达技术20.1亿，电子链占多数。\"\n    },\n    {\n      \"title\": \"龙虎榜资金与负反馈\",\n      \"text\": \"龙虎榜58条净额合计+21.1亿元，净买前位金安国纪+8.12亿、长盈通+5.21亿、博云新材+4.03亿；净卖前列金健米业-2.31亿、红棉股份-1.30亿。\"\n    },\n    {\n      \"title\": \"结构与数据一致性\",\n      \"text\": \"跌幅候选以有色与糖业为主（江西铜业-7.78%、西部矿业-7.12%、中粮糖业-9.03%）；TDX聚合板块涨跌幅与当日实价不符，仅可作行业主题映射，不作当日事实。\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"title\": \"市场核心指标（20260911）\",\n      \"columns\": [\n        \"项目\",\n        \"数值\",\n        \"涨跌幅/说明\"\n      ],\n      \"rows\": [\n        [\n          \"上证指数\",\n          \"3888.11\",\n          \"-1.18%\"\n        ],\n        [\n          \"深证成指\",\n          \"13471.26\",\n          \"-1.08%\"\n        ],\n        [\n          \"创业板指\",\n          \"3322.04\",\n          \"-0.49%\"\n        ],\n        [\n          \"科创50\",\n          \"1553.39\",\n          \"-1.01%\"\n        ],\n        [\n          \"上证50\",\n          \"2868.32\",\n          \"-1.24%\"\n        ],\n        [\n          \"北证50\",\n          \"1023.46\",\n          \"-2.66%\"\n        ],\n        [\n          \"同期股票/上涨/下跌/平盘\",\n          \"5556/637/4869/50\",\n          \"下跌占比约87.6%\"\n        ],\n        [\n          \"样本成交额（元）\",\n          \"1981034226669\",\n          \"约1.98万亿元\"\n        ]\n      ]\n    },\n    {\n      \"title\": \"TDX行业/主题成员聚合Top10（涨跌幅与0911实价不符，仅作结构候选）\",\n      \"columns\": [\n        \"类型\",\n        \"板块\",\n        \"成员数\",\n        \"均涨幅%\",\n        \"涨停家数\",\n        \"领涨股\"\n      ],\n      \"rows\": [\n        [\n          \"TDX行业\",\n          \"石油\",\n          \"23\",\n          \"4.31\",\n          \"3\",\n          \"华锦股份\"\n        ],\n        [\n          \"TDX主题\",\n          \"磷概念\",\n          \"23\",\n          \"3.41\",\n          \"3\",\n          \"潞化科技\"\n        ],\n        [\n          \"TDX行业\",\n          \"煤炭\",\n          \"26\",\n          \"2.95\",\n          \"1\",\n          \"云煤能源\"\n        ],\n        [\n          \"TDX行业\",\n          \"传媒\",\n          \"48\",\n          \"2.87\",\n          \"4\",\n          \"出版传媒\"\n        ],\n        [\n          \"TDX主题\",\n          \"天然气\",\n          \"73\",\n          \"2.74\",\n          \"4\",\n          \"潞化科技\"\n        ],\n        [\n          \"TDX主题\",\n          \"土地流转\",\n          \"19\",\n          \"2.72\",\n          \"2\",\n          \"亚盛集团\"\n        ],\n        [\n          \"TDX行业\",\n          \"综合\",\n          \"12\",\n          \"2.68\",\n          \"1\",\n          \"亚泰集团\"\n        ],\n        [\n          \"TDX行业\",\n          \"钢铁\",\n          \"26\",\n          \"2.54\",\n          \"0\",\n          \"抚顺特钢\"\n        ],\n        [\n          \"TDX行业\",\n          \"农林牧渔\",\n          \"45\",\n          \"2.20\",\n          \"3\",\n          \"亚盛集团\"\n        ],\n        [\n          \"TDX主题\",\n          \"AI营销\",\n          \"12\",\n          \"2.10\",\n          \"1\",\n          \"博瑞传播\"\n        ]\n      ]\n    },\n    {\n      \"title\": \"龙虎榜净额Top10（20260911本地快照，58条/净额合计+21.1亿元）\",\n      \"columns\": [\n        \"方向\",\n        \"代码\",\n        \"名称\",\n        \"净额(亿元)\",\n        \"买入(亿元)\",\n        \"卖出(亿元)\",\n        \"席位说明\"\n      ],\n      \"rows\": [\n        [\n          \"净买入\",\n          \"002636\",\n          \"金安国纪\",\n          \"8.12\",\n          \"20.87\",\n          \"12.75\",\n          \"4家机构买入\"\n        ],\n        [\n          \"净买入\",\n          \"688143\",\n          \"长盈通\",\n          \"5.21\",\n          \"8.12\",\n          \"2.91\",\n          \"1家机构买入\"\n        ],\n        [\n          \"净买入\",\n          \"002297\",\n          \"博云新材\",\n          \"4.03\",\n          \"7.14\",\n          \"3.11\",\n          \"2家机构买入\"\n        ],\n        [\n          \"净买入\",\n          \"000636\",\n          \"风华高科\",\n          \"2.92\",\n          \"15.64\",\n          \"12.71\",\n          \"3家机构买入\"\n        ],\n        [\n          \"净买入\",\n          \"603466\",\n          \"风语筑\",\n          \"1.96\",\n          \"2.61\",\n          \"0.65\",\n          \"买一主买\"\n        ],\n        [\n          \"净卖出\",\n          \"600127\",\n          \"金健米业\",\n          \"-2.31\",\n          \"3.27\",\n          \"5.58\",\n          \"卖一主卖\"\n        ],\n        [\n          \"净卖出\",\n          \"000523\",\n          \"红棉股份\",\n          \"-1.30\",\n          \"1.31\",\n          \"2.61\",\n          \"1家机构卖出\"\n        ],\n        [\n          \"净卖出\",\n          \"301176\",\n          \"逸豪新材\",\n          \"-1.25\",\n          \"4.42\",\n          \"5.67\",\n          \"4家机构买入（净卖出）\"\n        ],\n        [\n          \"净卖出\",\n          \"000737\",\n          \"北方铜业\",\n          \"-1.15\",\n          \"1.66\",\n          \"2.81\",\n          \"3家机构卖出\"\n        ],\n        [\n          \"净卖出\",\n          \"603366\",\n          \"日出东方\",\n          \"-0.60\",\n          \"0.27\",\n          \"0.86\",\n          \"普通席位卖出\"\n        ]\n      ]\n    }\n  ]\n}"
+}

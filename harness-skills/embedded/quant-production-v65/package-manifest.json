@@ -1,0 +1,68 @@
+{
+  "name": "a-share-quant-production-v65-workbuddy",
+  "display_name": "A股量化生产定型工程 V6.5 WorkBuddy双路容灾最终生产版",
+  "version": "6.5.0-final",
+  "date": "2026-09-12",
+  "base_version": "6.4.0-resilient",
+  "entrypoint": "python scripts/workbuddy_entry.py execute --mode after-market",
+  "audit_focus": [
+    "早期错误防回归",
+    "固化13步工作流一致性",
+    "禁止简化输出/少跑步骤",
+    "模型级历史门与代码口径一致",
+    "直连/桥接/共识三段容灾续跑",
+    "独立二源同日逐只核价",
+    "禁止外部模型冒充原生四模型",
+    "真实发布日候选实跑"
+  ],
+  "workflow_steps": 13,
+  "output_sections": 10,
+  "production_routes": [
+    "NATIVE_4MODEL",
+    "CONSENSUS_RESCUE"
+  ],
+  "native_history_policy": {
+    "request_bars": 260,
+    "core_min_bars": 120,
+    "enhanced_bars": 250
+  },
+  "critical_fixes": [
+    "修复V6.4文档320根与代码260根口径漂移",
+    "原生历史门改为与指标实际依赖一致的120核心/250增强",
+    "保留退出码4自动桥接续跑",
+    "新增独立跨提供商共识容灾正式生产路径",
+    "共识路径禁止同源/模拟/生成数据",
+    "主模型阈值+流动性+过热门+事件风险硬门",
+    "独立二源逐只同日核价且正式候选100%匹配",
+    "外部模型不得冒充V6.3四模型标签",
+    "发布时2026-09-11真实证据包和AUTHORIZED结果随包交付"
+  ],
+  "sha256": {
+    "README_安装说明.md": "e0b330f577ee04047f998fb4ba0d91eb2fbbfa1e550ff31b26402e355f8995a9",
+    "SKILL.md": "3ab56b9090a63cce6fafd58f21aa11ac53db35944f5449aff9415156de5e8460",
+    "config/production.json": "4411f567baeb894c5d413f90fe0e0c964f3db5aed05abd76157b8ae1e111af5b",
+    "evidence/2026-09-11_consensus_bundle.json": "8649a0b8fdb02d620fe95057bda28c458fe92b0152d69b4d8bab6d0cf0b1220f",
+    "references/V6.3_深度审计与防回归报告.md": "8b728bad9762b46ec77def31a0f87be2244476b9a4a608869f585659894ce5cb",
+    "references/V6.3_行业强度与驱动引擎.md": "31180a68023f899255f3a46f52f8c113037b6c3c79967efff0b9fcb119aed32e",
+    "references/V6.3_规则引擎.md": "6c9abdb60e45c182a679a987e3c30e0cf9344f9b17a8f32fe6332fd71f72d5f5",
+    "references/V6.4_数据容灾与WorkBuddy桥接规范.md": "5e8329d146bfa3c70006693bd858be39a7a1c4d2cc9c82056f81ff060ada6605",
+    "references/V6.5_双路容灾最终生产规范.md": "6d053222718f756146bd20cff688cd99fd97ba5c91c5a3426fb5aa45f441ee58",
+    "references/数据源与生产门禁.md": "605ce0dd700788db83108688b71c88b0059bc065c8b14b0652011d0dd0b423a6",
+    "references/纠错继承矩阵.md": "e725b1d7fac65d1280bf77b637b7e12e8567fa5b5c767f58737b183b983b7c16",
+    "references/输出模板.md": "702745bb57454f1b10ea175151d4793edc62ade1a3b4931487dde9e684f959dc",
+    "release_validation/2026-09-11/V6.5_consensus_report.html": "037d4fef831b22e00633386bf0ef909d1dce698e28cb85989ec29ef3eeee04bf",
+    "release_validation/2026-09-11/V6.5_consensus_report.md": "ff682b74acae60de1e4d9647ee52d2b1d9effacfa1fe54639645a35167118e65",
+    "release_validation/2026-09-11/V6.5_consensus_result.json": "0330a70197f2ba5752098acc7e41ae36bd3244f36ab49ad357f6fdfc8ee13488",
+    "release_validation/2026-09-11/consensus_run_manifest.json": "f3e1346ebb0299bff34423478b066188958f3c0fbe26dbde202fa9e590c9155e",
+    "scripts/consensus_engine.py": "daac8500c3c5e3964abf52df4b0d9cef33a54ba2e8ce355fdb77c7a98bea4497",
+    "scripts/data_bridge.py": "687c287d4f5c71f6c872ee5d7dbed49736032c49b19ee5d27a36d73eccd3c1ed",
+    "scripts/engine.py": "b6fd0aaf0911f1b726a2d7599ed935031bf88ecd6ef2840a1e85d74ed1a61ac9",
+    "scripts/industry_engine.py": "327d3d601f229ef4dfb865b7487f526b9d4cc81621cc42c48f119ed309511b03",
+    "scripts/public_data.py": "c5d94f7d78b57a8dc326abd7ae1e4ed43b83e945f594a57434da37333e411e10",
+    "scripts/validation.py": "b7309df5f39e9dd5dbace59d8e482204c228b92822005ee652bde0553a0964c5",
+    "scripts/workbuddy_entry.py": "0de8f06db2499de903c3c834f96f54781db75a17da542479a0bd9f1039e2270d",
+    "tests/README.md": "c51b3318eb4e73c545b9b942ddac718a2356f06b6efb01adb293d56036eb7127",
+    "tests/offline_e2e.py": "f13bf9e050e8c77993135fb6f5f8c27c5257f7df3a49ecac7c5365c8dcecf51f",
+    "workflow_manifest.json": "d2501ce38165bf1e5d6c326440692f167fa628ff1ef64d5e140cbea67710d838"
+  }
+}

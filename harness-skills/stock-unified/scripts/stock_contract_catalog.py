@@ -406,6 +406,15 @@ def synchronize_contract_payload(
         codex_root=skills_root.parent,
         skills_root=skills_root,
     )
+    active_binding_root = skills_root.parent.resolve()
+
+    def _is_active_binding_path(value: object) -> bool:
+        try:
+            Path(str(value)).resolve().relative_to(active_binding_root)
+            return True
+        except (ValueError, OSError):
+            return False
+
     for skill_id in skills:
         row = contracts[skill_id]
         skill_root = skills_root / skill_id
@@ -549,6 +558,11 @@ def synchronize_contract_payload(
                 isinstance(binding, dict)
                 and binding.get("path")
                 and _is_mutable_global_agents_path(binding["path"])
+            )
+            and not (
+                isinstance(binding, dict)
+                and binding.get("path")
+                and not _is_active_binding_path(binding["path"])
             )
         ]
         if len(filtered_bindings) != len(bindings):

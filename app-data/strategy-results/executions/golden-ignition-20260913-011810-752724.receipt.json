@@ -1,0 +1,433 @@
+{
+  "receipt_version": 4,
+  "runtime": "stock-canonical-runtime-v3",
+  "runtime_surface": "Codex",
+  "skill_id": "golden-ignition",
+  "entry": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\harness-skills\\golden-ignition\\scripts\\codex_entry.py",
+  "run_dir": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\strategy-results\\executions\\runs\\20260913-011759-871854",
+  "command": [
+    "C:\\Users\\Scott\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\harness-skills\\golden-ignition\\scripts\\canonical_business_adapter.py",
+    "--run-dir",
+    "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\strategy-results\\executions\\runs\\20260913-011759-871854",
+    "--timeout",
+    "300",
+    "600577.SH",
+    "--lookback",
+    "5"
+  ],
+  "extra_args": [
+    "600577.SH",
+    "--lookback",
+    "5"
+  ],
+  "cwd": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\harness-skills\\golden-ignition",
+  "started_at": "2026-09-13T01:17:59+08:00",
+  "finished_at": "2026-09-13T01:18:04+08:00",
+  "elapsed_seconds": 4.86,
+  "returncode": 0,
+  "status": "CLEAN_PASS",
+  "execution_purpose": "readiness_validation",
+  "request_fingerprint": "4543beba7f2de924aa544ce6a0036d99a0696349e265eb2c428a3fbb29636e14",
+  "failure_class": "NONE",
+  "production_policy_sha256": "f44fa31a3cf8477e52e80cbd2d18e26d6459cdedf22ffdb1000538004dd2bf85",
+  "production_readiness": {
+    "schema": "STOCK_PRODUCTION_READINESS_V1",
+    "status": "CLEAN_PASS",
+    "execution_purpose": "readiness_validation",
+    "conclusion_eligible": false,
+    "request_fingerprint": "4543beba7f2de924aa544ce6a0036d99a0696349e265eb2c428a3fbb29636e14",
+    "policy_sha256": "f44fa31a3cf8477e52e80cbd2d18e26d6459cdedf22ffdb1000538004dd2bf85",
+    "data_gate": null,
+    "failure_class": "NONE",
+    "output_bytes": {
+      "stdout": 1251,
+      "stderr": 0,
+      "limit": 16777216,
+      "limited": false
+    },
+    "persistence": "atomic_replace_with_verified_readback",
+    "errors": []
+  },
+  "facade_sha256": "50f983020454e3e1b4548f5118f591d84d5fccb5ffd2c79c5b8b4d487b04392f",
+  "executor_sha256": "53bb7a0d22c3226e721b97c22967a4d3be1835386210980887e2394ec7c38b4b",
+  "contract_sha256": "2aabc5d87c5400f04ff1ea0daffeab20aef07d7a6e316d94cd5564411599d613",
+  "production_surface_signature": "55e6dc6a6c9fcc843a153422654571aec86445b80b3140d33082032751fc00ba",
+  "business_bindings": [
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\harness-skills\\golden-ignition\\SKILL.md",
+      "sha256": "15f14b1ecb10e18869071d3b179c7e11fb090b103d27e43df735df73be287828"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\harness-skills\\golden-ignition\\references\\workflow.md",
+      "sha256": "9eadaa0b184c2d1547650858fefd4768cde3b963afa1d07b1c4a96e6a641ec58"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\harness-skills\\golden-ignition\\scripts\\canonical_business_adapter.py",
+      "sha256": "2f773a4c9e00a5b2bc954de39a89d23149b5f63de9b11c42e57f75a01e870995"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\harness-skills\\golden-ignition\\scripts\\legacy_codex_entry.py",
+      "sha256": "bb94fb7c58decd4fb8cf0e4530663dfbb7fd0d5499ddc6790259c337a5e67b97"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\scripts\\stock_evidence_set.py",
+      "sha256": "fced85499ce98b93d6290637d4f5f792351799eb4e60df1ec09b88507de3dc1a"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\scripts\\stock_adapter_io.py",
+      "sha256": "c5408f45ac00487199f3e7e08101b64916969bbcfa14e3f8930b0745e3d74ee0"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\scripts\\lianban_daily_client.py",
+      "sha256": "7d6a51fc1efa1472b7e3bee49b208e581732f7108b64ecbaef446fb5749be51a"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\scripts\\stock_runtime_bootstrap\\sitecustomize.py",
+      "sha256": "8363f7ed7c4cabdb8f292e9a31020600d8b011bc8479113b1ed74fd3df850ec3"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\scripts\\stock_runtime_bootstrap\\tdx_process_guard.py",
+      "sha256": "30f7e3bec22d6b08de76d7a496e270c4b17cf31c754992bd1042653f090bf1c5"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\harness-skills\\stock-unified\\scripts\\stock_contract_catalog.py",
+      "sha256": "5a56bcecbd6bc9d4f8134ea257b8dd060cc99345ac4a4226919e3c9500031bbd"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\harness-skills\\stock-unified\\scripts\\stock_production_readiness.py",
+      "sha256": "6405d4a8bb03cf0211816668323f7abae6311d7652254446dd106af72665ebbc"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\harness-skills\\stock-unified\\scripts\\audit_stock_production_readiness.py",
+      "sha256": "d0a718c54c0100e79028a4b3df8d0e6c64342d0e84e9dc158fce1e5aa195b2fb"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\harness-skills\\stock-unified\\scripts\\sync_stock_execution_contracts.py",
+      "sha256": "04249a89e4124c83e82e7a54d6ba4c9d50ce1a5b4c8838202b20ea08a55663fb"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\harness-skills\\a-share-hotspot-sentiment-analysis\\scripts\\duanxianxia_client.ps1",
+      "sha256": "e86bf63ce6959baa112c8a331866be66135e5611feb4b871ddca205ebc65ec2f"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\harness-skills\\golden-ignition\\scripts\\entry_golden_ignition.py",
+      "sha256": "604fa57c3de401d75bc2b8f8d05de4d4a4239930357cf3ef2d7b7dbb2243dce7"
+    }
+  ],
+  "contract_preflight": {
+    "status": "CLEAN_PASS",
+    "catalog_count": null,
+    "contract_count": null,
+    "surface_signature": "55e6dc6a6c9fcc843a153422654571aec86445b80b3140d33082032751fc00ba"
+  },
+  "contract_postflight": {
+    "status": "CLEAN_PASS",
+    "catalog_count": null,
+    "contract_count": null,
+    "surface_signature_before": "55e6dc6a6c9fcc843a153422654571aec86445b80b3140d33082032751fc00ba",
+    "surface_signature_after": "55e6dc6a6c9fcc843a153422654571aec86445b80b3140d33082032751fc00ba",
+    "errors": []
+  },
+  "stock_business_lease": {
+    "status": "ACQUIRED",
+    "lease_id": "38872-1789233477387591600",
+    "root_lease_id": "38872-1789233477387591600",
+    "root_skill_id": "golden-ignition",
+    "skill_id": "golden-ignition",
+    "pid": 38872,
+    "lock_path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\.runtime\\stock-business-runtime.golden-ignition.lock",
+    "acquired_at": "2026-09-13T01:17:57+08:00",
+    "waited_seconds": 0.0
+  },
+  "workflow_telemetry": [
+    {
+      "name": "request_validation",
+      "status": "CLEAN_PASS",
+      "elapsed_seconds": 0.015,
+      "error_count": 0
+    },
+    {
+      "name": "global_contract_preflight",
+      "status": "CLEAN_PASS",
+      "elapsed_seconds": 5.469,
+      "surface_stable": true
+    },
+    {
+      "name": "workflow_queue_wait",
+      "status": "CLEAN_PASS",
+      "elapsed_seconds": 0.031,
+      "waited_seconds": 0.0,
+      "lock_path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\.runtime\\stock-business-runtime.golden-ignition.lock"
+    },
+    {
+      "name": "binding_validation",
+      "status": "CLEAN_PASS",
+      "elapsed_seconds": 0.0,
+      "error_count": 0
+    },
+    {
+      "name": "tdx_control_scan",
+      "status": "CLEAN_PASS",
+      "elapsed_seconds": 1.875,
+      "finding_count": 0
+    },
+    {
+      "name": "evidence_set",
+      "status": "DISABLED",
+      "elapsed_seconds": 0.0,
+      "mode": null
+    },
+    {
+      "name": "supplemental_target_date",
+      "status": "CLEAN_PASS",
+      "elapsed_seconds": 0.0,
+      "mode": "runtime_date"
+    },
+    {
+      "name": "supplemental_lianban",
+      "status": "DISABLED",
+      "elapsed_seconds": 0.0,
+      "mode": null,
+      "cache_hit": false
+    },
+    {
+      "name": "business_process",
+      "status": "CLEAN_PASS",
+      "elapsed_seconds": 5.391,
+      "returncode": 0
+    },
+    {
+      "name": "contract_surface_postflight",
+      "status": "CLEAN_PASS",
+      "elapsed_seconds": 5.484,
+      "surface_stable": true,
+      "error_count": 0
+    },
+    {
+      "name": "result_validation",
+      "status": "CLEAN_PASS",
+      "elapsed_seconds": 0.0,
+      "semantic_check_count": 8
+    },
+    {
+      "name": "production_gate",
+      "status": "CLEAN_PASS",
+      "elapsed_seconds": 0.0,
+      "execution_purpose": "readiness_validation",
+      "conclusion_eligible": false,
+      "error_count": 0
+    },
+    {
+      "name": "runtime_inside_lease",
+      "status": "CLEAN_PASS",
+      "elapsed_seconds": 13.328
+    },
+    {
+      "name": "total_runtime_to_receipt",
+      "status": "CLEAN_PASS",
+      "elapsed_seconds": 18.843
+    }
+  ],
+  "tdx_process_integrity": {
+    "status": "CLEAN_PASS",
+    "errors": [],
+    "before": {
+      "status": "OK",
+      "captured_at": "2026-09-13T01:17:59+08:00",
+      "processes": [
+        {
+          "name": "tdxcef",
+          "pid": 18284,
+          "start_time": "/Date(1789213178504)/"
+        },
+        {
+          "name": "tdxcef",
+          "pid": 42804,
+          "start_time": "/Date(1789213178635)/"
+        },
+        {
+          "name": "tdxcef",
+          "pid": 44084,
+          "start_time": "/Date(1789213178409)/"
+        },
+        {
+          "name": "TdxW",
+          "pid": 53784,
+          "start_time": "/Date(1789213162005)/"
+        }
+      ],
+      "errors": []
+    },
+    "after": {
+      "status": "OK",
+      "captured_at": "2026-09-13T01:18:04+08:00",
+      "processes": [
+        {
+          "name": "tdxcef",
+          "pid": 18284,
+          "start_time": "/Date(1789213178504)/"
+        },
+        {
+          "name": "tdxcef",
+          "pid": 42804,
+          "start_time": "/Date(1789213178635)/"
+        },
+        {
+          "name": "tdxcef",
+          "pid": 44084,
+          "start_time": "/Date(1789213178409)/"
+        },
+        {
+          "name": "TdxW",
+          "pid": 53784,
+          "start_time": "/Date(1789213162005)/"
+        }
+      ],
+      "errors": []
+    }
+  },
+  "tdx_process_guard": {
+    "schema": "TDX_PROCESS_GUARD_AUDIT_V1",
+    "status": "CLEAN_PASS",
+    "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\strategy-results\\executions\\runs\\20260913-011759-871854\\tdx_process_guard.jsonl",
+    "exists": false,
+    "event_count": 0,
+    "events": [],
+    "errors": [],
+    "artifact": null
+  },
+  "evidence_set": {
+    "enabled": false,
+    "status": "DISABLED",
+    "environment": {},
+    "errors": []
+  },
+  "supplemental_sources": {
+    "lianban_daily": {
+      "enabled": false,
+      "required": false,
+      "status": "DISABLED",
+      "environment": {
+        "CODEX_LIANBAN_STATUS": "DISABLED"
+      },
+      "target_date_resolution": {
+        "status": "CLEAN_PASS",
+        "mode": "runtime_date",
+        "target_date": "2026-09-13",
+        "fallback_date": "2026-09-13",
+        "errors": []
+      },
+      "errors": []
+    }
+  },
+  "binding_errors": [],
+  "contract_stability_errors": [],
+  "business_stdout_validation": {
+    "ok": true,
+    "errors": [],
+    "data_gate": null,
+    "output_size": 1251,
+    "output_sha256": "ffd287479ab83de9ec8dbe509c09627c9eb97da5cfd2f135687a00a56d61cdbc"
+  },
+  "semantic_assertions": [
+    {
+      "type": "returncode_zero",
+      "actual": 0,
+      "ok": true
+    },
+    {
+      "type": "stdout_nonempty",
+      "actual_size": 1251,
+      "ok": true
+    },
+    {
+      "type": "output_contains_any",
+      "values": [
+        "\"schema\": \"STOCK_CANONICAL_BUSINESS_RESULT_V1\"",
+        "\"schema\":\"STOCK_CANONICAL_BUSINESS_RESULT_V1\""
+      ],
+      "found": [
+        "\"schema\": \"STOCK_CANONICAL_BUSINESS_RESULT_V1\""
+      ],
+      "ok": true
+    },
+    {
+      "type": "output_contains_any",
+      "values": [
+        "\"status\": \"CLEAN_PASS\"",
+        "\"status\":\"CLEAN_PASS\""
+      ],
+      "found": [
+        "\"status\": \"CLEAN_PASS\""
+      ],
+      "ok": true
+    },
+    {
+      "type": "output_not_contains",
+      "values": [
+        "\"status\": \"BLOCKED\"",
+        "\"status\":\"BLOCKED\"",
+        "\"status\": \"FAILED\"",
+        "\"status\":\"FAILED\"",
+        "\"status\": \"PROCEDURAL\"",
+        "\"status\":\"PROCEDURAL\"",
+        "\"status\": \"DATA_REQUIRED\"",
+        "\"status\":\"DATA_REQUIRED\"",
+        "Traceback (most recent call last)",
+        "TIMEOUT after "
+      ],
+      "found": [],
+      "ok": true
+    },
+    {
+      "type": "required_artifact",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\strategy-results\\executions\\runs\\20260913-011759-871854\\business_child.stdout.txt",
+      "minimum_size": 0,
+      "matched": 1,
+      "ok": true
+    },
+    {
+      "type": "required_artifact",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\strategy-results\\executions\\runs\\20260913-011759-871854\\business_child.stderr.txt",
+      "minimum_size": 0,
+      "matched": 1,
+      "ok": true
+    },
+    {
+      "type": "required_artifact",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\strategy-results\\executions\\runs\\20260913-011759-871854\\business_result.json",
+      "minimum_size": 100,
+      "matched": 1,
+      "ok": true
+    }
+  ],
+  "required_artifacts": [
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\strategy-results\\executions\\runs\\20260913-011759-871854\\business_child.stderr.txt",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\strategy-results\\executions\\runs\\20260913-011759-871854\\business_child.stdout.txt",
+      "size": 350,
+      "sha256": "5452f214d06c39f055d0295ad5d2cf0db849b1a32b8e8be23ed9490db17a8c60"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\strategy-results\\executions\\runs\\20260913-011759-871854\\business_result.json",
+      "size": 1389,
+      "sha256": "4d4c461588147006c83813d2a1f9d1e53f3e93013211b829c97450e9e7aaa642"
+    }
+  ],
+  "stdout_artifact": {
+    "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\strategy-results\\executions\\golden-ignition-20260913-011810-752724.stdout.txt",
+    "size": 1251,
+    "sha256": "ffd287479ab83de9ec8dbe509c09627c9eb97da5cfd2f135687a00a56d61cdbc"
+  },
+  "stderr_artifact": {
+    "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\strategy-results\\executions\\golden-ignition-20260913-011810-752724.stderr.txt",
+    "size": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "receipt_integrity": "f54ec85bdff4c0abdfd6c186c92a537bc502c73f1017a89f21e8fcc924ac8fab"
+}

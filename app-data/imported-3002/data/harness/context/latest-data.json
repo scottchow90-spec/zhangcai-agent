@@ -1,0 +1,321 @@
+{
+  "schema": "ZHANGCAI_HARNESS_DAILY_CONTEXT_V1",
+  "date": "2026-09-11",
+  "timezone": "Asia/Shanghai",
+  "closeRefreshCutoff": "16:30",
+  "trigger": "manual/web-open",
+  "generatedAt": "2026-09-11T15:05:30.378Z",
+  "runtimeRoot": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\runtime",
+  "publicSnapshot": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\public\\latest.json",
+  "newsSnapshot": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\news\\latest.json",
+  "dailyState": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\runtime\\daily-refresh-state.json",
+  "steps": [
+    {
+      "name": "通达信运行状态",
+      "status": "completed",
+      "script": "tdx_runtime_bridge.py",
+      "code": 0,
+      "finishedAt": "2026-09-11T15:05:13.577Z"
+    },
+    {
+      "name": "通达信日线完整性检查与补齐",
+      "status": "completed",
+      "script": "tdx_daily_integrity.py",
+      "code": 0,
+      "finishedAt": "2026-09-11T15:05:23.046Z"
+    },
+    {
+      "name": "公开行情补齐",
+      "status": "completed",
+      "script": "public_market_sync.py",
+      "code": 0,
+      "finishedAt": "2026-09-11T15:05:28.666Z"
+    },
+    {
+      "name": "新闻快讯补齐",
+      "status": "completed",
+      "script": "news_sync.py",
+      "code": 0,
+      "finishedAt": "2026-09-11T15:05:23.525Z"
+    }
+  ],
+  "snapshots": {
+    "publicMarket": {
+      "schema": "ZHANGCAI_PUBLIC_MARKET_V1",
+      "date": "2026-09-11",
+      "fetchedAt": "2026-09-11T23:05:28+08:00",
+      "sources": {
+        "lianban": {
+          "status": "available",
+          "url": "https://lianban.net/opendata/2026-09-11.json",
+          "sha256": "f7de1e0830736b41e79133e39e2402e2aab4f0814064a07f97c8411a0d18a104",
+          "bytes": 818,
+          "recordCount": 9,
+          "providerSuccess": true,
+          "providerMessage": null
+        },
+        "eastmoneyLimitUp": {
+          "status": "available",
+          "url": "https://push2ex.eastmoney.com/getTopicZTPool?ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wz.ztzt&Pageindex=0&pagesize=10000&sort=fbt%3Aasc&date=20260911",
+          "sha256": "cf86d27497054aefb7f2567b23dcee5e22506c4c8e5a4c8b64dde0a9458c221d",
+          "bytes": 10663,
+          "recordCount": 40,
+          "providerSuccess": true,
+          "providerMessage": null
+        },
+        "eastmoneyLhb": {
+          "status": "available",
+          "url": "https://datacenter-web.eastmoney.com/api/data/v1/get?sortColumns=SECURITY_CODE%2CTRADE_DATE&sortTypes=1%2C-1&pageSize=5000&pageNumber=1&reportName=RPT_DAILYBILLBOARD_DETAILSNEW&columns=SECURITY_CODE%2CSECURITY_NAME_ABBR%2CTRADE_DATE%2CBILLBOARD_NET_AMT%2CBILLBOARD_BUY_AMT%2CBILLBOARD_SELL_AMT%2CEXPLAIN&source=WEB&client=WEB&filter=%28TRADE_DATE%3C%3D%272026-09-11%27%29%28TRADE_DATE%3E%3D%272026-09-11%27%29",
+          "sha256": "6cefe5d87323d4649eaff00ab2e3a40fdf866ad4a2694e88e7ac44c0516653f7",
+          "bytes": 16553,
+          "recordCount": 68,
+          "providerSuccess": true,
+          "providerMessage": "ok"
+        },
+        "akshareLhb": {
+          "status": "available",
+          "url": "",
+          "sha256": "",
+          "bytes": 0,
+          "recordCount": 68,
+          "providerSuccess": true,
+          "providerMessage": null
+        },
+        "akshareLhbSina": {
+          "status": "available",
+          "url": "",
+          "sha256": "",
+          "bytes": 0,
+          "recordCount": 68,
+          "providerSuccess": true,
+          "providerMessage": null
+        },
+        "akshareLhbStockStatistic": {
+          "status": "available",
+          "url": "",
+          "sha256": "",
+          "bytes": 0,
+          "recordCount": 647,
+          "providerSuccess": true,
+          "providerMessage": null
+        },
+        "akshareLimitUpPool": {
+          "status": "available",
+          "url": "",
+          "sha256": "",
+          "bytes": 0,
+          "recordCount": 40,
+          "providerSuccess": true,
+          "providerMessage": null
+        },
+        "akshareLhbStockDetail": {
+          "status": "available",
+          "url": "",
+          "sha256": "",
+          "bytes": 0,
+          "recordCount": 20,
+          "providerSuccess": true,
+          "providerMessage": null
+        }
+      },
+      "marketBreadth": {
+        "currentCount": 5513,
+        "up": 643,
+        "down": 4870,
+        "flat": 0,
+        "limitUp": 40,
+        "limitDown": 21,
+        "lianban": 7
+      }
+    },
+    "tdxDailyIntegrity": {
+      "reportPath": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\runtime\\tdx-daily-integrity-20260911-230522.json",
+      "targetDate": "20260911",
+      "stockListCount": 5570,
+      "stockCompleteCount": 5570,
+      "stockMissingCount": 0,
+      "complete": true,
+      "unresolved": [],
+      "unresolvedCount": 0,
+      "repairs": [],
+      "repairAttempts": [
+        {
+          "code": "001246.SZ",
+          "before": "missing_file",
+          "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz001246.day",
+          "status": "unresolved",
+          "sourcesTried": [
+            "Tongdaxin TQ get_market_data"
+          ],
+          "reason": "KeyError: 'before'"
+        },
+        {
+          "code": "301716.SZ",
+          "before": "missing_file",
+          "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz301716.day",
+          "status": "unresolved",
+          "sourcesTried": [
+            "Tongdaxin TQ get_market_data"
+          ],
+          "reason": "KeyError: 'before'"
+        },
+        {
+          "code": "601091.SH",
+          "before": "missing_file",
+          "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh601091.day",
+          "status": "unresolved",
+          "sourcesTried": [
+            "Tongdaxin TQ get_market_data"
+          ],
+          "reason": "KeyError: 'before'"
+        },
+        {
+          "code": "688837.SH",
+          "before": "missing_file",
+          "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh688837.day",
+          "status": "unresolved",
+          "sourcesTried": [
+            "Tongdaxin TQ get_market_data"
+          ],
+          "reason": "KeyError: 'before'"
+        },
+        {
+          "code": "920201.BJ",
+          "before": "missing_file",
+          "path": "C:\\new_tdx_mock\\vipdoc\\bj\\lday\\bj920201.day",
+          "status": "unresolved",
+          "sourcesTried": [
+            "Tongdaxin TQ get_market_data"
+          ],
+          "reason": "KeyError: 'before'"
+        },
+        {
+          "code": "920229.BJ",
+          "before": "missing_file",
+          "path": "C:\\new_tdx_mock\\vipdoc\\bj\\lday\\bj920229.day",
+          "status": "unresolved",
+          "sourcesTried": [
+            "Tongdaxin TQ get_market_data"
+          ],
+          "reason": "KeyError: 'before'"
+        },
+        {
+          "code": "920298.BJ",
+          "before": "missing_file",
+          "path": "C:\\new_tdx_mock\\vipdoc\\bj\\lday\\bj920298.day",
+          "status": "unresolved",
+          "sourcesTried": [
+            "Tongdaxin TQ get_market_data"
+          ],
+          "reason": "KeyError: 'before'"
+        }
+      ],
+      "repairAttemptsCount": 7,
+      "refreshSubmissionCount": 0,
+      "writtenCount": 0,
+      "manualActionRequired": false,
+      "manualAction": "",
+      "nonTrading": [
+        {
+          "code": "001246.SZ",
+          "status": "non_trading",
+          "type": "suspended",
+          "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+          "quoteEvidence": {
+            "provider": "Tongdaxin base.dbf",
+            "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+            "listingDate": "20260910"
+          }
+        },
+        {
+          "code": "301716.SZ",
+          "status": "non_trading",
+          "type": "suspended",
+          "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+          "quoteEvidence": {
+            "provider": "Tongdaxin base.dbf",
+            "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+            "listingDate": "20260908"
+          }
+        },
+        {
+          "code": "601091.SH",
+          "status": "non_trading",
+          "type": "suspended",
+          "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+          "quoteEvidence": {
+            "provider": "Tongdaxin base.dbf",
+            "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+            "listingDate": "20260909"
+          }
+        },
+        {
+          "code": "688837.SH",
+          "status": "non_trading",
+          "type": "suspended",
+          "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+          "quoteEvidence": {
+            "provider": "Tongdaxin base.dbf",
+            "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+            "listingDate": "20260909"
+          }
+        },
+        {
+          "code": "920201.BJ",
+          "status": "non_trading",
+          "type": "suspended",
+          "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+          "quoteEvidence": {
+            "provider": "Tongdaxin base.dbf",
+            "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+            "listingDate": "20260904"
+          }
+        },
+        {
+          "code": "920229.BJ",
+          "status": "non_trading",
+          "type": "suspended",
+          "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+          "quoteEvidence": {
+            "provider": "Tongdaxin base.dbf",
+            "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+            "listingDate": "20260908"
+          }
+        },
+        {
+          "code": "920298.BJ",
+          "status": "non_trading",
+          "type": "suspended",
+          "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+          "quoteEvidence": {
+            "provider": "Tongdaxin base.dbf",
+            "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+            "listingDate": "20260904"
+          }
+        }
+      ],
+      "nonTradingCount": 7
+    },
+    "news": {
+      "schema": "ZHANGCAI_NEWS_SNAPSHOT_V1",
+      "date": "2026-09-11",
+      "status": "available",
+      "fetchedAt": "2026-09-11T23:05:23+08:00",
+      "sameDayRecordCount": 100,
+      "source": {
+        "url": "https://np-weblist.eastmoney.com/comm/web/getFastNewsList?client=web&biz=web_news_col&fastColumn=102&pageSize=100&page=1&sortEnd=&req_trace=1789139123281",
+        "httpStatus": 200,
+        "sha256": "fc5c35a1106d3e4832bb3ffa2dfc1dfa8b98ded74b8e2d62ff722bcca0bacf46",
+        "bytes": 52190,
+        "providerCode": "1",
+        "recordCount": 100
+      }
+    }
+  },
+  "harness": {
+    "status": "completed",
+    "finishedAt": "2026-09-11T15:06:01.383Z",
+    "output": "{\n  \"status\": \"partial\",\n  \"summary\": \"2026-09-11公开源全部可用：涨停40家、连板7家、龙虎榜68条、同日新闻100条；通达信日线5570/5570完整，缺失0。成交额、指数、领先候选与行业主题聚合未提供，为部分补齐。\",\n  \"data_date\": \"2026-09-11\",\n  \"data_scope\": \"公开涨停池、连板梯队、龙虎榜、同日快讯，以及本地通达信日线完整性校验；不含个股涨跌幅/成交额榜单、指数、板块聚合与盘口数据（未提供）\",\n  \"cautions\": [\n    \"样本成交额=0，指数未提供，无法核验量能与大盘环境。\",\n    \"涨幅领先候选、成交额领先候选、跌幅/负反馈候选、跌停阈值候选均未提供。\",\n    \"前日涨停表现（日线推导）、TDX行业板块聚合、TDX主题板块聚合、盘中封板/炸板代理（OHLC）、主线名称聚类候选、TDX涨停文件均未提供。\",\n    \"akshare系列来源标记available但url为空、bytes=0、sha256为空，无独立原始快照与哈希，不能作为独立第二来源校验。\",\n    \"a_share利空：akshareLhbStockStatistic记录647条、akshareLhbStockDetail记录20条，无日期与哈希，未参与同日校验。\",\n    \"snapshots.tdxDailyIntegrity未给出effectiveCompleteCount字段，仅有complete=true与stockMissingCount=0，有效完整率无法按该字段复核。\",\n    \"repairAttempts中7项(001246.SZ、301716.SZ、601091.SH、688837.SH、920201.BJ、920229.BJ、920298.BJ)均属nonTrading停牌/新上市，按规则计入完整，不重新计为缺失；其reason为KeyError:'before'，仅为尝试记录。\",\n    \"连板网记录数9与涨停40/连板7口径不同，仅作公开字段留档，未用于口径合并。\"\n  ],\n  \"findings\": [\n    {\n      \"title\": \"交易日与来源核验\",\n      \"text\": \"连板网、东财涨停池、东财龙虎榜的日期均为2026-09-11，与目标交易日一致，三源状态均为available。\"\n    },\n    {\n      \"title\": \"涨停与连板\",\n      \"text\": \"涨停40家、连板7家；东财涨停池40条与akshare涨停池40条一致，无空响应或跨日数据。\"\n    },\n    {\n      \"title\": \"龙虎榜\",\n      \"text\": \"东财龙虎榜68条，akshare两镜像同为68条，providerMessage为ok，含代码、名称、交易日、净买额最低有效字段。\"\n    },\n    {\n      \"title\": \"日线完整性\",\n      \"text\": \"通达信日线5570/5570完整，缺失0、未解决0、complete=true；7只停牌或无交易证券按规则计入完整。\"\n    },\n    {\n      \"title\": \"未提供字段\",\n      \"text\": \"成交额、指数、涨跌幅与成交额领先候选、跌停阈值、前日涨停表现、行业与主题聚合、封板代理均未提供，结论仅限已核验数据。\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"title\": \"公开数据源核验\",\n      \"columns\": [\n        \"来源\",\n        \"状态\",\n        \"记录数\",\n        \"字节\",\n        \"校验\"\n      ],\n      \"rows\": [\n        [\n          \"连板网开放数据\",\n          \"available\",\n          \"9\",\n          \"818\",\n          \"sha256:f7de1e08…a104\"\n        ],\n        [\n          \"东方财富涨停池\",\n          \"available\",\n          \"40\",\n          \"10663\",\n          \"sha256:cf86d274…c221d\"\n        ],\n        [\n          \"东方财富龙虎榜\",\n          \"available\",\n          \"68\",\n          \"16553\",\n          \"sha256:6cefe5d8…653f7\"\n        ],\n        [\n          \"akshare龙虎榜镜像\",\n          \"available\",\n          \"68\",\n          \"0\",\n          \"无URL/哈希\"\n        ],\n        [\n          \"akshare龙虎榜(新浪)镜像\",\n          \"available\",\n          \"68\",\n          \"0\",\n          \"无URL/哈希\"\n        ],\n        [\n          \"akshare涨停池镜像\",\n          \"available\",\n          \"40\",\n          \"0\",\n          \"无URL/哈希\"\n        ],\n        [\n          \"akshare龙虎榜统计\",\n          \"available\",\n          \"647\",\n          \"0\",\n          \"无URL/哈希\"\n        ]\n      ]\n    },\n    {\n      \"title\": \"市场宽度核心指标(2026-09-11)\",\n      \"columns\": [\n        \"指标\",\n        \"数值\"\n      ],\n      \"rows\": [\n        [\n          \"同日股票数\",\n          \"5513\"\n        ],\n        [\n          \"上涨\",\n          \"643\"\n        ],\n        [\n          \"下跌\",\n          \"4870\"\n        ],\n        [\n          \"平盘\",\n          \"0\"\n        ],\n        [\n          \"涨停\",\n          \"40\"\n        ],\n        [\n          \"跌停\",\n          \"21\"\n        ],\n        [\n          \"连板\",\n          \"7\"\n        ],\n        [\n          \"同日新闻条数\",\n          \"100\"\n        ]\n      ]\n    },\n    {\n      \"title\": \"通达信日线完整性\",\n      \"columns\": [\n        \"项目\",\n        \"数值\",\n        \"说明\"\n      ],\n      \"rows\": [\n        [\n          \"目标交易日\",\n          \"20260911\",\n          \"与公开源一致\"\n        ],\n        [\n          \"证券清单\",\n          \"5570\",\n          \"\"\n        ],\n        [\n          \"完整\",\n          \"5570\",\n          \"\"\n        ],\n        [\n          \"缺失\",\n          \"0\",\n          \"complete=true\"\n        ],\n        [\n          \"未解决\",\n          \"0\",\n          \"unresolvedCount=0\"\n        ],\n        [\n          \"停牌/目标日无交易\",\n          \"7\",\n          \"计入完整，非缺失\"\n        ],\n        [\n          \"补齐写入\",\n          \"0\",\n          \"writtenCount=0\"\n        ],\n        [\n          \"补齐尝试\",\n          \"7\",\n          \"KeyError:'before'，均为非交易日项\"\n        ]\n      ]\n    }\n  ]\n}",
+    "elapsedMs": 30978
+  }
+}

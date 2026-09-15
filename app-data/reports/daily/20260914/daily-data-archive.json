@@ -1,0 +1,161 @@
+{
+  "schema": "ZHANGCAI_DAILY_DATA_ARCHIVE_REPORT_V1",
+  "report_id": "daily-data-archive",
+  "status": "available",
+  "trade_date": "20260914",
+  "created_at": "2026-09-15T12:50:46+08:00",
+  "data_root": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data",
+  "daily_archive": {
+    "schema": "ZHANGCAI_TDX_DAILY_ARCHIVE_V1",
+    "status": "available",
+    "asset": "tdx_daily_history",
+    "trade_date": "20260914",
+    "archived_at": "2026-09-15T12:50:43+08:00",
+    "source_root": "C:\\new_tdx_mock",
+    "history_days_requested": 0,
+    "history_scope": "all_available_source_history",
+    "current_trade_date_symbols": 9473,
+    "archived_symbols": 9490,
+    "security_master_records": 9473,
+    "security_master_named_records": 9473,
+    "bar_records": 15731736,
+    "file": "market/daily/20260914/tdx-bars.jsonl",
+    "sha256": "6f45ef6c5175ec598728634bb59eb37ddad4448610db331895941c2cc1913aaa",
+    "archive_mode": "unchanged",
+    "incremental_from": "",
+    "incremental_records": 0,
+    "incremental_trade_dates": [],
+    "incremental_base_file": "",
+    "delta_file": "",
+    "delta_records": 0,
+    "source_file_count": 9490,
+    "latest_date_source_files": 9473,
+    "source_record_count": 15731736,
+    "source_changed_since_previous": false,
+    "symbol_index": "market/daily/index/tdx-symbol-index.json",
+    "symbol_index_count": 9490,
+    "expected_trade_date": "20260914",
+    "freshness_status": "available",
+    "freshness_reason": "",
+    "storage_rule": "首次读取本地 .day 全部可用历史（或显式指定窗口）；后续交易日只向 market/daily/aggregate/tdx-bars.jsonl 追加新增记录，并在交易日目录保存 delta，历史目录和原文件保留。",
+    "reason": "",
+    "daily_data_index_sync": {
+      "status": "available",
+      "path": "market/daily/index/daily-data-index.json",
+      "date": "20260914",
+      "summary": {
+        "symbol_count": 9833,
+        "tdx_symbol_count": 9490,
+        "tdx_record_count": 15731736,
+        "fallback_symbol_count": 228,
+        "fallback_record_count": 228,
+        "date_count": 2
+      }
+    }
+  },
+  "assets": {
+    "tdx_daily_history": {
+      "status": "available",
+      "reason": "",
+      "file": "market/daily/20260914/tdx-bars.jsonl",
+      "file_count": null
+    },
+    "tdx_tq_formula": {
+      "status": "available",
+      "reason": "",
+      "file": "",
+      "file_count": null
+    },
+    "tdx_formula_source_archive": {
+      "status": "available",
+      "reason": "",
+      "file": "evidence/formulas/package/",
+      "file_count": null
+    },
+    "unified_source_manifest": {
+      "status": "available",
+      "reason": "",
+      "file": "evidence/sources/latest.json",
+      "file_count": 1
+    },
+    "unified_source_verification": {
+      "status": "available",
+      "reason": "",
+      "file": "evidence/sources/latest-verification.json",
+      "file_count": 1
+    },
+    "package_source_inventory": {
+      "status": "available",
+      "reason": "",
+      "file": "harness/context/package-source-inventory.json",
+      "file_count": 1
+    },
+    "package_source_gaps": {
+      "status": "degraded",
+      "reason": "已固化压缩包来源与数据缺口，共 11 项未完全闭合。",
+      "file": "harness/context/package-source-gap-report.json",
+      "file_count": null
+    },
+    "package_data_routing": {
+      "status": "available",
+      "reason": "",
+      "file": "harness/context/package-data-routing.json",
+      "file_count": 1
+    },
+    "package_source_snapshots": {
+      "status": "available",
+      "reason": "",
+      "file": "evidence/package-sources",
+      "file_count": 12
+    },
+    "security_master": {
+      "status": "available",
+      "reason": "",
+      "file": "market/security-master/",
+      "file_count": 2
+    },
+    "limit_up_pool": {
+      "status": "available",
+      "reason": "",
+      "file": "public/limit-up",
+      "file_count": 2
+    },
+    "lhb_data": {
+      "status": "available",
+      "reason": "",
+      "file": "public/lhb",
+      "file_count": 2
+    },
+    "public_research": {
+      "status": "available",
+      "reason": "",
+      "file": "evidence/public/",
+      "file_count": 2
+    },
+    "supplemental_stock": {
+      "status": "missing",
+      "reason": "尚未生成目标交易日的个股财务/股本快照。",
+      "file": "evidence/supplemental/20260914/",
+      "file_count": 0
+    },
+    "execution_evidence": {
+      "status": "available",
+      "reason": "",
+      "file": "reports/daily",
+      "file_count": 305
+    },
+    "skill_packages": {
+      "status": "available",
+      "reason": "",
+      "file": "",
+      "file_count": null
+    },
+    "imported_3002_sources": {
+      "status": "available",
+      "reason": "",
+      "file": "imported-3002",
+      "file_count": 717
+    }
+  },
+  "note": "这是本地数据归档日报，不包含投资结论；后续技能预检和执行报告会引用该快照哈希。"
+}

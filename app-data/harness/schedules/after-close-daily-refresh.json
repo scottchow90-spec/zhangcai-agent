@@ -1,0 +1,14 @@
+{
+  "schema": "ZHANGCAI_HARNESS_AFTER_CLOSE_SCHEDULE_V1",
+  "enabled": true,
+  "timezone": "Asia/Shanghai",
+  "schedule": "每个交易日收盘后 16:30",
+  "guard": "本地交易日历；周末和闭市日跳过；日期以本地可核验数据为准",
+  "nextRunAt": "2026-09-16T08:30:00.000Z",
+  "pipeline": [
+    "通达信日线补齐",
+    "公开行情与新闻同步",
+    "统一数据源落盘",
+    "DeepSeek Harness 数据校验"
+  ]
+}

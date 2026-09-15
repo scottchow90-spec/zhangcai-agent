@@ -147,8 +147,8 @@ TDX_GUARD_BOOTSTRAP_DIR = (
     Path(__file__).resolve().parent / "stock_runtime_bootstrap"
 )
 TDX_GUARD_BOOTSTRAP_FILES = {
-    "sitecustomize.py": "b101151ab8a66d264bad58bc82f8cb5d2e971d193f0d0b28799a7b882c3eba27",
-    "tdx_process_guard.py": "884c84e8e69bdac0f35ba7f06c6f6e97925698a8af4a06d514b0631b3060f834",
+    "sitecustomize.py": "8363f7ed7c4cabdb8f292e9a31020600d8b011bc8479113b1ed74fd3df850ec3",
+    "tdx_process_guard.py": "30f7e3bec22d6b08de76d7a496e270c4b17cf31c754992bd1042653f090bf1c5",
 }
 TDX_EXECUTABLE_SOURCE_SUFFIXES = frozenset(
     {".bat", ".cmd", ".js", ".ps1", ".py", ".ts", ".vbs"}

@@ -1,0 +1,1036 @@
+{
+  "schema": "ZHANGCAI_HARNESS_DAILY_CONTEXT_V1",
+  "date": "2026-09-14",
+  "generatedAt": "2026-09-14T08:32:25.584Z",
+  "runtimeRoot": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\runtime",
+  "publicSnapshot": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\public\\latest.json",
+  "newsSnapshot": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\news\\latest.json",
+  "dailyState": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\runtime\\daily-refresh-state.json",
+  "localDataPage": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\harness\\context\\local-data-page.json",
+  "localDataPageContent": {
+    "schema": "ZHANGCAI_LOCAL_DATA_PAGE_V1",
+    "generated_at": "2026-09-14T16:32:19+08:00",
+    "data_root": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data",
+    "latest_tdx_trade_date": "20260911",
+    "latest_tdx_archive": {
+      "status": "available",
+      "path": "market/daily/20260911/tdx-bars.jsonl",
+      "manifest": "market/daily/20260911/manifest.json",
+      "bar_records": 15722263,
+      "archived_symbols": 9485,
+      "history_days_requested": 0,
+      "history_scope": "all_available_source_history",
+      "sha256": "766e39a5ade66ec05eada4c9afc90a2d9d03b0867fef5975c47396ed10628cc8",
+      "delta_file": "",
+      "delta_records": 0,
+      "archive_mode": "unchanged",
+      "incremental_from": "",
+      "incremental_records": 0,
+      "incremental_trade_dates": [],
+      "source_file_count": 9485,
+      "symbol_index": "market/daily/index/tdx-symbol-index.json",
+      "daily_data_index": "market/daily/index/daily-data-index.json",
+      "fallback_root": "market/daily/fallback/20260911/",
+      "fallback_status": "blocked",
+      "fallback_symbol_count": 228,
+      "fallback_record_count": 228,
+      "jsonl_integrity_report": "runtime/daily-jsonl-integrity-20260911.json",
+      "jsonl_integrity_status": "available"
+    },
+    "read_order": [
+      "先读取本页确认 data_root、latest_tdx_trade_date 与资产状态",
+      "再读取 status/current.json 与各资产 manifest/快照，核对 status、source_date、retrieved_at、sha256",
+      "历史价格与公式输入按 tdx_local_day → tdx_archive → public_daily_fallback 顺序读取；优先使用 latest_tdx_archive.path，公开降级记录只能按 daily_data_index 索引合并，不能伪装成 TDX 全历史",
+      "个股日线索引先读 market/daily/index/tdx-symbol-index.json，再读 market/daily/index/daily-data-index.json；fallback 文件必须核对目标日期、source、source_date、status、source_sha256 和 missing_fields",
+      "通达信不可用时允许读取 market/daily/fallback/<trade-date>/<symbol>.jsonl；仅日期完全匹配的公开 OHLCV 可作为 degraded 输入，缺失成交额不得用价格乘成交量估算",
+      "需要全文件结构核验时读取 runtime/daily-jsonl-integrity-<trade-date>.json；该报告由流式逐行校验生成，不替代统一清单的 SHA-256 校验",
+      "evidence/supplemental/<trade-date>/market.json 与 <code>.<market>.json 提供财务、股本、指数日线、龙虎榜、融资融券的统一补充快照",
+      "公式安装包镜像读取 evidence/formulas/package/；现场计算回执读取 evidence/formulas/<trade-date>/",
+      "统一来源清单读取 evidence/sources/latest.json；压缩包来源目录读取 harness/context/package-source-inventory.json",
+      "公开源、新闻、连板和龙虎榜若来自 3002，读取 imported-3002/source-catalog.json，再按其中映射读取原始文件；先核对日期和状态",
+      "最后读取 reports/daily/<trade-date>/ 与 harness/jobs/<job-id>.json 作为执行回执"
+    ],
+    "assets": {
+      "tdx_daily_history": {
+        "name": "本地日线快照",
+        "declared_path": "market/daily/<trade-date>/tdx-bars.jsonl",
+        "resolved_path": "market/daily/20260911/tdx-bars.jsonl",
+        "status": "available",
+        "reason": ""
+      },
+      "security_master": {
+        "name": "证券基础资料",
+        "declared_path": "market/security-master/",
+        "resolved_path": "market/security-master/",
+        "status": "available",
+        "reason": ""
+      },
+      "limit_up_pool": {
+        "name": "涨停池快照",
+        "declared_path": "public/limit-up/",
+        "resolved_path": "public/limit-up/",
+        "status": "available",
+        "reason": ""
+      },
+      "lhb_data": {
+        "name": "龙虎榜原始快照",
+        "declared_path": "public/lhb/",
+        "resolved_path": "public/lhb/",
+        "status": "available",
+        "reason": ""
+      },
+      "public_research": {
+        "name": "公开资讯与公告证据",
+        "declared_path": "evidence/public/",
+        "resolved_path": "evidence/public/",
+        "status": "available",
+        "reason": "使用 3002 导入的只读历史同日快照作为公开资讯备援；当前仅确认单一公开源，保留单源降级标记。"
+      },
+      "tdx_tq_formula": {
+        "name": "通达信 TQ 公式现场证据",
+        "declared_path": "evidence/formulas/",
+        "resolved_path": "evidence/formulas/",
+        "status": "available",
+        "reason": ""
+      },
+      "tdx_formula_source_archive": {
+        "name": "通达信公式可移植镜像",
+        "declared_path": "evidence/formulas/package/",
+        "resolved_path": "evidence/formulas/package/",
+        "status": "available",
+        "reason": ""
+      },
+      "unified_source_manifest": {
+        "name": "统一数据源落盘清单",
+        "declared_path": "evidence/sources/latest.json",
+        "resolved_path": "evidence/sources/latest.json",
+        "status": "available",
+        "reason": ""
+      },
+      "unified_source_verification": {
+        "name": "统一数据源落盘校验",
+        "declared_path": "evidence/sources/latest-verification.json",
+        "resolved_path": "evidence/sources/latest-verification.json",
+        "status": "available",
+        "reason": ""
+      },
+      "package_source_inventory": {
+        "name": "行情能力包来源目录",
+        "declared_path": "harness/context/package-source-inventory.json",
+        "resolved_path": "harness/context/package-source-inventory.json",
+        "status": "available",
+        "reason": ""
+      },
+      "execution_evidence": {
+        "name": "任务回执与报告",
+        "declared_path": "reports/daily/<trade-date>/",
+        "resolved_path": "reports/daily/20260911/",
+        "status": "available",
+        "reason": ""
+      },
+      "tdx_daily_index": {
+        "name": "通达信日线证券索引",
+        "declared_path": "market/daily/index/tdx-symbol-index.json",
+        "resolved_path": "market/daily/index/tdx-symbol-index.json",
+        "status": "available",
+        "reason": ""
+      },
+      "daily_data_index": {
+        "name": "统一日线可用性索引",
+        "declared_path": "market/daily/index/daily-data-index.json",
+        "resolved_path": "market/daily/index/daily-data-index.json",
+        "status": "available",
+        "reason": ""
+      },
+      "tdx_daily_fallback": {
+        "name": "公开源日线降级层",
+        "declared_path": "market/daily/fallback/20260911/",
+        "resolved_path": "market/daily/fallback/20260911/",
+        "status": "available",
+        "reason": ""
+      },
+      "supplemental_market": {
+        "name": "统一补充数据快照",
+        "declared_path": "evidence/supplemental/20260911/market.json",
+        "resolved_path": "evidence/supplemental/20260911/market.json",
+        "status": "available",
+        "reason": ""
+      },
+      "supplemental_stock": {
+        "name": "个股财务与股本补充快照",
+        "declared_path": "evidence/supplemental/20260911/",
+        "resolved_path": "evidence/supplemental/20260911/",
+        "status": "available",
+        "reason": ""
+      },
+      "daily_jsonl_integrity": {
+        "name": "日线 JSONL 逐行校验报告",
+        "declared_path": "runtime/daily-jsonl-integrity-20260911.json",
+        "resolved_path": "runtime/daily-jsonl-integrity-20260911.json",
+        "status": "available",
+        "reason": ""
+      },
+      "package_source_gap_report": {
+        "name": "压缩包来源缺口清单",
+        "declared_path": "harness/context/package-source-gap-report.json",
+        "resolved_path": "harness/context/package-source-gap-report.json",
+        "status": "available",
+        "reason": ""
+      },
+      "package_data_routing": {
+        "name": "压缩包数据路由",
+        "declared_path": "harness/context/package-data-routing.json",
+        "resolved_path": "harness/context/package-data-routing.json",
+        "status": "available",
+        "reason": ""
+      },
+      "package_source_snapshots": {
+        "name": "压缩包来源实际快照",
+        "declared_path": "evidence/package-sources/20260911/",
+        "resolved_path": "evidence/package-sources/20260911/",
+        "status": "available",
+        "reason": ""
+      },
+      "imported_3002_sources": {
+        "name": "3002 兼容数据源索引",
+        "declared_path": "imported-3002/",
+        "resolved_path": "imported-3002/",
+        "status": "available",
+        "reason": "已复制并保留来源日期/哈希；不可将历史快照当作当前交易日数据。"
+      }
+    },
+    "paths": {
+      "tdx_daily_history": "market/daily/20260911/tdx-bars.jsonl",
+      "tdx_daily_manifest": "market/daily/20260911/manifest.json",
+      "tdx_daily_delta": "",
+      "tdx_daily_index": "market/daily/index/tdx-symbol-index.json",
+      "daily_data_index": "market/daily/index/daily-data-index.json",
+      "tdx_daily_aggregate": "market/daily/20260911/tdx-bars.jsonl",
+      "tdx_daily_fallback": "market/daily/fallback/20260911/",
+      "tdx_daily_fallback_bars": "market/daily/fallback/20260911/<symbol>.jsonl",
+      "supplemental_market": "evidence/supplemental/20260911/market.json",
+      "supplemental_stock": "evidence/supplemental/20260911/<code>.<market>.json",
+      "security_master": "market/security-master/",
+      "limit_up_pool": "public/limit-up/",
+      "lhb_data": "public/lhb/",
+      "public_research": "evidence/public/",
+      "tdx_tq_formula": "evidence/formulas/",
+      "tdx_formula_source_archive": "evidence/formulas/package/",
+      "unified_source_manifest": "evidence/sources/latest.json",
+      "unified_source_verification": "evidence/sources/latest-verification.json",
+      "package_source_inventory": "harness/context/package-source-inventory.json",
+      "package_source_gap_report": "harness/context/package-source-gap-report.json",
+      "package_data_routing": "harness/context/package-data-routing.json",
+      "package_source_snapshots": "evidence/package-sources/20260911/",
+      "execution_evidence": "reports/daily/20260911/",
+      "market_latest_snapshot": "runtime/market-latest.json",
+      "daily_refresh_state": "runtime/daily-refresh-state.json",
+      "daily_jsonl_integrity": "runtime/daily-jsonl-integrity-20260911.json",
+      "harness_context": "harness/context/latest-data.json",
+      "harness_jobs": "harness/jobs/",
+      "skill_manifest": "skills/manifest.json",
+      "status": "status/current.json",
+      "imported_3002_root": "imported-3002/",
+      "imported_3002_manifest": "imported-3002/manifest.json",
+      "imported_3002_source_catalog": "imported-3002/source-catalog.json"
+    },
+    "integrated_sources": {
+      "public_market": {
+        "path": "imported-3002/data/public/",
+        "latest": "imported-3002/data/public/latest.json",
+        "date": "2026-09-11",
+        "sources": [
+          "akshareLhb",
+          "akshareLhbSina",
+          "akshareLhbStockDetail",
+          "akshareLhbStockStatistic",
+          "akshareLimitUpPool",
+          "eastmoneyLhb",
+          "eastmoneyLimitUp",
+          "lianban"
+        ]
+      },
+      "news": {
+        "path": "imported-3002/data/news/",
+        "latest": "imported-3002/data/news/latest.json",
+        "date": "2026-09-11",
+        "sources": [
+          "东方财富7x24快讯"
+        ],
+        "same_day_record_count": 100
+      },
+      "daily_context": {
+        "path": "imported-3002/data/harness/context/",
+        "latest": "imported-3002/data/harness/context/latest-data.json"
+      },
+      "runtime_status": {
+        "path": "imported-3002/data/runtime/"
+      },
+      "operational_logs": {
+        "path": "imported-3002/data/logs/",
+        "note": "3002 运行诊断日志，仅作故障追溯，不作为行情事实"
+      },
+      "task_artifacts": {
+        "path": "imported-3002/data/harness/tasks/",
+        "note": "已完成 Harness 任务产物，仅作历史证据"
+      },
+      "data_reports": {
+        "path": "imported-3002/data/reports/"
+      },
+      "strategy_results": {
+        "path": "imported-3002/data/strategy-results/"
+      },
+      "historical_reports": {
+        "path": "imported-3002/reports/"
+      },
+      "runtime_results": {
+        "path": "imported-3002/runtime-results/"
+      }
+    },
+    "provenance_required": [
+      "source",
+      "source_url_or_local_root",
+      "source_date",
+      "retrieved_at",
+      "status",
+      "error_or_reason",
+      "sha256"
+    ],
+    "truth_rules": [
+      "包内源码/接口说明不等于接口可用；必须以本页和资产现场状态为准",
+      "通达信本地日线是历史与公式类技能的主数据；公开源只能作为声明清楚的降级或辅助证据",
+      "公开日线降级层只写入应用 data_root，不修改通达信源目录；TDX 断开时可以继续研究已补齐的明确交易日，但必须把 quality=degraded 和缺失字段传给 Harness",
+      "不得读取或写入密钥、Cookie，不得修改通达信源目录，不得把推测写入快照",
+      "3002 兼容目录只允许作为带来源日期的本地证据；当前结论必须优先使用当前日期资产，历史导入不能覆盖更新日期"
+    ]
+  },
+  "steps": [
+    {
+      "name": "通达信运行状态",
+      "status": "completed",
+      "script": "tdx_runtime_bridge.py",
+      "code": 0,
+      "finishedAt": "2026-09-14T08:30:01.394Z"
+    },
+    {
+      "name": "通达信日线完整性检查与补齐",
+      "status": "failed",
+      "finishedAt": "2026-09-14T08:30:09.332Z",
+      "error": "Traceback (most recent call last):\r\n  File \"C:\\new_tdx_mock\\PYPlugins\\user\\tqcenter.py\", line 725, in _auto_initialize\r\n    raise RuntimeError(\"TQ���ݽӿڳ�ʼ��ʧ�ܻ�����ͬ����������\")\r\nRuntimeError: TQ���ݽӿڳ�ʼ��ʧ�ܻ�����ͬ����������\r\n\r\nDuring handling of the above exception, another exception occurred:\r\n\r\nTraceback (most recent call last):\r\n  File \"C:\\work\\260907 �Ʋ�������\\CodeX-st-wsp\\zhangcai-web-3003\\scripts\\tdx_daily_integrity.py\", line 391, in <module>\r\n    raise SystemExit(main())\r\n                     ^^^^^^\r\n  File \"C:\\work\\260907 �Ʋ�������\\CodeX-st-wsp\\zhangcai-web-3003\\scripts\\tdx_daily_integrity.py\", line 329, in main\r\n    codes = read_tq_stock_list()\r\n            ^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\work\\260907 �Ʋ�������\\CodeX-st-wsp\\zhangcai-web-3003\\scripts\\tdx_daily_integrity.py\", line 66, in read_tq_stock_list\r\n    tq.initialize(str(init))\r\n  File \"C:\\new_tdx_mock\\PYPlugins\\user\\tqcenter.py\", line 630, in initialize\r\n    cls._auto_initialize()\r\n  File \"C:\\new_tdx_mock\\PYPlugins\\user\\tqcenter.py\", line 729, in _auto_initialize\r\n    raise RuntimeError(\"TQ���ݽӿڳ�ʼ��ʧ��: ����·��Ϊ�գ����ȵ��� tq.initialize(path)\")\r\nRuntimeError: TQ���ݽӿڳ�ʼ��ʧ��: ����·��Ϊ�գ����ȵ��� tq.initialize(path)"
+    },
+    {
+      "name": "14技能日线归档",
+      "status": "completed",
+      "script": "skill14_data_runtime.py",
+      "code": 0,
+      "finishedAt": "2026-09-14T08:30:15.757Z"
+    },
+    {
+      "name": "公开日线缺口降级补齐",
+      "status": "partial",
+      "script": "daily_data_recovery.py",
+      "code": 2,
+      "finishedAt": "2026-09-14T08:31:56.451Z"
+    },
+    {
+      "name": "新闻快讯补齐",
+      "status": "completed",
+      "script": "news_sync.py",
+      "code": 0,
+      "finishedAt": "2026-09-14T08:31:58.331Z"
+    },
+    {
+      "name": "公开行情补齐",
+      "status": "completed",
+      "script": "public_market_sync.py",
+      "code": 0,
+      "finishedAt": "2026-09-14T08:32:05.558Z"
+    },
+    {
+      "name": "财务、股本、指数、龙虎榜、融资融券统一落盘",
+      "status": "completed",
+      "script": "supplemental_data_sync.py",
+      "code": 0,
+      "finishedAt": "2026-09-14T08:32:08.952Z"
+    },
+    {
+      "name": "行情资讯能力包来源补充",
+      "status": "completed",
+      "script": "package_source_sync.py",
+      "code": 0,
+      "finishedAt": "2026-09-14T08:32:16.842Z"
+    },
+    {
+      "name": "统一数据状态刷新",
+      "status": "completed",
+      "script": "skill14_data_runtime.py",
+      "code": 0,
+      "finishedAt": "2026-09-14T08:32:19.459Z"
+    },
+    {
+      "name": "统一数据源清单生成",
+      "status": "completed",
+      "script": "unified_data_archive.py",
+      "code": 0,
+      "finishedAt": "2026-09-14T08:32:21.414Z"
+    }
+  ],
+  "snapshots": {
+    "localDataPage": {
+      "schema": "ZHANGCAI_LOCAL_DATA_PAGE_V1",
+      "generated_at": "2026-09-14T16:32:19+08:00",
+      "data_root": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data",
+      "latest_tdx_trade_date": "20260911",
+      "latest_tdx_archive": {
+        "status": "available",
+        "path": "market/daily/20260911/tdx-bars.jsonl",
+        "manifest": "market/daily/20260911/manifest.json",
+        "bar_records": 15722263,
+        "archived_symbols": 9485,
+        "history_days_requested": 0,
+        "history_scope": "all_available_source_history",
+        "sha256": "766e39a5ade66ec05eada4c9afc90a2d9d03b0867fef5975c47396ed10628cc8",
+        "delta_file": "",
+        "delta_records": 0,
+        "archive_mode": "unchanged",
+        "incremental_from": "",
+        "incremental_records": 0,
+        "incremental_trade_dates": [],
+        "source_file_count": 9485,
+        "symbol_index": "market/daily/index/tdx-symbol-index.json",
+        "daily_data_index": "market/daily/index/daily-data-index.json",
+        "fallback_root": "market/daily/fallback/20260911/",
+        "fallback_status": "blocked",
+        "fallback_symbol_count": 228,
+        "fallback_record_count": 228,
+        "jsonl_integrity_report": "runtime/daily-jsonl-integrity-20260911.json",
+        "jsonl_integrity_status": "available"
+      },
+      "read_order": [
+        "先读取本页确认 data_root、latest_tdx_trade_date 与资产状态",
+        "再读取 status/current.json 与各资产 manifest/快照，核对 status、source_date、retrieved_at、sha256",
+        "历史价格与公式输入按 tdx_local_day → tdx_archive → public_daily_fallback 顺序读取；优先使用 latest_tdx_archive.path，公开降级记录只能按 daily_data_index 索引合并，不能伪装成 TDX 全历史",
+        "个股日线索引先读 market/daily/index/tdx-symbol-index.json，再读 market/daily/index/daily-data-index.json；fallback 文件必须核对目标日期、source、source_date、status、source_sha256 和 missing_fields",
+        "通达信不可用时允许读取 market/daily/fallback/<trade-date>/<symbol>.jsonl；仅日期完全匹配的公开 OHLCV 可作为 degraded 输入，缺失成交额不得用价格乘成交量估算",
+        "需要全文件结构核验时读取 runtime/daily-jsonl-integrity-<trade-date>.json；该报告由流式逐行校验生成，不替代统一清单的 SHA-256 校验",
+        "evidence/supplemental/<trade-date>/market.json 与 <code>.<market>.json 提供财务、股本、指数日线、龙虎榜、融资融券的统一补充快照",
+        "公式安装包镜像读取 evidence/formulas/package/；现场计算回执读取 evidence/formulas/<trade-date>/",
+        "统一来源清单读取 evidence/sources/latest.json；压缩包来源目录读取 harness/context/package-source-inventory.json",
+        "公开源、新闻、连板和龙虎榜若来自 3002，读取 imported-3002/source-catalog.json，再按其中映射读取原始文件；先核对日期和状态",
+        "最后读取 reports/daily/<trade-date>/ 与 harness/jobs/<job-id>.json 作为执行回执"
+      ],
+      "assets": {
+        "tdx_daily_history": {
+          "name": "本地日线快照",
+          "declared_path": "market/daily/<trade-date>/tdx-bars.jsonl",
+          "resolved_path": "market/daily/20260911/tdx-bars.jsonl",
+          "status": "available",
+          "reason": ""
+        },
+        "security_master": {
+          "name": "证券基础资料",
+          "declared_path": "market/security-master/",
+          "resolved_path": "market/security-master/",
+          "status": "available",
+          "reason": ""
+        },
+        "limit_up_pool": {
+          "name": "涨停池快照",
+          "declared_path": "public/limit-up/",
+          "resolved_path": "public/limit-up/",
+          "status": "available",
+          "reason": ""
+        },
+        "lhb_data": {
+          "name": "龙虎榜原始快照",
+          "declared_path": "public/lhb/",
+          "resolved_path": "public/lhb/",
+          "status": "available",
+          "reason": ""
+        },
+        "public_research": {
+          "name": "公开资讯与公告证据",
+          "declared_path": "evidence/public/",
+          "resolved_path": "evidence/public/",
+          "status": "available",
+          "reason": "使用 3002 导入的只读历史同日快照作为公开资讯备援；当前仅确认单一公开源，保留单源降级标记。"
+        },
+        "tdx_tq_formula": {
+          "name": "通达信 TQ 公式现场证据",
+          "declared_path": "evidence/formulas/",
+          "resolved_path": "evidence/formulas/",
+          "status": "available",
+          "reason": ""
+        },
+        "tdx_formula_source_archive": {
+          "name": "通达信公式可移植镜像",
+          "declared_path": "evidence/formulas/package/",
+          "resolved_path": "evidence/formulas/package/",
+          "status": "available",
+          "reason": ""
+        },
+        "unified_source_manifest": {
+          "name": "统一数据源落盘清单",
+          "declared_path": "evidence/sources/latest.json",
+          "resolved_path": "evidence/sources/latest.json",
+          "status": "available",
+          "reason": ""
+        },
+        "unified_source_verification": {
+          "name": "统一数据源落盘校验",
+          "declared_path": "evidence/sources/latest-verification.json",
+          "resolved_path": "evidence/sources/latest-verification.json",
+          "status": "available",
+          "reason": ""
+        },
+        "package_source_inventory": {
+          "name": "行情能力包来源目录",
+          "declared_path": "harness/context/package-source-inventory.json",
+          "resolved_path": "harness/context/package-source-inventory.json",
+          "status": "available",
+          "reason": ""
+        },
+        "execution_evidence": {
+          "name": "任务回执与报告",
+          "declared_path": "reports/daily/<trade-date>/",
+          "resolved_path": "reports/daily/20260911/",
+          "status": "available",
+          "reason": ""
+        },
+        "tdx_daily_index": {
+          "name": "通达信日线证券索引",
+          "declared_path": "market/daily/index/tdx-symbol-index.json",
+          "resolved_path": "market/daily/index/tdx-symbol-index.json",
+          "status": "available",
+          "reason": ""
+        },
+        "daily_data_index": {
+          "name": "统一日线可用性索引",
+          "declared_path": "market/daily/index/daily-data-index.json",
+          "resolved_path": "market/daily/index/daily-data-index.json",
+          "status": "available",
+          "reason": ""
+        },
+        "tdx_daily_fallback": {
+          "name": "公开源日线降级层",
+          "declared_path": "market/daily/fallback/20260911/",
+          "resolved_path": "market/daily/fallback/20260911/",
+          "status": "available",
+          "reason": ""
+        },
+        "supplemental_market": {
+          "name": "统一补充数据快照",
+          "declared_path": "evidence/supplemental/20260911/market.json",
+          "resolved_path": "evidence/supplemental/20260911/market.json",
+          "status": "available",
+          "reason": ""
+        },
+        "supplemental_stock": {
+          "name": "个股财务与股本补充快照",
+          "declared_path": "evidence/supplemental/20260911/",
+          "resolved_path": "evidence/supplemental/20260911/",
+          "status": "available",
+          "reason": ""
+        },
+        "daily_jsonl_integrity": {
+          "name": "日线 JSONL 逐行校验报告",
+          "declared_path": "runtime/daily-jsonl-integrity-20260911.json",
+          "resolved_path": "runtime/daily-jsonl-integrity-20260911.json",
+          "status": "available",
+          "reason": ""
+        },
+        "package_source_gap_report": {
+          "name": "压缩包来源缺口清单",
+          "declared_path": "harness/context/package-source-gap-report.json",
+          "resolved_path": "harness/context/package-source-gap-report.json",
+          "status": "available",
+          "reason": ""
+        },
+        "package_data_routing": {
+          "name": "压缩包数据路由",
+          "declared_path": "harness/context/package-data-routing.json",
+          "resolved_path": "harness/context/package-data-routing.json",
+          "status": "available",
+          "reason": ""
+        },
+        "package_source_snapshots": {
+          "name": "压缩包来源实际快照",
+          "declared_path": "evidence/package-sources/20260911/",
+          "resolved_path": "evidence/package-sources/20260911/",
+          "status": "available",
+          "reason": ""
+        },
+        "imported_3002_sources": {
+          "name": "3002 兼容数据源索引",
+          "declared_path": "imported-3002/",
+          "resolved_path": "imported-3002/",
+          "status": "available",
+          "reason": "已复制并保留来源日期/哈希；不可将历史快照当作当前交易日数据。"
+        }
+      },
+      "paths": {
+        "tdx_daily_history": "market/daily/20260911/tdx-bars.jsonl",
+        "tdx_daily_manifest": "market/daily/20260911/manifest.json",
+        "tdx_daily_delta": "",
+        "tdx_daily_index": "market/daily/index/tdx-symbol-index.json",
+        "daily_data_index": "market/daily/index/daily-data-index.json",
+        "tdx_daily_aggregate": "market/daily/20260911/tdx-bars.jsonl",
+        "tdx_daily_fallback": "market/daily/fallback/20260911/",
+        "tdx_daily_fallback_bars": "market/daily/fallback/20260911/<symbol>.jsonl",
+        "supplemental_market": "evidence/supplemental/20260911/market.json",
+        "supplemental_stock": "evidence/supplemental/20260911/<code>.<market>.json",
+        "security_master": "market/security-master/",
+        "limit_up_pool": "public/limit-up/",
+        "lhb_data": "public/lhb/",
+        "public_research": "evidence/public/",
+        "tdx_tq_formula": "evidence/formulas/",
+        "tdx_formula_source_archive": "evidence/formulas/package/",
+        "unified_source_manifest": "evidence/sources/latest.json",
+        "unified_source_verification": "evidence/sources/latest-verification.json",
+        "package_source_inventory": "harness/context/package-source-inventory.json",
+        "package_source_gap_report": "harness/context/package-source-gap-report.json",
+        "package_data_routing": "harness/context/package-data-routing.json",
+        "package_source_snapshots": "evidence/package-sources/20260911/",
+        "execution_evidence": "reports/daily/20260911/",
+        "market_latest_snapshot": "runtime/market-latest.json",
+        "daily_refresh_state": "runtime/daily-refresh-state.json",
+        "daily_jsonl_integrity": "runtime/daily-jsonl-integrity-20260911.json",
+        "harness_context": "harness/context/latest-data.json",
+        "harness_jobs": "harness/jobs/",
+        "skill_manifest": "skills/manifest.json",
+        "status": "status/current.json",
+        "imported_3002_root": "imported-3002/",
+        "imported_3002_manifest": "imported-3002/manifest.json",
+        "imported_3002_source_catalog": "imported-3002/source-catalog.json"
+      },
+      "integrated_sources": {
+        "public_market": {
+          "path": "imported-3002/data/public/",
+          "latest": "imported-3002/data/public/latest.json",
+          "date": "2026-09-11",
+          "sources": [
+            "akshareLhb",
+            "akshareLhbSina",
+            "akshareLhbStockDetail",
+            "akshareLhbStockStatistic",
+            "akshareLimitUpPool",
+            "eastmoneyLhb",
+            "eastmoneyLimitUp",
+            "lianban"
+          ]
+        },
+        "news": {
+          "path": "imported-3002/data/news/",
+          "latest": "imported-3002/data/news/latest.json",
+          "date": "2026-09-11",
+          "sources": [
+            "东方财富7x24快讯"
+          ],
+          "same_day_record_count": 100
+        },
+        "daily_context": {
+          "path": "imported-3002/data/harness/context/",
+          "latest": "imported-3002/data/harness/context/latest-data.json"
+        },
+        "runtime_status": {
+          "path": "imported-3002/data/runtime/"
+        },
+        "operational_logs": {
+          "path": "imported-3002/data/logs/",
+          "note": "3002 运行诊断日志，仅作故障追溯，不作为行情事实"
+        },
+        "task_artifacts": {
+          "path": "imported-3002/data/harness/tasks/",
+          "note": "已完成 Harness 任务产物，仅作历史证据"
+        },
+        "data_reports": {
+          "path": "imported-3002/data/reports/"
+        },
+        "strategy_results": {
+          "path": "imported-3002/data/strategy-results/"
+        },
+        "historical_reports": {
+          "path": "imported-3002/reports/"
+        },
+        "runtime_results": {
+          "path": "imported-3002/runtime-results/"
+        }
+      },
+      "provenance_required": [
+        "source",
+        "source_url_or_local_root",
+        "source_date",
+        "retrieved_at",
+        "status",
+        "error_or_reason",
+        "sha256"
+      ],
+      "truth_rules": [
+        "包内源码/接口说明不等于接口可用；必须以本页和资产现场状态为准",
+        "通达信本地日线是历史与公式类技能的主数据；公开源只能作为声明清楚的降级或辅助证据",
+        "公开日线降级层只写入应用 data_root，不修改通达信源目录；TDX 断开时可以继续研究已补齐的明确交易日，但必须把 quality=degraded 和缺失字段传给 Harness",
+        "不得读取或写入密钥、Cookie，不得修改通达信源目录，不得把推测写入快照",
+        "3002 兼容目录只允许作为带来源日期的本地证据；当前结论必须优先使用当前日期资产，历史导入不能覆盖更新日期"
+      ]
+    },
+    "publicMarket": {
+      "schema": "ZHANGCAI_PUBLIC_MARKET_V1",
+      "date": "2026-09-14",
+      "fetchedAt": "2026-09-14T16:32:05+08:00",
+      "sources": {
+        "lianban": {
+          "status": "available",
+          "url": "https://lianban.net/opendata/2026-09-14.json",
+          "sha256": "af9c119e6aed2370395ca33ccba427f9769866bc78bef32f879a14129076953d",
+          "bytes": 970,
+          "recordCount": 14,
+          "providerSuccess": true,
+          "providerMessage": null
+        },
+        "eastmoneyLimitUp": {
+          "status": "available",
+          "url": "https://push2ex.eastmoney.com/getTopicZTPool?ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wz.ztzt&Pageindex=0&pagesize=10000&sort=fbt%3Aasc&date=20260914",
+          "sha256": "9f9264bcea592e6bb7c858572ed050446145146e125d791fc4f60ceff7a4e28b",
+          "bytes": 14561,
+          "recordCount": 55,
+          "providerSuccess": true,
+          "providerMessage": null
+        },
+        "eastmoneyLhb": {
+          "status": "available",
+          "url": "https://datacenter-web.eastmoney.com/api/data/v1/get?sortColumns=SECURITY_CODE%2CTRADE_DATE&sortTypes=1%2C-1&pageSize=5000&pageNumber=1&reportName=RPT_DAILYBILLBOARD_DETAILSNEW&columns=SECURITY_CODE%2CSECURITY_NAME_ABBR%2CTRADE_DATE%2CBILLBOARD_NET_AMT%2CBILLBOARD_BUY_AMT%2CBILLBOARD_SELL_AMT%2CEXPLAIN&source=WEB&client=WEB&filter=%28TRADE_DATE%3C%3D%272026-09-14%27%29%28TRADE_DATE%3E%3D%272026-09-14%27%29",
+          "sha256": "b4fd2ba1b978571b40df3d18e2b0187112e9e432ab8c8a20444b845f21f5b0ad",
+          "bytes": 9055,
+          "recordCount": 37,
+          "providerSuccess": true,
+          "providerMessage": "ok"
+        },
+        "akshareLhb": {
+          "status": "available",
+          "url": "",
+          "sha256": "",
+          "bytes": 0,
+          "recordCount": 37,
+          "providerSuccess": true,
+          "providerMessage": null
+        },
+        "akshareLhbSina": {
+          "status": "missing",
+          "url": "",
+          "sha256": "",
+          "bytes": 0,
+          "recordCount": null,
+          "providerSuccess": false,
+          "providerMessage": "KeyError: '股票代码'"
+        },
+        "akshareLhbStockStatistic": {
+          "status": "available",
+          "url": "",
+          "sha256": "",
+          "bytes": 0,
+          "recordCount": 600,
+          "providerSuccess": true,
+          "providerMessage": null
+        },
+        "akshareLimitUpPool": {
+          "status": "available",
+          "url": "",
+          "sha256": "",
+          "bytes": 0,
+          "recordCount": 55,
+          "providerSuccess": true,
+          "providerMessage": null
+        },
+        "akshareLhbStockDetail": {
+          "status": "available",
+          "url": "",
+          "sha256": "",
+          "bytes": 0,
+          "recordCount": 20,
+          "providerSuccess": true,
+          "providerMessage": null
+        }
+      },
+      "marketBreadth": {
+        "currentCount": 5081,
+        "up": 2974,
+        "down": 2107,
+        "flat": 0,
+        "limitUp": 55,
+        "limitDown": 16,
+        "lianban": 11
+      }
+    },
+    "tdxDailyIntegrity": {
+      "reportPath": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\runtime\\tdx-daily-integrity-20260913-111412.json",
+      "targetDate": "20260911",
+      "stockListCount": 5570,
+      "stockCompleteCount": 5570,
+      "stockMissingCount": 0,
+      "complete": true,
+      "unresolved": [],
+      "repairs": [],
+      "repairAttempts": [
+        {
+          "code": "001246.SZ",
+          "before": "missing_file",
+          "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz001246.day",
+          "status": "unresolved",
+          "sourcesTried": [
+            "Tongdaxin TQ get_market_data",
+            "东方财富历史K线(push2his)"
+          ],
+          "fetchedDate": null,
+          "reason": "TQ 与公开历史 K 线均未返回目标交易日数据"
+        },
+        {
+          "code": "301716.SZ",
+          "before": "missing_file",
+          "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz301716.day",
+          "status": "unresolved",
+          "sourcesTried": [
+            "Tongdaxin TQ get_market_data",
+            "东方财富历史K线(push2his)"
+          ],
+          "fetchedDate": null,
+          "reason": "TQ 与公开历史 K 线均未返回目标交易日数据"
+        },
+        {
+          "code": "601091.SH",
+          "before": "missing_file",
+          "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh601091.day",
+          "status": "unresolved",
+          "sourcesTried": [
+            "Tongdaxin TQ get_market_data",
+            "东方财富历史K线(push2his)"
+          ],
+          "fetchedDate": null,
+          "reason": "TQ 与公开历史 K 线均未返回目标交易日数据"
+        },
+        {
+          "code": "688837.SH",
+          "before": "missing_file",
+          "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh688837.day",
+          "status": "unresolved",
+          "sourcesTried": [
+            "Tongdaxin TQ get_market_data",
+            "东方财富历史K线(push2his)"
+          ],
+          "fetchedDate": null,
+          "reason": "TQ 与公开历史 K 线均未返回目标交易日数据"
+        },
+        {
+          "code": "920201.BJ",
+          "before": "missing_file",
+          "path": "C:\\new_tdx_mock\\vipdoc\\bj\\lday\\bj920201.day",
+          "status": "unresolved",
+          "sourcesTried": [
+            "Tongdaxin TQ get_market_data",
+            "东方财富历史K线(push2his)"
+          ],
+          "fetchedDate": null,
+          "reason": "TQ 与公开历史 K 线均未返回目标交易日数据"
+        },
+        {
+          "code": "920229.BJ",
+          "before": "missing_file",
+          "path": "C:\\new_tdx_mock\\vipdoc\\bj\\lday\\bj920229.day",
+          "status": "unresolved",
+          "sourcesTried": [
+            "Tongdaxin TQ get_market_data",
+            "东方财富历史K线(push2his)"
+          ],
+          "fetchedDate": null,
+          "reason": "TQ 与公开历史 K 线均未返回目标交易日数据"
+        },
+        {
+          "code": "920298.BJ",
+          "before": "missing_file",
+          "path": "C:\\new_tdx_mock\\vipdoc\\bj\\lday\\bj920298.day",
+          "status": "unresolved",
+          "sourcesTried": [
+            "Tongdaxin TQ get_market_data",
+            "东方财富历史K线(push2his)"
+          ],
+          "fetchedDate": null,
+          "reason": "TQ 与公开历史 K 线均未返回目标交易日数据"
+        }
+      ],
+      "nonTrading": [
+        {
+          "code": "001246.SZ",
+          "status": "non_trading",
+          "type": "suspended",
+          "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+          "quoteEvidence": {
+            "provider": "Tongdaxin base.dbf",
+            "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+            "listingDate": "20260910"
+          }
+        },
+        {
+          "code": "301716.SZ",
+          "status": "non_trading",
+          "type": "suspended",
+          "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+          "quoteEvidence": {
+            "provider": "Tongdaxin base.dbf",
+            "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+            "listingDate": "20260908"
+          }
+        },
+        {
+          "code": "601091.SH",
+          "status": "non_trading",
+          "type": "suspended",
+          "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+          "quoteEvidence": {
+            "provider": "Tongdaxin base.dbf",
+            "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+            "listingDate": "20260909"
+          }
+        },
+        {
+          "code": "688837.SH",
+          "status": "non_trading",
+          "type": "suspended",
+          "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+          "quoteEvidence": {
+            "provider": "Tongdaxin base.dbf",
+            "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+            "listingDate": "20260909"
+          }
+        },
+        {
+          "code": "920201.BJ",
+          "status": "non_trading",
+          "type": "suspended",
+          "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+          "quoteEvidence": {
+            "provider": "Tongdaxin base.dbf",
+            "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+            "listingDate": "20260904"
+          }
+        },
+        {
+          "code": "920229.BJ",
+          "status": "non_trading",
+          "type": "suspended",
+          "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+          "quoteEvidence": {
+            "provider": "Tongdaxin base.dbf",
+            "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+            "listingDate": "20260908"
+          }
+        },
+        {
+          "code": "920298.BJ",
+          "status": "non_trading",
+          "type": "suspended",
+          "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+          "quoteEvidence": {
+            "provider": "Tongdaxin base.dbf",
+            "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+            "listingDate": "20260904"
+          }
+        }
+      ]
+    },
+    "dailyDataIndex": {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\index\\daily-data-index.json",
+      "status": "available",
+      "sourcePrecedence": [
+        "tdx_local_day",
+        "tdx_archive",
+        "public_daily_fallback"
+      ],
+      "summary": {
+        "symbol_count": 9485,
+        "tdx_symbol_count": 9485,
+        "tdx_record_count": 15722263,
+        "fallback_symbol_count": 228,
+        "fallback_record_count": 228,
+        "date_count": 2
+      },
+      "dates": {
+        "20260911": {
+          "trade_date": "20260911",
+          "updated_at": "2026-09-14T11:54:08+08:00",
+          "requested_count": 2,
+          "fetched_count": 0,
+          "failed_count": 2,
+          "tdx_available": true,
+          "fallback_root": "market/daily/fallback/20260911/",
+          "status": "blocked",
+          "available_fallback_symbols": 29,
+          "available_fallback_records": 29
+        },
+        "20260914": {
+          "trade_date": "20260914",
+          "updated_at": "2026-09-14T16:31:53+08:00",
+          "requested_count": 200,
+          "fetched_count": 199,
+          "failed_count": 1,
+          "tdx_available": true,
+          "fallback_root": "market/daily/fallback/20260914/",
+          "status": "degraded",
+          "available_fallback_symbols": 199,
+          "available_fallback_records": 199
+        }
+      }
+    },
+    "news": {
+      "schema": "ZHANGCAI_MULTI_SOURCE_NEWS_SNAPSHOT_V2",
+      "date": "2026-09-14",
+      "status": "available",
+      "fetchedAt": "2026-09-14T16:31:58+08:00",
+      "sameDayRecordCount": 212,
+      "source": {
+        "url": "https://np-weblist.eastmoney.com/comm/web/getFastNewsList?client=web&biz=web_724&fastColumn=102&sortEnd=&pageSize=100&req_trace=1789374716835",
+        "httpStatus": null,
+        "sha256": "d850c860474fdadd9006d3e7b7d0a7ada9175572afbcf9918cf99239b70ba94c",
+        "bytes": 57477,
+        "providerCode": null,
+        "recordCount": 100
+      }
+    },
+    "supplemental": {
+      "status": "available",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\evidence\\supplemental\\20260914\\market.json",
+      "date": "2026-09-14",
+      "generatedAt": "2026-09-14T16:32:06+08:00",
+      "coverage": {
+        "financial": null,
+        "share_capital": null,
+        "index_daily": true,
+        "longhubang_snapshot": true,
+        "margin_snapshot": false
+      },
+      "indexSymbolCount": 9,
+      "lhbRecordCount": 29,
+      "lhbMarketRecordCount": 29,
+      "marginRecordCount": 0,
+      "marginExactDate": 0,
+      "marginLatestAvailableDate": ""
+    }
+  },
+  "supplementalData": {
+    "status": "available",
+    "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\evidence\\supplemental\\20260914\\market.json",
+    "date": "2026-09-14",
+    "generatedAt": "2026-09-14T16:32:06+08:00",
+    "coverage": {
+      "financial": null,
+      "share_capital": null,
+      "index_daily": true,
+      "longhubang_snapshot": true,
+      "margin_snapshot": false
+    },
+    "indexSymbolCount": 9,
+    "lhbRecordCount": 29,
+    "lhbMarketRecordCount": 29,
+    "marginRecordCount": 0,
+    "marginExactDate": 0,
+    "marginLatestAvailableDate": ""
+  }
+}

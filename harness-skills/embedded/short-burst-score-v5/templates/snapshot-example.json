@@ -1,0 +1,162 @@
+{
+  "trade_date": "2026-09-10",
+  "as_of": "2026-09-10T21:00:00+08:00",
+  "market": {
+    "up_count": 955,
+    "down_count": 4512,
+    "limit_up_count": 40,
+    "limit_down_count": 14,
+    "broken_limit_up_count": 26,
+    "turnover_total": 1658000000000,
+    "turnover_change_pct": -8.2,
+    "index_changes": {
+      "000001.SH": -0.43,
+      "399001.SZ": -0.77,
+      "399006.SZ": -0.49
+    },
+    "source_time": "2026-09-10T18:00:00+08:00",
+    "causal_market": {
+      "state": "结构严重分化",
+      "permission": "精选",
+      "raw_permission": "精选",
+      "data_quality": "normal",
+      "breadth_pctile": 0.18,
+      "sentiment_pctile": 0.35,
+      "trend_pctile": 0.42,
+      "liquidity_pctile": 0.4,
+      "risk_pctile": 0.72,
+      "divergence_pctile": 0.78,
+      "improvement": -0.1,
+      "model": "causal_rolling_market_v5.0"
+    }
+  },
+  "stocks": [
+    {
+      "code": "000993.SZ",
+      "name": "示例股票",
+      "board": "主板",
+      "risk_warning": false,
+      "delisting_risk": false,
+      "new_unlimited": false,
+      "data_quality": "normal",
+      "change_pct": 10.0,
+      "turnover": 1000000000,
+      "turnover_rate": 16.0,
+      "free_float_mcap": 7000000000,
+      "days_return": {
+        "3": 15.0,
+        "5": 18.0,
+        "10": 20.0,
+        "20": 28.0
+      },
+      "board_streak": 2,
+      "market_height_rank": 2,
+      "sector": "电力",
+      "sector_core_rank": 1,
+      "sector_leader": true,
+      "capacity_core": false,
+      "close_location": 1.0,
+      "lhb": {
+        "listed": true,
+        "buy5": 150000000,
+        "sell5": 100000000,
+        "net_buy": 50000000,
+        "buy1": 40000000,
+        "institution_net": -20000000,
+        "connect_net": 0,
+        "broker_net": 70000000,
+        "lifecycle_event_no": 2,
+        "lifecycle_net_improving": true,
+        "seat_quality_pctile": 0.72,
+        "seat_quality_samples": 36,
+        "impact_denominator": 1000000000,
+        "window_type": "daily",
+        "trigger_reason": "日涨幅偏离",
+        "all_reasons": "日涨幅偏离|连续三个交易日涨幅偏离",
+        "daily_net_buy_ratio": 0.05,
+        "three_day_net_buy_ratio": 0.03
+      },
+      "post_close_events": [],
+      "source_time": "2026-09-10T20:00:00+08:00",
+      "feature_provenance": {
+        "pipeline": "raw-postmarket-v5.0-unverified",
+        "source_time": "2026-09-10T20:00:00+08:00",
+        "physical_cutoff": "2026-09-10"
+      },
+      "recent_ipo_immature": false,
+      "industry_core_rank": 1,
+      "industry_capacity_core": false,
+      "industry_metrics": {
+        "day_change_pct": 2.0,
+        "up_ratio": 0.7,
+        "limit_up_count": 5,
+        "two_plus_board_count": 1,
+        "rel_strength_3d": 3.0,
+        "rel_strength_5d": 4.0,
+        "leader_advanced": true
+      },
+      "volume_ratio20": 1.8,
+      "distance_to_prev20_high_pct": 3.2,
+      "breakout_20d_strength": 0.8,
+      "rs_20d_pctile": 0.88,
+      "ma20_slope_pctile": 0.84,
+      "close_above_ma20": true,
+      "ma5_gt_ma10_gt_ma20": true,
+      "ma20_gt_ma60": true,
+      "volume_health": 0.9,
+      "startup_location_health": 0.82,
+      "turnover_rate_pctile": 0.75,
+      "free_mcap_pctile": 0.3,
+      "lhb_net_free_float_pctile": 0.82,
+      "sector_rs_5d_pctile": 0.86,
+      "sector_activity_pctile": 0.78,
+      "lhb_net_impact_pctile": 0.82,
+      "lhb_participation_pctile": 0.72,
+      "inst_net_impact_pctile": 0.65,
+      "broker_net_impact_pctile": 0.78,
+      "buy_sell_balance": 0.35,
+      "distance_to_prev20_high_atr": 0.8,
+      "market_climax": false,
+      "risk_penalty": 0.0,
+      "independent_catalyst": false,
+      "catalyst_quality": null,
+      "catalyst_public_before_cutoff": false
+    }
+  ],
+  "pipeline": "raw-postmarket-v5.0-unverified",
+  "coverage": {
+    "market_full_features": true,
+    "industry_pit": true,
+    "theme_pit": false,
+    "event_feed": true,
+    "seat_detail": true,
+    "history_model": "external_at_analyze"
+  },
+  "workflow_trace": [
+    {
+      "step": "时间截断",
+      "status": "完成",
+      "detail": "所有交易日数据物理截断至T日"
+    },
+    {
+      "step": "历史时点状态",
+      "status": "完成",
+      "detail": "行业/ST/退市按T日状态映射"
+    },
+    {
+      "step": "市场环境",
+      "status": "完成",
+      "detail": "120日因果市场特征+原始宽度双轨"
+    },
+    {
+      "step": "板块与题材",
+      "status": "行业层完成/题材缺失",
+      "detail": "未提供历史题材成员，不猜题材"
+    },
+    {
+      "step": "爆发力评分",
+      "status": "分析阶段执行",
+      "detail": "六维评分+独立风险扣分"
+    }
+  ]
+}

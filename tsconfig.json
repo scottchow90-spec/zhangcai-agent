@@ -29,6 +29,8 @@
   "exclude": [
     "node_modules",
     "data/harness/skills/**",
-    "harness-skills/**"
+    "harness-skills/**",
+    "app-data/**",
+    "app/workspace-pages.tsx"
   ]
 }

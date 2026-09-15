@@ -1,0 +1,75 @@
+{
+  "schema": "ZHANGCAI_PACKAGE_SOURCE_SYNC_RECEIPT_V1",
+  "requested_date": "2026-09-11",
+  "fetched_at": "2026-09-14T17:05:08+08:00",
+  "codes": [
+    "000636",
+    "000823",
+    "001232",
+    "002201",
+    "002242",
+    "002560",
+    "002585",
+    "002815",
+    "002848",
+    "002902",
+    "300290",
+    "300563",
+    "300959",
+    "600088",
+    "600184",
+    "600207",
+    "600237",
+    "601199",
+    "603336",
+    "603386",
+    "603421",
+    "603466",
+    "603936",
+    "603938",
+    "605011",
+    "605058",
+    "688143",
+    "688260",
+    "688367",
+    "920008",
+    "920821"
+  ],
+  "snapshots": {
+    "baidu": {
+      "path": "evidence/package-sources/20260911/baidu/snapshot.json",
+      "status": "available",
+      "record_count": 4002,
+      "scope": "target_codes"
+    },
+    "ths": {
+      "path": "evidence/package-sources/20260911/ths/snapshot.json",
+      "status": "available",
+      "record_count": 121,
+      "scope": "target_codes"
+    },
+    "cninfo": {
+      "path": "evidence/package-sources/20260911/cninfo/snapshot.json",
+      "status": "available",
+      "record_count": 930,
+      "scope": "target_codes"
+    },
+    "sw": {
+      "path": "evidence/package-sources/20260911/sw/snapshot.json",
+      "status": "available",
+      "record_count": 12913,
+      "scope": "full_history"
+    },
+    "macro": {
+      "path": "evidence/package-sources/20260911/macro/snapshot.json",
+      "status": "available",
+      "record_count": 8,
+      "scope": "latest_official_period"
+    }
+  },
+  "rules": [
+    "仅无凭据公开源；目标日期与源实际期间分开保存。",
+    "按代码批次只标记 partial，不代表全市场覆盖。",
+    "失败源保留 status/error，不用空数组替代真实数据。"
+  ]
+}

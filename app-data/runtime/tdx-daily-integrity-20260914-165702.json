@@ -1,0 +1,482 @@
+{
+  "schema": "ZHANGCAI_TDX_DAILY_INTEGRITY_V1",
+  "startedAt": "2026-09-14T16:56:46+08:00",
+  "finishedAt": "2026-09-14T16:57:02+08:00",
+  "tdxRoot": "C:\\new_tdx_mock",
+  "stockListSource": "Tongdaxin TQ get_stock_list(market=5)",
+  "targetDate": "20260914",
+  "before": {
+    "targetDate": "20260914",
+    "stockCount": 5571,
+    "completeCount": 5550,
+    "nonTradingCount": 0,
+    "effectiveCompleteCount": 5550,
+    "staleCount": 13,
+    "missingFileCount": 8,
+    "corruptCount": 0,
+    "effectiveMissingCount": 21,
+    "dateDistribution": {
+      "20260914": 5550,
+      "20260911": 13
+    },
+    "byMarket": {
+      "SH": {
+        "stockCount": 2320,
+        "completeCount": 2311,
+        "nonTradingCount": 0,
+        "effectiveCompleteCount": 2311,
+        "staleCount": 7,
+        "missingFileCount": 2,
+        "corruptCount": 0
+      },
+      "SZ": {
+        "stockCount": 2904,
+        "completeCount": 2896,
+        "nonTradingCount": 0,
+        "effectiveCompleteCount": 2896,
+        "staleCount": 6,
+        "missingFileCount": 2,
+        "corruptCount": 0
+      },
+      "BJ": {
+        "stockCount": 347,
+        "completeCount": 343,
+        "nonTradingCount": 0,
+        "effectiveCompleteCount": 343,
+        "staleCount": 0,
+        "missingFileCount": 4,
+        "corruptCount": 0
+      }
+    }
+  },
+  "repairs": [
+    {
+      "code": "000016.SZ",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz000016.day",
+      "status": "written",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "fetchedDate": "20260914",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "001246.SZ",
+      "before": "missing_file",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz001246.day",
+      "status": "unresolved",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data",
+        "东方财富历史K线(push2his)"
+      ],
+      "fetchedDate": null,
+      "reason": "TQ 与公开历史 K 线均未返回目标交易日数据"
+    },
+    {
+      "code": "002731.SZ",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz002731.day",
+      "status": "written",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "fetchedDate": "20260914",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "002870.SZ",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz002870.day",
+      "status": "written",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "fetchedDate": "20260914",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "301139.SZ",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz301139.day",
+      "status": "written",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "fetchedDate": "20260914",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "301390.SZ",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz301390.day",
+      "status": "written",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "fetchedDate": "20260914",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "301686.SZ",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz301686.day",
+      "status": "unresolved",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data",
+        "东方财富历史K线(push2his)"
+      ],
+      "fetchedDate": "20260911",
+      "reason": "TQ 与公开历史 K 线均未返回目标交易日数据"
+    },
+    {
+      "code": "301716.SZ",
+      "before": "missing_file",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz301716.day",
+      "status": "unresolved",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data",
+        "东方财富历史K线(push2his)"
+      ],
+      "fetchedDate": null,
+      "reason": "TQ 与公开历史 K 线均未返回目标交易日数据"
+    },
+    {
+      "code": "600301.SH",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh600301.day",
+      "status": "written",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "fetchedDate": "20260914",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "600825.SH",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh600825.day",
+      "status": "written",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "fetchedDate": "20260914",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "601091.SH",
+      "before": "missing_file",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh601091.day",
+      "status": "unresolved",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data",
+        "东方财富历史K线(push2his)"
+      ],
+      "fetchedDate": null,
+      "reason": "TQ 与公开历史 K 线均未返回目标交易日数据"
+    },
+    {
+      "code": "601238.SH",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh601238.day",
+      "status": "written",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "fetchedDate": "20260914",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "603159.SH",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh603159.day",
+      "status": "written",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "fetchedDate": "20260914",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "605303.SH",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh605303.day",
+      "status": "written",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "fetchedDate": "20260914",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "688291.SH",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh688291.day",
+      "status": "written",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "fetchedDate": "20260914",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "688496.SH",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh688496.day",
+      "status": "written",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "fetchedDate": "20260914",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "688837.SH",
+      "before": "missing_file",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh688837.day",
+      "status": "unresolved",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data",
+        "东方财富历史K线(push2his)"
+      ],
+      "fetchedDate": null,
+      "reason": "TQ 与公开历史 K 线均未返回目标交易日数据"
+    },
+    {
+      "code": "920025.BJ",
+      "before": "missing_file",
+      "path": "C:\\new_tdx_mock\\vipdoc\\bj\\lday\\bj920025.day",
+      "status": "unresolved",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data",
+        "东方财富历史K线(push2his)"
+      ],
+      "fetchedDate": null,
+      "reason": "TQ 与公开历史 K 线均未返回目标交易日数据"
+    },
+    {
+      "code": "920201.BJ",
+      "before": "missing_file",
+      "path": "C:\\new_tdx_mock\\vipdoc\\bj\\lday\\bj920201.day",
+      "status": "unresolved",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data",
+        "东方财富历史K线(push2his)"
+      ],
+      "fetchedDate": null,
+      "reason": "TQ 与公开历史 K 线均未返回目标交易日数据"
+    },
+    {
+      "code": "920229.BJ",
+      "before": "missing_file",
+      "path": "C:\\new_tdx_mock\\vipdoc\\bj\\lday\\bj920229.day",
+      "status": "unresolved",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data",
+        "东方财富历史K线(push2his)"
+      ],
+      "fetchedDate": null,
+      "reason": "TQ 与公开历史 K 线均未返回目标交易日数据"
+    },
+    {
+      "code": "920298.BJ",
+      "before": "missing_file",
+      "path": "C:\\new_tdx_mock\\vipdoc\\bj\\lday\\bj920298.day",
+      "status": "unresolved",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data",
+        "东方财富历史K线(push2his)"
+      ],
+      "fetchedDate": null,
+      "reason": "TQ 与公开历史 K 线均未返回目标交易日数据"
+    }
+  ],
+  "after": {
+    "targetDate": "20260914",
+    "stockCount": 5571,
+    "completeCount": 5562,
+    "nonTradingCount": 9,
+    "effectiveCompleteCount": 5571,
+    "staleCount": 1,
+    "missingFileCount": 8,
+    "corruptCount": 0,
+    "effectiveMissingCount": 0,
+    "dateDistribution": {
+      "20260914": 5562,
+      "20260911": 1
+    },
+    "byMarket": {
+      "SH": {
+        "stockCount": 2320,
+        "completeCount": 2318,
+        "nonTradingCount": 2,
+        "effectiveCompleteCount": 2320,
+        "staleCount": 0,
+        "missingFileCount": 2,
+        "corruptCount": 0
+      },
+      "SZ": {
+        "stockCount": 2904,
+        "completeCount": 2901,
+        "nonTradingCount": 3,
+        "effectiveCompleteCount": 2904,
+        "staleCount": 1,
+        "missingFileCount": 2,
+        "corruptCount": 0
+      },
+      "BJ": {
+        "stockCount": 347,
+        "completeCount": 343,
+        "nonTradingCount": 4,
+        "effectiveCompleteCount": 347,
+        "staleCount": 0,
+        "missingFileCount": 4,
+        "corruptCount": 0
+      }
+    }
+  },
+  "nonTrading": [
+    {
+      "code": "001246.SZ",
+      "status": "non_trading",
+      "type": "unlisted",
+      "reason": "未上市或暂无上市行情（证券元数据存在但总市值为0）",
+      "quoteEvidence": {
+        "url": "https://push2.eastmoney.com/api/qt/stock/get?secid=0.001246&fields=f43%2Cf57%2Cf58%2Cf59%2Cf60%2Cf116%2Cf117%2Cf169%2Cf170&ut=7eea3edcaed734bea9cbfc24409ed989",
+        "code": "001246",
+        "name": "力勤资源",
+        "price": 0.0,
+        "totalMarketCap": 0.0,
+        "floatMarketCap": 0.0
+      }
+    },
+    {
+      "code": "301686.SZ",
+      "status": "non_trading",
+      "type": "suspended",
+      "reason": "停牌（证券存在且总市值大于0，目标日无成交价）",
+      "quoteEvidence": {
+        "url": "https://push2.eastmoney.com/api/qt/stock/get?secid=0.301686&fields=f43%2Cf57%2Cf58%2Cf59%2Cf60%2Cf116%2Cf117%2Cf169%2Cf170&ut=7eea3edcaed734bea9cbfc24409ed989",
+        "code": "301686",
+        "name": "中塑股份",
+        "price": 0.0,
+        "totalMarketCap": 2045282331.6000001,
+        "floatMarketCap": 0.0
+      }
+    },
+    {
+      "code": "301716.SZ",
+      "status": "non_trading",
+      "type": "unlisted",
+      "reason": "未上市或暂无上市行情（证券元数据存在但总市值为0）",
+      "quoteEvidence": {
+        "url": "https://push2.eastmoney.com/api/qt/stock/get?secid=0.301716&fields=f43%2Cf57%2Cf58%2Cf59%2Cf60%2Cf116%2Cf117%2Cf169%2Cf170&ut=7eea3edcaed734bea9cbfc24409ed989",
+        "code": "301716",
+        "name": "鸿富诚",
+        "price": 0.0,
+        "totalMarketCap": 0.0,
+        "floatMarketCap": 0.0
+      }
+    },
+    {
+      "code": "601091.SH",
+      "status": "non_trading",
+      "type": "suspended",
+      "reason": "停牌（证券存在且总市值大于0，目标日无成交价）",
+      "quoteEvidence": {
+        "url": "https://push2.eastmoney.com/api/qt/stock/get?secid=1.601091&fields=f43%2Cf57%2Cf58%2Cf59%2Cf60%2Cf116%2Cf117%2Cf169%2Cf170&ut=7eea3edcaed734bea9cbfc24409ed989",
+        "code": "601091",
+        "name": "沈鼓集团",
+        "price": 0.0,
+        "totalMarketCap": 13652911365.71,
+        "floatMarketCap": 927006368.9799999
+      }
+    },
+    {
+      "code": "688837.SH",
+      "status": "non_trading",
+      "type": "suspended",
+      "reason": "停牌（证券存在且总市值大于0，目标日无成交价）",
+      "quoteEvidence": {
+        "url": "https://push2.eastmoney.com/api/qt/stock/get?secid=1.688837&fields=f43%2Cf57%2Cf58%2Cf59%2Cf60%2Cf116%2Cf117%2Cf169%2Cf170&ut=7eea3edcaed734bea9cbfc24409ed989",
+        "code": "688837",
+        "name": "信诺维",
+        "price": 0.0,
+        "totalMarketCap": 12019496814.0,
+        "floatMarketCap": 1341194013.6000001
+      }
+    },
+    {
+      "code": "920025.BJ",
+      "status": "non_trading",
+      "type": "unlisted",
+      "reason": "未上市或暂无上市行情（证券元数据存在但总市值为0）",
+      "quoteEvidence": {
+        "url": "https://push2.eastmoney.com/api/qt/stock/get?secid=0.920025&fields=f43%2Cf57%2Cf58%2Cf59%2Cf60%2Cf116%2Cf117%2Cf169%2Cf170&ut=7eea3edcaed734bea9cbfc24409ed989",
+        "code": "920025",
+        "name": "凯达重工",
+        "price": 0.0,
+        "totalMarketCap": 0.0,
+        "floatMarketCap": 0.0
+      }
+    },
+    {
+      "code": "920201.BJ",
+      "status": "non_trading",
+      "type": "unlisted",
+      "reason": "未上市或暂无上市行情（证券元数据存在但总市值为0）",
+      "quoteEvidence": {
+        "url": "https://push2.eastmoney.com/api/qt/stock/get?secid=0.920201&fields=f43%2Cf57%2Cf58%2Cf59%2Cf60%2Cf116%2Cf117%2Cf169%2Cf170&ut=7eea3edcaed734bea9cbfc24409ed989",
+        "code": "920201",
+        "name": "百瑞吉",
+        "price": 0.0,
+        "totalMarketCap": 0.0,
+        "floatMarketCap": 0.0
+      }
+    },
+    {
+      "code": "920229.BJ",
+      "status": "non_trading",
+      "type": "unlisted",
+      "reason": "未上市或暂无上市行情（证券元数据存在但总市值为0）",
+      "quoteEvidence": {
+        "url": "https://push2.eastmoney.com/api/qt/stock/get?secid=0.920229&fields=f43%2Cf57%2Cf58%2Cf59%2Cf60%2Cf116%2Cf117%2Cf169%2Cf170&ut=7eea3edcaed734bea9cbfc24409ed989",
+        "code": "920229",
+        "name": "世纪数码",
+        "price": 0.0,
+        "totalMarketCap": 0.0,
+        "floatMarketCap": 0.0
+      }
+    },
+    {
+      "code": "920298.BJ",
+      "status": "non_trading",
+      "type": "unlisted",
+      "reason": "未上市或暂无上市行情（证券元数据存在但总市值为0）",
+      "quoteEvidence": {
+        "url": "https://push2.eastmoney.com/api/qt/stock/get?secid=0.920298&fields=f43%2Cf57%2Cf58%2Cf59%2Cf60%2Cf116%2Cf117%2Cf169%2Cf170&ut=7eea3edcaed734bea9cbfc24409ed989",
+        "code": "920298",
+        "name": "腾信精密",
+        "price": 0.0,
+        "totalMarketCap": 0.0,
+        "floatMarketCap": 0.0
+      }
+    }
+  ],
+  "unresolved": [],
+  "complete": true,
+  "output": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\runtime\\tdx-daily-integrity-20260914-165702.json",
+  "markdown": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\runtime\\tdx-daily-integrity-20260914-165702.md"
+}

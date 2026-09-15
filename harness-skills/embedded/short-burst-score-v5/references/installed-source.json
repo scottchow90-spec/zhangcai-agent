@@ -1,0 +1,10 @@
+{
+  "schema": "SHORT_BURST_CODEX_INSTALL_SOURCE_V1",
+  "source_package": "G:\\2026年9月课程\\技能导出电脑版\\A股短线爆发力评分系统_V5.0_优化版.zip",
+  "source_package_sha256": "8461dcf45ecb143699373822f0ac56ce5984b15008ee0b3734ed9fa0501921a3",
+  "upstream_version": "5.0.1",
+  "codex_adaptation": "canonical-entry-and-receipts",
+  "scope": "installation_and_synthetic_debugging",
+  "live_market_verified": false,
+  "source_package_modified_by_installation": false
+}

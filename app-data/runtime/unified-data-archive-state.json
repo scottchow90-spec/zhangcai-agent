@@ -1,0 +1,119 @@
+{
+  "schema": "ZHANGCAI_UNIFIED_DATA_ARCHIVE_RUN_V1",
+  "date": "2026-09-15",
+  "startedAt": "2026-09-15T09:54:35.614Z",
+  "status": "partial",
+  "steps": [
+    {
+      "name": "通达信日线完整性检查与补齐",
+      "status": "completed",
+      "startedAt": "2026-09-15T09:54:35.633Z",
+      "script": "tdx_daily_integrity.py",
+      "finishedAt": "2026-09-15T09:54:48.809Z",
+      "code": 0,
+      "partial": false,
+      "resultStored": true
+    },
+    {
+      "name": "通达信日线与证券资料归档",
+      "status": "completed",
+      "startedAt": "2026-09-15T09:54:49.144Z",
+      "script": "skill14_data_runtime.py",
+      "finishedAt": "2026-09-15T09:55:03.464Z",
+      "code": 0,
+      "partial": false,
+      "resultStored": true
+    },
+    {
+      "name": "公开日线缺口降级补齐",
+      "status": "partial",
+      "startedAt": "2026-09-15T09:55:03.473Z",
+      "script": "daily_data_recovery.py",
+      "finishedAt": "2026-09-15T09:55:14.808Z",
+      "code": 2,
+      "partial": true,
+      "resultStored": true
+    },
+    {
+      "name": "财务、股本、指数、龙虎榜、融资融券统一落盘",
+      "status": "completed",
+      "startedAt": "2026-09-15T09:55:14.818Z",
+      "script": "supplemental_data_sync.py",
+      "finishedAt": "2026-09-15T09:55:17.485Z",
+      "code": 0,
+      "partial": false,
+      "resultStored": true
+    },
+    {
+      "name": "行情资讯能力包来源补充",
+      "status": "completed",
+      "startedAt": "2026-09-15T09:55:17.494Z",
+      "script": "package_source_sync.py",
+      "finishedAt": "2026-09-15T09:55:23.815Z",
+      "code": 0,
+      "partial": false,
+      "resultStored": true
+    },
+    {
+      "name": "公开行情、涨停池与龙虎榜归档",
+      "status": "completed",
+      "startedAt": "2026-09-15T09:55:23.827Z",
+      "script": "public_market_sync.py",
+      "finishedAt": "2026-09-15T09:55:30.412Z",
+      "code": 0,
+      "partial": false,
+      "resultStored": true
+    },
+    {
+      "name": "东方财富 7×24 新闻归档",
+      "status": "completed",
+      "startedAt": "2026-09-15T09:55:23.829Z",
+      "script": "news_sync.py",
+      "finishedAt": "2026-09-15T09:55:25.225Z",
+      "code": 0,
+      "partial": false,
+      "resultStored": true
+    },
+    {
+      "name": "统一数据状态刷新",
+      "status": "completed",
+      "startedAt": "2026-09-15T09:55:30.421Z",
+      "script": "skill14_data_runtime.py",
+      "finishedAt": "2026-09-15T09:55:32.102Z",
+      "code": 0,
+      "partial": false,
+      "resultStored": true
+    },
+    {
+      "name": "统一数据源清单生成",
+      "status": "completed",
+      "startedAt": "2026-09-15T09:55:32.113Z",
+      "script": "unified_data_archive.py",
+      "finishedAt": "2026-09-15T09:55:36.877Z",
+      "code": 0,
+      "partial": false,
+      "resultStored": true
+    }
+  ],
+  "harness": {
+    "status": "completed",
+    "finishedAt": "2026-09-15T09:57:32.402Z",
+    "elapsedMs": 104986,
+    "summary": "2026-09-15统一归档:通达信日线主数据可用完整(15741210条/9490只),涨停32家、跌停27家、连板7家,龙虎榜与新闻已落盘;但统一校验BLOCKED(8项哈希失败),财务股本与两融缺失。",
+    "dataDate": "2026-09-15",
+    "cautionCount": 8,
+    "findingCount": 5,
+    "tableCount": 3
+  },
+  "report": {
+    "date": "20260915",
+    "htmlUrl": "/data/archive/report?date=20260915",
+    "jsonUrl": "/data/archive/report?date=20260915&format=json",
+    "htmlPath": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\reports\\unified-archive\\20260915\\index.html",
+    "jsonPath": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\reports\\unified-archive\\20260915\\report.json",
+    "relativeHtml": "reports/unified-archive/20260915/index.html",
+    "relativeJson": "reports/unified-archive/20260915/report.json",
+    "generatedAt": "2026-09-15T10:04:26.977Z"
+  },
+  "finishedAt": "2026-09-15T09:57:32.439Z"
+}

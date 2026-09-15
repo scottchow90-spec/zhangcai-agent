@@ -1,0 +1,9 @@
+{
+  "excluded": [],
+  "rules": [
+    "no_bj",
+    "no_kcb",
+    "no_st_delist",
+    "no_bank"
+  ]
+}

@@ -1,0 +1,284 @@
+{
+  "schema": "ZHANGCAI_PUBLIC_DAILY_RECOVERY_V1",
+  "status": "degraded",
+  "trade_date": "20260911",
+  "tdx_available": true,
+  "requested_count": 30,
+  "fetched_count": 28,
+  "failed_count": 2,
+  "source_precedence": [
+    "tdx_local_day",
+    "tdx_archive",
+    "public_daily_fallback"
+  ],
+  "daily_index": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\index\\daily-data-index.json",
+  "fallback_root": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911",
+  "requested_scope": "explicit_codes",
+  "cap_applied": null,
+  "results": [
+    {
+      "symbol": "000636.SZ",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sz000636.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "000823.SZ",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sz000823.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "001232.SZ",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sz001232.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "002201.SZ",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sz002201.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "002242.SZ",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sz002242.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "002560.SZ",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sz002560.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "002585.SZ",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sz002585.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "002815.SZ",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sz002815.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "002848.SZ",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sz002848.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "002902.SZ",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sz002902.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "300290.SZ",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sz300290.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "300563.SZ",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sz300563.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "600088.SH",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sh600088.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "600184.SH",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sh600184.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "600207.SH",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sh600207.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "600237.SH",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sh600237.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "601199.SH",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sh601199.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "603336.SH",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sh603336.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "603386.SH",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sh603386.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "603421.SH",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sh603421.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "603466.SH",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sh603466.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "603936.SH",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sh603936.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "603938.SH",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sh603938.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "605011.SH",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sh605011.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "605058.SH",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sh605058.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "688143.SH",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sh688143.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "688260.SH",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sh688260.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "688367.SH",
+      "status": "written",
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911\\sh688367.jsonl",
+      "source": "Tencent public fqkline daily (bfq)",
+      "missing_fields": [
+        "amount"
+      ]
+    },
+    {
+      "symbol": "920008.SZ",
+      "status": "missing",
+      "reason": "公开源未返回目标交易日或请求失败"
+    },
+    {
+      "symbol": "920821.SZ",
+      "status": "missing",
+      "reason": "公开源未返回目标交易日或请求失败"
+    }
+  ],
+  "retrieved_at": "2026-09-14T11:53:47+08:00",
+  "report": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\runtime\\daily-recovery-20260911-115347.json"
+}

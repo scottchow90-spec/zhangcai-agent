@@ -1,0 +1,43 @@
+{
+  "schema": "ZHANGCAI_PACKAGE_SOURCE_SYNC_RECEIPT_V1",
+  "requested_date": "2026-09-15",
+  "fetched_at": "2026-09-15T17:55:23+08:00",
+  "codes": [],
+  "snapshots": {
+    "baidu": {
+      "path": "evidence/package-sources/20260915/baidu/snapshot.json",
+      "status": "missing",
+      "record_count": 0,
+      "scope": "target_codes"
+    },
+    "ths": {
+      "path": "evidence/package-sources/20260915/ths/snapshot.json",
+      "status": "missing",
+      "record_count": 0,
+      "scope": "target_codes"
+    },
+    "cninfo": {
+      "path": "evidence/package-sources/20260915/cninfo/snapshot.json",
+      "status": "missing",
+      "record_count": 0,
+      "scope": "target_codes"
+    },
+    "sw": {
+      "path": "evidence/package-sources/20260915/sw/snapshot.json",
+      "status": "available",
+      "record_count": 12913,
+      "scope": "full_history"
+    },
+    "macro": {
+      "path": "evidence/package-sources/20260915/macro/snapshot.json",
+      "status": "available",
+      "record_count": 9,
+      "scope": "latest_official_period"
+    }
+  },
+  "rules": [
+    "仅无凭据公开源；目标日期与源实际期间分开保存。",
+    "按代码批次只标记 partial，不代表全市场覆盖。",
+    "失败源保留 status/error，不用空数组替代真实数据。"
+  ]
+}

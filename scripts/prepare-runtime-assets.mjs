@@ -3,7 +3,7 @@ import path from 'node:path';
 import process from 'node:process';
 
 const appRoot = path.resolve(process.cwd());
-const source = path.resolve(process.env.ZHANGCAI_SKILLS_SOURCE || path.join(appRoot, '..', 'skill_pack_extract', 'Codex股票技能迁移包', 'payload', 'skills'));
+const source = path.resolve(process.env.ZHANGCAI_SKILLS_SOURCE || path.join(appRoot, 'harness-skills'));
 const destination = path.resolve(process.env.ZHANGCAI_SKILLS_DIR || path.join(appRoot, 'harness-skills'));
 
 if (!existsSync(source)) throw new Error(`未找到迁移技能源：${source}`);

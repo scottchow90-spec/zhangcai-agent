@@ -20,5 +20,5 @@ export async function POST() {
     child.unref();
     setTimeout(() => { launchInProgress = false; }, 5000);
   }
-  return Response.json({ status: 'starting', port: 4318, launcher: 'scripts/start-local.ps1' }, { status: 202 });
+  return Response.json({ status: 'starting', port: 4319, launcher: 'scripts/start-local.ps1' }, { status: 202 });
 }

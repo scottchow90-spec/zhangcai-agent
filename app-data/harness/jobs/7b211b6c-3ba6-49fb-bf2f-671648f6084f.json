@@ -1,0 +1,8 @@
+{
+  "id": "7b211b6c-3ba6-49fb-bf2f-671648f6084f",
+  "status": "failed",
+  "skill_id": "golden-ignition-v8",
+  "started_at": 1789228898815,
+  "error": "桥接服务在 Harness 返回前重启，任务未完成；可重新执行。",
+  "completed_at": 1789228950710
+}

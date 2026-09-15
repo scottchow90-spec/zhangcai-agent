@@ -1,0 +1,88 @@
+{
+  "schema": "LIANBAN_DAILY_SNAPSHOT_V1",
+  "status": "DEGRADED",
+  "requested_at": "2026-09-12T00:24:27+08:00",
+  "requested_date": "2026-09-03",
+  "target_date": "2026-09-03",
+  "latest_requested": false,
+  "source_name": "连板网",
+  "license": "CC BY 4.0, 引用需署名“连板网”并附上行原文链接",
+  "attribution_required": true,
+  "source_role": "supplemental_event_theme_sentiment_cross_validation",
+  "sources": {
+    "open_data": {
+      "url": "https://lianban.net/opendata/2026-09-03.json",
+      "status_code": 200,
+      "content_type": "application/json",
+      "size": 795,
+      "sha256": "e9fa3863f354fd3113739dce177bdd7696634eebe93fa475819d137d7de83c75",
+      "error": null
+    },
+    "page": {
+      "url": "https://lianban.net/days/2026-09-03.html",
+      "status_code": 200,
+      "content_type": "text/html; charset=utf-8",
+      "size": 3907,
+      "sha256": "01dead5be464f7a68f3f1a2452e01ee35b52645cac46aee84fd5350c65c69308",
+      "error": null
+    }
+  },
+  "market": {
+    "limit_up": 44,
+    "limit_down": 16,
+    "consecutive": 9,
+    "max_board": 5,
+    "seal_rate": 57.1,
+    "broken_board": 33,
+    "advancers": 1846,
+    "decliners": 3570,
+    "emotion_stage": "退潮期"
+  },
+  "topics": [
+    {
+      "name": "算力(液冷)",
+      "count": 7
+    },
+    {
+      "name": "机器人概念",
+      "count": 6
+    },
+    {
+      "name": "AI应用",
+      "count": 3
+    },
+    {
+      "name": "零售",
+      "count": 3
+    },
+    {
+      "name": "医药",
+      "count": 3
+    },
+    {
+      "name": "地产链",
+      "count": 2
+    },
+    {
+      "name": "通信",
+      "count": 2
+    },
+    {
+      "name": "金刚石概念",
+      "count": 2
+    }
+  ],
+  "note": "逐只涨停/连板名单见 source 页面(近期免登录, 更早需注册登录; 已验证的搜索引擎与AI爬虫不受限)",
+  "page_details": {
+    "title": "2026年9月3日A股复盘：涨停44家 最高5板 主线算力(液冷)_连板网",
+    "stock_count": 0,
+    "stock_codes": [],
+    "stock_items": [],
+    "event_texts": [
+      "2026年9月3日A股复盘：涨停44家 最高5板 主线算力(液冷)_连板网 正在打开 2026-09-03 复盘… 首次访问需要一两秒完成浏览器校验，之后 30 天内不再出现。"
+    ]
+  },
+  "errors": [
+    "page_stock_details_missing"
+  ]
+}

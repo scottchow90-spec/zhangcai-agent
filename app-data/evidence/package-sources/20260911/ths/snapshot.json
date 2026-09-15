@@ -1,0 +1,1603 @@
+{
+  "schema": "ZHANGCAI_PACKAGE_SOURCE_BATCH_V1",
+  "provider": "ths",
+  "requested_date": "2026-09-11",
+  "fetched_at": "2026-09-14T17:04:49+08:00",
+  "scope": "target_codes",
+  "codes": [
+    "000636",
+    "000823",
+    "001232",
+    "002201",
+    "002242",
+    "002560",
+    "002585",
+    "002815",
+    "002848",
+    "002902",
+    "300290",
+    "300563",
+    "300959",
+    "600088",
+    "600184",
+    "600207",
+    "600237",
+    "601199",
+    "603336",
+    "603386",
+    "603421",
+    "603466",
+    "603936",
+    "603938",
+    "605011",
+    "605058",
+    "688143",
+    "688260",
+    "688367",
+    "920008",
+    "920821"
+  ],
+  "status": "available",
+  "results": [
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:34+08:00",
+      "fetched_at": "2026-09-14T17:04:34+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/000636/worth.html",
+      "source_sha256": "cb973adacc43342df18db7f65a039d8fe7f6c8ac17e4b60bf3e1d1ea82d6bd75",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 3,
+      "records": [
+        {
+          "年度": 2026,
+          "预测机构数": 4,
+          "最小值": 0.58,
+          "均值": 0.66,
+          "最大值": 0.72,
+          "行业平均数": 2.9
+        },
+        {
+          "年度": 2027,
+          "预测机构数": 4,
+          "最小值": 0.7,
+          "均值": 0.95,
+          "最大值": 1.35,
+          "行业平均数": 4.21
+        },
+        {
+          "年度": 2028,
+          "预测机构数": 4,
+          "最小值": 0.84,
+          "均值": 1.1,
+          "最大值": 1.56,
+          "行业平均数": 5.7
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/000636/worth.html",
+        "http_status": 200,
+        "bytes": 103105,
+        "response_sha256": "cb973adacc43342df18db7f65a039d8fe7f6c8ac17e4b60bf3e1d1ea82d6bd75",
+        "endpoint": "https://basic.10jqka.com.cn/new/000636/worth.html",
+        "code": "000636",
+        "columns": [
+          "年度",
+          "预测机构数",
+          "最小值",
+          "均值",
+          "最大值",
+          "行业平均数"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:34+08:00",
+      "fetched_at": "2026-09-14T17:04:34+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/000823/worth.html",
+      "source_sha256": "16e7ff868060f2ce34b84b09b41dda1a08c08e3cfd4fe0d4230a6e1edeaec832",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 5,
+      "records": [
+        {
+          "评级": "公司评级",
+          "说明": "报告发布日后的12个月内，公司的涨跌幅度相对同期沪深300指数的涨跌幅为基准"
+        },
+        {
+          "评级": "买 入/推 荐",
+          "说明": "相对大盘涨幅大于10%"
+        },
+        {
+          "评级": "增 持/谨慎推荐",
+          "说明": "相对大盘涨幅在5%～10%之间"
+        },
+        {
+          "评级": "中 性/持 有",
+          "说明": "相对大盘涨幅在-5%～5%之间"
+        },
+        {
+          "评级": "减 持/卖 出",
+          "说明": "相对大盘涨幅小于-5%"
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/000823/worth.html",
+        "http_status": 200,
+        "bytes": 45192,
+        "response_sha256": "16e7ff868060f2ce34b84b09b41dda1a08c08e3cfd4fe0d4230a6e1edeaec832",
+        "endpoint": "https://basic.10jqka.com.cn/new/000823/worth.html",
+        "code": "000823",
+        "columns": [
+          "评级",
+          "说明"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:35+08:00",
+      "fetched_at": "2026-09-14T17:04:35+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/001232/worth.html",
+      "source_sha256": "f2e600c1e522419a040208b0fc606c82f408b2b71d5fcceace69fb3103456085",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 3,
+      "records": [
+        {
+          "年度": 2026,
+          "预测机构数": 3,
+          "最小值": 3.46,
+          "均值": 3.82,
+          "最大值": 4.07,
+          "行业平均数": 2.9
+        },
+        {
+          "年度": 2027,
+          "预测机构数": 3,
+          "最小值": 5.33,
+          "均值": 5.77,
+          "最大值": 6.61,
+          "行业平均数": 4.21
+        },
+        {
+          "年度": 2028,
+          "预测机构数": 3,
+          "最小值": 6.92,
+          "均值": 8.19,
+          "最大值": 10.6,
+          "行业平均数": 5.7
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/001232/worth.html",
+        "http_status": 200,
+        "bytes": 92482,
+        "response_sha256": "f2e600c1e522419a040208b0fc606c82f408b2b71d5fcceace69fb3103456085",
+        "endpoint": "https://basic.10jqka.com.cn/new/001232/worth.html",
+        "code": "001232",
+        "columns": [
+          "年度",
+          "预测机构数",
+          "最小值",
+          "均值",
+          "最大值",
+          "行业平均数"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:35+08:00",
+      "fetched_at": "2026-09-14T17:04:35+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/002201/worth.html",
+      "source_sha256": "ec018b5d20c972d96c3112c636e9923f0ecdf40a84929614ba21e372b0d68606",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 5,
+      "records": [
+        {
+          "评级": "公司评级",
+          "说明": "报告发布日后的12个月内，公司的涨跌幅度相对同期沪深300指数的涨跌幅为基准"
+        },
+        {
+          "评级": "买 入/推 荐",
+          "说明": "相对大盘涨幅大于10%"
+        },
+        {
+          "评级": "增 持/谨慎推荐",
+          "说明": "相对大盘涨幅在5%～10%之间"
+        },
+        {
+          "评级": "中 性/持 有",
+          "说明": "相对大盘涨幅在-5%～5%之间"
+        },
+        {
+          "评级": "减 持/卖 出",
+          "说明": "相对大盘涨幅小于-5%"
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/002201/worth.html",
+        "http_status": 200,
+        "bytes": 45192,
+        "response_sha256": "ec018b5d20c972d96c3112c636e9923f0ecdf40a84929614ba21e372b0d68606",
+        "endpoint": "https://basic.10jqka.com.cn/new/002201/worth.html",
+        "code": "002201",
+        "columns": [
+          "评级",
+          "说明"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:35+08:00",
+      "fetched_at": "2026-09-14T17:04:35+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/002242/worth.html",
+      "source_sha256": "f2779d80a9bdec29b554542d4206744df20ee1726c556cd6ea37cecd34f2019b",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 3,
+      "records": [
+        {
+          "年度": 2026,
+          "预测机构数": 10,
+          "最小值": 0.15,
+          "均值": 0.26,
+          "最大值": 0.43,
+          "行业平均数": 2.53
+        },
+        {
+          "年度": 2027,
+          "预测机构数": 10,
+          "最小值": 0.19,
+          "均值": 0.3,
+          "最大值": 0.48,
+          "行业平均数": 3.32
+        },
+        {
+          "年度": 2028,
+          "预测机构数": 10,
+          "最小值": 0.21,
+          "均值": 0.33,
+          "最大值": 0.54,
+          "行业平均数": 4.14
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/002242/worth.html",
+        "http_status": 200,
+        "bytes": 122446,
+        "response_sha256": "f2779d80a9bdec29b554542d4206744df20ee1726c556cd6ea37cecd34f2019b",
+        "endpoint": "https://basic.10jqka.com.cn/new/002242/worth.html",
+        "code": "002242",
+        "columns": [
+          "年度",
+          "预测机构数",
+          "最小值",
+          "均值",
+          "最大值",
+          "行业平均数"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:36+08:00",
+      "fetched_at": "2026-09-14T17:04:36+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/002560/worth.html",
+      "source_sha256": "0b6f7b0ab1a2cd35b535c57e38cd9b8212ff4e429e96eeed11f34dd0f6676fe3",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 3,
+      "records": [
+        {
+          "年度": 2026,
+          "预测机构数": 2,
+          "最小值": 0.27,
+          "均值": 0.29,
+          "最大值": 0.31,
+          "行业平均数": 2.53
+        },
+        {
+          "年度": 2027,
+          "预测机构数": 2,
+          "最小值": 0.39,
+          "均值": 0.39,
+          "最大值": 0.39,
+          "行业平均数": 3.32
+        },
+        {
+          "年度": 2028,
+          "预测机构数": 2,
+          "最小值": 0.41,
+          "均值": 0.44,
+          "最大值": 0.47,
+          "行业平均数": 4.14
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/002560/worth.html",
+        "http_status": 200,
+        "bytes": 83659,
+        "response_sha256": "0b6f7b0ab1a2cd35b535c57e38cd9b8212ff4e429e96eeed11f34dd0f6676fe3",
+        "endpoint": "https://basic.10jqka.com.cn/new/002560/worth.html",
+        "code": "002560",
+        "columns": [
+          "年度",
+          "预测机构数",
+          "最小值",
+          "均值",
+          "最大值",
+          "行业平均数"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:36+08:00",
+      "fetched_at": "2026-09-14T17:04:36+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/002585/worth.html",
+      "source_sha256": "d01e0a9a50a21ef1d5243b16a7ff122c12d7567fca6029046c3ac9c50675d70f",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 5,
+      "records": [
+        {
+          "评级": "公司评级",
+          "说明": "报告发布日后的12个月内，公司的涨跌幅度相对同期沪深300指数的涨跌幅为基准"
+        },
+        {
+          "评级": "买 入/推 荐",
+          "说明": "相对大盘涨幅大于10%"
+        },
+        {
+          "评级": "增 持/谨慎推荐",
+          "说明": "相对大盘涨幅在5%～10%之间"
+        },
+        {
+          "评级": "中 性/持 有",
+          "说明": "相对大盘涨幅在-5%～5%之间"
+        },
+        {
+          "评级": "减 持/卖 出",
+          "说明": "相对大盘涨幅小于-5%"
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/002585/worth.html",
+        "http_status": 200,
+        "bytes": 45199,
+        "response_sha256": "d01e0a9a50a21ef1d5243b16a7ff122c12d7567fca6029046c3ac9c50675d70f",
+        "endpoint": "https://basic.10jqka.com.cn/new/002585/worth.html",
+        "code": "002585",
+        "columns": [
+          "评级",
+          "说明"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:37+08:00",
+      "fetched_at": "2026-09-14T17:04:37+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/002815/worth.html",
+      "source_sha256": "76a9fb8f4344bf3df1b38146284e0f1691b22d117d0871039b0747d359da471b",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 5,
+      "records": [
+        {
+          "评级": "公司评级",
+          "说明": "报告发布日后的12个月内，公司的涨跌幅度相对同期沪深300指数的涨跌幅为基准"
+        },
+        {
+          "评级": "买 入/推 荐",
+          "说明": "相对大盘涨幅大于10%"
+        },
+        {
+          "评级": "增 持/谨慎推荐",
+          "说明": "相对大盘涨幅在5%～10%之间"
+        },
+        {
+          "评级": "中 性/持 有",
+          "说明": "相对大盘涨幅在-5%～5%之间"
+        },
+        {
+          "评级": "减 持/卖 出",
+          "说明": "相对大盘涨幅小于-5%"
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/002815/worth.html",
+        "http_status": 200,
+        "bytes": 48019,
+        "response_sha256": "76a9fb8f4344bf3df1b38146284e0f1691b22d117d0871039b0747d359da471b",
+        "endpoint": "https://basic.10jqka.com.cn/new/002815/worth.html",
+        "code": "002815",
+        "columns": [
+          "评级",
+          "说明"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:38+08:00",
+      "fetched_at": "2026-09-14T17:04:38+08:00",
+      "source_url_or_local_root": "https://basic.10jqka.com.cn/new/002848/worth.html",
+      "source_sha256": "",
+      "status": "unavailable",
+      "scope": "target_codes",
+      "record_count": 0,
+      "records": [],
+      "meta": {
+        "endpoint": "https://basic.10jqka.com.cn/new/002848/worth.html",
+        "code": "002848"
+      },
+      "error_or_reason": "ValueError: No tables found",
+      "error": "ValueError: No tables found"
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:38+08:00",
+      "fetched_at": "2026-09-14T17:04:38+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/002902/worth.html",
+      "source_sha256": "00b77b485c7720cc4287ca0a5336d03f949c835e2c8c5c293697ed41ced57599",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 5,
+      "records": [
+        {
+          "评级": "公司评级",
+          "说明": "报告发布日后的12个月内，公司的涨跌幅度相对同期沪深300指数的涨跌幅为基准"
+        },
+        {
+          "评级": "买 入/推 荐",
+          "说明": "相对大盘涨幅大于10%"
+        },
+        {
+          "评级": "增 持/谨慎推荐",
+          "说明": "相对大盘涨幅在5%～10%之间"
+        },
+        {
+          "评级": "中 性/持 有",
+          "说明": "相对大盘涨幅在-5%～5%之间"
+        },
+        {
+          "评级": "减 持/卖 出",
+          "说明": "相对大盘涨幅小于-5%"
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/002902/worth.html",
+        "http_status": 200,
+        "bytes": 45200,
+        "response_sha256": "00b77b485c7720cc4287ca0a5336d03f949c835e2c8c5c293697ed41ced57599",
+        "endpoint": "https://basic.10jqka.com.cn/new/002902/worth.html",
+        "code": "002902",
+        "columns": [
+          "评级",
+          "说明"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:38+08:00",
+      "fetched_at": "2026-09-14T17:04:38+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/300290/worth.html",
+      "source_sha256": "fb0167de21571a4709221020b1f11db338953673a5597bb51d674f963ab5b60d",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 5,
+      "records": [
+        {
+          "评级": "公司评级",
+          "说明": "报告发布日后的12个月内，公司的涨跌幅度相对同期沪深300指数的涨跌幅为基准"
+        },
+        {
+          "评级": "买 入/推 荐",
+          "说明": "相对大盘涨幅大于10%"
+        },
+        {
+          "评级": "增 持/谨慎推荐",
+          "说明": "相对大盘涨幅在5%～10%之间"
+        },
+        {
+          "评级": "中 性/持 有",
+          "说明": "相对大盘涨幅在-5%～5%之间"
+        },
+        {
+          "评级": "减 持/卖 出",
+          "说明": "相对大盘涨幅小于-5%"
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/300290/worth.html",
+        "http_status": 200,
+        "bytes": 45182,
+        "response_sha256": "fb0167de21571a4709221020b1f11db338953673a5597bb51d674f963ab5b60d",
+        "endpoint": "https://basic.10jqka.com.cn/new/300290/worth.html",
+        "code": "300290",
+        "columns": [
+          "评级",
+          "说明"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:39+08:00",
+      "fetched_at": "2026-09-14T17:04:39+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/300563/worth.html",
+      "source_sha256": "389b4e618053dcfbbeaf495b5a17f1732e026af7d5801eda8d435f7172efb498",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 5,
+      "records": [
+        {
+          "评级": "公司评级",
+          "说明": "报告发布日后的12个月内，公司的涨跌幅度相对同期沪深300指数的涨跌幅为基准"
+        },
+        {
+          "评级": "买 入/推 荐",
+          "说明": "相对大盘涨幅大于10%"
+        },
+        {
+          "评级": "增 持/谨慎推荐",
+          "说明": "相对大盘涨幅在5%～10%之间"
+        },
+        {
+          "评级": "中 性/持 有",
+          "说明": "相对大盘涨幅在-5%～5%之间"
+        },
+        {
+          "评级": "减 持/卖 出",
+          "说明": "相对大盘涨幅小于-5%"
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/300563/worth.html",
+        "http_status": 200,
+        "bytes": 45192,
+        "response_sha256": "389b4e618053dcfbbeaf495b5a17f1732e026af7d5801eda8d435f7172efb498",
+        "endpoint": "https://basic.10jqka.com.cn/new/300563/worth.html",
+        "code": "300563",
+        "columns": [
+          "评级",
+          "说明"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:39+08:00",
+      "fetched_at": "2026-09-14T17:04:39+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/300959/worth.html",
+      "source_sha256": "5fe9f0c93b80d91e18f0e831dd71fb512103e3e2921cda431f2d25c8f9bd6698",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 3,
+      "records": [
+        {
+          "年度": 2026,
+          "预测机构数": 1,
+          "最小值": 0.4,
+          "均值": 0.4,
+          "最大值": 0.4,
+          "行业平均数": 1.37
+        },
+        {
+          "年度": 2027,
+          "预测机构数": 1,
+          "最小值": 0.48,
+          "均值": 0.48,
+          "最大值": 0.48,
+          "行业平均数": 1.96
+        },
+        {
+          "年度": 2028,
+          "预测机构数": 1,
+          "最小值": 0.56,
+          "均值": 0.56,
+          "最大值": 0.56,
+          "行业平均数": 2.83
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/300959/worth.html",
+        "http_status": 200,
+        "bytes": 75644,
+        "response_sha256": "5fe9f0c93b80d91e18f0e831dd71fb512103e3e2921cda431f2d25c8f9bd6698",
+        "endpoint": "https://basic.10jqka.com.cn/new/300959/worth.html",
+        "code": "300959",
+        "columns": [
+          "年度",
+          "预测机构数",
+          "最小值",
+          "均值",
+          "最大值",
+          "行业平均数"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:40+08:00",
+      "fetched_at": "2026-09-14T17:04:40+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/600088/worth.html",
+      "source_sha256": "4cbc8c73d57a438ce8f5713a192ee6dfd83f04bbf7d9302e759452ef62325602",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 5,
+      "records": [
+        {
+          "评级": "公司评级",
+          "说明": "报告发布日后的12个月内，公司的涨跌幅度相对同期沪深300指数的涨跌幅为基准"
+        },
+        {
+          "评级": "买 入/推 荐",
+          "说明": "相对大盘涨幅大于10%"
+        },
+        {
+          "评级": "增 持/谨慎推荐",
+          "说明": "相对大盘涨幅在5%～10%之间"
+        },
+        {
+          "评级": "中 性/持 有",
+          "说明": "相对大盘涨幅在-5%～5%之间"
+        },
+        {
+          "评级": "减 持/卖 出",
+          "说明": "相对大盘涨幅小于-5%"
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/600088/worth.html",
+        "http_status": 200,
+        "bytes": 45202,
+        "response_sha256": "4cbc8c73d57a438ce8f5713a192ee6dfd83f04bbf7d9302e759452ef62325602",
+        "endpoint": "https://basic.10jqka.com.cn/new/600088/worth.html",
+        "code": "600088",
+        "columns": [
+          "评级",
+          "说明"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:40+08:00",
+      "fetched_at": "2026-09-14T17:04:40+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/600184/worth.html",
+      "source_sha256": "68abb6f359789208c213c94d2fbdea73c4e412c2441b912d3e7f7b5c8db4bd08",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 3,
+      "records": [
+        {
+          "年度": 2026,
+          "预测机构数": 1,
+          "最小值": 0.15,
+          "均值": 0.15,
+          "最大值": 0.15,
+          "行业平均数": 2.07
+        },
+        {
+          "年度": 2027,
+          "预测机构数": 1,
+          "最小值": 0.19,
+          "均值": 0.19,
+          "最大值": 0.19,
+          "行业平均数": 2.81
+        },
+        {
+          "年度": 2028,
+          "预测机构数": 1,
+          "最小值": 0.23,
+          "均值": 0.23,
+          "最大值": 0.23,
+          "行业平均数": 3.71
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/600184/worth.html",
+        "http_status": 200,
+        "bytes": 77849,
+        "response_sha256": "68abb6f359789208c213c94d2fbdea73c4e412c2441b912d3e7f7b5c8db4bd08",
+        "endpoint": "https://basic.10jqka.com.cn/new/600184/worth.html",
+        "code": "600184",
+        "columns": [
+          "年度",
+          "预测机构数",
+          "最小值",
+          "均值",
+          "最大值",
+          "行业平均数"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:41+08:00",
+      "fetched_at": "2026-09-14T17:04:41+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/600207/worth.html",
+      "source_sha256": "299c808de76badfed607857cf82c75091f4bfcafe5bcfefa210dac6cc660e62e",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 5,
+      "records": [
+        {
+          "评级": "公司评级",
+          "说明": "报告发布日后的12个月内，公司的涨跌幅度相对同期沪深300指数的涨跌幅为基准"
+        },
+        {
+          "评级": "买 入/推 荐",
+          "说明": "相对大盘涨幅大于10%"
+        },
+        {
+          "评级": "增 持/谨慎推荐",
+          "说明": "相对大盘涨幅在5%～10%之间"
+        },
+        {
+          "评级": "中 性/持 有",
+          "说明": "相对大盘涨幅在-5%～5%之间"
+        },
+        {
+          "评级": "减 持/卖 出",
+          "说明": "相对大盘涨幅小于-5%"
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/600207/worth.html",
+        "http_status": 200,
+        "bytes": 45198,
+        "response_sha256": "299c808de76badfed607857cf82c75091f4bfcafe5bcfefa210dac6cc660e62e",
+        "endpoint": "https://basic.10jqka.com.cn/new/600207/worth.html",
+        "code": "600207",
+        "columns": [
+          "评级",
+          "说明"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:41+08:00",
+      "fetched_at": "2026-09-14T17:04:41+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/600237/worth.html",
+      "source_sha256": "76ae79eca2f4b9bdf53e7422b6116c900a2e514cefc3e0a32859b3caba6c943c",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 5,
+      "records": [
+        {
+          "评级": "公司评级",
+          "说明": "报告发布日后的12个月内，公司的涨跌幅度相对同期沪深300指数的涨跌幅为基准"
+        },
+        {
+          "评级": "买 入/推 荐",
+          "说明": "相对大盘涨幅大于10%"
+        },
+        {
+          "评级": "增 持/谨慎推荐",
+          "说明": "相对大盘涨幅在5%～10%之间"
+        },
+        {
+          "评级": "中 性/持 有",
+          "说明": "相对大盘涨幅在-5%～5%之间"
+        },
+        {
+          "评级": "减 持/卖 出",
+          "说明": "相对大盘涨幅小于-5%"
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/600237/worth.html",
+        "http_status": 200,
+        "bytes": 45194,
+        "response_sha256": "76ae79eca2f4b9bdf53e7422b6116c900a2e514cefc3e0a32859b3caba6c943c",
+        "endpoint": "https://basic.10jqka.com.cn/new/600237/worth.html",
+        "code": "600237",
+        "columns": [
+          "评级",
+          "说明"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:41+08:00",
+      "fetched_at": "2026-09-14T17:04:41+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/601199/worth.html",
+      "source_sha256": "1c2fc98dfa6b208a29cf6a491d2ab453140631921142fb174864675efd43dbe6",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 5,
+      "records": [
+        {
+          "评级": "公司评级",
+          "说明": "报告发布日后的12个月内，公司的涨跌幅度相对同期沪深300指数的涨跌幅为基准"
+        },
+        {
+          "评级": "买 入/推 荐",
+          "说明": "相对大盘涨幅大于10%"
+        },
+        {
+          "评级": "增 持/谨慎推荐",
+          "说明": "相对大盘涨幅在5%～10%之间"
+        },
+        {
+          "评级": "中 性/持 有",
+          "说明": "相对大盘涨幅在-5%～5%之间"
+        },
+        {
+          "评级": "减 持/卖 出",
+          "说明": "相对大盘涨幅小于-5%"
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/601199/worth.html",
+        "http_status": 200,
+        "bytes": 45192,
+        "response_sha256": "1c2fc98dfa6b208a29cf6a491d2ab453140631921142fb174864675efd43dbe6",
+        "endpoint": "https://basic.10jqka.com.cn/new/601199/worth.html",
+        "code": "601199",
+        "columns": [
+          "评级",
+          "说明"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:42+08:00",
+      "fetched_at": "2026-09-14T17:04:42+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/603336/worth.html",
+      "source_sha256": "0ed697b98a1111b0fa7fd80059799a3c842883beef7069561ef2c0a2de603787",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 3,
+      "records": [
+        {
+          "年度": 2026,
+          "预测机构数": 1,
+          "最小值": 0.11,
+          "均值": 0.11,
+          "最大值": 0.11,
+          "行业平均数": 1.45
+        },
+        {
+          "年度": 2027,
+          "预测机构数": 1,
+          "最小值": 0.15,
+          "均值": 0.15,
+          "最大值": 0.15,
+          "行业平均数": 1.87
+        },
+        {
+          "年度": 2028,
+          "预测机构数": 1,
+          "最小值": 0.17,
+          "均值": 0.17,
+          "最大值": 0.17,
+          "行业平均数": 2.21
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/603336/worth.html",
+        "http_status": 200,
+        "bytes": 78109,
+        "response_sha256": "0ed697b98a1111b0fa7fd80059799a3c842883beef7069561ef2c0a2de603787",
+        "endpoint": "https://basic.10jqka.com.cn/new/603336/worth.html",
+        "code": "603336",
+        "columns": [
+          "年度",
+          "预测机构数",
+          "最小值",
+          "均值",
+          "最大值",
+          "行业平均数"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:42+08:00",
+      "fetched_at": "2026-09-14T17:04:42+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/603386/worth.html",
+      "source_sha256": "05783354c832b7dc8fc16568e501f7ce02ae6d4e9d9cb84437c6f44f9e1157be",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 5,
+      "records": [
+        {
+          "评级": "公司评级",
+          "说明": "报告发布日后的12个月内，公司的涨跌幅度相对同期沪深300指数的涨跌幅为基准"
+        },
+        {
+          "评级": "买 入/推 荐",
+          "说明": "相对大盘涨幅大于10%"
+        },
+        {
+          "评级": "增 持/谨慎推荐",
+          "说明": "相对大盘涨幅在5%～10%之间"
+        },
+        {
+          "评级": "中 性/持 有",
+          "说明": "相对大盘涨幅在-5%～5%之间"
+        },
+        {
+          "评级": "减 持/卖 出",
+          "说明": "相对大盘涨幅小于-5%"
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/603386/worth.html",
+        "http_status": 200,
+        "bytes": 45196,
+        "response_sha256": "05783354c832b7dc8fc16568e501f7ce02ae6d4e9d9cb84437c6f44f9e1157be",
+        "endpoint": "https://basic.10jqka.com.cn/new/603386/worth.html",
+        "code": "603386",
+        "columns": [
+          "评级",
+          "说明"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:43+08:00",
+      "fetched_at": "2026-09-14T17:04:43+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/603421/worth.html",
+      "source_sha256": "a806056890395c01e4128122ed7e830386f18bfb2a980bcffb2b540b86e9dec7",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 5,
+      "records": [
+        {
+          "评级": "公司评级",
+          "说明": "报告发布日后的12个月内，公司的涨跌幅度相对同期沪深300指数的涨跌幅为基准"
+        },
+        {
+          "评级": "买 入/推 荐",
+          "说明": "相对大盘涨幅大于10%"
+        },
+        {
+          "评级": "增 持/谨慎推荐",
+          "说明": "相对大盘涨幅在5%～10%之间"
+        },
+        {
+          "评级": "中 性/持 有",
+          "说明": "相对大盘涨幅在-5%～5%之间"
+        },
+        {
+          "评级": "减 持/卖 出",
+          "说明": "相对大盘涨幅小于-5%"
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/603421/worth.html",
+        "http_status": 200,
+        "bytes": 45196,
+        "response_sha256": "a806056890395c01e4128122ed7e830386f18bfb2a980bcffb2b540b86e9dec7",
+        "endpoint": "https://basic.10jqka.com.cn/new/603421/worth.html",
+        "code": "603421",
+        "columns": [
+          "评级",
+          "说明"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:43+08:00",
+      "fetched_at": "2026-09-14T17:04:43+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/603466/worth.html",
+      "source_sha256": "ba45772e3ace80e96460f06189ac26ddf6678adde76cb1d1dfd50731712a785c",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 3,
+      "records": [
+        {
+          "年度": 2026,
+          "预测机构数": 4,
+          "最小值": 0.17,
+          "均值": 0.24,
+          "最大值": 0.34,
+          "行业平均数": 0.77
+        },
+        {
+          "年度": 2027,
+          "预测机构数": 4,
+          "最小值": 0.2,
+          "均值": 0.28,
+          "最大值": 0.42,
+          "行业平均数": 0.93
+        },
+        {
+          "年度": 2028,
+          "预测机构数": 4,
+          "最小值": 0.25,
+          "均值": 0.35,
+          "最大值": 0.53,
+          "行业平均数": 1.0
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/603466/worth.html",
+        "http_status": 200,
+        "bytes": 108670,
+        "response_sha256": "ba45772e3ace80e96460f06189ac26ddf6678adde76cb1d1dfd50731712a785c",
+        "endpoint": "https://basic.10jqka.com.cn/new/603466/worth.html",
+        "code": "603466",
+        "columns": [
+          "年度",
+          "预测机构数",
+          "最小值",
+          "均值",
+          "最大值",
+          "行业平均数"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:44+08:00",
+      "fetched_at": "2026-09-14T17:04:44+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/603936/worth.html",
+      "source_sha256": "c930ad5702e531df022d1253fd28f48091bee1be2a52b630bb034dd53b6e0602",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 3,
+      "records": [
+        {
+          "年度": 2026,
+          "预测机构数": 1,
+          "最小值": 0.32,
+          "均值": 0.32,
+          "最大值": 0.32,
+          "行业平均数": 2.9
+        },
+        {
+          "年度": 2027,
+          "预测机构数": 1,
+          "最小值": 0.64,
+          "均值": 0.64,
+          "最大值": 0.64,
+          "行业平均数": 4.21
+        },
+        {
+          "年度": 2028,
+          "预测机构数": 1,
+          "最小值": 0.95,
+          "均值": 0.95,
+          "最大值": 0.95,
+          "行业平均数": 5.7
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/603936/worth.html",
+        "http_status": 200,
+        "bytes": 81521,
+        "response_sha256": "c930ad5702e531df022d1253fd28f48091bee1be2a52b630bb034dd53b6e0602",
+        "endpoint": "https://basic.10jqka.com.cn/new/603936/worth.html",
+        "code": "603936",
+        "columns": [
+          "年度",
+          "预测机构数",
+          "最小值",
+          "均值",
+          "最大值",
+          "行业平均数"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:44+08:00",
+      "fetched_at": "2026-09-14T17:04:44+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/603938/worth.html",
+      "source_sha256": "01f072e2aa5225eb7537acc95b237691826dc078ca067a5550e4fb51e5fcd634",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 3,
+      "records": [
+        {
+          "年度": 2026,
+          "预测机构数": 2,
+          "最小值": 0.39,
+          "均值": 0.41,
+          "最大值": 0.42,
+          "行业平均数": 1.68
+        },
+        {
+          "年度": 2027,
+          "预测机构数": 2,
+          "最小值": 0.45,
+          "均值": 0.52,
+          "最大值": 0.58,
+          "行业平均数": 2.01
+        },
+        {
+          "年度": 2028,
+          "预测机构数": 2,
+          "最小值": 0.52,
+          "均值": 0.65,
+          "最大值": 0.77,
+          "行业平均数": 2.4
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/603938/worth.html",
+        "http_status": 200,
+        "bytes": 85866,
+        "response_sha256": "01f072e2aa5225eb7537acc95b237691826dc078ca067a5550e4fb51e5fcd634",
+        "endpoint": "https://basic.10jqka.com.cn/new/603938/worth.html",
+        "code": "603938",
+        "columns": [
+          "年度",
+          "预测机构数",
+          "最小值",
+          "均值",
+          "最大值",
+          "行业平均数"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:44+08:00",
+      "fetched_at": "2026-09-14T17:04:44+08:00",
+      "source_url_or_local_root": "https://basic.10jqka.com.cn/new/605011/worth.html",
+      "source_sha256": "",
+      "status": "unavailable",
+      "scope": "target_codes",
+      "record_count": 0,
+      "records": [],
+      "meta": {
+        "endpoint": "https://basic.10jqka.com.cn/new/605011/worth.html",
+        "code": "605011"
+      },
+      "error_or_reason": "ValueError: No tables found",
+      "error": "ValueError: No tables found"
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:45+08:00",
+      "fetched_at": "2026-09-14T17:04:45+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/605058/worth.html",
+      "source_sha256": "7ca4ae550b71937bb1e1c8211bece31e0cabc8adb341578eddea3c78234d74bd",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 5,
+      "records": [
+        {
+          "评级": "公司评级",
+          "说明": "报告发布日后的12个月内，公司的涨跌幅度相对同期沪深300指数的涨跌幅为基准"
+        },
+        {
+          "评级": "买 入/推 荐",
+          "说明": "相对大盘涨幅大于10%"
+        },
+        {
+          "评级": "增 持/谨慎推荐",
+          "说明": "相对大盘涨幅在5%～10%之间"
+        },
+        {
+          "评级": "中 性/持 有",
+          "说明": "相对大盘涨幅在-5%～5%之间"
+        },
+        {
+          "评级": "减 持/卖 出",
+          "说明": "相对大盘涨幅小于-5%"
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/605058/worth.html",
+        "http_status": 200,
+        "bytes": 45192,
+        "response_sha256": "7ca4ae550b71937bb1e1c8211bece31e0cabc8adb341578eddea3c78234d74bd",
+        "endpoint": "https://basic.10jqka.com.cn/new/605058/worth.html",
+        "code": "605058",
+        "columns": [
+          "评级",
+          "说明"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:46+08:00",
+      "fetched_at": "2026-09-14T17:04:46+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/688143/worth.html",
+      "source_sha256": "71dafd95c56c0da5d1b835643c47457f75b99e2d517852330ffe871b7a3d989c",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 3,
+      "records": [
+        {
+          "年度": 2026,
+          "预测机构数": 8,
+          "最小值": 0.36,
+          "均值": 0.67,
+          "最大值": 1.02,
+          "行业平均数": 2.9
+        },
+        {
+          "年度": 2027,
+          "预测机构数": 8,
+          "最小值": 0.56,
+          "均值": 1.08,
+          "最大值": 1.54,
+          "行业平均数": 4.21
+        },
+        {
+          "年度": 2028,
+          "预测机构数": 8,
+          "最小值": 0.84,
+          "均值": 1.53,
+          "最大值": 2.12,
+          "行业平均数": 5.7
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/688143/worth.html",
+        "http_status": 200,
+        "bytes": 113067,
+        "response_sha256": "71dafd95c56c0da5d1b835643c47457f75b99e2d517852330ffe871b7a3d989c",
+        "endpoint": "https://basic.10jqka.com.cn/new/688143/worth.html",
+        "code": "688143",
+        "columns": [
+          "年度",
+          "预测机构数",
+          "最小值",
+          "均值",
+          "最大值",
+          "行业平均数"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:46+08:00",
+      "fetched_at": "2026-09-14T17:04:46+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/688260/worth.html",
+      "source_sha256": "dcbe0eeacc5388b2990759031eae73c7285fdd14efd485a54437e6be5a809186",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 3,
+      "records": [
+        {
+          "年度": 2026,
+          "预测机构数": 2,
+          "最小值": -0.6,
+          "均值": -0.37,
+          "最大值": -0.13,
+          "行业平均数": 2.9
+        },
+        {
+          "年度": 2027,
+          "预测机构数": 2,
+          "最小值": 0.46,
+          "均值": 0.47,
+          "最大值": 0.48,
+          "行业平均数": 4.21
+        },
+        {
+          "年度": 2028,
+          "预测机构数": 1,
+          "最小值": 1.46,
+          "均值": 1.46,
+          "最大值": 1.46,
+          "行业平均数": 5.7
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/688260/worth.html",
+        "http_status": 200,
+        "bytes": 80604,
+        "response_sha256": "dcbe0eeacc5388b2990759031eae73c7285fdd14efd485a54437e6be5a809186",
+        "endpoint": "https://basic.10jqka.com.cn/new/688260/worth.html",
+        "code": "688260",
+        "columns": [
+          "年度",
+          "预测机构数",
+          "最小值",
+          "均值",
+          "最大值",
+          "行业平均数"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:47+08:00",
+      "fetched_at": "2026-09-14T17:04:47+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/688367/worth.html",
+      "source_sha256": "5f8679a1e64207f042b04075943b102eb34dd688937e9be2116f2f38d93f6f1d",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 5,
+      "records": [
+        {
+          "评级": "公司评级",
+          "说明": "报告发布日后的12个月内，公司的涨跌幅度相对同期沪深300指数的涨跌幅为基准"
+        },
+        {
+          "评级": "买 入/推 荐",
+          "说明": "相对大盘涨幅大于10%"
+        },
+        {
+          "评级": "增 持/谨慎推荐",
+          "说明": "相对大盘涨幅在5%～10%之间"
+        },
+        {
+          "评级": "中 性/持 有",
+          "说明": "相对大盘涨幅在-5%～5%之间"
+        },
+        {
+          "评级": "减 持/卖 出",
+          "说明": "相对大盘涨幅小于-5%"
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/688367/worth.html",
+        "http_status": 200,
+        "bytes": 45192,
+        "response_sha256": "5f8679a1e64207f042b04075943b102eb34dd688937e9be2116f2f38d93f6f1d",
+        "endpoint": "https://basic.10jqka.com.cn/new/688367/worth.html",
+        "code": "688367",
+        "columns": [
+          "评级",
+          "说明"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:48+08:00",
+      "fetched_at": "2026-09-14T17:04:48+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/920008/worth.html",
+      "source_sha256": "e5df896c962893f2a9f3249e5e7465379500237855a70e6c224627b4fb367d55",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 5,
+      "records": [
+        {
+          "评级": "公司评级",
+          "说明": "报告发布日后的12个月内，公司的涨跌幅度相对同期沪深300指数的涨跌幅为基准"
+        },
+        {
+          "评级": "买 入/推 荐",
+          "说明": "相对大盘涨幅大于10%"
+        },
+        {
+          "评级": "增 持/谨慎推荐",
+          "说明": "相对大盘涨幅在5%～10%之间"
+        },
+        {
+          "评级": "中 性/持 有",
+          "说明": "相对大盘涨幅在-5%～5%之间"
+        },
+        {
+          "评级": "减 持/卖 出",
+          "说明": "相对大盘涨幅小于-5%"
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/920008/worth.html",
+        "http_status": 200,
+        "bytes": 55959,
+        "response_sha256": "e5df896c962893f2a9f3249e5e7465379500237855a70e6c224627b4fb367d55",
+        "endpoint": "https://basic.10jqka.com.cn/new/920008/worth.html",
+        "code": "920008",
+        "columns": [
+          "评级",
+          "说明"
+        ]
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "ths",
+      "source": "ths",
+      "requested_date": "2026-09-11",
+      "source_date": "2026-09-11",
+      "retrieved_at": "2026-09-14T17:04:49+08:00",
+      "fetched_at": "2026-09-14T17:04:49+08:00",
+      "source_url_or_local_root": "http://basic.10jqka.com.cn/920821/worth.html",
+      "source_sha256": "5371c0ec24cac350e24fd41a771690336365e9d9653f51a0633a3227d9b1e508",
+      "status": "available",
+      "scope": "target_codes",
+      "record_count": 5,
+      "records": [
+        {
+          "评级": "公司评级",
+          "说明": "报告发布日后的12个月内，公司的涨跌幅度相对同期沪深300指数的涨跌幅为基准"
+        },
+        {
+          "评级": "买 入/推 荐",
+          "说明": "相对大盘涨幅大于10%"
+        },
+        {
+          "评级": "增 持/谨慎推荐",
+          "说明": "相对大盘涨幅在5%～10%之间"
+        },
+        {
+          "评级": "中 性/持 有",
+          "说明": "相对大盘涨幅在-5%～5%之间"
+        },
+        {
+          "评级": "减 持/卖 出",
+          "说明": "相对大盘涨幅小于-5%"
+        }
+      ],
+      "meta": {
+        "url": "http://basic.10jqka.com.cn/920821/worth.html",
+        "http_status": 200,
+        "bytes": 47951,
+        "response_sha256": "5371c0ec24cac350e24fd41a771690336365e9d9653f51a0633a3227d9b1e508",
+        "endpoint": "https://basic.10jqka.com.cn/new/920821/worth.html",
+        "code": "920821",
+        "columns": [
+          "评级",
+          "说明"
+        ]
+      },
+      "error_or_reason": ""
+    }
+  ],
+  "record_count": 121
+}

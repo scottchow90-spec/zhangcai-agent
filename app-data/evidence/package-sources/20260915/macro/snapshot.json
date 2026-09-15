@@ -1,0 +1,182 @@
+{
+  "schema": "ZHANGCAI_PACKAGE_SOURCE_BATCH_V1",
+  "provider": "macro",
+  "requested_date": "2026-09-15",
+  "fetched_at": "2026-09-15T17:55:23+08:00",
+  "scope": "latest_official_period",
+  "status": "available",
+  "results": [
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "macro",
+      "source": "macro",
+      "requested_date": "2026-09-15",
+      "source_date": "2026-09-15",
+      "retrieved_at": "2026-09-15T17:55:22+08:00",
+      "fetched_at": "2026-09-15T17:55:22+08:00",
+      "source_url_or_local_root": "https://www.stats.gov.cn/sj/zxfb/202608/t20260831_1965154.html",
+      "source_sha256": "a561911c92b4ea4ea58ed808d5fe4ef61a1dfb79a31f593ba46ad4692aa5af46",
+      "status": "available",
+      "scope": "latest_official_period",
+      "record_count": 1,
+      "records": [
+        {
+          "title": "2026年8月中国采购经理指数运行情况",
+          "period": "2026-08",
+          "manufacturing_pmi": 49.8,
+          "non_manufacturing_pmi": 49.0,
+          "composite_pmi": 49.5,
+          "source_url": "https://www.stats.gov.cn/sj/zxfb/202608/t20260831_1965154.html"
+        }
+      ],
+      "meta": {
+        "index_url": "https://www.stats.gov.cn/sj/zxfb/",
+        "url": "https://www.stats.gov.cn/sj/zxfb/202608/t20260831_1965154.html",
+        "http_status": 200,
+        "bytes": 398531,
+        "response_sha256": "a561911c92b4ea4ea58ed808d5fe4ef61a1dfb79a31f593ba46ad4692aa5af46",
+        "endpoint": "https://www.stats.gov.cn/sj/zxfb/"
+      },
+      "error_or_reason": ""
+    },
+    {
+      "schema": "ZHANGCAI_PACKAGE_SOURCE_SNAPSHOT_V1",
+      "provider": "macro",
+      "source": "macro",
+      "requested_date": "2026-09-15",
+      "source_date": "2026-09-15",
+      "retrieved_at": "2026-09-15T17:55:23+08:00",
+      "fetched_at": "2026-09-15T17:55:23+08:00",
+      "source_url_or_local_root": "https://www.pbc.gov.cn/diaochatongjisi/116219/116319/index.html",
+      "source_sha256": "2d86f8b010ba96a6ea569e5e1ac57c637f0d64a854a4b40c9fdf9bf3fe8b7da7",
+      "status": "available",
+      "scope": "latest_year_monthly",
+      "record_count": 8,
+      "records": [
+        {
+          "month": "2026-01",
+          "afre_total": 72185.0,
+          "rmb_loans": 49016.0,
+          "fx_loans": 468.0,
+          "entrusted_loans": -192.0,
+          "trust_loans": -4.0,
+          "undiscounted_bankers_acceptance": 6293.0,
+          "corporate_bonds": 5033.0,
+          "government_bonds": 9764.0,
+          "equity_financing": 291.0,
+          "abs_by_depository": -99.0,
+          "loans_written_off": 355.0
+        },
+        {
+          "month": "2026-02",
+          "afre_total": 23837.0,
+          "rmb_loans": 8458.0,
+          "fx_loans": -36.0,
+          "entrusted_loans": -181.0,
+          "trust_loans": 310.0,
+          "undiscounted_bankers_acceptance": -1755.0,
+          "corporate_bonds": 1522.0,
+          "government_bonds": 14014.0,
+          "equity_financing": 454.0,
+          "abs_by_depository": -56.0,
+          "loans_written_off": 379.0
+        },
+        {
+          "month": "2026-03",
+          "afre_total": 52240.0,
+          "rmb_loans": 31522.0,
+          "fx_loans": 420.0,
+          "entrusted_loans": -284.0,
+          "trust_loans": -173.0,
+          "undiscounted_bankers_acceptance": 1258.0,
+          "corporate_bonds": 3910.0,
+          "government_bonds": 11658.0,
+          "equity_financing": 428.0,
+          "abs_by_depository": -132.0,
+          "loans_written_off": 2538.0
+        },
+        {
+          "month": "2026-04",
+          "afre_total": 6238.0,
+          "rmb_loans": -4006.0,
+          "fx_loans": 184.0,
+          "entrusted_loans": -283.0,
+          "trust_loans": -129.0,
+          "undiscounted_bankers_acceptance": -5284.0,
+          "corporate_bonds": 4520.0,
+          "government_bonds": 9041.0,
+          "equity_financing": 835.0,
+          "abs_by_depository": -128.0,
+          "loans_written_off": 580.0
+        },
+        {
+          "month": "2026-05",
+          "afre_total": 20293.0,
+          "rmb_loans": 4965.0,
+          "fx_loans": 117.0,
+          "entrusted_loans": -90.0,
+          "trust_loans": 53.0,
+          "undiscounted_bankers_acceptance": -685.0,
+          "corporate_bonds": 1680.0,
+          "government_bonds": 12236.0,
+          "equity_financing": 298.0,
+          "abs_by_depository": -241.0,
+          "loans_written_off": 1016.0
+        },
+        {
+          "month": "2026-06",
+          "afre_total": 33671.0,
+          "rmb_loans": 17650.0,
+          "fx_loans": 455.0,
+          "entrusted_loans": 243.0,
+          "trust_loans": -503.0,
+          "undiscounted_bankers_acceptance": -1084.0,
+          "corporate_bonds": 4012.0,
+          "government_bonds": 7683.0,
+          "equity_financing": 628.0,
+          "abs_by_depository": 322.0,
+          "loans_written_off": 3188.0
+        },
+        {
+          "month": "2026-07",
+          "afre_total": 14068.0,
+          "rmb_loans": -5896.0,
+          "fx_loans": 85.0,
+          "entrusted_loans": -22.0,
+          "trust_loans": -226.0,
+          "undiscounted_bankers_acceptance": -530.0,
+          "corporate_bonds": 4536.0,
+          "government_bonds": 13176.0,
+          "equity_financing": 1128.0,
+          "abs_by_depository": -159.0,
+          "loans_written_off": 798.0
+        },
+        {
+          "month": "2026-08",
+          "afre_total": 16577.0,
+          "rmb_loans": 552.0,
+          "fx_loans": 409.0,
+          "entrusted_loans": 229.0,
+          "trust_loans": -233.0,
+          "undiscounted_bankers_acceptance": 382.0,
+          "corporate_bonds": 2712.0,
+          "government_bonds": 10097.0,
+          "equity_financing": 639.0,
+          "abs_by_depository": -176.0,
+          "loans_written_off": 906.0
+        }
+      ],
+      "meta": {
+        "index_url": "https://www.pbc.gov.cn/diaochatongjisi/116219/116319/index.html",
+        "workbook_url": "https://www.pbc.gov.cn/diaochatongjisi/attachDir/2026/09/2026091418125322850.xlsx",
+        "http_status": 200,
+        "bytes": 12878,
+        "response_sha256": "2d86f8b010ba96a6ea569e5e1ac57c637f0d64a854a4b40c9fdf9bf3fe8b7da7",
+        "endpoint": "https://www.pbc.gov.cn/diaochatongjisi/116219/116319/index.html",
+        "year": 2026
+      },
+      "error_or_reason": ""
+    }
+  ],
+  "record_count": 9
+}

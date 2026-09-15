@@ -640,6 +640,114 @@ def cmd_five(args: argparse.Namespace) -> None:
     )
 
 
+def _batch_formula(formula: str, symbols: list[str], count: int, dividend_type: int) -> dict[str, Any]:
+    """Run one indicator for several symbols in one TQ session.
+
+    The web strategy screen needs the same five local formulas for a small
+    candidate set.  Reusing one TQ connection avoids starting a Python/TQ
+    process for every row while keeping the existing single-symbol command
+    unchanged.
+    """
+    start = time.perf_counter()
+    normalized = [symbol_suffix(symbol) for symbol in symbols]
+    stdout_log = io.StringIO()
+    stderr_log = io.StringIO()
+    result: Any = {}
+    error: str | None = None
+    init_path: Path | None = None
+    runtime_formula = str(CORE_FORMULAS.get(formula, {}).get("call_name") or formula)
+    try:
+        with TQLock() as lock:
+            with contextlib.redirect_stdout(stdout_log), contextlib.redirect_stderr(stderr_log):
+                tq, init_path = load_tq()
+                try:
+                    if formula == "庄家资金监控":
+                        result = {}
+                        # This formula uses the direct per-symbol API in the
+                        # single-symbol path, so keep that special handling
+                        # while still reusing the same initialized session.
+                        for symbol in normalized:
+                            setup = tq.formula_set_data_info(symbol, count=count, dividend_type=dividend_type)
+                            if str(setup.get("ErrorId")) != "0":
+                                result[symbol] = {"ErrorId": str(setup.get("ErrorId", "1"))}
+                                continue
+                            direct = tq.formula_zb(runtime_formula, symbol.split(".", 1)[0], xsflag=2)
+                            if isinstance(direct, dict) and str(direct.get("ErrorId")) == "0" and isinstance(direct.get("Value"), dict):
+                                result[symbol] = direct["Value"]
+                            else:
+                                result[symbol] = direct if isinstance(direct, dict) else {}
+                    else:
+                        result = tq.formula_process_mul_zb(
+                            runtime_formula,
+                            stock_list=normalized,
+                            count=count,
+                            return_date=False,
+                            dividend_type=dividend_type,
+                        )
+                finally:
+                    if hasattr(tq, "_release"):
+                        tq._release()
+                    else:
+                        tq.close()
+    except Exception as exc:
+        error = str(exc)
+
+    rows: dict[str, Any] = {}
+    for symbol in normalized:
+        value = result.get(symbol) if isinstance(result, dict) else None
+        if isinstance(value, dict):
+            rows[symbol] = value
+    payload: dict[str, Any] = {
+        "ok": bool(rows) and len(rows) == len(normalized),
+        "formula": formula,
+        "tq_formula": runtime_formula,
+        "kind": "zb",
+        "symbols": normalized,
+        "count": count,
+        "init_path": str(init_path) if init_path else None,
+        "results": rows,
+        "elapsed_ms": round((time.perf_counter() - start) * 1000, 3),
+    }
+    if error:
+        payload["error"] = error
+    stdout_text = stdout_log.getvalue().strip()
+    stderr_text = stderr_log.getvalue().strip()
+    if stdout_text:
+        payload["tq_stdout"] = stdout_text
+    if stderr_text:
+        payload["tq_stderr"] = stderr_text
+    return payload
+
+
+def cmd_batch(args: argparse.Namespace) -> None:
+    symbols = [item for item in args.symbols if item.strip()]
+    if not symbols:
+        emit({"ok": False, "error": "batch requires at least one symbol"}, 1)
+    # Keep the endpoint bounded; the web page only needs its Top10 table.
+    if len(symbols) > 30:
+        emit({"ok": False, "error": "batch 最多支持 30 只股票"}, 1)
+    items = []
+    for formula in ["大牛线4.0", "飞龙在天", "游资资金监控", "机构资金监控", "庄家资金监控"]:
+        meta = CORE_FORMULAS[formula]
+        try:
+            item = _batch_formula(formula, symbols, int(meta["count"]), int(meta["dividend_type"]))
+            item["required"] = True
+            items.append(item)
+        except Exception as exc:
+            items.append({"ok": False, "formula": formula, "symbols": symbols, "results": {}, "error": str(exc), "required": True})
+    failed = [item.get("formula") for item in items if not item.get("ok")]
+    emit(
+        {
+            "ok": not failed,
+            "symbols": [symbol_suffix(symbol) for symbol in symbols],
+            "items": items,
+            "failed_formulas": failed,
+            "elapsed_ms": round(sum(float(item.get("elapsed_ms", 0) or 0) for item in items), 3),
+        },
+        0 if not failed else 2,
+    )
+
+
 def cmd_news(args: argparse.Namespace) -> None:
     start = time.perf_counter()
     files: list[Path] = []
@@ -714,6 +822,10 @@ def build_parser() -> argparse.ArgumentParser:
     five = sub.add_parser("five")
     five.add_argument("symbol")
     five.set_defaults(func=cmd_five)
+
+    batch = sub.add_parser("batch")
+    batch.add_argument("symbols", nargs="+")
+    batch.set_defaults(func=cmd_batch)
 
     news = sub.add_parser("news")
     news.add_argument("--limit", type=int, default=20)

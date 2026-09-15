@@ -1,0 +1,29 @@
+{
+  "schema": "STOCK_CANONICAL_BUSINESS_RESULT_V1",
+  "skill_id": "golden-ignition",
+  "status": "CLEAN_PASS",
+  "business_process": {
+    "command": [
+      "C:\\Users\\Scott\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\harness-skills\\golden-ignition\\scripts\\legacy_codex_entry.py",
+      "run",
+      "600577.SH",
+      "--lookback",
+      "5"
+    ],
+    "cwd": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\harness-skills\\golden-ignition",
+    "returncode": 0,
+    "timed_out": false,
+    "failure_tokens": [],
+    "artifact_validation_errors": []
+  },
+  "business_binding": {
+    "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\harness-skills\\golden-ignition\\scripts\\legacy_codex_entry.py",
+    "sha256": "bb94fb7c58decd4fb8cf0e4530663dfbb7fd0d5499ddc6790259c337a5e67b97"
+  },
+  "artifacts": {
+    "stdout": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\strategy-results\\executions\\runs\\20260913-011759-871854\\business_child.stdout.txt",
+    "stderr": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\strategy-results\\executions\\runs\\20260913-011759-871854\\business_child.stderr.txt"
+  },
+  "delivery_artifacts": {}
+}

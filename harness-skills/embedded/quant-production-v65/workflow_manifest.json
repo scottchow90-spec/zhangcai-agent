@@ -1,0 +1,120 @@
+{
+  "name": "a-share-quant-production-v65-workbuddy",
+  "display_name": "A股量化生产定型工程 V6.5 WorkBuddy双路容灾最终生产版",
+  "version": "6.5.0-final",
+  "entrypoint": "python scripts/workbuddy_entry.py execute --mode after-market",
+  "commands": {
+    "verify": "python scripts/workbuddy_entry.py verify",
+    "selftest": "python scripts/workbuddy_entry.py selftest",
+    "deep_audit": "python scripts/workbuddy_entry.py deep-audit",
+    "offline_e2e": "python scripts/workbuddy_entry.py offline-e2e",
+    "doctor": "python scripts/workbuddy_entry.py doctor",
+    "after_market": "python scripts/workbuddy_entry.py execute --mode after-market",
+    "realtime": "python scripts/workbuddy_entry.py execute --mode realtime",
+    "production_status": "python scripts/workbuddy_entry.py production-status",
+    "validate_production": "python scripts/workbuddy_entry.py validate-production",
+    "bridge_request": "python scripts/workbuddy_entry.py bridge-request --mode after-market",
+    "after_market_bridge": "python scripts/workbuddy_entry.py execute --mode after-market --data-bundle workbuddy_data_bundle.zip",
+    "consensus_after_market": "python scripts/consensus_engine.py execute --bundle consensus_bundle.json"
+  },
+  "required_steps": [
+    {
+      "step": 1,
+      "name": "包完整性/决策时点锁定"
+    },
+    {
+      "step": 2,
+      "name": "全A股票池与主板过滤"
+    },
+    {
+      "step": 3,
+      "name": "模型级历史数据门（核心≥120根；≥250根增强）"
+    },
+    {
+      "step": 4,
+      "name": "全市场宽度逐股重算"
+    },
+    {
+      "step": 5,
+      "name": "沪深对应指数与市场权限"
+    },
+    {
+      "step": 6,
+      "name": "四模型核心结构逐股预筛"
+    },
+    {
+      "step": 7,
+      "name": "行业六维+时间+消息驱动精算"
+    },
+    {
+      "step": 8,
+      "name": "四模型完整硬门/评分/共振"
+    },
+    {
+      "step": 9,
+      "name": "UNKNOWN传播与数据门禁预审"
+    },
+    {
+      "step": 10,
+      "name": "第二行情源候选价格核验",
+      "conditional": "盘后执行；盘中必须记录不适用原因"
+    },
+    {
+      "step": 11,
+      "name": "严格样本/行业状态归档与历史样本成熟",
+      "conditional": "盘后仅AUTHORIZED新增当前样本并成熟既有5/10日结果；BLOCKED必须记录阻断未归档；盘中仅归档实时预警"
+    },
+    {
+      "step": 12,
+      "name": "量化生产定型验证"
+    },
+    {
+      "step": 13,
+      "name": "完整Markdown/JSON/HTML/运行哈希输出"
+    }
+  ],
+  "anti_shortcut_policy": "all_steps_recorded_even_if_not_applicable_or_blocked",
+  "runtime": [
+    "after-market",
+    "realtime"
+  ],
+  "forbidden_runtime": [
+    "auction",
+    "realtime-first-30-minutes",
+    "historical-realtime-replay-without-snapshots",
+    "next-open-entry",
+    "position-exit",
+    "auto-trading"
+  ],
+  "dependencies": {
+    "python": ">=3.9",
+    "third_party_python_packages": [],
+    "local_tdx": false,
+    "tdx_formula": false,
+    "network": "direct-preferred-workbuddy-bridge-fallback"
+  },
+  "authorization_states": [
+    "AUTHORIZED",
+    "BLOCKED"
+  ],
+  "candidate_evaluation_states": [
+    "PASS",
+    "FAIL",
+    "UNKNOWN"
+  ],
+  "production_states": [
+    "PRODUCTION_READY",
+    "NOT_READY"
+  ],
+  "data_acquisition_policy": {
+    "primary_route": "direct_public_api",
+    "fallback_route": "workbuddy_external_data_bridge",
+    "bridge_exit_code": 4,
+    "exit_code_4_is_terminal": false,
+    "mandatory_resume": "WorkBuddy必须完成外部取数后自动以--data-bundle续跑，禁止把DATA_BRIDGE_REQUIRED当最终结果",
+    "secondary_policy": "盘后最终候选必须使用与主行情源独立的第二来源核验",
+    "native_history_policy": "model-local: core >=120 bars; enhanced fib context >=250 bars",
+    "second_production_route": "independent cross-provider consensus rescue",
+    "consensus_route_is_authorized_when_all_gates_pass": true
+  }
+}

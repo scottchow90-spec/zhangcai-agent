@@ -1,0 +1,21 @@
+{
+  "schema": "ZHANGCAI_PUBLIC_DAILY_RECOVERY_V1",
+  "status": "available",
+  "trade_date": "20260911",
+  "tdx_available": true,
+  "requested_count": 0,
+  "fetched_count": 0,
+  "failed_count": 0,
+  "source_precedence": [
+    "tdx_local_day",
+    "tdx_archive",
+    "public_daily_fallback"
+  ],
+  "daily_index": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\index\\daily-data-index.json",
+  "fallback_root": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\fallback\\20260911",
+  "requested_scope": "explicit_codes",
+  "cap_applied": null,
+  "results": [],
+  "retrieved_at": "2026-09-14T10:12:00+08:00",
+  "report": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\runtime\\daily-recovery-20260911-101200.json"
+}

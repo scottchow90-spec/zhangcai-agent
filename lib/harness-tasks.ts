@@ -1,6 +1,5 @@
 'use client';
 
-import { saveReportArchive } from '@/lib/report-archive';
 import { bridgeUrl } from '@/lib/bridge-url';
 
 export type HarnessTaskStatus = 'starting' | 'running' | 'completed' | 'failed';
@@ -25,9 +24,9 @@ export type HarnessTask = {
 
 const STORAGE_KEY = 'zhangcai.harness.tasks.v1';
 const EVENT_NAME = 'zhangcai:harness-tasks';
-// 优先走网页开发服务器的同源代理，避免浏览器对 localhost -> 127.0.0.1
-// 的 Private Network 请求策略；直连地址作为代理不可用时的兼容回退。
-const BRIDGE_ENDPOINTS = ['/bridge'];
+// 3003 的生产网页没有 /bridge 代理路由；桥接服务本身已配置 CORS，
+// 因此后台任务必须直接访问同一工作区的 4319，避免网页层返回 404。
+const BRIDGE_ENDPOINTS: string[] = [];
 
 function readTasks(): HarnessTask[] {
   try {
@@ -39,46 +38,8 @@ function writeTasks(tasks: HarnessTask[]) {
   const next = tasks.slice(0, 12);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
   window.dispatchEvent(new CustomEvent(EVENT_NAME, { detail: next }));
-  // 任务状态与“我的报告”共用一个稳定 ID。这样刷新页面、桥接重启或
-  // Harness 超时后，用户仍能看到“未完成”记录，而不是丢失这次操作。
-  for (const task of next) {
-    const now = new Date().toISOString();
-    const date = now.slice(0, 10).replace(/-/g, '');
-    const running = task.status === 'starting' || task.status === 'running';
-    const summary = task.status === 'completed'
-      ? 'Harness 任务已完成，结果已返回。'
-      : task.status === 'failed'
-        ? `任务未完成：${task.error || 'Harness 执行失败'}`
-        : running
-          ? 'Harness 任务正在后台运行，结果尚未返回。'
-          : 'Harness 任务等待桥接服务受理。';
-    saveReportArchive({
-      id: `harness-task-${task.id}`,
-      createdAt: new Date(task.startedAt).toISOString(),
-      updatedAt: now,
-      date,
-      title: `掌财智能体 · ${task.label} · ${task.status === 'completed' ? '任务记录' : '未完成任务'}`,
-      reportType: 'Harness任务',
-      generatedBy: `DeepSeek Harness · ${task.skillId || '通用研究'}`,
-      summary,
-      dataScope: `${task.originPage}${task.originStockCode ? ` · ${task.originStockCode}` : ''}`,
-      content: {
-        kind: 'harness-task',
-        taskId: task.id,
-        backendJobId: task.backendJobId,
-        backendKind: task.backendKind,
-        status: task.status,
-        startedAt: task.startedAt,
-        completedAt: task.completedAt,
-        expectedSeconds: task.expectedSeconds,
-        error: task.error,
-        strategyStatus: task.strategyStatus,
-        receipt: task.receipt,
-        structured: task.structured,
-      },
-      raw: task.output || task.error || '',
-    });
-  }
+  // 任务状态只属于后台任务栏和本地任务缓存，不再伪装成第二份报告。
+  // 真正的 Harness/策略报告由各自的完成回调单独归档一次。
 }
 export function getHarnessTasks() { return readTasks(); }
 export function subscribeHarnessTasks(listener: (tasks: HarnessTask[]) => void) {
@@ -164,12 +125,16 @@ async function fetchBridge(path: string, init?: RequestInit) {
   let lastError: unknown;
   let lastGatewayResponse: Response | undefined;
   const endpoints = [...BRIDGE_ENDPOINTS, bridgeUrl()];
+  const suffix = path.startsWith('/') ? path : `/${path}`;
   for (let endpointIndex = 0; endpointIndex < endpoints.length; endpointIndex += 1) {
     for (let attempt = 0; attempt < 3; attempt += 1) {
       try {
-        const response = await fetch(`${endpoints[endpointIndex]}${path}`, init);
-        // Vite 同源代理在 4318 短暂重启时会返回 502/503。把它视为
-        // 连接失败，继续重试并切换到直连地址，避免前端过早结束任务。
+        // bridgeUrl() 返回根地址时带一个结尾斜杠；直接拼接 /agent/start
+        // 会变成 //agent/start，而 4319 会按未知路径返回“路径不存在”。
+        const endpoint = endpoints[endpointIndex].replace(/\/+$/, '');
+        const response = await fetch(`${endpoint}${suffix}`, init);
+        // 4319 短暂重启时可能返回 502/503。把它视为连接失败，
+        // 继续重试，避免前端过早结束已提交的后台任务。
         if (response.status >= 502 && response.status <= 504) {
           lastGatewayResponse = response;
           lastError = new Error(`桥接代理返回 ${response.status}`);
@@ -192,7 +157,7 @@ async function fetchBridge(path: string, init?: RequestInit) {
     : lastGatewayResponse
       ? `桥接代理返回 ${lastGatewayResponse.status}`
       : String(lastError || '未知网络错误');
-  throw new Error(`无法连接 DeepSeek Harness 桥接服务（4318）：${reason}`);
+  throw new Error(`无法连接 DeepSeek Harness 桥接服务（4319）：${reason}`);
 }
 
 export async function startDailyDataRefresh(options: { force?: boolean } = {}) {
@@ -228,6 +193,76 @@ export async function getSupplementalDataRefreshStatus() {
   const response = await fetchBridge('/data/public/status', { cache: 'no-store' });
   const value = await response.json().catch(() => ({}));
   if (!response.ok || !value || typeof value !== 'object') throw new Error(value?.error || `其他数据状态读取失败（${response.status}）`);
+  return value as { status: string; state?: { status?: string; date?: string }; jobs?: unknown[] };
+}
+
+export async function startUnifiedDataArchive(options: { force?: boolean } = {}) {
+  const response = await fetchBridge('/data/archive/start', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ force: options.force === true }),
+  });
+  const value = await response.json().catch(() => ({}));
+  if (!response.ok || !value || typeof value !== 'object') throw new Error(value?.error || `统一数据落盘启动失败（${response.status}）`);
+  return value as UnifiedDataArchiveResponse;
+}
+
+export async function getUnifiedDataArchiveStatus() {
+  const response = await fetchBridge('/data/archive/status', { cache: 'no-store' });
+  const value = await response.json().catch(() => ({}));
+  if (!response.ok || !value || typeof value !== 'object') throw new Error(value?.error || `统一数据落盘状态读取失败（${response.status}）`);
+  return value as UnifiedDataArchiveResponse;
+}
+
+export type UnifiedDataArchiveResponse = {
+  status: string;
+  message?: string;
+  state?: {
+    status?: string;
+    date?: string;
+    startedAt?: string;
+    finishedAt?: string;
+    steps?: Array<Record<string, unknown>>;
+    report?: UnifiedDataArchiveReport;
+  };
+  progress?: {
+    completed?: number;
+    total?: number;
+    percent?: number;
+    currentStep?: string;
+    failed?: number;
+  };
+  report?: UnifiedDataArchiveReport;
+  job?: { id?: string; status?: string; date?: string; started_at?: number };
+  jobs?: unknown[];
+};
+
+export type UnifiedDataArchiveReport = {
+  date?: string;
+  htmlUrl?: string;
+  jsonUrl?: string;
+  htmlPath?: string;
+  jsonPath?: string;
+  relativeHtml?: string;
+  relativeJson?: string;
+  generatedAt?: string;
+};
+
+export async function startUnifiedDataVerification(options: { force?: boolean } = {}) {
+  const response = await fetchBridge('/data/archive/verify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ force: options.force === true }),
+  });
+  const value = await response.json().catch(() => ({}));
+  if (!response.ok || !value || typeof value !== 'object') throw new Error(value?.error || `统一数据校验启动失败（${response.status}）`);
+  return value as { status: string; state?: { status?: string; date?: string }; job?: { status?: string; date?: string } };
+}
+
+export async function getUnifiedDataVerificationStatus() {
+  const response = await fetchBridge('/data/archive/verify/status', { cache: 'no-store' });
+  const value = await response.json().catch(() => ({}));
+  if (!response.ok || !value || typeof value !== 'object') throw new Error(value?.error || `统一数据校验状态读取失败（${response.status}）`);
   return value as { status: string; state?: { status?: string; date?: string }; jobs?: unknown[] };
 }
 

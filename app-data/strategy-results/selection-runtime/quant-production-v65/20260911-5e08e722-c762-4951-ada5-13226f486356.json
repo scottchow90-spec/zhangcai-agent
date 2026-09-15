@@ -1,0 +1,4786 @@
+{
+  "status": "ok",
+  "strategy_id": "quant-production-v65",
+  "trade_date": "20260911",
+  "score_status": "DEGRADED",
+  "score_source": {
+    "kind": "embedded_original_engine",
+    "root": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\harness-skills\\embedded",
+    "tdx_daily": {
+      "status": "available",
+      "kind": "tdx-native-day",
+      "root": "C:\\new_tdx_mock",
+      "paths": [
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh000001.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh600088.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh600184.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh600207.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh600237.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh601199.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh603336.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh603386.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh603421.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh603466.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh603936.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh603938.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh605011.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh605058.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh688143.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh688260.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh688367.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz000636.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz000823.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz001232.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz002201.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz002242.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz002560.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz002585.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz002815.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz002848.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz002902.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz300290.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz300563.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz399001.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz399006.day"
+      ],
+      "records": 9629
+    },
+    "candidate_scope": 30
+  },
+  "candidate_count": 30,
+  "missing": [
+    "V6.5独立第二行情源收盘核验（secondary）",
+    "行业六维历史时点数据（industry bars/constituents/events）",
+    "未进入同日公开快照的候选缺少换手率/流通市值精确字段",
+    "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+    "全市场策略扫描（当前按网页条件候选评分）"
+  ],
+  "results": [
+    {
+      "code": "300563",
+      "name": "神宇股份",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "光纤光缆",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 5,
+        "弱转强": 10,
+        "龙回头": 9,
+        "黄金点火": 12
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "非沪深主板"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 27.92,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 0,
+        "platform_score": 1,
+        "lock_model": true,
+        "volume_ratio_2_10": 1.5964085329309778,
+        "turnover_fraction": 0.18052383422851562,
+        "vol_start": 3.2982751622007482,
+        "pressure_space": 0.006560171919770763,
+        "support_distance": 0.03471636467674011,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": true,
+        "sealed": true,
+        "fire_age": 0,
+        "fire_gap": 0.05445068887347149,
+        "weak_prev3": true,
+        "oversold_y": false,
+        "pullback_prev": null,
+        "pool": false
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2,
+          "换手甜蜜区": 0
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 5,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 4,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "黄金点火": {
+          "金叉新鲜": 0,
+          "均线差扩大": 4,
+          "行业超额强度": 0,
+          "支撑邻近": 3,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 10,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 9,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 12,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 12,
+      "final_score": 12,
+      "primary_score": 12,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    },
+    {
+      "code": "688260",
+      "name": "昀冢科技",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "消费电子组件",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 3,
+        "弱转强": 8,
+        "龙回头": 7,
+        "黄金点火": 10
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "非沪深主板"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 109.9,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 1,
+        "platform_score": 2,
+        "lock_model": true,
+        "volume_ratio_2_10": 1.4642536108620365,
+        "turnover_fraction": 0,
+        "vol_start": 2.720336711813742,
+        "pressure_space": 0.027750864422201982,
+        "support_distance": 0.0763849371925962,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": false,
+        "sealed": false,
+        "fire_age": 0,
+        "fire_gap": 0.013702756084336354,
+        "weak_prev3": true,
+        "oversold_y": false,
+        "pullback_prev": null,
+        "pool": false
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 0,
+          "换手甜蜜区": 0
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 5,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 0
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 4,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 0
+        },
+        "黄金点火": {
+          "金叉新鲜": 0,
+          "均线差扩大": 4,
+          "行业超额强度": 0,
+          "支撑邻近": 3,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 0
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 3,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 8,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 7,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 10,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 10,
+      "final_score": 10,
+      "primary_score": 10,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "未进入同日公开快照的候选缺少换手率/流通市值精确字段",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    },
+    {
+      "code": "300290",
+      "name": "ST荣科",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "行业应用软件",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 5,
+        "弱转强": 10,
+        "龙回头": 5,
+        "黄金点火": 12
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "非沪深主板",
+        "ST/退市风险名称"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 8.44,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 4,
+        "platform_score": 0,
+        "lock_model": true,
+        "volume_ratio_2_10": 2.2965162022756482,
+        "turnover_fraction": 0,
+        "vol_start": 2.2793259562020274,
+        "pressure_space": 0.014767772511848465,
+        "support_distance": 0.12288992485684469,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": false,
+        "sealed": false,
+        "fire_age": 2,
+        "fire_gap": 0.21000276518211747,
+        "weak_prev3": false,
+        "oversold_y": false,
+        "pullback_prev": null,
+        "pool": false
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2,
+          "换手甜蜜区": 0
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 5,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "黄金点火": {
+          "金叉新鲜": 3,
+          "均线差扩大": 4,
+          "行业超额强度": 0,
+          "支撑邻近": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 10,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 12,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 12,
+      "final_score": 12,
+      "primary_score": 12,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "未进入同日公开快照的候选缺少换手率/流通市值精确字段",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    },
+    {
+      "code": "688143",
+      "name": "长盈通",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "光纤光缆",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 5,
+        "弱转强": 10,
+        "龙回头": 9,
+        "黄金点火": 12
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "非沪深主板"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 195,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 5,
+        "platform_score": 1,
+        "lock_model": true,
+        "volume_ratio_2_10": 1.032900082512236,
+        "turnover_fraction": 0,
+        "vol_start": 1.3739697144564382,
+        "pressure_space": 0.06601497435897441,
+        "support_distance": 0.0399119263925809,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": false,
+        "sealed": false,
+        "fire_age": 99,
+        "fire_gap": 0.13237802233711293,
+        "weak_prev3": false,
+        "oversold_y": false,
+        "pullback_prev": null,
+        "pool": false
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2,
+          "换手甜蜜区": 0
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 5,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 4,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "黄金点火": {
+          "金叉新鲜": 0,
+          "均线差扩大": 4,
+          "行业超额强度": 0,
+          "支撑邻近": 3,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 10,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 9,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 12,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 12,
+      "final_score": 12,
+      "primary_score": 12,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "未进入同日公开快照的候选缺少换手率/流通市值精确字段",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    },
+    {
+      "code": "920821",
+      "name": "则成电子",
+      "trade_date": "",
+      "market_state": "未知",
+      "market_level": -1,
+      "industry": "PCB",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {},
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "历史数据不足120根"
+      ],
+      "metrics": {
+        "history_count": 0,
+        "history_tier": "INSUFFICIENT"
+      },
+      "bases": {},
+      "components": {},
+      "model_states": {},
+      "score": null,
+      "final_score": null,
+      "primary_score": null,
+      "score_status": "INSUFFICIENT_HISTORY",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "未进入同日公开快照的候选缺少换手率/流通市值精确字段",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）",
+        "原始引擎要求至少120根历史日线"
+      ]
+    },
+    {
+      "code": "688367",
+      "name": "工大高科",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "轨交设备",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 5,
+        "弱转强": 15,
+        "龙回头": 9,
+        "黄金点火": 12
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "非沪深主板",
+        "流动性不足"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 32.12,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 0,
+        "platform_score": 1,
+        "lock_model": true,
+        "volume_ratio_2_10": 1.786869946906015,
+        "turnover_fraction": 0,
+        "vol_start": 2.9765588914875467,
+        "pressure_space": 0.05332067247820693,
+        "support_distance": 0.024415011826061095,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": false,
+        "sealed": false,
+        "fire_age": 0,
+        "fire_gap": 0.019213509240452842,
+        "weak_prev3": true,
+        "oversold_y": true,
+        "pullback_prev": null,
+        "pool": false
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2,
+          "换手甜蜜区": 0
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 5,
+          "行业超额强度": 0,
+          "锁筹": 5,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 4,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "黄金点火": {
+          "金叉新鲜": 0,
+          "均线差扩大": 4,
+          "行业超额强度": 0,
+          "支撑邻近": 3,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 15,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 9,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 12,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 15,
+      "final_score": 15,
+      "primary_score": 15,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "未进入同日公开快照的候选缺少换手率/流通市值精确字段",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    },
+    {
+      "code": "920008",
+      "name": "成电光信",
+      "trade_date": "",
+      "market_state": "未知",
+      "market_level": -1,
+      "industry": "军工电子",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {},
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "历史数据不足120根"
+      ],
+      "metrics": {
+        "history_count": 0,
+        "history_tier": "INSUFFICIENT"
+      },
+      "bases": {},
+      "components": {},
+      "model_states": {},
+      "score": null,
+      "final_score": null,
+      "primary_score": null,
+      "score_status": "INSUFFICIENT_HISTORY",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "未进入同日公开快照的候选缺少换手率/流通市值精确字段",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）",
+        "原始引擎要求至少120根历史日线"
+      ]
+    },
+    {
+      "code": "002560",
+      "name": "通达股份",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "线缆部件及其他",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 5,
+        "弱转强": 5,
+        "龙回头": 9,
+        "黄金点火": 15
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "四模型核心结构均未触发"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 6.88,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 2,
+        "platform_score": 2,
+        "lock_model": false,
+        "volume_ratio_2_10": 1.8993301197969668,
+        "turnover_fraction": 0.12538698196411133,
+        "vol_start": 4.009762788160847,
+        "pressure_space": 0.022529069767441845,
+        "support_distance": 0.045856553477017004,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": true,
+        "sealed": true,
+        "fire_age": 2,
+        "fire_gap": 0.04174910680093058,
+        "weak_prev3": false,
+        "oversold_y": false,
+        "pullback_prev": null,
+        "pool": true
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2,
+          "换手甜蜜区": 0
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 4,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "黄金点火": {
+          "金叉新鲜": 3,
+          "均线差扩大": 4,
+          "行业超额强度": 0,
+          "支撑邻近": 3,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 9,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 15,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 15,
+      "final_score": 15,
+      "primary_score": 15,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    },
+    {
+      "code": "002585",
+      "name": "双星新材",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "塑料薄膜",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 3,
+        "弱转强": 3,
+        "龙回头": 7,
+        "黄金点火": 6
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "昨日背景趋势不足"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 9.96,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 0,
+        "platform_score": 3,
+        "lock_model": false,
+        "volume_ratio_2_10": 1.57345174443281,
+        "turnover_fraction": 0.11873950004577637,
+        "vol_start": 2.9630953397850637,
+        "pressure_space": 0.010032128514056105,
+        "support_distance": 0.011188044427298038,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": true,
+        "sealed": true,
+        "fire_age": 99,
+        "fire_gap": -0.0021902975056454776,
+        "weak_prev3": true,
+        "oversold_y": false,
+        "pullback_prev": null,
+        "pool": true
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 0,
+          "换手甜蜜区": 0
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 0
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 4,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 0
+        },
+        "黄金点火": {
+          "金叉新鲜": 0,
+          "均线差扩大": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 3,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 0
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 3,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 3,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 7,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 6,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 7,
+      "final_score": 7,
+      "primary_score": 7,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    },
+    {
+      "code": "002242",
+      "name": "九阳股份",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "厨房小家电",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 8,
+        "弱转强": 5,
+        "龙回头": 9,
+        "黄金点火": 15
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "四模型核心结构均未触发"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 9.74,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 2,
+        "platform_score": 1,
+        "lock_model": false,
+        "volume_ratio_2_10": 2.779258884270941,
+        "turnover_fraction": 0.04368296146392822,
+        "vol_start": 3.719842592351837,
+        "pressure_space": 0.03850102669404509,
+        "support_distance": 0.01685643114712687,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": true,
+        "sealed": true,
+        "fire_age": 1,
+        "fire_gap": 0.056617815959018714,
+        "weak_prev3": false,
+        "oversold_y": false,
+        "pullback_prev": null,
+        "pool": true
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2,
+          "换手甜蜜区": 3
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 4,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "黄金点火": {
+          "金叉新鲜": 3,
+          "均线差扩大": 4,
+          "行业超额强度": 0,
+          "支撑邻近": 3,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 8,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 9,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 15,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 15,
+      "final_score": 15,
+      "primary_score": 15,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    },
+    {
+      "code": "002848",
+      "name": "高斯贝尔",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "其他黑色家电",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 5,
+        "弱转强": 5,
+        "龙回头": 9,
+        "黄金点火": 12
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "四模型核心结构均未触发"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 15.24,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 5,
+        "platform_score": 2,
+        "lock_model": false,
+        "volume_ratio_2_10": 2.1772294347456436,
+        "turnover_fraction": 0.18273935317993165,
+        "vol_start": 5.739889793143782,
+        "pressure_space": 0.01919291338582685,
+        "support_distance": 0.03007772896248717,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": true,
+        "sealed": true,
+        "fire_age": 99,
+        "fire_gap": 0.059672475063260455,
+        "weak_prev3": false,
+        "oversold_y": false,
+        "pullback_prev": null,
+        "pool": true
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2,
+          "换手甜蜜区": 0
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 4,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "黄金点火": {
+          "金叉新鲜": 0,
+          "均线差扩大": 4,
+          "行业超额强度": 0,
+          "支撑邻近": 3,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 9,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 12,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 12,
+      "final_score": 12,
+      "primary_score": 12,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    },
+    {
+      "code": "002815",
+      "name": "崇达技术",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "PCB",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 5,
+        "弱转强": 5,
+        "龙回头": 5,
+        "黄金点火": 9
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "非20日首板"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 20.08,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 5,
+        "platform_score": 0,
+        "lock_model": false,
+        "volume_ratio_2_10": 1.3196552129746826,
+        "turnover_fraction": 0.13467951774597167,
+        "vol_start": 0.9545540402313457,
+        "pressure_space": 0.01344621513944233,
+        "support_distance": 0.0818965517241379,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": false,
+        "sealed": true,
+        "fire_age": 99,
+        "fire_gap": 0.21941622494452062,
+        "weak_prev3": false,
+        "oversold_y": false,
+        "pullback_prev": 0.05871330418488441,
+        "pool": true
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2,
+          "换手甜蜜区": 0
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "黄金点火": {
+          "金叉新鲜": 0,
+          "均线差扩大": 4,
+          "行业超额强度": 0,
+          "支撑邻近": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 9,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 9,
+      "final_score": 9,
+      "primary_score": 9,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    },
+    {
+      "code": "603466",
+      "name": "风语筑",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "传媒",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 5,
+        "弱转强": 5,
+        "龙回头": 9,
+        "黄金点火": 12
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "四模型核心结构均未触发"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 13.27,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 5,
+        "platform_score": 0,
+        "lock_model": false,
+        "volume_ratio_2_10": 0.8564992144658011,
+        "turnover_fraction": 0.14130691528320313,
+        "vol_start": 0.9396807765612655,
+        "pressure_space": 0.0700828937452902,
+        "support_distance": 0.010333265317931328,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": true,
+        "sealed": true,
+        "fire_age": 99,
+        "fire_gap": 0.0664871188976357,
+        "weak_prev3": false,
+        "oversold_y": false,
+        "pullback_prev": null,
+        "pool": true
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2,
+          "换手甜蜜区": 0
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 4,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "黄金点火": {
+          "金叉新鲜": 0,
+          "均线差扩大": 4,
+          "行业超额强度": 0,
+          "支撑邻近": 3,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 9,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 12,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 12,
+      "final_score": 12,
+      "primary_score": 12,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    },
+    {
+      "code": "603386",
+      "name": "骏亚科技",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "PCB",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 5,
+        "弱转强": 5,
+        "龙回头": 9,
+        "黄金点火": 12
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "四模型核心结构均未触发"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 16.46,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 5,
+        "platform_score": 2,
+        "lock_model": false,
+        "volume_ratio_2_10": 2.411862052424975,
+        "turnover_fraction": 0.08897232055664063,
+        "vol_start": 4.196353008542912,
+        "pressure_space": 0.06337059538274614,
+        "support_distance": 0.023631840796020098,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": true,
+        "sealed": true,
+        "fire_age": 99,
+        "fire_gap": 0.09270022918990439,
+        "weak_prev3": false,
+        "oversold_y": false,
+        "pullback_prev": null,
+        "pool": true
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2,
+          "换手甜蜜区": 0
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 4,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "黄金点火": {
+          "金叉新鲜": 0,
+          "均线差扩大": 4,
+          "行业超额强度": 0,
+          "支撑邻近": 3,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 9,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 12,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 12,
+      "final_score": 12,
+      "primary_score": 12,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    },
+    {
+      "code": "603336",
+      "name": "宏辉果蔬",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "果蔬加工",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 8,
+        "弱转强": 5,
+        "龙回头": 9,
+        "黄金点火": 12
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "四模型核心结构均未触发"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 10.09,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 3,
+        "platform_score": 1,
+        "lock_model": false,
+        "volume_ratio_2_10": 1.1943100932625503,
+        "turnover_fraction": 0.06322435855865478,
+        "vol_start": 1.5739216770357907,
+        "pressure_space": 0.01189296333002976,
+        "support_distance": 0.028666037301122937,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": true,
+        "sealed": true,
+        "fire_age": 99,
+        "fire_gap": 0.033214732894803145,
+        "weak_prev3": false,
+        "oversold_y": false,
+        "pullback_prev": null,
+        "pool": true
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2,
+          "换手甜蜜区": 3
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 4,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "黄金点火": {
+          "金叉新鲜": 0,
+          "均线差扩大": 4,
+          "行业超额强度": 0,
+          "支撑邻近": 3,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 8,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 9,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 12,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 12,
+      "final_score": 12,
+      "primary_score": 12,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    },
+    {
+      "code": "601199",
+      "name": "江南水务",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "水务",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 6,
+        "弱转强": 8,
+        "龙回头": 7,
+        "黄金点火": 10
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "昨日背景趋势不足"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 6.47,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 0,
+        "platform_score": 3,
+        "lock_model": true,
+        "volume_ratio_2_10": 1.897816020573563,
+        "turnover_fraction": 0.03637652397155762,
+        "vol_start": 4.282519469962922,
+        "pressure_space": 0.04791344667697062,
+        "support_distance": 0.00037726747026689544,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": true,
+        "sealed": true,
+        "fire_age": 0,
+        "fire_gap": 0.01891424566818567,
+        "weak_prev3": true,
+        "oversold_y": false,
+        "pullback_prev": null,
+        "pool": true
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 0,
+          "换手甜蜜区": 3
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 5,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 0
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 4,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 0
+        },
+        "黄金点火": {
+          "金叉新鲜": 0,
+          "均线差扩大": 4,
+          "行业超额强度": 0,
+          "支撑邻近": 3,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 0
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 6,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 8,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 7,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 10,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 10,
+      "final_score": 10,
+      "primary_score": 10,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    },
+    {
+      "code": "002201",
+      "name": "九鼎新材",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "玻纤制造",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 5,
+        "弱转强": 5,
+        "龙回头": 9,
+        "黄金点火": 12
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "非20日首板"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 11.09,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 5,
+        "platform_score": 1,
+        "lock_model": false,
+        "volume_ratio_2_10": 1.5190027922576188,
+        "turnover_fraction": 0.1853305435180664,
+        "vol_start": 1.9803528798017602,
+        "pressure_space": 0.05275022542831387,
+        "support_distance": 0.01568868088691855,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": false,
+        "sealed": true,
+        "fire_age": 99,
+        "fire_gap": 0.14599740680746076,
+        "weak_prev3": false,
+        "oversold_y": false,
+        "pullback_prev": -0.03470715835141003,
+        "pool": true
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2,
+          "换手甜蜜区": 0
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 4,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "黄金点火": {
+          "金叉新鲜": 0,
+          "均线差扩大": 4,
+          "行业超额强度": 0,
+          "支撑邻近": 3,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 9,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 12,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 12,
+      "final_score": 12,
+      "primary_score": 12,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    },
+    {
+      "code": "002902",
+      "name": "铭普光磁",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "网络接配及塔设",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 10,
+        "弱转强": 9,
+        "龙回头": 13,
+        "黄金点火": 17
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "非20日首板"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 30.86,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 5,
+        "platform_score": 1,
+        "lock_model": false,
+        "volume_ratio_2_10": 1.621076893021783,
+        "turnover_fraction": 0.18638332366943358,
+        "vol_start": 1.7862577173224554,
+        "pressure_space": 0.09059364873622822,
+        "support_distance": 0.0032509752925877766,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": false,
+        "sealed": true,
+        "fire_age": 99,
+        "fire_gap": 0.10565069707433228,
+        "weak_prev3": false,
+        "oversold_y": false,
+        "pullback_prev": -0.028697571743929395,
+        "pool": true
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 5,
+          "动量": 3,
+          "控盘": 2,
+          "换手甜蜜区": 0
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 4,
+          "动量": 3,
+          "控盘": 2
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 4,
+          "压力空间": 4,
+          "动量": 3,
+          "控盘": 2
+        },
+        "黄金点火": {
+          "金叉新鲜": 0,
+          "均线差扩大": 4,
+          "行业超额强度": 0,
+          "支撑邻近": 3,
+          "压力空间": 5,
+          "动量": 3,
+          "控盘": 2
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 10,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 9,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 13,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 17,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 17,
+      "final_score": 17,
+      "primary_score": 17,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    },
+    {
+      "code": "600184",
+      "name": "光电股份",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "地面兵装",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 13,
+        "弱转强": 9,
+        "龙回头": 13,
+        "黄金点火": 20
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "四模型核心结构均未触发"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 19.98,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 4,
+        "platform_score": 2,
+        "lock_model": false,
+        "volume_ratio_2_10": 1.6760677236207817,
+        "turnover_fraction": 0.07986961841583252,
+        "vol_start": 3.0538070890664724,
+        "pressure_space": 0.08437737737737727,
+        "support_distance": 0.04759807468461963,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": true,
+        "sealed": true,
+        "fire_age": 2,
+        "fire_gap": 0.045749613239672415,
+        "weak_prev3": false,
+        "oversold_y": false,
+        "pullback_prev": null,
+        "pool": true
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 5,
+          "动量": 3,
+          "控盘": 2,
+          "换手甜蜜区": 3
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 4,
+          "动量": 3,
+          "控盘": 2
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 4,
+          "压力空间": 4,
+          "动量": 3,
+          "控盘": 2
+        },
+        "黄金点火": {
+          "金叉新鲜": 3,
+          "均线差扩大": 4,
+          "行业超额强度": 0,
+          "支撑邻近": 3,
+          "压力空间": 5,
+          "动量": 3,
+          "控盘": 2
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 13,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 9,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 13,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 20,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 20,
+      "final_score": 20,
+      "primary_score": 20,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    },
+    {
+      "code": "600237",
+      "name": "铜峰电子",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "被动元件",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 5,
+        "弱转强": 5,
+        "龙回头": 9,
+        "黄金点火": 12
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "昨日背景趋势不足"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 9.22,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 0,
+        "platform_score": 3,
+        "lock_model": false,
+        "volume_ratio_2_10": 2.2211066806044966,
+        "turnover_fraction": 0.16220592498779296,
+        "vol_start": 3.9206541184694776,
+        "pressure_space": 0.06275488069414314,
+        "support_distance": 0.05578966654452189,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": true,
+        "sealed": true,
+        "fire_age": 0,
+        "fire_gap": 0.03137696726431494,
+        "weak_prev3": false,
+        "oversold_y": false,
+        "pullback_prev": null,
+        "pool": true
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2,
+          "换手甜蜜区": 0
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 4,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "黄金点火": {
+          "金叉新鲜": 0,
+          "均线差扩大": 4,
+          "行业超额强度": 0,
+          "支撑邻近": 3,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 9,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 12,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 12,
+      "final_score": 12,
+      "primary_score": 12,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原��量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    },
+    {
+      "code": "600088",
+      "name": "中视传媒",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "影视制作",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 8,
+        "弱转强": 10,
+        "龙回头": 9,
+        "黄金点火": 12
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "四模型核心结构均未触发"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 13.4,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 4,
+        "platform_score": 1,
+        "lock_model": true,
+        "volume_ratio_2_10": 0.9554841996281447,
+        "turnover_fraction": 0.04880650997161865,
+        "vol_start": 1.2666773496370183,
+        "pressure_space": 0.04245522388059708,
+        "support_distance": 0.04830331326432269,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": true,
+        "sealed": true,
+        "fire_age": 99,
+        "fire_gap": 0.06032660108588184,
+        "weak_prev3": false,
+        "oversold_y": false,
+        "pullback_prev": null,
+        "pool": true
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2,
+          "换手甜蜜区": 3
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 5,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 4,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "黄金点火": {
+          "金叉新鲜": 0,
+          "均线差扩大": 4,
+          "行业超额强度": 0,
+          "支撑邻近": 3,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 8,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 10,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 9,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 12,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 12,
+      "final_score": 12,
+      "primary_score": 12,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    },
+    {
+      "code": "600207",
+      "name": "安彩高科",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "光伏辅材",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 8,
+        "弱转强": 10,
+        "龙回头": 9,
+        "黄金点火": 12
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": true,
+      "core_base_hit": true,
+      "reject_reasons": [
+        "需要行业数据完成硬门判定"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 4.94,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 4,
+        "platform_score": 3,
+        "lock_model": true,
+        "volume_ratio_2_10": 1.3878026639659975,
+        "turnover_fraction": 0.022743825912475587,
+        "vol_start": 1.9274321931076983,
+        "pressure_space": 0.048582995951416796,
+        "support_distance": 0.02966433776325239,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": true,
+        "sealed": true,
+        "fire_age": 99,
+        "fire_gap": 0.04956124586768107,
+        "weak_prev3": false,
+        "oversold_y": false,
+        "pullback_prev": null,
+        "pool": true
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2,
+          "换手甜蜜区": 3
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 5,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 4,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "黄金点火": {
+          "金叉新鲜": 0,
+          "均线差扩大": 4,
+          "行业超额强度": 0,
+          "支撑邻近": 3,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "UNKNOWN_ENVIRONMENT",
+          "core": true,
+          "environment": null,
+          "score": 8,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 10,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 9,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 12,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 12,
+      "final_score": 12,
+      "primary_score": 12,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    },
+    {
+      "code": "603936",
+      "name": "博敏电子",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "PCB",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 5,
+        "弱转强": 5,
+        "龙回头": 9,
+        "黄金点火": 12
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "非20日首板"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 20.88,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 5,
+        "platform_score": 0,
+        "lock_model": false,
+        "volume_ratio_2_10": 1.9057696715658838,
+        "turnover_fraction": 0.18545833587646485,
+        "vol_start": 1.9572589868304884,
+        "pressure_space": 0.005268199233716686,
+        "support_distance": 0.029078363725973277,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": false,
+        "sealed": true,
+        "fire_age": 99,
+        "fire_gap": 0.113879943095607,
+        "weak_prev3": false,
+        "oversold_y": false,
+        "pullback_prev": -0.0091012514220703,
+        "pool": true
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2,
+          "换手甜蜜区": 0
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 4,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "黄金点火": {
+          "金叉新鲜": 0,
+          "均线差扩大": 4,
+          "行业超额强度": 0,
+          "支撑邻近": 3,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 9,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 12,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 12,
+      "final_score": 12,
+      "primary_score": 12,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    },
+    {
+      "code": "603938",
+      "name": "三孚股份",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "其他化学原料",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 8,
+        "弱转强": 5,
+        "龙回头": 9,
+        "黄金点火": 15
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "非20日首板"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 49.56,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 5,
+        "platform_score": 0,
+        "lock_model": false,
+        "volume_ratio_2_10": 1.6020941655709988,
+        "turnover_fraction": 0.0714232873916626,
+        "vol_start": 1.0597252960670052,
+        "pressure_space": 0.04136400322840994,
+        "support_distance": 0.04512863770560949,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": false,
+        "sealed": true,
+        "fire_age": 2,
+        "fire_gap": 0.07254795797395563,
+        "weak_prev3": false,
+        "oversold_y": false,
+        "pullback_prev": 0.00045014629754680513,
+        "pool": true
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2,
+          "换手甜蜜区": 3
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 4,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "黄金点火": {
+          "金叉新鲜": 3,
+          "均线差扩大": 4,
+          "行业超额强度": 0,
+          "支撑邻近": 3,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 8,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 9,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 15,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 15,
+      "final_score": 15,
+      "primary_score": 15,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    },
+    {
+      "code": "603421",
+      "name": "鼎信通讯",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "其他通信设备",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 5,
+        "弱转强": 5,
+        "龙回头": 5,
+        "黄金点火": 9
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "非20日首板"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 8.02,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 5,
+        "platform_score": 0,
+        "lock_model": false,
+        "volume_ratio_2_10": 3.307088279198244,
+        "turnover_fraction": 0.16876401901245117,
+        "vol_start": 5.684258973782946,
+        "pressure_space": 0.009351620947630757,
+        "support_distance": 0.09496126676915417,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": false,
+        "sealed": true,
+        "fire_age": 99,
+        "fire_gap": 0.17893254134163183,
+        "weak_prev3": false,
+        "oversold_y": false,
+        "pullback_prev": 0.03167420814479627,
+        "pool": true
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2,
+          "换手甜蜜区": 0
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "黄金点火": {
+          "金叉新鲜": 0,
+          "均线差扩大": 4,
+          "行业超额强度": 0,
+          "支撑邻近": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 9,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 9,
+      "final_score": 9,
+      "primary_score": 9,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    },
+    {
+      "code": "605058",
+      "name": "澳弘电子",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "PCB",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 8,
+        "弱转强": 5,
+        "龙回头": 9,
+        "黄金点火": 12
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "四模型核心结构均未触发"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 33.31,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 5,
+        "platform_score": 2,
+        "lock_model": false,
+        "volume_ratio_2_10": 2.2874143121527504,
+        "turnover_fraction": 0.06809301853179932,
+        "vol_start": 3.284299902566452,
+        "pressure_space": 0.027319723806664697,
+        "support_distance": 0.048968666351755674,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": true,
+        "sealed": true,
+        "fire_age": 99,
+        "fire_gap": 0.1096329747876077,
+        "weak_prev3": false,
+        "oversold_y": false,
+        "pullback_prev": null,
+        "pool": true
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2,
+          "换手甜蜜区": 3
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 4,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "黄金点火": {
+          "金叉新鲜": 0,
+          "均线差扩大": 4,
+          "行业超额强度": 0,
+          "支撑邻近": 3,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 8,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 9,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 12,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 12,
+      "final_score": 12,
+      "primary_score": 12,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    },
+    {
+      "code": "000636",
+      "name": "风华高科",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "被动元件",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 3,
+        "弱转强": 3,
+        "龙回头": 7,
+        "黄金点火": 6
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "昨日背景趋势不足"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 55.99,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 1,
+        "platform_score": 3,
+        "lock_model": false,
+        "volume_ratio_2_10": 1.3341535646228517,
+        "turnover_fraction": 0.16216114044189453,
+        "vol_start": 2.2844203843898234,
+        "pressure_space": 0.022546168958742507,
+        "support_distance": 0.011007139346361106,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": true,
+        "sealed": true,
+        "fire_age": 0,
+        "fire_gap": 0.0031568519330420486,
+        "weak_prev3": true,
+        "oversold_y": false,
+        "pullback_prev": null,
+        "pool": true
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 0,
+          "换手甜蜜区": 0
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 0
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 4,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 0
+        },
+        "黄金点火": {
+          "金叉新鲜": 0,
+          "均线差扩大": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 3,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 0
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 3,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 3,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 7,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 6,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 7,
+      "final_score": 7,
+      "primary_score": 7,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    },
+    {
+      "code": "000823",
+      "name": "超声电子",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "PCB",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 5,
+        "弱转强": 5,
+        "龙回头": 5,
+        "黄金点火": 9
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "非20日首板"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 20.57,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 5,
+        "platform_score": 0,
+        "lock_model": false,
+        "volume_ratio_2_10": 2.042179798073764,
+        "turnover_fraction": 0.3075214767456055,
+        "vol_start": 1.7804127029184547,
+        "pressure_space": 0.005590666018473689,
+        "support_distance": 0.10943673837464551,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": false,
+        "sealed": true,
+        "fire_age": 99,
+        "fire_gap": 0.18123559794153832,
+        "weak_prev3": false,
+        "oversold_y": false,
+        "pullback_prev": 0.026976160602258492,
+        "pool": true
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2,
+          "换手甜蜜区": 0
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "黄金点火": {
+          "金叉新鲜": 0,
+          "均线差扩大": 4,
+          "行业超额强度": 0,
+          "支撑邻近": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 9,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 9,
+      "final_score": 9,
+      "primary_score": 9,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    },
+    {
+      "code": "001232",
+      "name": "嘉立创",
+      "trade_date": "2026-09-11",
+      "market_state": "未知",
+      "market_level": -1,
+      "industry": "PCB",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {},
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "历史数据不足120根"
+      ],
+      "metrics": {
+        "history_count": 29,
+        "history_tier": "INSUFFICIENT"
+      },
+      "bases": {},
+      "components": {},
+      "model_states": {},
+      "score": null,
+      "final_score": null,
+      "primary_score": null,
+      "score_status": "INSUFFICIENT_HISTORY",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）",
+        "原始引擎要求至少120根历史日线"
+      ]
+    },
+    {
+      "code": "605011",
+      "name": "杭州热电",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "热力服务",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 8,
+        "弱转强": 5,
+        "龙回头": 9,
+        "黄金点火": 15
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "四模型核心结构均未触发"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 19.03,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 4,
+        "platform_score": 2,
+        "lock_model": false,
+        "volume_ratio_2_10": 2.1548115547657316,
+        "turnover_fraction": 0.04211380481719971,
+        "vol_start": 2.814145936213437,
+        "pressure_space": 0.009612191276930915,
+        "support_distance": 0.0315101134606921,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": true,
+        "sealed": true,
+        "fire_age": 2,
+        "fire_gap": 0.051992740295766504,
+        "weak_prev3": false,
+        "oversold_y": false,
+        "pullback_prev": null,
+        "pool": true
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2,
+          "换手甜蜜区": 3
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 4,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        },
+        "黄金点火": {
+          "金叉新鲜": 3,
+          "均线差扩大": 4,
+          "行业超额强度": 0,
+          "支撑邻近": 3,
+          "压力空间": 0,
+          "动量": 3,
+          "控盘": 2
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 8,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 5,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 9,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 15,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 15,
+      "final_score": 15,
+      "primary_score": 15,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线 + 同日公开快照补充",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    }
+  ],
+  "audit": {
+    "no_future_data": true,
+    "data_date": "20260911",
+    "tdx_daily": {
+      "status": "available",
+      "kind": "tdx-native-day",
+      "root": "C:\\new_tdx_mock",
+      "paths": [
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh000001.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh600088.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh600184.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh600207.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh600237.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh601199.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh603336.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh603386.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh603421.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh603466.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh603936.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh603938.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh605011.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh605058.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh688143.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh688260.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh688367.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz000636.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz000823.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz001232.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz002201.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz002242.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz002560.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz002585.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz002815.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz002848.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz002902.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz300290.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz300563.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz399001.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz399006.day"
+      ],
+      "records": 9629
+    },
+    "same_day_market_fields": {
+      "status": "available",
+      "date": "2026-09-11",
+      "records": 40,
+      "paths": [
+        "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\public\\20260911\\market-111530.json",
+        "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\public\\20260911\\market-182044.json",
+        "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\public\\limit-up\\2026-09-11.json",
+        "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\public\\latest.json"
+      ],
+      "kind": "same-day-public-snapshot"
+    },
+    "full_market_scan": false,
+    "note": "数值字段来自原始策略评分函数；缺失辅助数据只影响生产授权/候选等级，不用涨幅或成交额替代策略分。"
+  },
+  "artifact_path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\strategy-results\\selection-runtime\\quant-production-v65\\20260911-5e08e722-c762-4951-ada5-13226f486356.json",
+  "persisted_at": "2026-09-14T03:28:24.027Z"
+}

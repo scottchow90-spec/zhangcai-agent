@@ -1,0 +1,420 @@
+{
+  "schema": "ZHANGCAI_SKILL14_DATA_STATUS_V1",
+  "checked_at": "2026-09-15T19:59:58+08:00",
+  "data_root": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data",
+  "assets": {
+    "tdx_daily_history": {
+      "schema": "ZHANGCAI_TDX_DAILY_ARCHIVE_V1",
+      "status": "available",
+      "asset": "tdx_daily_history",
+      "trade_date": "20260915",
+      "archived_at": "2026-09-15T17:54:55+08:00",
+      "source_root": "C:\\new_tdx_mock",
+      "history_days_requested": 0,
+      "history_scope": "all_available_source_history",
+      "current_trade_date_symbols": 9474,
+      "archived_symbols": 9490,
+      "security_master_records": 9474,
+      "security_master_named_records": 9474,
+      "bar_records": 15741210,
+      "file": "market/daily/aggregate/tdx-bars.jsonl",
+      "sha256": "08a0f42900ebbc11237302167816a2191849d56b91cf44326af81a905a0c8d51",
+      "archive_mode": "unchanged",
+      "incremental_from": "",
+      "incremental_records": 0,
+      "incremental_trade_dates": [],
+      "incremental_base_file": "",
+      "delta_file": "",
+      "delta_records": 0,
+      "source_file_count": 9490,
+      "latest_date_source_files": 9474,
+      "source_record_count": 15741210,
+      "source_changed_since_previous": false,
+      "symbol_index": "market/daily/index/tdx-symbol-index.json",
+      "symbol_index_count": 9490,
+      "expected_trade_date": "20260915",
+      "freshness_status": "available",
+      "freshness_reason": "",
+      "storage_rule": "首次读取本地 .day 全部可用历史（或显式指定窗口）；后续交易日只向 market/daily/aggregate/tdx-bars.jsonl 追加新增记录，并在交易日目录保存 delta，历史目录和原文件保留。",
+      "reason": "",
+      "archive_status": "available",
+      "freshness": {
+        "status": "available",
+        "expected_trade_date": "20260915",
+        "archive_trade_date": "20260915",
+        "archive_file": "market/daily/aggregate/tdx-bars.jsonl",
+        "manifest_path": "market/daily/20260915/manifest.json",
+        "manifest_exists": true,
+        "file_exists": true,
+        "current_trade_date_symbols": 9474,
+        "archived_symbols": 9490,
+        "bar_records": 15741210,
+        "issues": [],
+        "reason": ""
+      }
+    },
+    "tdx_tq_formula": {
+      "status": "available",
+      "asset": "tdx_tq_formula",
+      "checked_at": "2026-09-15T19:59:58+08:00",
+      "source_root": "C:\\new_tdx_mock",
+      "registry": "C:\\new_tdx_mock\\T0002\\PriLoc.dat",
+      "formula_files": [
+        "大牛线撑压版.tn6",
+        "庄家资金监控.tn6",
+        "机构资金监控.tn6",
+        "游资资金监控.tn6",
+        "飞龙在天.tn6",
+        "黄金点火选股.tn6"
+      ],
+      "receipt_root": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\evidence\\formulas",
+      "receipt_count": 41,
+      "valid_receipt_count": 40,
+      "latest_receipt": "evidence/formulas/20260911/tdx-tq-300502.SZ-1789363886241.json",
+      "latest_receipt_executed_at": "2026-09-14T05:31:19.501Z",
+      "source_archive": {
+        "schema": "ZHANGCAI_TDX_TQ_FORMULA_SOURCE_ARCHIVE_V1",
+        "archived_at": "2026-09-15T19:59:58+08:00",
+        "source_root": "C:\\new_tdx_mock",
+        "path": "evidence/formulas/package",
+        "required_files": [
+          "T0002/PriLoc.dat",
+          "T0002/PriGS.dat",
+          "T0002/PriCS.dat",
+          "T0002/PriPack.dat",
+          "T0002/gs_bak/大牛线撑压版.tn6",
+          "T0002/gs_bak/飞龙在天.tn6",
+          "T0002/gs_bak/游资资金监控.tn6",
+          "T0002/gs_bak/机构资金监控.tn6",
+          "T0002/gs_bak/庄家资金监控.tn6",
+          "T0002/gs_bak/黄金点火选股.tn6",
+          "PYPlugins/user/tdxdata_test.py"
+        ],
+        "copied_files": [
+          {
+            "path": "evidence/formulas/package/T0002/PriLoc.dat",
+            "source": "C:\\new_tdx_mock\\T0002\\PriLoc.dat",
+            "bytes": 360,
+            "sha256": "1f0290add670d3de082bb6402276250a648e50f2580a067c23e8bcc7be0b1d8e"
+          },
+          {
+            "path": "evidence/formulas/package/T0002/PriGS.dat",
+            "source": "C:\\new_tdx_mock\\T0002\\PriGS.dat",
+            "bytes": 53121,
+            "sha256": "70c6a0e7a5299ee9fbbc7463e6b4ba2859e7eece9380cc17eb8a925b10764358"
+          },
+          {
+            "path": "evidence/formulas/package/T0002/PriCS.dat",
+            "source": "C:\\new_tdx_mock\\T0002\\PriCS.dat",
+            "bytes": 806828,
+            "sha256": "4a392cf88248344463ace0167a2046bf5eda1e5fbbb23af7cd305f037d5d53f0"
+          },
+          {
+            "path": "evidence/formulas/package/T0002/PriPack.dat",
+            "source": "C:\\new_tdx_mock\\T0002\\PriPack.dat",
+            "bytes": 1424,
+            "sha256": "24ea8180997f3bfe4e75185f777053a1d2dbdb1ad0e7a70abe5420289063f168"
+          },
+          {
+            "path": "evidence/formulas/package/T0002/gs_bak/大牛线撑压版.tn6",
+            "source": "C:\\new_tdx_mock\\T0002\\gs_bak\\大牛线撑压版.tn6",
+            "bytes": 20912,
+            "sha256": "5ce11a2f3973141791d79052dc9f37a06b77ab941c455beb9443d3dd0a2bd0dc"
+          },
+          {
+            "path": "evidence/formulas/package/T0002/gs_bak/飞龙在天.tn6",
+            "source": "C:\\new_tdx_mock\\T0002\\gs_bak\\飞龙在天.tn6",
+            "bytes": 9456,
+            "sha256": "e46558892d724d581c7fafea9b51453cb90cc927f30a7b9f41b48cb735b26d87"
+          },
+          {
+            "path": "evidence/formulas/package/T0002/gs_bak/游资资金监控.tn6",
+            "source": "C:\\new_tdx_mock\\T0002\\gs_bak\\游资资金监控.tn6",
+            "bytes": 6680,
+            "sha256": "ca4a989405e1182ade9140cec2a0bebe37ea204811730321c091bd1fa3a19894"
+          },
+          {
+            "path": "evidence/formulas/package/T0002/gs_bak/机构资金监控.tn6",
+            "source": "C:\\new_tdx_mock\\T0002\\gs_bak\\机构资金监控.tn6",
+            "bytes": 6936,
+            "sha256": "39150345094e2030c4f4357c911feee0a15342490f817f60339e04aef372cc9c"
+          },
+          {
+            "path": "evidence/formulas/package/T0002/gs_bak/庄家资金监控.tn6",
+            "source": "C:\\new_tdx_mock\\T0002\\gs_bak\\庄家资金监控.tn6",
+            "bytes": 6600,
+            "sha256": "a1a2c0d1c7091512174a806719a5dd93135f8be93c2e3dd662b3a4f8066a8adc"
+          },
+          {
+            "path": "evidence/formulas/package/T0002/gs_bak/黄金点火选股.tn6",
+            "source": "C:\\new_tdx_mock\\T0002\\gs_bak\\黄金点火选股.tn6",
+            "bytes": 8784,
+            "sha256": "e5b1a6e16dca4ab2f71ac05c63eed710ba3c31027d9183543d0ee99777fa2656"
+          },
+          {
+            "path": "evidence/formulas/package/PYPlugins/user/tdxdata_test.py",
+            "source": "C:\\new_tdx_mock\\PYPlugins\\user\\tdxdata_test.py",
+            "bytes": 18657,
+            "sha256": "892932960920d51da18431db0dbc86e95680d918676e39ad19bab515604dc319"
+          }
+        ],
+        "missing_files": [],
+        "status": "available"
+      },
+      "required_formulas": [
+        "大牛线4.0",
+        "飞龙在天",
+        "游资资金监控",
+        "机构资金监控",
+        "庄家资金监控"
+      ],
+      "reason": ""
+    },
+    "tdx_formula_source_archive": {
+      "schema": "ZHANGCAI_TDX_TQ_FORMULA_SOURCE_ARCHIVE_V1",
+      "archived_at": "2026-09-15T19:59:58+08:00",
+      "source_root": "C:\\new_tdx_mock",
+      "path": "evidence/formulas/package/",
+      "required_files": [
+        "T0002/PriLoc.dat",
+        "T0002/PriGS.dat",
+        "T0002/PriCS.dat",
+        "T0002/PriPack.dat",
+        "T0002/gs_bak/大牛线撑压版.tn6",
+        "T0002/gs_bak/飞龙在天.tn6",
+        "T0002/gs_bak/游资资金监控.tn6",
+        "T0002/gs_bak/机构资金监控.tn6",
+        "T0002/gs_bak/庄家资金监控.tn6",
+        "T0002/gs_bak/黄金点火选股.tn6",
+        "PYPlugins/user/tdxdata_test.py"
+      ],
+      "copied_files": [
+        {
+          "path": "evidence/formulas/package/T0002/PriLoc.dat",
+          "source": "C:\\new_tdx_mock\\T0002\\PriLoc.dat",
+          "bytes": 360,
+          "sha256": "1f0290add670d3de082bb6402276250a648e50f2580a067c23e8bcc7be0b1d8e"
+        },
+        {
+          "path": "evidence/formulas/package/T0002/PriGS.dat",
+          "source": "C:\\new_tdx_mock\\T0002\\PriGS.dat",
+          "bytes": 53121,
+          "sha256": "70c6a0e7a5299ee9fbbc7463e6b4ba2859e7eece9380cc17eb8a925b10764358"
+        },
+        {
+          "path": "evidence/formulas/package/T0002/PriCS.dat",
+          "source": "C:\\new_tdx_mock\\T0002\\PriCS.dat",
+          "bytes": 806828,
+          "sha256": "4a392cf88248344463ace0167a2046bf5eda1e5fbbb23af7cd305f037d5d53f0"
+        },
+        {
+          "path": "evidence/formulas/package/T0002/PriPack.dat",
+          "source": "C:\\new_tdx_mock\\T0002\\PriPack.dat",
+          "bytes": 1424,
+          "sha256": "24ea8180997f3bfe4e75185f777053a1d2dbdb1ad0e7a70abe5420289063f168"
+        },
+        {
+          "path": "evidence/formulas/package/T0002/gs_bak/大牛线撑压版.tn6",
+          "source": "C:\\new_tdx_mock\\T0002\\gs_bak\\大牛线撑压版.tn6",
+          "bytes": 20912,
+          "sha256": "5ce11a2f3973141791d79052dc9f37a06b77ab941c455beb9443d3dd0a2bd0dc"
+        },
+        {
+          "path": "evidence/formulas/package/T0002/gs_bak/飞龙在天.tn6",
+          "source": "C:\\new_tdx_mock\\T0002\\gs_bak\\飞龙在天.tn6",
+          "bytes": 9456,
+          "sha256": "e46558892d724d581c7fafea9b51453cb90cc927f30a7b9f41b48cb735b26d87"
+        },
+        {
+          "path": "evidence/formulas/package/T0002/gs_bak/游资资金监控.tn6",
+          "source": "C:\\new_tdx_mock\\T0002\\gs_bak\\游资资金监控.tn6",
+          "bytes": 6680,
+          "sha256": "ca4a989405e1182ade9140cec2a0bebe37ea204811730321c091bd1fa3a19894"
+        },
+        {
+          "path": "evidence/formulas/package/T0002/gs_bak/机构资金监控.tn6",
+          "source": "C:\\new_tdx_mock\\T0002\\gs_bak\\机构资金监控.tn6",
+          "bytes": 6936,
+          "sha256": "39150345094e2030c4f4357c911feee0a15342490f817f60339e04aef372cc9c"
+        },
+        {
+          "path": "evidence/formulas/package/T0002/gs_bak/庄家资金监控.tn6",
+          "source": "C:\\new_tdx_mock\\T0002\\gs_bak\\庄家资金监控.tn6",
+          "bytes": 6600,
+          "sha256": "a1a2c0d1c7091512174a806719a5dd93135f8be93c2e3dd662b3a4f8066a8adc"
+        },
+        {
+          "path": "evidence/formulas/package/T0002/gs_bak/黄金点火选股.tn6",
+          "source": "C:\\new_tdx_mock\\T0002\\gs_bak\\黄金点火选股.tn6",
+          "bytes": 8784,
+          "sha256": "e5b1a6e16dca4ab2f71ac05c63eed710ba3c31027d9183543d0ee99777fa2656"
+        },
+        {
+          "path": "evidence/formulas/package/PYPlugins/user/tdxdata_test.py",
+          "source": "C:\\new_tdx_mock\\PYPlugins\\user\\tdxdata_test.py",
+          "bytes": 18657,
+          "sha256": "892932960920d51da18431db0dbc86e95680d918676e39ad19bab515604dc319"
+        }
+      ],
+      "missing_files": [],
+      "status": "available",
+      "asset": "tdx_formula_source_archive",
+      "checked_at": "2026-09-15T19:59:58+08:00",
+      "reason": ""
+    },
+    "unified_source_manifest": {
+      "status": "available",
+      "asset": "unified_source_manifest",
+      "checked_at": "2026-09-15T19:59:58+08:00",
+      "path": "evidence/sources/latest.json",
+      "file_count": 1,
+      "reason": ""
+    },
+    "unified_source_verification": {
+      "status": "available",
+      "asset": "unified_source_verification",
+      "checked_at": "2026-09-15T19:59:58+08:00",
+      "path": "evidence/sources/latest-verification.json",
+      "file_count": 1,
+      "reason": ""
+    },
+    "package_source_inventory": {
+      "status": "available",
+      "asset": "package_source_inventory",
+      "checked_at": "2026-09-15T19:59:58+08:00",
+      "path": "harness/context/package-source-inventory.json",
+      "file_count": 1,
+      "reason": ""
+    },
+    "package_source_gaps": {
+      "status": "degraded",
+      "asset": "package_source_gaps",
+      "checked_at": "2026-09-15T19:59:58+08:00",
+      "path": "harness/context/package-source-gap-report.json",
+      "missing_count": 12,
+      "reason": "已固化压缩包来源与数据缺口，共 12 项未完全闭合。"
+    },
+    "package_data_routing": {
+      "status": "available",
+      "asset": "package_data_routing",
+      "checked_at": "2026-09-15T19:59:58+08:00",
+      "path": "harness/context/package-data-routing.json",
+      "file_count": 1,
+      "reason": ""
+    },
+    "package_source_snapshots": {
+      "status": "available",
+      "asset": "package_source_snapshots",
+      "checked_at": "2026-09-15T19:59:58+08:00",
+      "path": "evidence/package-sources",
+      "file_count": 18,
+      "reason": ""
+    },
+    "runtime_policy": {
+      "status": "available",
+      "asset": "runtime_policy",
+      "checked_at": "2026-09-15T19:59:58+08:00",
+      "path": "harness/context/runtime-policy.json",
+      "file_count": 1,
+      "reason": ""
+    },
+    "report_archive": {
+      "status": "available",
+      "asset": "report_archive",
+      "checked_at": "2026-09-15T19:59:58+08:00",
+      "path": "reports/archive",
+      "file_count": 19,
+      "reason": ""
+    },
+    "security_master": {
+      "status": "available",
+      "asset": "security_master",
+      "checked_at": "2026-09-15T19:59:58+08:00",
+      "path": "market/security-master/",
+      "file_count": 3,
+      "record_count": 28418,
+      "named_record_count": 28418,
+      "reason": ""
+    },
+    "limit_up_pool": {
+      "status": "available",
+      "asset": "limit_up_pool",
+      "checked_at": "2026-09-15T19:59:58+08:00",
+      "path": "public/limit-up",
+      "file_count": 3,
+      "reason": ""
+    },
+    "lhb_data": {
+      "status": "available",
+      "asset": "lhb_data",
+      "checked_at": "2026-09-15T19:59:58+08:00",
+      "path": "public/lhb",
+      "file_count": 3,
+      "reason": ""
+    },
+    "public_research": {
+      "status": "available",
+      "asset": "public_research",
+      "checked_at": "2026-09-15T19:59:58+08:00",
+      "path": "evidence/public/",
+      "target_date": "2026-09-15",
+      "file_count": 3,
+      "candidate_count": 7,
+      "same_date_file_count": 5,
+      "same_day_record_count": 212,
+      "multi_source_records": {
+        "cls": 42,
+        "eastmoney": 100,
+        "sina": 50,
+        "ths": 20
+      },
+      "providers_succeeded": [
+        "cls",
+        "eastmoney",
+        "sina",
+        "ths"
+      ],
+      "news_snapshot_count": 7,
+      "selected_snapshot": "news/20260915/multi-source-news-170826.json",
+      "historical_fallback": false,
+      "reason": ""
+    },
+    "supplemental_stock": {
+      "status": "missing",
+      "trade_date": "20260915",
+      "path": "evidence/supplemental/20260915/",
+      "file_count": 0,
+      "financial": {
+        "status": "missing",
+        "covered_codes": [],
+        "covered_count": 0
+      },
+      "share_capital": {
+        "status": "missing",
+        "covered_codes": [],
+        "covered_count": 0
+      },
+      "reason": "尚未生成目标交易日的个股财务/股本快照。"
+    },
+    "execution_evidence": {
+      "status": "available",
+      "asset": "execution_evidence",
+      "checked_at": "2026-09-15T19:59:58+08:00",
+      "path": "reports/daily",
+      "file_count": 320,
+      "reason": ""
+    },
+    "skill_packages": {
+      "status": "available",
+      "asset": "skill_packages",
+      "checked_at": "2026-09-15T19:59:58+08:00",
+      "installed_count": 14,
+      "reason": ""
+    }
+  },
+  "local_data_page": {
+    "path": "harness/context/local-data-page.json",
+    "schema": "ZHANGCAI_LOCAL_DATA_PAGE_V1",
+    "latest_tdx_trade_date": "20260915"
+  }
+}

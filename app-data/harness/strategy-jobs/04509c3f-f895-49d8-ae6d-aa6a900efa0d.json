@@ -1,0 +1,15 @@
+{
+  "id": "04509c3f-f895-49d8-ae6d-aa6a900efa0d",
+  "skill_id": "golden-ignition",
+  "status": "completed",
+  "started_at": 1789231207603,
+  "strategy_status": "PARAMETER_REQUIRED",
+  "output": "{\n  \"status\": \"PARAMETER_REQUIRED\",\n  \"message\": \"黄金点火需要指定股票或可转债代码，当前策略页尚未提供标的输入框。\",\n  \"action\": \"请在个股研究页选择股票后运行，或在策略页补充代码输入。\"\n}",
+  "result": {
+    "status": "PARAMETER_REQUIRED",
+    "skill_id": "golden-ignition",
+    "output": "{\n  \"status\": \"PARAMETER_REQUIRED\",\n  \"message\": \"黄金点火需要指定股票或可转债代码，当前策略页尚未提供标的输入框。\",\n  \"action\": \"请在个股研究页选择股票后运行，或在策略页补充代码输入。\"\n}"
+  },
+  "elapsed_ms": 5,
+  "completed_at": 1789231207608
+}

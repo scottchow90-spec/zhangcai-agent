@@ -1,0 +1,75 @@
+{
+  "schema": "ZHANGCAI_SKILL14_PREFLIGHT_V1",
+  "report_id": "20260913-001702-short-burst-score-v5-9b88286d",
+  "skill": {
+    "id": "short-burst-score-v5",
+    "name": "A股短线爆发力评分 V5",
+    "archive": "A股短线爆发力评分系统_V5.0_优化版.zip",
+    "mode": "python_batch",
+    "category": "盘后评分",
+    "summary": "纯盘后强势股评分、龙虎榜资金分析、数据审计和样本外研究。",
+    "required": [
+      "tdx_daily_history",
+      "limit_up_pool"
+    ],
+    "optional": [
+      "lhb_data",
+      "public_research"
+    ],
+    "degrade": "辅助维度缺失应降低候选资格并说明，不得把相对评分解释为上涨概率。"
+  },
+  "status": "DEGRADED",
+  "created_at": "2026-09-13T00:17:02+08:00",
+  "data_root": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data",
+  "required_missing": [],
+  "optional_missing": [
+    "public_research"
+  ],
+  "assets": {
+    "tdx_daily_history": {
+      "schema": "ZHANGCAI_TDX_DAILY_ARCHIVE_V1",
+      "status": "available",
+      "asset": "tdx_daily_history",
+      "trade_date": "20260911",
+      "archived_at": "2026-09-12T23:58:17+08:00",
+      "source_root": "C:\\new_tdx_mock",
+      "history_days_requested": 420,
+      "current_trade_date_symbols": 9471,
+      "archived_symbols": 9471,
+      "security_master_records": 9471,
+      "security_master_named_records": 9471,
+      "bar_records": 3723525,
+      "file": "market/daily/20260911/tdx-bars.jsonl",
+      "sha256": "a381bce4f043c964bdbd62951403efba948ef3dfc70fdd66f1cf5be1cec8f6af",
+      "reason": ""
+    },
+    "limit_up_pool": {
+      "status": "available",
+      "asset": "limit_up_pool",
+      "checked_at": "2026-09-13T00:17:01+08:00",
+      "path": "public/limit-up",
+      "file_count": 1,
+      "reason": ""
+    },
+    "lhb_data": {
+      "status": "available",
+      "asset": "lhb_data",
+      "checked_at": "2026-09-13T00:17:01+08:00",
+      "path": "public/lhb",
+      "file_count": 1,
+      "reason": ""
+    },
+    "public_research": {
+      "status": "degraded",
+      "asset": "public_research",
+      "checked_at": "2026-09-13T00:17:01+08:00",
+      "path": "evidence/public/",
+      "file_count": 1,
+      "same_date_file_count": 1,
+      "same_day_record_count": 0,
+      "reason": "已保存公开资讯响应，但目标交易日可用同日记录为 0 条，不能把空快照当作研究证据。"
+    }
+  },
+  "degrade_policy": "辅助维度缺失应降低候选资格并说明，不得把相对评分解释为上涨概率。",
+  "execution_note": "本报告是网页适配层的真实数据预检与落盘运行单；未调用原始策略入口，因此不构成策略已执行或投资结论。"
+}

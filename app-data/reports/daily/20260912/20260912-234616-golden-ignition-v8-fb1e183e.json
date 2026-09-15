@@ -1,0 +1,66 @@
+{
+  "schema": "ZHANGCAI_SKILL14_PREFLIGHT_V1",
+  "report_id": "20260912-234616-golden-ignition-v8-fb1e183e",
+  "skill": {
+    "id": "golden-ignition-v8",
+    "name": "黄金点火策略 V8",
+    "archive": "黄金点火策略_WorkBuddy最终版.zip",
+    "mode": "python_batch",
+    "category": "盘后选股",
+    "summary": "平台突破、龙回头和首次黄金点火的确定性盘后筛选。",
+    "required": [
+      "tdx_daily_history",
+      "security_master"
+    ],
+    "optional": [
+      "public_research"
+    ],
+    "degrade": "可降级到已声明覆盖范围的候选池，不能把候选池结果写成全市场筛选。"
+  },
+  "status": "BLOCKED",
+  "created_at": "2026-09-12T23:46:16+08:00",
+  "data_root": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data",
+  "required_missing": [
+    "security_master"
+  ],
+  "optional_missing": [
+    "public_research"
+  ],
+  "assets": {
+    "tdx_daily_history": {
+      "schema": "ZHANGCAI_TDX_DAILY_ARCHIVE_V1",
+      "status": "available",
+      "asset": "tdx_daily_history",
+      "trade_date": "20260911",
+      "archived_at": "2026-09-12T18:08:28+08:00",
+      "source_root": "C:\\new_tdx_mock",
+      "history_days_requested": 420,
+      "current_trade_date_symbols": 9471,
+      "archived_symbols": 9471,
+      "bar_records": 3723525,
+      "file": "market/daily/20260911/tdx-bars.jsonl",
+      "sha256": "a381bce4f043c964bdbd62951403efba948ef3dfc70fdd66f1cf5be1cec8f6af",
+      "reason": ""
+    },
+    "security_master": {
+      "status": "degraded",
+      "asset": "security_master",
+      "checked_at": "2026-09-12T23:46:16+08:00",
+      "path": "market/security-master/",
+      "file_count": 1,
+      "reason": "已归档证券代码与市场标识；尚未同时归档名称、ST/退市和历史属性，不能作为完整证券主数据。"
+    },
+    "public_research": {
+      "status": "degraded",
+      "asset": "public_research",
+      "checked_at": "2026-09-12T23:46:16+08:00",
+      "path": "evidence/public/",
+      "file_count": 1,
+      "same_date_file_count": 1,
+      "same_day_record_count": 0,
+      "reason": "已保存公开资讯响应，但目标交易日可用同日记录为 0 条，不能把空快照当作研究证据。"
+    }
+  },
+  "degrade_policy": "可降级到已声明覆盖范围的候选池，不能把候选池结果写成全市场筛选。",
+  "execution_note": "本报告是网页适配层的真实数据预检与落盘运行单；未调用原始策略入口，因此不构成策略已执行或投资结论。"
+}

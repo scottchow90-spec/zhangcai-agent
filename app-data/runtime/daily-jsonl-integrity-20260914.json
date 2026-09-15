@@ -1,0 +1,60 @@
+{
+  "schema": "ZHANGCAI_DAILY_JSONL_INTEGRITY_V1",
+  "status": "CLEAN_PASS",
+  "trade_date": "20260914",
+  "file": "market/daily/20260914/tdx-bars.jsonl",
+  "manifest": "market/daily/20260914/manifest.json",
+  "checked_at": "2026-09-15T12:15:49+08:00",
+  "line_count": 15731736,
+  "manifest_bar_records": 15731736,
+  "bad_records": 0,
+  "symbol_count": 9490,
+  "date_count": 8781,
+  "first_seen_date": "19901219",
+  "last_seen_date": "20260914",
+  "target_trade_date_records": 9473,
+  "top_dates": [
+    [
+      "20260914",
+      9473
+    ],
+    [
+      "20260911",
+      9471
+    ],
+    [
+      "20260910",
+      9457
+    ],
+    [
+      "20260909",
+      9454
+    ],
+    [
+      "20260904",
+      9443
+    ],
+    [
+      "20260907",
+      9361
+    ],
+    [
+      "20260903",
+      9360
+    ],
+    [
+      "20260827",
+      9357
+    ],
+    [
+      "20260828",
+      9354
+    ],
+    [
+      "20260831",
+      9353
+    ]
+  ],
+  "note": "流式逐行 JSON 结构与必需数值字段校验；文件 SHA-256 由统一来源清单另行校验。",
+  "report": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\runtime\\daily-jsonl-integrity-20260914.json"
+}

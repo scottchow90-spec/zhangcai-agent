@@ -1,0 +1,2 @@
+PARSE_FAIL: 传入元数据覆盖范围：ZHANGCAI_HARNESS_DAILY_CONTEXT_V1 每日上下文(4 个本机补全步骤)；公开行情快照 ZHANGCAI_PUBLIC_MARKET_V1 的连板网开放数据、东方财富涨停池、东方财富龙虎榜(缺失)与市场宽度；新闻快照 ZHANGCAI_NEWS_SNAPSHOT_V1 的东方财富 100 条快讯。不含指数、成交额、个股涨跌幅与成交额榜单、板块聚合、盘中封板/炸板代理、前日涨停表现与本地通达信涨停文件。仅依据传入字段做核对，未读取文件、未执行命令、未访问网络、未重新抓取。\",\n  \"cautions\": [\n    \"东方财富龙虎榜(eastmoneyLhb)状态为 
+

@@ -25,7 +25,7 @@ import requests
 SCHEMA = "LIANBAN_DAILY_SNAPSHOT_V1"
 BASE_URL = "https://lianban.net"
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; CodexStockResearch/1.0)",
+    "User-Agent": "Mozilla/5.0 (compatible; Zhangcai3003DataClient/1.0)",
     "Accept": "application/json,text/html;q=0.9,*/*;q=0.8",
     "Referer": f"{BASE_URL}/opendata.html",
 }

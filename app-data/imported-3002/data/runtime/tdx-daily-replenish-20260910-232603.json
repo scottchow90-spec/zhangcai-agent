@@ -1,0 +1,750 @@
+{
+  "schema": "ZHANGCAI_TDX_DAILY_REPLENISH_V1",
+  "startedAt": "2026-09-10T23:25:24+08:00",
+  "tdxRoot": "C:\\new_tdx_mock",
+  "targetDateBefore": "20260910",
+  "beforeDateCounts": {
+    "20260910": 9444,
+    "20260402": 1,
+    "20260909": 14,
+    "20211011": 1,
+    "20260904": 1,
+    "20260828": 3,
+    "20260908": 1,
+    "20260907": 1,
+    "20260903": 6,
+    "20260831": 3,
+    "20260624": 1,
+    "20260626": 1,
+    "20250903": 1,
+    "20240809": 1,
+    "20260227": 1,
+    "20260407": 1,
+    "20260313": 1
+  },
+  "batchSize": 50,
+  "batches": [
+    {
+      "offset": 0,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 50,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 100,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 150,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 200,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 250,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 300,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 350,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 400,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 450,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 500,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 550,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 600,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 650,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 700,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 750,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 800,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 850,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 900,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 950,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 1000,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 1050,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 1100,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 1150,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 1200,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 1250,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 1300,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 1350,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 1400,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 1450,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 1500,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 1550,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 1600,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 1650,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 1700,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 1750,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 1800,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 1850,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 1900,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 1950,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 2000,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 2050,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 2100,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 2150,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 2200,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 2250,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 2300,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 2350,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 2400,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 2450,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 2500,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 2550,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 2600,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 2650,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 2700,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 2750,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 2800,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 2850,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 2900,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 2950,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 3000,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 3050,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 3100,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 3150,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 3200,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 3250,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 3300,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 3350,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 3400,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 3450,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 3500,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 3550,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 3600,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 3650,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 3700,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 3750,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 3800,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 3850,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 3900,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 3950,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 4000,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 4050,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 4100,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 4150,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 4200,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 4250,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 4300,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 4350,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 4400,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 4450,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 4500,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 4550,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 4600,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 4650,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 4700,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 4750,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 4800,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 4850,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 4900,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 4950,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 5000,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 5050,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 5100,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 5150,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 5200,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 5250,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 5300,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 5350,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 5400,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 5450,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 5500,
+      "count": 50,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    },
+    {
+      "offset": 5550,
+      "count": 19,
+      "ok": true,
+      "result": "{\"ErrorId\":\"0\",\"Msg\":\"refresh kline cache success.\",\"run_id\":\"1\"}\n"
+    }
+  ],
+  "stockListCount": 5569,
+  "requestedCount": 5569,
+  "missingCodesBefore": [],
+  "mode": "all",
+  "status": "DONE",
+  "finishedAt": "2026-09-10T23:26:03+08:00",
+  "targetDateAfter": "20260910",
+  "afterDateCounts": {
+    "20260910": 9444,
+    "20260402": 1,
+    "20260909": 14,
+    "20211011": 1,
+    "20260904": 1,
+    "20260828": 3,
+    "20260908": 1,
+    "20260907": 1,
+    "20260903": 6,
+    "20260831": 3,
+    "20260624": 1,
+    "20260626": 1,
+    "20250903": 1,
+    "20240809": 1,
+    "20260227": 1,
+    "20260407": 1,
+    "20260313": 1
+  },
+  "targetDateRowsAfter": 9444,
+  "missingCodesAfter": [
+    "000016.SZ",
+    "002731.SZ",
+    "002870.SZ",
+    "002998.SZ",
+    "301139.SZ",
+    "301390.SZ",
+    "301686.SZ",
+    "301716.SZ",
+    "600825.SH",
+    "600929.SH",
+    "601091.SH",
+    "603159.SH",
+    "605577.SH",
+    "688291.SH",
+    "688432.SH",
+    "688801.SH",
+    "688837.SH",
+    "920201.BJ",
+    "920229.BJ",
+    "920298.BJ"
+  ],
+  "failedBatches": 0
+}

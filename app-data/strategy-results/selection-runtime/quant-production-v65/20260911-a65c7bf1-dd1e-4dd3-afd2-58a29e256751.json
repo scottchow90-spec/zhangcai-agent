@@ -1,0 +1,234 @@
+{
+  "status": "ok",
+  "strategy_id": "quant-production-v65",
+  "trade_date": "20260911",
+  "score_status": "DEGRADED",
+  "score_source": {
+    "kind": "embedded_original_engine",
+    "root": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\harness-skills\\embedded",
+    "tdx_daily": {
+      "status": "available",
+      "kind": "tdx-native-day",
+      "root": "C:\\new_tdx_mock",
+      "paths": [
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh000001.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh600184.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz399001.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz399006.day"
+      ],
+      "records": 1280
+    },
+    "candidate_scope": 1
+  },
+  "candidate_count": 1,
+  "missing": [
+    "V6.5独立第二行情源收盘核验（secondary）",
+    "行业六维历史时点数据（industry bars/constituents/events）",
+    "未进入同日公开快照的候选缺少换手率/流通市值精确字段",
+    "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+    "全市场策略扫描（当前按网页条件候选评分）"
+  ],
+  "results": [
+    {
+      "code": "600184",
+      "name": "光电股份",
+      "trade_date": "2026-09-11",
+      "market_state": "极弱市",
+      "market_level": 0,
+      "industry": "地面兵装",
+      "industry_valid": false,
+      "model_labels": [],
+      "model_scores": {
+        "平台主升": 13,
+        "弱转强": 9,
+        "龙回头": 13,
+        "黄金点火": 20
+      },
+      "primary_model": null,
+      "resonance_count": 0,
+      "authorized_candidate": false,
+      "needs_industry": false,
+      "core_base_hit": false,
+      "reject_reasons": [
+        "四模型核心结构均未触发"
+      ],
+      "metrics": {
+        "history_count": 320,
+        "history_tier": "ENHANCED_250",
+        "close": 19.98,
+        "market_breadth": 0.1146508279337653,
+        "market_score": 0,
+        "index_return": -0.011765453436356266,
+        "industry_score": 0,
+        "industry_return": null,
+        "industry_excess": null,
+        "industry_phase": "未知",
+        "industry_tier": "未知",
+        "industry_coverage": 0,
+        "industry_complete": false,
+        "industry_dimensions": {
+          "相对价格强度": 0,
+          "行业内部扩散": 0,
+          "时间持续性": 0,
+          "资金与成交确认": 0,
+          "消息政策事件驱动": 0,
+          "龙头与梯队": 0
+        },
+        "industry_overheat_penalty": 0,
+        "industry_event_risk_penalty": 0,
+        "industry_events": [],
+        "industry_increment_points": 0,
+        "industry_breadth_up_ratio": null,
+        "industry_amount_share": null,
+        "trend_score_y": 4,
+        "platform_score": 2,
+        "lock_model": false,
+        "volume_ratio_2_10": 1.6760677236207817,
+        "turnover_fraction": 0.07986961841583252,
+        "vol_start": 3.0538070890664724,
+        "pressure_space": 0.08437737737737727,
+        "support_distance": 0.04759807468461963,
+        "no_pressure": false,
+        "support_valid": true,
+        "first_board": true,
+        "sealed": true,
+        "fire_age": 2,
+        "fire_gap": 0.045749613239672415,
+        "weak_prev3": false,
+        "oversold_y": false,
+        "pullback_prev": null,
+        "pool": true
+      },
+      "bases": {
+        "平台主升": false,
+        "弱转强": false,
+        "龙回头": false,
+        "黄金点火": false
+      },
+      "components": {
+        "平台主升": {
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 5,
+          "动量": 3,
+          "控盘": 2,
+          "换手甜蜜区": 3
+        },
+        "弱转强": {
+          "弱势+超卖双确认": 0,
+          "行业超额强度": 0,
+          "锁筹": 0,
+          "压力空间": 4,
+          "动量": 3,
+          "控盘": 2
+        },
+        "龙回头": {
+          "健康回撤": 0,
+          "行业超额强度": 0,
+          "支撑邻近": 4,
+          "压力空间": 4,
+          "动量": 3,
+          "控盘": 2
+        },
+        "黄金点火": {
+          "金叉新鲜": 3,
+          "均线差扩大": 4,
+          "行业超额强度": 0,
+          "支撑邻近": 3,
+          "压力空间": 5,
+          "动量": 3,
+          "控盘": 2
+        }
+      },
+      "model_states": {
+        "平台主升": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 13,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        },
+        "弱转强": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 9,
+          "threshold": 10,
+          "score_pass": false,
+          "base": false,
+          "triggered": false
+        },
+        "龙回头": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 13,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        },
+        "黄金点火": {
+          "status": "CORE_NOT_TRIGGERED",
+          "core": false,
+          "environment": null,
+          "score": 20,
+          "threshold": 10,
+          "score_pass": true,
+          "base": false,
+          "triggered": false
+        }
+      },
+      "score": 20,
+      "final_score": 20,
+      "primary_score": 20,
+      "score_status": "LOCAL_SCORED_DEGRADED",
+      "score_source": "原始量化生产 V6.5 engine.py · 本地通达信日线适配",
+      "model_triggered": [],
+      "model_triggered_count": 0,
+      "model_score_basis": "四模型分量分数；只有 model_labels 才表示通过全部硬门并触发",
+      "missing": [
+        "V6.5独立第二行情源收盘核验（secondary）",
+        "行业六维历史时点数据（industry bars/constituents/events）",
+        "未进入同日公开快照的候选缺少换手率/流通市值精确字段",
+        "生产授权门槛与全市场双路共识（当前仅执行原始engine逐股研究评分）",
+        "全市场策略扫描（当前按网页条件候选评分）"
+      ]
+    }
+  ],
+  "audit": {
+    "no_future_data": true,
+    "data_date": "20260911",
+    "tdx_daily": {
+      "status": "available",
+      "kind": "tdx-native-day",
+      "root": "C:\\new_tdx_mock",
+      "paths": [
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh000001.day",
+        "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh600184.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz399001.day",
+        "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz399006.day"
+      ],
+      "records": 1280
+    },
+    "same_day_market_fields": {
+      "status": "available",
+      "date": "2026-09-11",
+      "records": 40,
+      "paths": [
+        "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\public\\20260911\\market-111530.json",
+        "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\public\\20260911\\market-182044.json",
+        "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\public\\limit-up\\2026-09-11.json",
+        "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\public\\latest.json"
+      ],
+      "kind": "same-day-public-snapshot"
+    },
+    "full_market_scan": false,
+    "note": "数值字段来自原始策略评分函数；缺失辅助数据只影响生产授权/候选等级，不用涨幅或成交额替代策略分。"
+  },
+  "artifact_path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\strategy-results\\selection-runtime\\quant-production-v65\\20260911-a65c7bf1-dd1e-4dd3-afd2-58a29e256751.json",
+  "persisted_at": "2026-09-14T03:22:12.853Z"
+}

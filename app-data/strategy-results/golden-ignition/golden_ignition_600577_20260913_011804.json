@@ -1,0 +1,56 @@
+{
+  "status": "PASS",
+  "skill": "golden-ignition",
+  "name_cn": "黄金点火",
+  "scope": "通用证券点火分析；股票直接分析，可转债自动映射正股",
+  "generated_at": "2026-09-13T01:18:04.468339+08:00",
+  "input_symbol": "600577.SH",
+  "target_name": "600577.SH",
+  "target_type": "stock",
+  "analysis_symbol": "600577.SH",
+  "underlying_symbol": null,
+  "latest_trading_date": "2026-09-11",
+  "lookback_trading_days": 5,
+  "signal_definition": "CROSS(EMA(CLOSE,3),EMA(CLOSE,21))",
+  "signal_status": "NO_SIGNAL",
+  "ignition_signal": false,
+  "local_daily": {
+    "latest_close": 8.02,
+    "latest_ema3": 8.0654,
+    "latest_ema21": 8.2047,
+    "recent_crosses": []
+  },
+  "tdx_formula": {
+    "ok": true,
+    "public_name": "大牛线4.0",
+    "runtime_name": "大牛线撑压版",
+    "symbol": "600577.SH",
+    "fields": {
+      "OUTPUT59": 0.0,
+      "OUTPUT60": 0.0,
+      "OUTPUT61": 0.0
+    },
+    "current_triggered": false,
+    "generated_at": null
+  },
+  "data_sources": {
+    "tdx_hub": {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\harness-skills\\tdx-local-hub\\scripts\\tdx_hub.py",
+      "size_bytes": 29260,
+      "sha256": "5fe40f975e25100a032cf4acc331defcc9bd37cae2f443bf211b8e9f90868f67",
+      "updated_at": "2026-09-12T17:54:36.551010+08:00"
+    },
+    "daily_file": {
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh600577.day",
+      "size_bytes": 177056,
+      "sha256": "b4ef39346e7ab9f3a4f6113dcb55e0e714ce6a0fd1855d54ba85efee54b22347",
+      "updated_at": "2026-09-11T22:57:13.407157+08:00"
+    },
+    "bond_mapping": null
+  },
+  "risk_boundary": [
+    "点火信号是技术条件，不代表必然上涨。",
+    "可转债输入仅以正股判断点火，仍需另行检查溢价率、余额、强赎与流动性。",
+    "本地日线日期与盘中公式快照不一致时，必须分别标注，不能冒充同日收盘结论。"
+  ]
+}
