@@ -40,6 +40,9 @@ SCAN_JSON = HOME / "reports" / "2026-06-03_five_dimension_feilong_block_hardenin
 GLOBAL_SCORE_CONTRACT = SKILLS_ROOT / "stock-unified" / "references" / "short_term_strong_stock_scoring_contract.json"
 GLOBAL_SCORE_CONTRACT_SHA256 = hashlib.sha256(GLOBAL_SCORE_CONTRACT.read_bytes()).hexdigest()
 SCORE_CONTRACT_VERSION = "A-SHARE-STRONG-26F-100-V6.1"
+# CORE-MAINLINE-CLOSE-V3 is the current close-confirmed model; the raw
+# CORE-MAINLINE-100-V2 identifier remains valid for older saved reports.
+MAINLINE_MODEL_VERSIONS = {"CORE-MAINLINE-CLOSE-V3", "CORE-MAINLINE-100-V2"}
 FAILURE_TOKENS = (
     '"status": "BLOCKED"',
     '"status":"BLOCKED"',
@@ -167,7 +170,7 @@ def validate_mainline_report() -> list[str]:
     errors: list[str] = []
     if report.get("status") != "CLEAN_PASS":
         errors.append("mainline_execution_not_clean")
-    if market.get("model_version") != "CORE-MAINLINE-100-V2":
+    if market.get("model_version") not in MAINLINE_MODEL_VERSIONS:
         errors.append("mainline_model_binding_missing")
     results = report.get("all_results", [])
     if not results or any("mainline_scoring" not in item for item in results):

@@ -1,0 +1,6 @@
+interface:
+  display_name: "涨停板深度复盘"
+  short_description: "从最新涨停证据生成可验证的方向论证、个股角色与次日情景计划"
+  default_prompt: "使用 $limit-up-review 按唯一 v6 深度分析流程完成涨停板复盘：先形成证据、反证、失效条件和情景树，再生成任何可见报告。"
+policy:
+  allow_implicit_invocation: false

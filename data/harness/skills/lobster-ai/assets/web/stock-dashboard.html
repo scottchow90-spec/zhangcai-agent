@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>LOBSTER AI · 本机选股结果总览</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #070713;
+      --panel: #111225;
+      --panel-2: #16172d;
+      --line: #303154;
+      --text: #f5f3ff;
+      --muted: #a8a5c5;
+      --pink: #f472b6;
+      --purple: #a78bfa;
+      --cyan: #67e8f9;
+      --green: #4ade80;
+      --yellow: #facc15;
+      --orange: #fb923c;
+      --red: #fb7185;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(168, 85, 247, .18), transparent 30rem),
+        radial-gradient(circle at 88% 15%, rgba(236, 72, 153, .13), transparent 28rem),
+        var(--bg);
+      color: var(--text);
+      font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+    }
+    a { color: inherit; }
+    button, input, select { font: inherit; }
+    button, select, input {
+      border: 1px solid var(--line);
+      background: #17182d;
+      color: var(--text);
+      border-radius: 9px;
+    }
+    button { cursor: pointer; }
+    button:hover, a.action:hover { border-color: var(--pink); }
+    button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 2px;
+    }
+    .shell { width: min(1480px, calc(100% - 24px)); margin: 0 auto; }
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(244, 114, 182, .35);
+      background: rgba(7, 7, 19, .88);
+      backdrop-filter: blur(16px);
+    }
+    .header-inner {
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px 0;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(244, 114, 182, .55);
+      border-radius: 12px;
+      background: linear-gradient(145deg, rgba(190, 24, 93, .38), rgba(91, 33, 182, .26));
+      box-shadow: 0 0 24px rgba(236, 72, 153, .16);
+      font-size: 24px;
+    }
+    .brand h1 { margin: 0; font-size: clamp(17px, 2vw, 23px); letter-spacing: .02em; }
+    .brand p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+    .header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .live {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--yellow); box-shadow: 0 0 12px currentColor; }
+    .dot.ok { background: var(--green); }
+    .dot.error { background: var(--red); }
+    .action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #17182d;
+      text-decoration: none;
+      font-size: 13px;
+    }
+    main { padding: 18px 0 34px; }
+    .risk {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 13px 15px;
+      border: 1px solid rgba(250, 204, 21, .45);
+      border-radius: var(--radius);
+      background: rgba(113, 63, 18, .16);
+      color: #fef3c7;
+    }
+    .risk strong { display: block; margin-bottom: 4px; }
+    .risk p { margin: 0; color: #fde68a; font-size: 13px; line-height: 1.65; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .stat {
+      min-height: 104px;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(145deg, rgba(23, 24, 45, .96), rgba(17, 18, 37, .94));
+      box-shadow: 0 12px 28px rgba(0, 0, 0, .16);
+    }
+    .stat-label { color: var(--muted); font-size: 12px; }
+    .stat-value { margin-top: 6px; font-size: clamp(26px, 4vw, 36px); font-weight: 700; font-variant-numeric: tabular-nums; }
+    .stat-note { margin-top: 4px; color: var(--muted); font-size: 11px; }
+    .accent-pink { color: var(--pink); }
+    .accent-cyan { color: var(--cyan); }
+    .accent-green { color: var(--green); }
+    .accent-yellow { color: var(--yellow); }
+    .hero-panel {
+      margin-top: 14px;
+      border: 1px solid rgba(74, 222, 128, .52);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(145deg, rgba(5, 46, 38, .34), rgba(17, 18, 37, .98) 52%),
+        rgba(13, 14, 29, .96);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, .22), 0 0 28px rgba(74, 222, 128, .06);
+      overflow: hidden;
+    }
+    .hero-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid rgba(48, 49, 84, .72);
+    }
+    .hero-head h2 { margin: 0; font-size: 19px; }
+    .hero-head p { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
+    .hero-count { color: var(--green); font-size: 13px; font-weight: 700; white-space: nowrap; }
+    .hero-count small { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; font-weight: 400; }
+    .hero-table-wrap { max-height: 356px; overflow: auto; }
+    .hero-table { min-width: 820px; }
+    .hero-table th { top: 0; background: #12251f; }
+    .hero-table td { padding-top: 9px; padding-bottom: 9px; }
+    .hero-rank { color: var(--muted); font-variant-numeric: tabular-nums; }
+    .hero-stock { display: flex; align-items: baseline; gap: 9px; }
+    .hero-stock strong { font-size: 14px; }
+    .latest-flag { color: var(--green); font-size: 10px; white-space: nowrap; }
+    .history-flag { color: var(--muted); font-size: 10px; white-space: nowrap; }
+    .toolbar {
+      margin-top: 14px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(17, 18, 37, .92);
+      display: grid;
+      grid-template-columns: minmax(220px, 1.5fr) minmax(140px, .55fr) minmax(140px, .55fr) auto;
+      gap: 9px;
+    }
+    .toolbar input, .toolbar select, .toolbar button { width: 100%; min-height: 40px; padding: 0 11px; }
+    .toolbar button { background: linear-gradient(135deg, rgba(190, 24, 93, .65), rgba(109, 40, 217, .65)); border-color: rgba(244, 114, 182, .58); }
+    .section-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 22px 0 10px;
+    }
+    .section-head h2 { margin: 0; font-size: 18px; }
+    .section-head p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+    .count-text { color: var(--muted); font-size: 12px; white-space: nowrap; }
+    .skill-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+    .skill-card {
+      min-width: 0;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(145deg, rgba(22, 23, 45, .97), rgba(13, 14, 29, .97));
+      box-shadow: 0 14px 30px rgba(0, 0, 0, .13);
+    }
+    .skill-card.active { border-color: var(--pink); box-shadow: 0 0 0 1px rgba(244, 114, 182, .22), 0 14px 30px rgba(0, 0, 0, .18); }
+    .skill-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+    .skill-name { margin: 0; font-size: 15px; }
+    .skill-id { margin-top: 4px; color: var(--muted); font: 11px Consolas, monospace; overflow-wrap: anywhere; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 23px;
+      padding: 0 8px;
+      border: 1px solid currentColor;
+      border-radius: 999px;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+    .state-available { color: var(--green); background: rgba(34, 197, 94, .1); }
+    .state-observation { color: var(--cyan); background: rgba(34, 211, 238, .09); }
+    .state-empty { color: var(--purple); background: rgba(167, 139, 250, .09); }
+    .state-blocked, .state-error { color: var(--red); background: rgba(244, 63, 94, .1); }
+    .state-missing, .state-diagnostic { color: var(--yellow); background: rgba(250, 204, 21, .08); }
+    .state-wrong_target { color: var(--orange); background: rgba(251, 146, 60, .1); }
+    .meta-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; margin-top: 13px; }
+    .meta { padding: 8px; border-radius: 9px; background: rgba(36, 37, 67, .55); }
+    .meta span { display: block; color: var(--muted); font-size: 10px; }
+    .meta strong { display: block; margin-top: 4px; font-size: 14px; font-variant-numeric: tabular-nums; }
+    .skill-note { min-height: 38px; margin: 11px 0 0; color: #d8d5e8; font-size: 12px; line-height: 1.55; }
+    .source-line { margin-top: 8px; color: var(--muted); font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .preview { display: flex; gap: 5px; flex-wrap: wrap; min-height: 25px; margin-top: 9px; }
+    .chip { padding: 4px 7px; border-radius: 999px; background: rgba(91, 33, 182, .28); color: #ddd6fe; font-size: 10px; }
+    .card-action { margin-top: 10px; min-height: 34px; width: 100%; padding: 0 10px; background: transparent; }
+    .table-wrap { border: 1px solid var(--line); border-radius: var(--radius); overflow: auto; background: rgba(13, 14, 29, .96); }
+    table { width: 100%; min-width: 980px; border-collapse: collapse; }
+    th, td { padding: 11px 12px; border-bottom: 1px solid rgba(48, 49, 84, .72); text-align: left; vertical-align: middle; }
+    th { position: sticky; top: 0; z-index: 1; background: #17182d; color: #d8d5e8; font-size: 11px; }
+    td { font-size: 12px; }
+    tbody tr:hover { background: rgba(91, 33, 182, .12); }
+    .symbol { color: var(--cyan); font: 12px Consolas, monospace; white-space: nowrap; }
+    .row-name { font-weight: 700; }
+    .row-sub { margin-top: 3px; color: var(--muted); font-size: 10px; }
+    .reason { max-width: 330px; color: #d8d5e8; line-height: 1.45; }
+    .empty-view { padding: 34px 16px; text-align: center; color: var(--muted); }
+    .legend { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 12px; }
+    .footer { padding: 20px 0 30px; color: var(--muted); text-align: center; font-size: 11px; }
+    .hidden { display: none !important; }
+    @media (max-width: 1000px) {
+      .skill-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 720px) {
+      .shell { width: min(100% - 16px, 1480px); }
+      .header { position: static; }
+      .header-inner { align-items: flex-start; flex-direction: column; }
+      .header-actions { width: 100%; justify-content: flex-start; }
+      .toolbar { grid-template-columns: 1fr; }
+      .skill-grid { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .risk { grid-template-columns: 1fr; }
+      .hero-head { align-items: flex-start; flex-direction: column; }
+    }
+    @media (max-width: 420px) {
+      .stats { grid-template-columns: 1fr; }
+      .meta-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="shell header-inner">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">🦞</div>
+        <div>
+          <h1>LOBSTER AI · 本机选股结果总览</h1>
+          <p>读取本机技能已落盘业务结果，不重新生成投资结论</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span class="live"><span id="live-dot" class="dot"></span><span id="live-text">正在读取</span></span>
+        <a class="action" href="/index.html">涨停监控面板</a>
+        <button id="refresh-top" class="action" type="button">刷新结果</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="risk" aria-label="风险说明">
+      <div aria-hidden="true">⚠️</div>
+      <div>
+        <strong>结果边界</strong>
+        <p id="risk-text">仅展示本机技能已落盘结果，不构成投资建议；结果可能过期，空候选和诊断文件不会被包装成选股结论。</p>
+      </div>
+    </section>
+
+    <section class="stats" aria-label="面板摘要">
+      <article class="stat"><div class="stat-label">审计选股技能</div><div id="stat-skills" class="stat-value accent-pink">--</div><div class="stat-note">18 个核心选股工作流</div></article>
+      <article class="stat"><div class="stat-label">有业务结果技能</div><div id="stat-business" class="stat-value accent-cyan">--</div><div class="stat-note">含空候选与观察结果</div></article>
+      <article class="stat"><div class="stat-label">严格入选候选</div><div id="stat-selected" class="stat-value accent-green">--</div><div id="stat-observation-note" class="stat-note">观察项 -- · 主题 --</div></article>
+      <article class="stat"><div class="stat-label">异常／缺失技能</div><div id="stat-problems" class="stat-value accent-yellow">--</div><div id="stat-date-note" class="stat-note">最新交易日 --</div></article>
+    </section>
+
+    <section id="selected-section" class="hero-panel" aria-labelledby="selected-title">
+      <div class="hero-head">
+        <div>
+          <h2 id="selected-title">今日严格入选结果</h2>
+          <p>直接展示各选股技能已经落盘的真实结果；按结果日期从新到旧排列，历史结果会明确标记。</p>
+        </div>
+        <div id="selected-count" class="hero-count">正在读取<small id="source-fingerprint">动态指纹 --</small></div>
+      </div>
+      <div class="hero-table-wrap">
+        <table class="hero-table">
+          <thead><tr><th>序号</th><th>代码／名称</th><th>来源技能</th><th>策略</th><th>分数</th><th>结果日期</th></tr></thead>
+          <tbody id="selected-body"></tbody>
+        </table>
+        <div id="selected-empty" class="empty-view hidden">当前筛选下没有严格入选结果。</div>
+      </div>
+    </section>
+
+    <section class="toolbar" aria-label="结果筛选">
+      <label><span class="hidden">搜索</span><input id="search" type="search" placeholder="搜索技能、代码、名称或策略"></label>
+      <label><span class="hidden">结果状态</span><select id="state-filter">
+        <option value="all">全部状态</option>
+        <option value="business">业务结果</option>
+        <option value="available">有入选</option>
+        <option value="observation">仅观察</option>
+        <option value="empty">空候选</option>
+        <option value="problem">异常／缺失</option>
+      </select></label>
+      <label><span class="hidden">时效</span><select id="freshness-filter">
+        <option value="all">全部时效</option>
+        <option value="latest">最新交易日</option>
+        <option value="stale">历史结果</option>
+        <option value="undated">日期未识别</option>
+      </select></label>
+      <button id="refresh" type="button">重新读取落盘结果</button>
+    </section>
+
+    <section aria-labelledby="skills-title">
+      <div class="section-head">
+        <div><h2 id="skills-title">技能状态与异常</h2><p>空候选、诊断、缺失与观察类状态集中放在结果之后；点击卡片可查看对应明细。</p></div>
+        <div id="skill-count" class="count-text">--</div>
+      </div>
+      <div id="skill-grid" class="skill-grid"></div>
+      <div id="skill-empty" class="empty-view hidden">没有符合当前筛选条件的技能。</div>
+      <div class="legend" aria-label="状态图例">
+        <span class="badge state-available">有入选</span>
+        <span class="badge state-observation">仅观察</span>
+        <span class="badge state-empty">空候选</span>
+        <span class="badge state-blocked">运行阻断</span>
+        <span class="badge state-diagnostic">仅诊断</span>
+        <span class="badge state-wrong_target">目标不符</span>
+        <span class="badge state-missing">未落盘</span>
+      </div>
+    </section>
+
+    <section id="results-section" aria-labelledby="results-title">
+      <div class="section-head">
+        <div><h2 id="results-title">结果明细</h2><p id="result-scope">严格入选、观察项与主题结果分栏标识。</p></div>
+        <div id="result-count" class="count-text">--</div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>技能</th><th>类型</th><th>代码／实体</th><th>名称</th><th>策略／角色</th><th>分数</th><th>结果日期</th><th>落盘理由</th></tr></thead>
+          <tbody id="result-body"></tbody>
+        </table>
+        <div id="result-empty" class="empty-view hidden">当前筛选下没有可展示的业务结果。</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="shell footer"><span id="updated-at">尚未读取</span> · 本机结果文件变化后由服务端实时推送，60 秒仅作断线兜底 · 数据来源仅限本机显式白名单路径 · 网页结果不构成投资建议</footer>
+  <script src="stock-dashboard.js?v=1.2.0"></script>
+</body>
+</html>

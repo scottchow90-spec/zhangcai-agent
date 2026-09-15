@@ -1,0 +1,8 @@
+{
+  "id": "3f4ae227-9214-4f38-aeab-ea7e43138989",
+  "status": "failed",
+  "skill_id": "four-strategy-system",
+  "started_at": 1789048304574,
+  "error": "桥接服务在 Harness 返回前重启，任务未完成；可重新执行。",
+  "completed_at": 1789048847607
+}

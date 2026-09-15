@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "skill_id": "wechat-public-writing",
+  "display_name": "公众号写作",
+  "created_at": "2026-07-21",
+  "source_articles": [
+    {
+      "account": "主力行为学原hi研报 新",
+      "seed_url": "https://mp.weixin.qq.com/s/pwkVtHpA231x_2JxBE1XXA",
+      "indexed_records": 100,
+      "direct_full_text_samples": 2,
+      "source_archive_sha256": "9dfc391462d935431e4e8f26d1a83af9c687829f1d22c4765ca0c41443002d07",
+      "source_archive_size_bytes": 99049
+    },
+    {
+      "account": "刀锋2020",
+      "seed_url": "https://mp.weixin.qq.com/s/eteF6saES-SaMyhlbogYhw",
+      "indexed_records": 100,
+      "direct_full_text_samples": 2,
+      "source_archive_sha256": "9cc00ef19b8c55e0d190821fca3e0ca93f923cf7ab9821925db5da8fe045c71f",
+      "source_archive_size_bytes": 97242
+    }
+  ],
+  "combined_corpus": {
+    "path": "references/source-corpus.json",
+    "self_contained_copy": true,
+    "record_count": 200,
+    "account_counts": [100, 100],
+    "direct_full_text_samples_total": 4,
+    "sha256": "c7e53612c2cf1e94a63f604a0b471a350c3638d891598b418c26106180286e80",
+    "size_bytes": 202350
+  },
+  "verification_boundary": {
+    "complete_backend_continuity_verified": false,
+    "note": "已固化200条公开索引学习记录及4篇直接正文样本；未验证两个公众号后台连续历史无缺口，不能表述为200篇全文逐字精读。"
+  }
+}

@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "C:\work\260907 掌财智能体\CodeX-st-wsp\zhangcai-demo\harness-skills\dragon-pullback\scripts\run_strong_leader_first_yin.py", line 656, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "C:\work\260907 掌财智能体\CodeX-st-wsp\zhangcai-demo\harness-skills\dragon-pullback\scripts\run_strong_leader_first_yin.py", line 343, in main
+    hub = load_tdx_hub()
+          ^^^^^^^^^^^^^^
+  File "C:\work\260907 掌财智能体\CodeX-st-wsp\zhangcai-demo\harness-skills\dragon-pullback\scripts\run_strong_leader_first_yin.py", line 46, in load_tdx_hub
+    spec.loader.exec_module(module)
+  File "C:\work\260907 掌财智能体\CodeX-st-wsp\zhangcai-demo\scripts\stock_runtime_bootstrap\tdx_process_guard.py", line 296, in _guarding_source_exec_module
+    result = _ORIGINAL_SOURCE_EXEC_MODULE(loader, module)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1132, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1190, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: 'D:\\C盘转移\\日志\\codex\\skills\\tdx-local-hub\\scripts\\tdx_hub.py'

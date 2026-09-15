@@ -109,7 +109,13 @@ def run(output_path: Path, lookback_sessions: int = 500, as_of_date: int | None 
         _dates, date_index = index_rows(rows)
         index_by_code[code7] = date_index
 
-    benchmark_rows = live.read_day_rows("1000300")
+    # 取完整基准日历作为稳定锚点。若直接对 as_of 截断后的列表取模，
+    # 每增加一个交易日会让历史信号整体错位，稳定性校验会误报。
+    benchmark_all_rows = live.read_day_rows("1000300")
+    absolute_benchmark_index = {
+        int(row["date"]): index for index, row in enumerate(benchmark_all_rows)
+    }
+    benchmark_rows = list(benchmark_all_rows)
     if as_of_date is not None:
         benchmark_rows = [row for row in benchmark_rows if int(row["date"]) <= as_of_date]
     if len(benchmark_rows) < 180:
@@ -119,7 +125,7 @@ def run(output_path: Path, lookback_sessions: int = 500, as_of_date: int | None 
     last_signal_exclusive = len(benchmark_dates) - HOLDING_DAYS - 1
     signal_indices = [
         index for index in range(first_signal_index, last_signal_exclusive)
-        if index % HOLDING_DAYS == 0
+        if absolute_benchmark_index.get(int(benchmark_dates[index]), index) % HOLDING_DAYS == 0
     ]
     signal_dates = [benchmark_dates[index] for index in signal_indices]
     concept_by_name = {str(item["source_name"]): item for item in concepts}

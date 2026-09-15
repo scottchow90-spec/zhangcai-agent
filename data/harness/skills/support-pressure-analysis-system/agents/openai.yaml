@@ -1,0 +1,6 @@
+interface:
+  display_name: "支撑压力分析系统"
+  short_description: "统一的支撑压力/支撑阻力分析工作流；兼容旧显式入口 $support-resistance-analysis-system"
+  default_prompt: "Use $support-pressure-analysis-system to run the unified 支撑压力分析系统 workflow. Treat 支撑阻力分析系统 and $support-resistance-analysis-system as compatibility names for this same skill."
+policy:
+  allow_implicit_invocation: false

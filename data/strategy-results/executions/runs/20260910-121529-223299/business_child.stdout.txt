@@ -1,0 +1,5 @@
+TQ数据接口初始化成功，使用路径: C:\new_tdx_mock\PYPlugins\user\tdxdata_test.py
+TQ数据连接已关闭
+REPORT=C:\work\260907 掌财智能体\CodeX-st-wsp\zhangcai-demo\data\strategy-results\reports\feilong\feilong_002771_20260910_121535_report.md
+ANALYSIS_JSON=C:\work\260907 掌财智能体\CodeX-st-wsp\zhangcai-demo\data\strategy-results\reports\feilong\feilong_002771_20260910_121535_analysis.json
+DERIVED_JSON=C:\work\260907 掌财智能体\CodeX-st-wsp\zhangcai-demo\data\strategy-results\reports\feilong\feilong_002771_20260910_121535_derived.json

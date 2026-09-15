@@ -1,0 +1,98 @@
+{
+  "schema": "QUALITY-TRACK-STOCK-SELECTION-SKILL-1",
+  "skill": "quality-track-stock-selection",
+  "display_name": "优质赛道选股",
+  "status": "PASS",
+  "generated_at": "2026-09-12T00:04:45+08:00",
+  "target_system": "local Codex",
+  "mode": "paper_selection_only",
+  "automatic_order": false,
+  "selection_status": "NO_TRADE",
+  "selection_generated_at": "2026-09-12T00:02:47+08:00",
+  "selection_trade_date": "20260911",
+  "selection_counts": {
+    "equity_names": 6545,
+    "concepts": 268,
+    "quality_track_stock_snapshots": 4049,
+    "eligible_quality_sectors": 59,
+    "strict_event_confirmed_sectors": 0,
+    "preliminary_candidates": 806,
+    "enriched_candidates": 30,
+    "paper_eligible": 0,
+    "selected": 0,
+    "watch_candidates": 5
+  },
+  "watch_candidates": [
+    "金信诺",
+    "锐科激光",
+    "永鼎股份",
+    "合众思壮",
+    "烽火通信"
+  ],
+  "backtest_status": "FAIL",
+  "backtest_metrics": {
+    "period_count": 99,
+    "active_period_count": 37,
+    "inactive_period_count": 62,
+    "trade_count": 181,
+    "trading_days_covered": 495,
+    "strategy_total_return_pct": -15.9781,
+    "benchmark_total_return_pct_at_same_60pct_exposure": -2.5942,
+    "benchmark_total_return_pct_always_exposed_60pct": 14.205,
+    "excess_return_pct": -13.3839,
+    "excess_return_pct_vs_always_exposed_60pct": -30.1831,
+    "strategy_annualized_return_pct": -8.4815,
+    "benchmark_annualized_return_pct": -1.3292,
+    "benchmark_annualized_return_pct_always_exposed_60pct": 6.9959,
+    "max_drawdown_pct": -26.117,
+    "benchmark_max_drawdown_pct": -8.2783,
+    "benchmark_max_drawdown_pct_always_exposed_60pct": -6.7707,
+    "positive_period_ratio_pct": 18.1818,
+    "trade_win_rate_pct": 40.884,
+    "average_trade_return_pct": -0.7289
+  },
+  "backtest_readiness_checks": {
+    "at_least_50_non_overlapping_periods": true,
+    "positive_average_trade_after_cost": false,
+    "positive_excess_return": false,
+    "max_drawdown_not_below_minus_25pct": false,
+    "trade_win_rate_at_least_45pct": false,
+    "no_lookahead_violations": true,
+    "every_trade_has_nonzero_cost": true
+  },
+  "backtest_stability_status": "PASS",
+  "paper_ledger_states": [
+    "NO_TRADE_RECORDED"
+  ],
+  "deployment": {
+    "real_money_authorized": false,
+    "reason": "paper decision support only; automatic order disabled; backtest and evidence gates remain fail closed"
+  },
+  "artifacts": [
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\quality-track-stock-selection\\reports\\executions\\runs\\20260912-000238-670308\\business-data\\quality-track-stock-selection\\practical_selection.json",
+      "size_bytes": 636055,
+      "sha256": "669CA31BC53859266FA892511C5A790C17EEC8B0194E0BE7B27FC72F71EDAE1F"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\quality-track-stock-selection\\reports\\executions\\runs\\20260912-000238-670308\\business-data\\quality-track-stock-selection\\execution_backtest.json",
+      "size_bytes": 146410,
+      "sha256": "8BD27CD4C778069023CDE76A9DCA4AFDD9CF70B8D6539BFAE4709A71C9401ECC"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\quality-track-stock-selection\\reports\\executions\\runs\\20260912-000238-670308\\business-data\\quality-track-stock-selection\\backtest_stability.json",
+      "size_bytes": 2179,
+      "sha256": "D7F1CC97A92DD694B710A09E0699787B8A25B5177B4DE4D43B2CB4C42E2CA257"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\quality-track-stock-selection\\reports\\executions\\runs\\20260912-000238-670308\\business-data\\quality-track-stock-selection\\paper_ledger.json",
+      "size_bytes": 581,
+      "sha256": "FA8E29B3E7B8F01F3CF7D3F8B0799BBC55B383382F56B26969D5963CCFEF0EEB"
+    },
+    {
+      "path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\quality-track-stock-selection\\reports\\executions\\runs\\20260912-000238-670308\\business-data\\quality-track-stock-selection\\selftest.json",
+      "size_bytes": 2719,
+      "sha256": "39AC7E1D2F3924ABEF25840E881135833D00ECB909DE0E02062BA2D20EE6C7E4"
+    }
+  ]
+}

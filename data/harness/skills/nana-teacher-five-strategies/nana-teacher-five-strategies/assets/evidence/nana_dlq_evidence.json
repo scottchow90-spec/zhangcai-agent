@@ -1,0 +1,118 @@
+{
+  "status": "PASS_WITH_TDX_GUI_NOT_VERIFIED",
+  "generated_at": "2026-07-18T21:50:55+08:00",
+  "strategy": "地极破晓",
+  "source": {
+    "path": "G:\\AI新产品部\\娜娜老师\\地极破晓.pptx",
+    "sha256": "3b2aaa37d78f159723198ca7187c5c012953ab5c58ea0979e71b3159749926ee",
+    "size_bytes": 1862196,
+    "slide_count": 20,
+    "current_hash_match": true
+  },
+  "formula": {
+    "path": "C:\\Users\\25296\\Documents\\Codex\\2026-07-18\\g-ai\\outputs\\nana_dlq_xg.txt",
+    "sha256": "826f0ed4e82ea253bec8f886a48a3a0583e664788534cac37ec40bc7eadec190",
+    "size_bytes": 727,
+    "formula_check": {
+      "strategy": "地极破晓",
+      "path": "C:\\Users\\25296\\Documents\\Codex\\2026-07-18\\g-ai\\outputs\\nana_dlq_xg.txt",
+      "sha256": "826f0ed4e82ea253bec8f886a48a3a0583e664788534cac37ec40bc7eadec190",
+      "size_bytes": 727,
+      "required_markers": [
+        "V<MA(V,20)*0.60",
+        "AMOUNT>=30000000"
+      ],
+      "missing": [],
+      "status": "PASS"
+    },
+    "final_output": "XG:GROUP AND NOLOW AND MAUP AND (BREAKOUT OR (CROSS(C,MA(C,5)) AND CONFIRM)) AND STF AND LISTED AND LIQ AND C>2;",
+    "status": "PASS"
+  },
+  "workflow": {
+    "path": "C:\\Users\\25296\\Documents\\Codex\\2026-07-18\\g-ai\\outputs\\nana_dlq_workflow.md",
+    "sha256": "66f1b69965f1cf40fea73a97289b0c5cd858aed92800273893dac5c449560748",
+    "size_bytes": 2185,
+    "title": "# 地量群选股工作流",
+    "formula_reference_present": true,
+    "source_reference_present": true,
+    "status": "PASS"
+  },
+  "scan_result": {
+    "target_trade_date": "20260717",
+    "scanned_symbols": 5406,
+    "current_count": 0,
+    "current_candidates": [],
+    "history_signal_count": 313,
+    "history_distinct_symbols": 281,
+    "backtest_metrics": {
+      "forward_1d": {
+        "evaluated": 313,
+        "average_pct": -0.158,
+        "median_pct": -0.59,
+        "win_rate_pct": 40.89
+      },
+      "forward_3d": {
+        "evaluated": 312,
+        "average_pct": 0.093,
+        "median_pct": -0.565,
+        "win_rate_pct": 42.31
+      },
+      "forward_5d": {
+        "evaluated": 310,
+        "average_pct": -0.047,
+        "median_pct": -0.87,
+        "win_rate_pct": 40.65
+      },
+      "max_drawdown_5d": {
+        "evaluated": 310,
+        "average_pct": -4.113,
+        "worst_pct": -19.33
+      }
+    },
+    "most_recent_signal": {
+      "strategy": "地极破晓",
+      "variant": "地量群放量确认",
+      "signal_date": "20260715",
+      "close": 7.12,
+      "pct_change": 3.34,
+      "amount_yi": 1.93,
+      "ma5": 6.94,
+      "ma10": 6.95,
+      "ma20": 6.93,
+      "low_volume_days": 7,
+      "narrow_days": 8,
+      "confirm_score": 3,
+      "invalidation": 6.6,
+      "evidence": "8日内低量7日、窄幅8日，确认分3",
+      "forward_1d_pct": -0.42,
+      "forward_3d_pct": null,
+      "forward_5d_pct": null,
+      "max_drawdown_5d_pct": null,
+      "market": "SH",
+      "code": "601236",
+      "symbol": "601236.SH",
+      "name": "红塔证券",
+      "data_path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh601236.day"
+    },
+    "most_recent_signal_local_data_readback": {
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh601236.day",
+      "exists": true,
+      "size_bytes": 54400,
+      "last_date": "20260717",
+      "last_close": 7.02
+    }
+  },
+  "candidate_quote_continuity_checks": [],
+  "checks": {
+    "source_hash_readback": "PASS",
+    "formula_structure_and_hash": "PASS",
+    "workflow_formula_source_mapping": "PASS",
+    "full_market_scan_and_history": "PASS",
+    "current_candidate_quote_continuity": "NOT_APPLICABLE_ZERO_CURRENT_MATCHES"
+  },
+  "unverified": [
+    "通达信公式管理器 GUI 编译/导入回执",
+    "通达信内部批量选股回执",
+    "分时、Level-2、公告和板块人工复核"
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "schema": "LIANBAN_DAILY_SNAPSHOT_V1",
+  "status": "DEGRADED",
+  "requested_at": "2026-09-10T14:54:00+08:00",
+  "requested_date": "2026-09-10",
+  "target_date": "2026-09-10",
+  "latest_requested": true,
+  "source_name": "连板网",
+  "license": "CC BY 4.0, 引用需署名“连板网”并附上行原文链接",
+  "attribution_required": true,
+  "source_role": "supplemental_event_theme_sentiment_cross_validation",
+  "sources": {
+    "open_data": {
+      "url": "https://lianban.net/opendata/latest.json",
+      "status_code": 200,
+      "content_type": "application/json",
+      "size": 924,
+      "sha256": "3683d62574b3bb4b9c238b7cd8a5695815604d70001a49563cbd8999175d29a4",
+      "error": null
+    },
+    "page": {
+      "url": "https://lianban.net/days/2026-09-10.html",
+      "status_code": 200,
+      "content_type": "text/html; charset=utf-8",
+      "size": 3957,
+      "sha256": "a5d4c922e312789969b3e7892c0db9b214f2eda470c9a0fc08dfada931ef9205",
+      "error": null
+    }
+  },
+  "market": {
+    "limit_up": 36,
+    "limit_down": 12,
+    "consecutive": 10,
+    "max_board": 4,
+    "seal_rate": 63.2,
+    "broken_board": 21,
+    "advancers": 994,
+    "decliners": 4183,
+    "emotion_stage": "退潮期"
+  },
+  "topics": [
+    {
+      "name": "电力",
+      "count": 4
+    },
+    {
+      "name": "农业",
+      "count": 3
+    },
+    {
+      "name": "芯片",
+      "count": 3
+    },
+    {
+      "name": "通信",
+      "count": 3
+    },
+    {
+      "name": "金融概念",
+      "count": 2
+    },
+    {
+      "name": "智能电网",
+      "count": 2
+    },
+    {
+      "name": "AI应用",
+      "count": 2
+    },
+    {
+      "name": "化工",
+      "count": 2
+    },
+    {
+      "name": "零售",
+      "count": 2
+    },
+    {
+      "name": "光伏",
+      "count": 2
+    },
+    {
+      "name": "海工装备",
+      "count": 2
+    },
+    {
+      "name": "其他",
+      "count": 9
+    }
+  ],
+  "note": "逐只涨停/连板名单见 source 页面(近期免登录, 更早需注册登录; 已验证的搜索引擎与AI爬虫不受限)",
+  "page_details": {
+    "title": "2026年9月10日A股盘中实时：涨停连板梯队与热点题材(滚动更新)_连板网",
+    "stock_count": 0,
+    "stock_codes": [],
+    "stock_items": [],
+    "event_texts": []
+  },
+  "errors": [
+    "page_stock_details_missing"
+  ]
+}

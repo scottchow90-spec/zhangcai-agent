@@ -1,0 +1,144 @@
+{
+  "schema": "ZHANGCAI_HARNESS_DAILY_CONTEXT_V1",
+  "date": "2026-09-09",
+  "generatedAt": "2026-09-10T09:05:26.768Z",
+  "runtimeRoot": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\runtime",
+  "publicSnapshot": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\public\\latest.json",
+  "newsSnapshot": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\news\\latest.json",
+  "dailyState": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\runtime\\daily-refresh-state.json",
+  "steps": [
+    {
+      "name": "通达信运行状态",
+      "status": "completed",
+      "script": "tdx_runtime_bridge.py",
+      "code": 0,
+      "finishedAt": "2026-09-10T09:03:29.464Z"
+    },
+    {
+      "name": "通达信日线补齐",
+      "status": "completed",
+      "script": "tdx_daily_replenish.py",
+      "code": 0,
+      "finishedAt": "2026-09-10T09:05:18.360Z"
+    },
+    {
+      "name": "新闻快讯补齐",
+      "status": "completed",
+      "script": "news_sync.py",
+      "code": 0,
+      "finishedAt": "2026-09-10T09:05:19.059Z"
+    },
+    {
+      "name": "公开行情补齐",
+      "status": "completed",
+      "script": "public_market_sync.py",
+      "code": 0,
+      "finishedAt": "2026-09-10T09:05:26.734Z"
+    }
+  ],
+  "snapshots": {
+    "publicMarket": {
+      "schema": "ZHANGCAI_PUBLIC_MARKET_V1",
+      "date": "2026-09-09",
+      "fetchedAt": "2026-09-10T17:05:26+08:00",
+      "sources": {
+        "lianban": {
+          "status": "available",
+          "url": "https://lianban.net/opendata/2026-09-09.json",
+          "sha256": "798a771edc8409b73a30d587a07e511b792fcb8cb830343815d7cd0c4df07e7e",
+          "bytes": 919,
+          "recordCount": 13,
+          "providerSuccess": true,
+          "providerMessage": null
+        },
+        "eastmoneyLimitUp": {
+          "status": "available",
+          "url": "https://push2ex.eastmoney.com/getTopicZTPool?ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wz.ztzt&Pageindex=0&pagesize=10000&sort=fbt%3Aasc&date=20260909",
+          "sha256": "f8a8bc34fad7f1eda8dd4dee2e51c3a90910fe35e92ece2ebb902425ae6aec7b",
+          "bytes": 12697,
+          "recordCount": 48,
+          "providerSuccess": true,
+          "providerMessage": null
+        },
+        "eastmoneyLhb": {
+          "status": "available",
+          "url": "https://datacenter-web.eastmoney.com/api/data/v1/get?sortColumns=SECURITY_CODE%2CTRADE_DATE&sortTypes=1%2C-1&pageSize=5000&pageNumber=1&reportName=RPT_DAILYBILLBOARD_DETAILSNEW&columns=SECURITY_CODE%2CSECURITY_NAME_ABBR%2CTRADE_DATE%2CBILLBOARD_NET_AMT%2CBILLBOARD_BUY_AMT%2CBILLBOARD_SELL_AMT%2CEXPLAIN&source=WEB&client=WEB&filter=%28TRADE_DATE%3C%3D%272026-09-09%27%29%28TRADE_DATE%3E%3D%272026-09-09%27%29",
+          "sha256": "d7c78fbac1352746876723cef8184eb9278c83d753851641171375267fca2484",
+          "bytes": 16035,
+          "recordCount": 66,
+          "providerSuccess": true,
+          "providerMessage": "ok"
+        },
+        "akshareLhb": {
+          "status": "available",
+          "url": "",
+          "sha256": "",
+          "bytes": 0,
+          "recordCount": 66,
+          "providerSuccess": true,
+          "providerMessage": null
+        },
+        "akshareLhbSina": {
+          "status": "available",
+          "url": "",
+          "sha256": "",
+          "bytes": 0,
+          "recordCount": 65,
+          "providerSuccess": true,
+          "providerMessage": null
+        },
+        "akshareLhbStockStatistic": {
+          "status": "available",
+          "url": "",
+          "sha256": "",
+          "bytes": 0,
+          "recordCount": 652,
+          "providerSuccess": true,
+          "providerMessage": null
+        },
+        "akshareLimitUpPool": {
+          "status": "available",
+          "url": "",
+          "sha256": "",
+          "bytes": 0,
+          "recordCount": 48,
+          "providerSuccess": true,
+          "providerMessage": null
+        },
+        "akshareLhbStockDetail": {
+          "status": "available",
+          "url": "",
+          "sha256": "",
+          "bytes": 0,
+          "recordCount": 20,
+          "providerSuccess": true,
+          "providerMessage": null
+        }
+      },
+      "marketBreadth": {
+        "currentCount": 5436,
+        "up": 1794,
+        "down": 3642,
+        "flat": 0,
+        "limitUp": 48,
+        "limitDown": 7,
+        "lianban": 15
+      }
+    },
+    "news": {
+      "schema": "ZHANGCAI_NEWS_SNAPSHOT_V1",
+      "date": "2026-09-09",
+      "status": "available",
+      "fetchedAt": "2026-09-10T17:05:19+08:00",
+      "sameDayRecordCount": 0,
+      "source": {
+        "url": "https://np-weblist.eastmoney.com/comm/web/getFastNewsList?client=web&biz=web_news_col&fastColumn=102&pageSize=100&page=1&sortEnd=&req_trace=1789031118721",
+        "httpStatus": 200,
+        "sha256": "093b959f4ec85119516e0157579641a67b3dfd4550874c1cf0e325b430a141c7",
+        "bytes": 65000,
+        "providerCode": "1",
+        "recordCount": 100
+      }
+    }
+  }
+}

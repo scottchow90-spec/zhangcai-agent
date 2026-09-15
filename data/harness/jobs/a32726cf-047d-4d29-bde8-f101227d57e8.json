@@ -1,0 +1,9 @@
+{
+  "id": "a32726cf-047d-4d29-bde8-f101227d57e8",
+  "status": "failed",
+  "skill_id": "a-share-15d-selection",
+  "started_at": 1789010322462,
+  "error": "DeepSeek Harness 超时（240 秒，技能 a-share-15d-selection）",
+  "elapsed_ms": 240048,
+  "completed_at": 1789010562510
+}

@@ -1,5 +1,5 @@
 import http from 'node:http';
-import { spawn } from 'node:child_process';
+import { spawn, execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { closeSync, cpSync, existsSync, mkdirSync, openSync, readFileSync, readSync, readdirSync, statSync } from 'node:fs';
 import { mkdir, writeFile, unlink } from 'node:fs/promises';
@@ -36,6 +36,7 @@ const RUNTIME_ROOT = path.join(DATA_ROOT, 'runtime');
 const HARNESS_ROOT = path.join(DATA_ROOT, 'harness');
 const HARNESS_CONTEXT_ROOT = path.join(HARNESS_ROOT, 'context');
 const HARNESS_JOBS_ROOT = path.join(HARNESS_ROOT, 'jobs');
+const MARKET_LATEST_FILE = path.join(RUNTIME_ROOT, 'market-latest.json');
 const STRATEGY_JOBS_ROOT = path.join(HARNESS_ROOT, 'strategy-jobs');
 const AFTER_CLOSE_SCHEDULE_FILE = path.join(HARNESS_ROOT, 'schedules', 'after-close-daily-refresh.json');
 const RUNTIME_POLICY_FILE = path.join(HARNESS_CONTEXT_ROOT, 'runtime-policy.json');
@@ -560,29 +561,38 @@ function runHarness(prompt, skillId = '', options = {}) {
 // 网络出口偶发重置时，dsh 可能在自身退避结束后仍返回 TRANSPORT。
 // 对同一任务再做两次低频重试，避免瞬时 API/代理抖动直接把报告判为失败。
 async function runHarnessWithRetry(prompt, skillId = '', options = {}) {
-  let lastError;
-  for (let attempt = 0; attempt < 3; attempt += 1) {
-    try {
-      return await runHarness(prompt, skillId, options);
-    } catch (error) {
-      lastError = error;
-      const message = error instanceof Error ? error.message : String(error);
-      const retryable = /TRANSPORT|fetch failed|ECONNRESET|ECONNREFUSED|ETIMEDOUT|ENETUNREACH|EAI_AGAIN/i.test(message);
-      if (!retryable || attempt >= 2) throw error;
-      const waitMs = 1500 * (attempt + 1);
-      console.warn(`[agent] Harness 网络错误，${waitMs}ms 后重试 ${attempt + 1}/2：${message}`);
-      await new Promise((resolve) => setTimeout(resolve, waitMs));
+  const executionId = String(options.executionId || randomUUID());
+  const busy = reserveHarnessExecution(executionId, skillId);
+  if (busy) throw createHarnessBusyError(busy);
+  try {
+    let lastError;
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      try {
+        return await runHarness(prompt, skillId, options);
+      } catch (error) {
+        lastError = error;
+        const message = error instanceof Error ? error.message : String(error);
+        const retryable = /TRANSPORT|fetch failed|ECONNRESET|ECONNREFUSED|ETIMEDOUT|ENETUNREACH|EAI_AGAIN/i.test(message);
+        if (!retryable || attempt >= 2) throw error;
+        const waitMs = 1500 * (attempt + 1);
+        console.warn(`[agent] Harness 网络错误，${waitMs}ms 后重试 ${attempt + 1}/2：${message}`);
+        await new Promise((resolve) => setTimeout(resolve, waitMs));
+      }
     }
+    throw lastError instanceof Error ? lastError : new Error(String(lastError || 'Harness 执行失败'));
+  } finally {
+    releaseHarnessExecution(executionId);
   }
-  throw lastError instanceof Error ? lastError : new Error(String(lastError || 'Harness 执行失败'));
 }
 
 function startHarnessJob(prompt, skillId = '') {
   const id = randomUUID();
+  const busy = reserveHarnessExecution(id, skillId);
+  if (busy) throw createHarnessBusyError(busy);
   const job = { id, status: 'running', skill_id: skillId || null, started_at: Date.now() };
   harnessJobs.set(id, job);
   persistHarnessJob(job);
-  void runHarnessWithRetry(prompt, skillId).then((result) => {
+  void runHarnessWithRetry(prompt, skillId, { executionId: id }).then((result) => {
     const current = harnessJobs.get(id);
     if (!current) return;
     void persistHarnessReport({ skillId, output: result.output, diagnostics: result.diagnostics, task: prompt, jobId: id })
@@ -642,13 +652,55 @@ async function runPublicMarketRefresh() {
   };
 }
 
+// 行情刷新结果必须跨浏览器刷新保留。lib/market.json 是随代码发布的
+// 基线快照，不能把运行时 TQ 数据只放在前端内存里，否则页面重载会退回
+// 到基线日期。运行时快照单独落到 data/runtime，既不污染源码，也方便
+// exe 安装后继续复用最近一次成功数据。
+async function persistMarketSnapshot(scope, result) {
+  if (!result || result.status !== 'ok') return;
+  const baseline = readJson(path.join(APP_ROOT, 'lib', 'market.json')) || {};
+  const previous = readJson(MARKET_LATEST_FILE) || {};
+  const merged = { ...baseline, ...previous };
+  if (Array.isArray(result.indices) && result.indices.length) {
+    const baselineIndices = Array.isArray(baseline.indices) ? baseline.indices : [];
+    const previousIndices = Array.isArray(previous.indices) ? previous.indices : [];
+    const baselineByCode = new Map(baselineIndices.map((row) => [row.code, row]));
+    const previousByCode = new Map(previousIndices.map((row) => [row.code, row]));
+    merged.indices = result.indices.map((row) => {
+      const previousRow = previousByCode.get(row.code);
+      const baselineRow = baselineByCode.get(row.code);
+      const existing = previousRow || baselineRow;
+      return existing
+        ? { ...existing, ...row, history: Array.isArray(row.history) && row.history.length ? row.history : (Array.isArray(existing.history) && existing.history.length ? existing.history : baselineRow?.history) }
+        : row;
+    });
+  }
+  if (scope === 'market' && Array.isArray(result.allStocks) && result.allStocks.length) {
+    merged.stocks = result.stocks || result.allStocks;
+    merged.allStocks = result.allStocks;
+    merged.date = result.tradeDate || merged.date;
+    if (result.marketSummary) Object.assign(merged, result.marketSummary);
+  } else if (scope === 'watchlist' && Array.isArray(result.stocks) && result.stocks.length) {
+    const existing = new Map((merged.allStocks || merged.stocks || []).map((row) => [row.code, row]));
+    for (const row of result.stocks) existing.set(row.code, { ...existing.get(row.code), ...row });
+    merged.allStocks = [...existing.values()];
+    merged.stocks = merged.allStocks;
+  }
+  merged.dataSources = { ...(merged.dataSources || {}), runtimeMarket: result.source || 'Tongdaxin TQ realtime snapshot' };
+  merged.status = 'ok';
+  merged.runtimeFetchedAt = result.fetchedAt || new Date().toISOString();
+  merged.runtimeScope = scope;
+  await writeRuntimeJson(MARKET_LATEST_FILE, merged);
+}
+
 async function runMarketRefresh(scope = 'indices', codes = '') {
   if (scope === 'market') {
     try {
       // 市场全量快照包含数千只股票，不能使用普通脚本的 12KB 尾部截断，
       // 否则 JSON 会被截断后触发降级到旧的公开快照。
-      const value = await runLocalScript('market_overview_refresh.py', ['--scope', 'market'], 180000, 0);
-      return JSON.parse(value.output);
+      const value = JSON.parse((await runLocalScript('market_overview_refresh.py', ['--scope', 'market'], 180000, 0)).output);
+      await persistMarketSnapshot(scope, value);
+      return value;
     } catch (error) {
       // 本地完整日线不可用时保留公开涨停池作为降级数据，但把来源和日期
       // 明确交给页面，不能静默继续使用旧 market.json。
@@ -674,7 +726,10 @@ async function runMarketRefresh(scope = 'indices', codes = '') {
     child.on('close', (code) => {
       clearTimeout(timer);
       if (code !== 0) { reject(new Error(readableScriptError('market_overview_refresh.py', stderr || stdout, code))); return; }
-      try { resolve(JSON.parse(stdout.trim())); } catch { reject(new Error('实时行情返回格式无效')); }
+      try {
+        const value = JSON.parse(stdout.trim());
+        void persistMarketSnapshot(scope, value).then(() => resolve(value)).catch(() => resolve(value));
+      } catch { reject(new Error('实时行情返回格式无效')); }
     });
   });
 }
@@ -1397,10 +1452,19 @@ function dailySnapshotSummary() {
       stockCompleteCount: dailyIntegrity.stockCompleteCount,
       stockMissingCount: dailyIntegrity.stockMissingCount,
       complete: dailyIntegrity.integrity.complete,
-      unresolved: dailyIntegrity.integrity.unresolved,
-      repairs: dailyIntegrity.integrity.repairs.filter((item) => item && item.status === 'written'),
-      repairAttempts: dailyIntegrity.integrity.repairs,
-      nonTrading: dailyIntegrity.integrity.nonTrading,
+      // 完整清单保留在本地 integrity JSON/Markdown；Harness 上下文只带
+      // 少量示例和计数，避免数千条 stale 记录导致校验提示超时。
+      unresolved: dailyIntegrity.integrity.unresolved.slice(0, 100),
+      unresolvedCount: dailyIntegrity.integrity.unresolved.length,
+      repairs: dailyIntegrity.integrity.repairs.filter((item) => item && item.status === 'written').slice(0, 100),
+      repairAttempts: dailyIntegrity.integrity.repairs.slice(0, 100),
+      repairAttemptsCount: dailyIntegrity.integrity.repairs.length,
+      refreshSubmissionCount: Number(dailyIntegrity.integrity.refreshSubmissionCount || dailyIntegrity.integrity.repairs.filter((item) => item?.status === 'refresh_submitted').length),
+      writtenCount: Number(dailyIntegrity.integrity.writtenCount || dailyIntegrity.integrity.repairs.filter((item) => item?.status === 'written').length),
+      manualActionRequired: dailyIntegrity.integrity.manualActionRequired === true,
+      manualAction: String(dailyIntegrity.integrity.manualAction || ''),
+      nonTrading: dailyIntegrity.integrity.nonTrading.slice(0, 100),
+      nonTradingCount: dailyIntegrity.integrity.nonTrading.length,
     } : {
       reportPath: dailyIntegrity.integrityReportPath,
       targetDate: dailyIntegrity.latestDate,
@@ -1970,6 +2034,9 @@ function readableScriptError(scriptName, raw, code = 1) {
   if (scriptName === 'market_overview_refresh.py' && (/Traceback|tqcenter|TQ|RuntimeError|�/.test(text))) {
     return '通达信实时行情刷新失败：请确认通达信已打开并登录；若已打开，请稍后重试以释放 TQ 数据连接。';
   }
+  if (scriptName === 'tdx_daily_integrity.py' && (/Traceback|tqcenter|TQ|RuntimeError|超时|�/.test(text))) {
+    return '通达信日线补齐未完成：请确认 TdxW 已打开并登录，点击“打开通达信”后重新执行；全量下载允许后台运行至 10 分钟。';
+  }
   return (text || `${scriptName} 退出码 ${code}`).slice(-2000);
 }
 
@@ -2068,10 +2135,8 @@ function inspectTdxDailyIntegrity(tdxRoot = process.env.ZHANGCAI_TDX_ROOT || 'C:
     for (const name of names) {
       if (!name.toLowerCase().endsWith('.day')) continue;
       try {
-        const bytes = readFileSync(path.join(directory, name));
-        if (bytes.length < 32) continue;
-        const date = String(bytes.readUInt32LE(bytes.length - 32));
-        if (!/^\d{8}$/.test(date)) continue;
+        const date = readDayFileDate(path.join(directory, name));
+        if (!date) continue;
         marketCount += 1;
         fileCount += 1;
         marketDates.set(date, (marketDates.get(date) || 0) + 1);
@@ -2102,14 +2167,21 @@ function inspectTdxDailyIntegrity(tdxRoot = process.env.ZHANGCAI_TDX_ROOT || 'C:
   const stockNonTradingCount = Number(stockAfter?.nonTradingCount || 0);
   const stockLatestCount = Number(stockAfter?.effectiveCompleteCount ?? (stockFileLatestCount + stockNonTradingCount));
   const stockExpectedCount = Number(stockAfter?.stockCount || 0);
+  const reportRepairs = Array.isArray(integrityReport?.repairs) ? integrityReport.repairs : [];
+  const reportNonTrading = Array.isArray(integrityReport?.nonTrading) ? integrityReport.nonTrading : [];
+  const reportUnresolved = Array.isArray(integrityReport?.unresolved) ? integrityReport.unresolved : [];
   const integritySummary = integrityReport ? {
     schema: integrityReport.schema,
     targetDate: integrityReport.targetDate || stockTargetDate,
     before: integrityReport.before,
     after: integrityReport.after,
-    repairs: Array.isArray(integrityReport.repairs) ? integrityReport.repairs : [],
-    nonTrading: Array.isArray(integrityReport.nonTrading) ? integrityReport.nonTrading : [],
-    unresolved: Array.isArray(integrityReport.unresolved) ? integrityReport.unresolved : [],
+    repairs: reportRepairs.slice(0, 100), repairsCount: reportRepairs.length,
+    nonTrading: reportNonTrading.slice(0, 100), nonTradingCount: reportNonTrading.length,
+    unresolved: reportUnresolved.slice(0, 10), unresolvedCount: reportUnresolved.length,
+    refreshSubmissionCount: Number(integrityReport.refreshSubmissionCount || reportRepairs.filter((item) => item?.status === 'refresh_submitted').length),
+    writtenCount: Number(integrityReport.writtenCount || reportRepairs.filter((item) => item?.status === 'written').length),
+    manualActionRequired: integrityReport.manualActionRequired === true,
+    manualAction: String(integrityReport.manualAction || ''),
     complete: integrityReport.complete === true,
   } : null;
   return {
@@ -2488,17 +2560,27 @@ async function runDailyRefresh(date) {
   };
   await writeRuntimeJson(DAILY_STATE_FILE, state);
   const execute = async (name, script, args, timeout, acceptedExitCodes = []) => {
+    // 先落盘 running 状态。此前只有子进程结束后才写步骤，导致全量 TQ
+    // 刷新期间网页永远停留在“等待 DeepSeek 校验”，无法判断实际卡点。
+    const step = { name, status: 'running', startedAt: new Date().toISOString(), script };
+    state.steps.push(step);
+    await writeRuntimeJson(DAILY_STATE_FILE, state);
     let result = null;
     try {
       result = await runLocalScript(script, args, timeout, 12000, acceptedExitCodes);
-      state.steps.push({ name, status: result.partial ? 'partial' : 'completed', finishedAt: new Date().toISOString(), ...result });
+      Object.assign(step, { status: result.partial ? 'partial' : 'completed', finishedAt: new Date().toISOString(), ...result });
     } catch (error) {
-      state.steps.push({ name, status: 'failed', finishedAt: new Date().toISOString(), error: error instanceof Error ? error.message : String(error) });
+      Object.assign(step, { status: 'failed', finishedAt: new Date().toISOString(), error: error instanceof Error ? error.message : String(error) });
     }
     await writeRuntimeJson(DAILY_STATE_FILE, state);
     return result;
   };
-  await execute('通达信运行状态', 'tdx_runtime_bridge.py', ['status'], 60000);
+  const tdxStatusResult = await execute('通达信运行状态', 'tdx_runtime_bridge.py', ['status'], 60000);
+  let tdxReady = false;
+  try {
+    const parsed = JSON.parse(String(tdxStatusResult?.output || '{}'));
+    tdxReady = Array.isArray(parsed.processes) && parsed.processes.some((item) => String(item?.Name || item?.name || '').toLowerCase() === 'tdxw');
+  } catch { tdxReady = false; }
   // 收盘后以通达信补齐后的最近完整交易日为准，再拉取同日公开源，
   // 这样龙虎榜、涨停池和 Harness 上下文不会出现日期错位。
   // 完整性脚本用退出码 2 表示“报告已生成但仍有缺口”。这不是进程故障，
@@ -3392,6 +3474,10 @@ if (req.method === 'GET' && req.url === '/health') {
   }
   if (req.method === 'POST' && req.url === '/agent/start') {
     try {
+      if (activeHarnessExecution) {
+        json(res, 409, harnessBusyPayload());
+        return;
+      }
       const payload = JSON.parse(await readBody(req));
       if (!payload || typeof payload.task !== 'string' || !payload.task.trim() || !payload.market || typeof payload.market !== 'object') {
         json(res, 400, { status: 'error', error: '需要 task 和 market' });
@@ -3407,7 +3493,9 @@ if (req.method === 'GET' && req.url === '/health') {
       console.log(`[agent] start ${job.id.slice(0, 8)} skill=${skillId || 'generic'}`);
       json(res, 202, { status: 'accepted', job_id: job.id, skill_id: skillId || null, started_at: job.started_at, timeout_seconds: Math.round(timeoutForSkill(skillId) / 1000) });
     } catch (error) {
-      json(res, 500, { status: 'error', error: error instanceof Error ? error.message : 'Harness 后台任务启动失败' });
+      json(res, isHarnessBusyError(error) ? 409 : 500, isHarnessBusyError(error)
+        ? harnessBusyPayload()
+        : { status: 'error', error: error instanceof Error ? error.message : 'Harness 后台任务启动失败' });
     }
     return;
   }
@@ -3416,6 +3504,10 @@ if (req.method === 'GET' && req.url === '/health') {
     return;
   }
   try {
+    if (activeHarnessExecution) {
+      json(res, 409, harnessBusyPayload());
+      return;
+    }
     const payload = JSON.parse(await readBody(req));
     if (!payload || typeof payload.task !== 'string' || !payload.task.trim() || !payload.market || typeof payload.market !== 'object') {
       json(res, 400, { status: 'error', error: '需要 task 和 market' });
@@ -3431,7 +3523,9 @@ if (req.method === 'GET' && req.url === '/health') {
     const reportPath = await persistHarnessReport({ skillId, output: result.output, diagnostics: result.diagnostics, task: payload.task.trim(), dataDate: payload.market.date || '', jobId: randomUUID() });
     json(res, 200, { status: 'ok', output: result.output, diagnostics: result.diagnostics, elapsed_ms: result.elapsedMs, timeout_seconds: Math.round(result.timeoutMs / 1000), model: 'DeepSeek Harness headless', skill_id: skillId || null, data_date: payload.market.date || null, report_path: reportPath });
   } catch (error) {
-    json(res, 500, { status: 'error', error: error instanceof Error ? error.message : '桥接服务失败' });
+    json(res, isHarnessBusyError(error) ? 409 : 500, isHarnessBusyError(error)
+      ? harnessBusyPayload()
+      : { status: 'error', error: error instanceof Error ? error.message : '桥接服务失败' });
   }
 });
 

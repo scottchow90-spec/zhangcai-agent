@@ -1,0 +1,6 @@
+interface:
+  display_name: "娜娜老师5策略"
+  short_description: "固化五套通达信策略，支持本地扫描、证据核验和5+5+5资产导出"
+  default_prompt: "使用 $nana-teacher-five-strategies 执行娜娜老师5策略全市场扫描并输出逐策略证据。"
+policy:
+  allow_implicit_invocation: false

@@ -137,12 +137,14 @@ async function fetchBridge(path: string, init?: RequestInit) {
         // 继续重试，避免前端过早结束已提交的后台任务。
         if (response.status >= 502 && response.status <= 504) {
           lastGatewayResponse = response;
-          lastError = new Error(`桥接代理返回 ${response.status}`);
+          lastError = new Error(`桥接入口返回 ${response.status}`);
           if (attempt < 2) {
             await delay(350 * (attempt + 1));
             continue;
           }
-          if (endpointIndex < BRIDGE_ENDPOINTS.length - 1) break;
+          // The current endpoint is unavailable. Leave the retry loop so the
+          // outer loop can try the next endpoint instead of returning 401/404.
+          break;
         }
         return response;
       } catch (error) {
@@ -280,6 +282,14 @@ export async function runHarnessInBackground(input: {
   try {
     const startResponse = await fetchBridge('/agent/start', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ task: input.task, skillId: input.skillId, market: input.market, context: input.context }) });
     const start = await startResponse.json().catch(() => ({}));
+    if (startResponse.status === 409 || start.status === 'busy') {
+      const message = String(start.error || 'Harness 正在执行长任务，请稍后再试。');
+      // A rejected concurrent start is not a failed task. Remove its temporary
+      // tray entry and surface the reason immediately on every calling page.
+      dismissHarnessTask(local.id);
+      window.alert(message);
+      throw new Error(message);
+    }
     if (!startResponse.ok || start.status !== 'accepted' || typeof start.job_id !== 'string') throw new Error(start.error || `Harness 后台任务启动失败（${startResponse.status}）`);
     updateHarnessTask(local.id, { backendJobId: start.job_id, status: 'running' });
     let connectivityFailures = 0;

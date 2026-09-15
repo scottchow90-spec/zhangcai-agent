@@ -1,0 +1,6 @@
+interface:
+  display_name: "妖股挖掘"
+  short_description: "妖股与连板候选挖掘：盘后快筛、严格研究与完整交付"
+  default_prompt: "Use $a-share-limit-up-mining as the only audited workflow for 妖股挖掘、连板挖掘、连板挖掘V2、连板龙头选股、连板龙头选股工作流 or 每日连板龙头, and select daily, research, or full mode from the user's requested deliverable."
+policy:
+  allow_implicit_invocation: false

@@ -1467,10 +1467,10 @@
         "--run-dir",
         "{run_dir}",
         "--timeout",
-        "300"
+        "900"
       ],
       "cwd": "{skill_root}",
-      "timeout_seconds": 360,
+      "timeout_seconds": 960,
       "semantic_assertions": [
         {
           "type": "returncode_zero"

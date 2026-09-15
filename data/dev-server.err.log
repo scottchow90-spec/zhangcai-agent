@@ -1,0 +1,75 @@
+14:18:06 [vite] (client) [console.error] ReferenceError: selectedStrategyStatus is not defined
+    at WorkspacePages (http://localhost:3001/app/workspace-pages.tsx?t=1789021085452:4493:9)
+    at Object.react_stack_bottom_frame (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=a575afa7:12867:12)
+    at renderWithHooks (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=a575afa7:4212:19)
+    at updateFunctionComponent (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=a575afa7:5568:16)
+    at beginWork (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=a575afa7:6139:20)
+    at runWithFiberInDEV (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=a575afa7:850:66)
+    at performUnitOfWork (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=a575afa7:8428:92)
+    at workLoopSync (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=a575afa7:8324:37)
+    at renderRootSync (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=a575afa7:8308:6)
+    at performWorkOnRoot (http://localhost:3001/node_modules/.vite/deps/react-dom_client.js?v=a575afa7:7993:27)
+14:18:06 [vite] (client) [console.error] The above error occurred in a React component:
+
+    at WorkspacePages (http://localhost:3001/app/workspace-pages.tsx?t=1789021085452:2746:42)
+    at main (<anonymous>)
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at SidebarProvider (http://localhost:3001/components/ui/sidebar.tsx:35:28)
+    at Home (http://localhost:3001/app/page.tsx?t=1789019417477:1053:26)
+    at AwaitAppRenderDependencies [Server] (<anonymous>)
+    at BfcacheSlotBoundary (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/slot.js?v=a575afa7:191:32)
+    at Slot (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/slot.js?v=a575afa7:274:17)
+    at LayoutSegmentProvider (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/layout-segment-context.js?v=a575afa7:41:34)
+    at RedirectErrorBoundary (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/error-boundary.js?v=a575afa7:63:3)
+    at RedirectBoundary (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/error-boundary.js?v=a575afa7:97:29)
+    at AppRouterScrollTargetInner (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/app-router-scroll.js?v=a575afa7:83:34)
+    at AppRouterScrollTarget (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/app-router-scroll.js?v=a575afa7:135:34)
+    at NotFoundBoundaryInner (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/error-boundary.js?v=a575afa7:185:3)
+    at NotFoundBoundary (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/error-boundary.js?v=a575afa7:221:29)
+    at Children (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/slot.js?v=a575afa7:305:17)
+    at body (<anonymous>)
+    at html (<anonymous>)
+    at RootLayout [Server] (<anonymous>)
+    at AppComponentDependencyBarrier [Server] (<anonymous>)
+    at BfcacheSlotBoundary (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/slot.js?v=a575afa7:191:32)
+    at Slot (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/slot.js?v=a575afa7:274:17)
+    at LayoutSegmentProvider (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/layout-segment-context.js?v=a575afa7:41:34)
+    at ErrorBoundaryInner (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/error-boundary.js?v=a575afa7:107:3)
+    at ErrorBoundary (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/error-boundary.js?v=a575afa7:159:26)
+    at ErrorBoundaryInner (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/error-boundary.js?v=a575afa7:107:3)
+    at GlobalErrorBoundary (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/error-boundary.js?v=a575afa7:167:32)
+    at BfcacheSlotBoundary (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/slot.js?v=a575afa7:191:32)
+    at Slot (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/slot.js?v=a575afa7:274:17)
+    at NavigationCommitSignal (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/app-browser-navigation-controller.js?v=a575afa7:232:36)
+    at RedirectErrorBoundary (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/error-boundary.js?v=a575afa7:63:3)
+    at RedirectBoundary (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/error-boundary.js?v=a575afa7:97:29)
+    at AppRouterRedirectBridge (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/app-browser-entry.js?v=a575afa7:464:36)
+    at DevRecoveryBoundary (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/error-boundary.js?v=a575afa7:313:3)
+    at AppRouterScrollCommitProvider (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/app-router-scroll.js?v=a575afa7:129:42)
+    at ErrorBoundaryInner (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/error-boundary.js?v=a575afa7:107:3)
+    at GlobalErrorBoundary (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/error-boundary.js?v=a575afa7:167:32)
+    at BrowserRoot (http://localhost:3001/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/app-browser-entry.js?v=a575afa7:490:24)
+file:///C:/work/260907%20%E6%8E%8C%E8%B4%A2%E6%99%BA%E8%83%BD%E4%BD%93/CodeX-st-wsp/zhangcai-demo/node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/socket-error-backstop.js:186
+		throw err;
+		^
+
+Error: EBUSY: resource busy or locked, watch 'C:\work\260907 掌财智能体\CodeX-st-wsp\zhangcai-demo\data\harness\tasks\._five_dim_report.json.24200.1d2c37db-ec68-4263-97ac-0ac5c2d0bbcb.tmpdir\_five_dim_report.json.tmp'
+    at FSWatcher.<computed> (node:internal/fs/watchers:323:19)
+    at Object.watch (node:fs:2609:36)
+    at createFsWatchInstance (file:///C:/work/260907%20%E6%8E%8C%E8%B4%A2%E6%99%BA%E8%83%BD%E4%BD%93/CodeX-st-wsp/zhangcai-demo/node_modules/.pnpm/vite@8.0.13_@types+node@22._f42a09a101dc349f1fd927e15a2fc943/node_modules/vite/dist/node/chunks/node.js:8497:16)
+    at setFsWatchListener (file:///C:/work/260907%20%E6%8E%8C%E8%B4%A2%E6%99%BA%E8%83%BD%E4%BD%93/CodeX-st-wsp/zhangcai-demo/node_modules/.pnpm/vite@8.0.13_@types+node@22._f42a09a101dc349f1fd927e15a2fc943/node_modules/vite/dist/node/chunks/node.js:8539:14)
+    at NodeFsHandler._watchWithNodeFs (file:///C:/work/260907%20%E6%8E%8C%E8%B4%A2%E6%99%BA%E8%83%BD%E4%BD%93/CodeX-st-wsp/zhangcai-demo/node_modules/.pnpm/vite@8.0.13_@types+node@22._f42a09a101dc349f1fd927e15a2fc943/node_modules/vite/dist/node/chunks/node.js:8653:20)
+    at NodeFsHandler._handleFile (file:///C:/work/260907%20%E6%8E%8C%E8%B4%A2%E6%99%BA%E8%83%BD%E4%BD%93/CodeX-st-wsp/zhangcai-demo/node_modules/.pnpm/vite@8.0.13_@types+node@22._f42a09a101dc349f1fd927e15a2fc943/node_modules/vite/dist/node/chunks/node.js:8697:24)
+    at NodeFsHandler._addToNodeFs (file:///C:/work/260907%20%E6%8E%8C%E8%B4%A2%E6%99%BA%E8%83%BD%E4%BD%93/CodeX-st-wsp/zhangcai-demo/node_modules/.pnpm/vite@8.0.13_@types+node@22._f42a09a101dc349f1fd927e15a2fc943/node_modules/vite/dist/node/chunks/node.js:8871:26)
+Emitted 'error' event on FSWatcher instance at:
+    at FSWatcher._handleError (file:///C:/work/260907%20%E6%8E%8C%E8%B4%A2%E6%99%BA%E8%83%BD%E4%BD%93/CodeX-st-wsp/zhangcai-demo/node_modules/.pnpm/vite@8.0.13_@types+node@22._f42a09a101dc349f1fd927e15a2fc943/node_modules/vite/dist/node/chunks/node.js:9670:146)
+    at NodeFsHandler._addToNodeFs (file:///C:/work/260907%20%E6%8E%8C%E8%B4%A2%E6%99%BA%E8%83%BD%E4%BD%93/CodeX-st-wsp/zhangcai-demo/node_modules/.pnpm/vite@8.0.13_@types+node@22._f42a09a101dc349f1fd927e15a2fc943/node_modules/vite/dist/node/chunks/node.js:8876:18) {
+  errno: -4082,
+  syscall: 'watch',
+  code: 'EBUSY',
+  path: 'C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\harness\\tasks\\._five_dim_report.json.24200.1d2c37db-ec68-4263-97ac-0ac5c2d0bbcb.tmpdir\\_five_dim_report.json.tmp',
+  filename: 'C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\harness\\tasks\\._five_dim_report.json.24200.1d2c37db-ec68-4263-97ac-0ac5c2d0bbcb.tmpdir\\_five_dim_report.json.tmp'
+}
+
+Node.js v24.19.0

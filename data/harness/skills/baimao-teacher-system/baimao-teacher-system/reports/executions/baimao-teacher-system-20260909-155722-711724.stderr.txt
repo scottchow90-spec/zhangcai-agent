@@ -1,0 +1,3 @@
+usage: canonical_business_adapter.py [-h] --run-dir RUN_DIR
+                                     [--timeout TIMEOUT]
+canonical_business_adapter.py: error: unrecognized arguments: status

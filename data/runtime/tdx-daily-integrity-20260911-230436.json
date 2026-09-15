@@ -1,0 +1,416 @@
+{
+  "schema": "ZHANGCAI_TDX_DAILY_INTEGRITY_V1",
+  "startedAt": "2026-09-11T23:04:26+08:00",
+  "finishedAt": "2026-09-11T23:04:36+08:00",
+  "tdxRoot": "C:\\new_tdx_mock",
+  "stockListSource": "Tongdaxin TQ get_stock_list(market=5)",
+  "timezone": "Asia/Shanghai",
+  "closeRefreshCutoff": "16:30",
+  "checkedAtShanghai": "2026-09-11T23:04:28+08:00",
+  "targetSelection": "explicit --target-date",
+  "tdxConnection": "connected",
+  "tdxConnectionMessage": "",
+  "targetDate": "20260911",
+  "before": {
+    "targetDate": "20260911",
+    "stockCount": 5570,
+    "completeCount": 5550,
+    "nonTradingCount": 0,
+    "effectiveCompleteCount": 5550,
+    "staleCount": 13,
+    "missingFileCount": 7,
+    "corruptCount": 0,
+    "effectiveMissingCount": 20,
+    "dateDistribution": {
+      "20260911": 5550,
+      "20260910": 13
+    },
+    "byMarket": {
+      "SH": {
+        "stockCount": 2320,
+        "completeCount": 2311,
+        "nonTradingCount": 0,
+        "effectiveCompleteCount": 2311,
+        "staleCount": 7,
+        "missingFileCount": 2,
+        "corruptCount": 0
+      },
+      "SZ": {
+        "stockCount": 2904,
+        "completeCount": 2896,
+        "nonTradingCount": 0,
+        "effectiveCompleteCount": 2896,
+        "staleCount": 6,
+        "missingFileCount": 2,
+        "corruptCount": 0
+      },
+      "BJ": {
+        "stockCount": 346,
+        "completeCount": 343,
+        "nonTradingCount": 0,
+        "effectiveCompleteCount": 343,
+        "staleCount": 0,
+        "missingFileCount": 3,
+        "corruptCount": 0
+      }
+    }
+  },
+  "repairs": [
+    {
+      "code": "000016.SZ",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz000016.day",
+      "status": "written",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "fetchedDate": "20260911",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "001246.SZ",
+      "before": "missing_file",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz001246.day",
+      "status": "unresolved",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "reason": "ValueError: cannot convert float NaN to integer"
+    },
+    {
+      "code": "002731.SZ",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz002731.day",
+      "status": "written",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "fetchedDate": "20260911",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "002870.SZ",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz002870.day",
+      "status": "written",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "fetchedDate": "20260911",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "301139.SZ",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz301139.day",
+      "status": "written",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "fetchedDate": "20260911",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "301390.SZ",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz301390.day",
+      "status": "written",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "fetchedDate": "20260911",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "301686.SZ",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz301686.day",
+      "status": "written",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "fetchedDate": "20260911",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "301716.SZ",
+      "before": "missing_file",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz301716.day",
+      "status": "unresolved",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "reason": "ValueError: cannot convert float NaN to integer"
+    },
+    {
+      "code": "600825.SH",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh600825.day",
+      "status": "written",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "fetchedDate": "20260911",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "600929.SH",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh600929.day",
+      "status": "written",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "fetchedDate": "20260911",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "601091.SH",
+      "before": "missing_file",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh601091.day",
+      "status": "unresolved",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "reason": "ValueError: cannot convert float NaN to integer"
+    },
+    {
+      "code": "603159.SH",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh603159.day",
+      "status": "written",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "fetchedDate": "20260911",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "605577.SH",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh605577.day",
+      "status": "written",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "fetchedDate": "20260911",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "688291.SH",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh688291.day",
+      "status": "written",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "fetchedDate": "20260911",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "688432.SH",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh688432.day",
+      "status": "written",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "fetchedDate": "20260911",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "688496.SH",
+      "before": "stale",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh688496.day",
+      "status": "written",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "fetchedDate": "20260911",
+      "recordAppended": 1,
+      "source": "Tongdaxin TQ get_market_data"
+    },
+    {
+      "code": "688837.SH",
+      "before": "missing_file",
+      "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh688837.day",
+      "status": "unresolved",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "reason": "ValueError: cannot convert float NaN to integer"
+    },
+    {
+      "code": "920201.BJ",
+      "before": "missing_file",
+      "path": "C:\\new_tdx_mock\\vipdoc\\bj\\lday\\bj920201.day",
+      "status": "unresolved",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "reason": "ValueError: cannot convert float NaN to integer"
+    },
+    {
+      "code": "920229.BJ",
+      "before": "missing_file",
+      "path": "C:\\new_tdx_mock\\vipdoc\\bj\\lday\\bj920229.day",
+      "status": "unresolved",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "reason": "ValueError: cannot convert float NaN to integer"
+    },
+    {
+      "code": "920298.BJ",
+      "before": "missing_file",
+      "path": "C:\\new_tdx_mock\\vipdoc\\bj\\lday\\bj920298.day",
+      "status": "unresolved",
+      "sourcesTried": [
+        "Tongdaxin TQ get_market_data"
+      ],
+      "reason": "ValueError: cannot convert float NaN to integer"
+    }
+  ],
+  "after": {
+    "targetDate": "20260911",
+    "stockCount": 5570,
+    "completeCount": 5563,
+    "nonTradingCount": 7,
+    "effectiveCompleteCount": 5570,
+    "staleCount": 0,
+    "missingFileCount": 7,
+    "corruptCount": 0,
+    "effectiveMissingCount": 0,
+    "dateDistribution": {
+      "20260911": 5563
+    },
+    "byMarket": {
+      "SH": {
+        "stockCount": 2320,
+        "completeCount": 2318,
+        "nonTradingCount": 2,
+        "effectiveCompleteCount": 2320,
+        "staleCount": 0,
+        "missingFileCount": 2,
+        "corruptCount": 0
+      },
+      "SZ": {
+        "stockCount": 2904,
+        "completeCount": 2902,
+        "nonTradingCount": 2,
+        "effectiveCompleteCount": 2904,
+        "staleCount": 0,
+        "missingFileCount": 2,
+        "corruptCount": 0
+      },
+      "BJ": {
+        "stockCount": 346,
+        "completeCount": 343,
+        "nonTradingCount": 3,
+        "effectiveCompleteCount": 346,
+        "staleCount": 0,
+        "missingFileCount": 3,
+        "corruptCount": 0
+      }
+    }
+  },
+  "nonTrading": [
+    {
+      "code": "001246.SZ",
+      "status": "non_trading",
+      "type": "suspended",
+      "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+      "quoteEvidence": {
+        "provider": "Tongdaxin base.dbf",
+        "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+        "listingDate": "20260910"
+      }
+    },
+    {
+      "code": "301716.SZ",
+      "status": "non_trading",
+      "type": "suspended",
+      "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+      "quoteEvidence": {
+        "provider": "Tongdaxin base.dbf",
+        "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+        "listingDate": "20260908"
+      }
+    },
+    {
+      "code": "601091.SH",
+      "status": "non_trading",
+      "type": "suspended",
+      "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+      "quoteEvidence": {
+        "provider": "Tongdaxin base.dbf",
+        "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+        "listingDate": "20260909"
+      }
+    },
+    {
+      "code": "688837.SH",
+      "status": "non_trading",
+      "type": "suspended",
+      "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+      "quoteEvidence": {
+        "provider": "Tongdaxin base.dbf",
+        "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+        "listingDate": "20260909"
+      }
+    },
+    {
+      "code": "920201.BJ",
+      "status": "non_trading",
+      "type": "suspended",
+      "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+      "quoteEvidence": {
+        "provider": "Tongdaxin base.dbf",
+        "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+        "listingDate": "20260904"
+      }
+    },
+    {
+      "code": "920229.BJ",
+      "status": "non_trading",
+      "type": "suspended",
+      "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+      "quoteEvidence": {
+        "provider": "Tongdaxin base.dbf",
+        "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+        "listingDate": "20260908"
+      }
+    },
+    {
+      "code": "920298.BJ",
+      "status": "non_trading",
+      "type": "suspended",
+      "reason": "停牌或目标日无交易（证券档案已登记，但无目标日 K 线）",
+      "quoteEvidence": {
+        "provider": "Tongdaxin base.dbf",
+        "path": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+        "listingDate": "20260904"
+      }
+    }
+  ],
+  "unresolved": [],
+  "complete": true,
+  "refreshSubmissionCount": 0,
+  "writtenCount": 13,
+  "manualActionRequired": false,
+  "manualAction": "",
+  "output": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\runtime\\tdx-daily-integrity-20260911-230436.json",
+  "markdown": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-demo\\data\\runtime\\tdx-daily-integrity-20260911-230436.md"
+}

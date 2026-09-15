@@ -14,8 +14,14 @@ import struct
 import sys
 import urllib.parse
 import urllib.request
+import shutil
+import time
 from collections import Counter
 from datetime import datetime
+try:
+    from zoneinfo import ZoneInfo
+except ImportError:  # pragma: no cover - Python 3.8 fallback
+    ZoneInfo = None  # type: ignore
 from pathlib import Path
 from typing import Any
 
@@ -23,6 +29,17 @@ TDX_ROOT = Path(os.environ.get("ZHANGCAI_TDX_ROOT", r"C:\new_tdx_mock"))
 DATA_ROOT = Path(os.environ.get("ZHANGCAI_DATA_DIR", Path(__file__).resolve().parents[1] / "data"))
 DAY = struct.Struct("<IIIIIfII")
 MARKETS = ("SH", "SZ", "BJ")
+
+
+def connection_script(tag: str) -> Path:
+    """每个 TQ 会话使用独立脚本名，避免并发任务被 TQ 判定为同名策略。"""
+    user = TDX_ROOT / "PYPlugins" / "user"
+    template = user / "tdxdata_test.py"
+    session_dir = DATA_ROOT / "runtime" / "tq-sessions"
+    session_dir.mkdir(parents=True, exist_ok=True)
+    target = session_dir / f"tdxdata_integrity_{tag}_{os.getpid()}_{time.time_ns()}.py"
+    shutil.copyfile(template, target)
+    return target
 
 
 def date_from_file(path: Path) -> tuple[str | None, int, bool]:
@@ -54,6 +71,40 @@ def find_existing_path(code: str) -> Path | None:
     return None
 
 
+def existing_stock_codes() -> list[str]:
+    """在 TDX/TQ 未连接时恢复可审计的 A 股证券清单。"""
+    # 优先使用本地市场快照中的 allStocks（通常 5559 只），它已排除
+    # 指数、基金和可转债；只有快照不存在时才回退扫描 .day 文件。
+    market_file = DATA_ROOT.parent / "lib" / "market.json"
+    try:
+        payload = json.loads(market_file.read_text(encoding="utf-8"))
+        values = payload.get("allStocks") if isinstance(payload, dict) else None
+        if isinstance(values, list):
+            codes = []
+            for item in values:
+                if not isinstance(item, dict):
+                    continue
+                code = str(item.get("code") or "").strip()
+                market = str(item.get("market") or "").strip().upper()
+                if len(code) == 6 and code.isdigit() and market in MARKETS:
+                    codes.append(f"{code}.{market}")
+            if codes:
+                return sorted(set(codes))
+    except Exception:
+        pass
+    """使用本地 .day 文件作为最后的审计回退。"""
+    codes: list[str] = []
+    for market in MARKETS:
+        folder = TDX_ROOT / "vipdoc" / market.lower() / "lday"
+        if not folder.exists():
+            continue
+        for path in folder.glob(f"{market.lower()}*.day"):
+            number = path.stem[len(market):]
+            if number.isdigit() and len(number) == 6:
+                codes.append(f"{number}.{market}")
+    return sorted(set(codes))
+
+
 def read_tq_stock_list() -> list[str]:
     user = TDX_ROOT / "PYPlugins" / "user"
     init = user / "tdxdata_test.py"
@@ -63,12 +114,14 @@ def read_tq_stock_list() -> list[str]:
     os.chdir(TDX_ROOT)
     from tqcenter import tq  # type: ignore
 
-    tq.initialize(str(init))
+    session = connection_script("list")
     try:
+        tq.initialize(str(session))
         raw = tq.get_stock_list(market="5", list_type=0)
         return sorted({str(item).strip().upper() for item in raw if isinstance(item, str) and "." in item})
     finally:
         tq.close()
+        session.unlink(missing_ok=True)
 
 
 def scan(codes: list[str], target: str | None = None) -> dict[str, Any]:
@@ -225,7 +278,12 @@ def classify_non_trading(rows: list[dict[str, Any]], target: str) -> list[dict[s
     """把确认未上市/停牌的缺口纳入有效完整率，不生成虚假 K 线。"""
     accepted: list[dict[str, Any]] = []
     for row in rows:
-        if row.get('status') not in {'missing_file', 'stale', 'corrupt'}:
+        # stale 表示已有日线文件但尚未切到目标交易日。它们应由上面的
+        # refresh_kline 批量下载，不能逐只走公开接口判成“停牌”。此前
+        # 5559 只股票中约 5000 条 stale 会触发 5000 次串行请求，造成网页
+        # 长时间停在“等待 DeepSeek 校验”。只有真正缺文件/损坏文件才做
+        # 状态核验；未能核实的项目继续保留为 unresolved。
+        if row.get('status') not in {'missing_file', 'corrupt'}:
             continue
         quote = quote_status(str(row['code']))
         metadata = local_security_metadata(str(row['code']))
@@ -253,6 +311,19 @@ def classify_non_trading(rows: list[dict[str, Any]], target: str) -> list[dict[s
     return accepted
 
 
+def after_close_target_date() -> tuple[str | None, str]:
+    """收盘切点统一为上海时间 16:30。
+
+    16:30 之后的工作日必须以当天为目标，不能继续沿用上一份完整性报告的日期。
+    周末不强行制造交易日，仍由文件日期分布决定目标日。
+    """
+    now = datetime.now(ZoneInfo("Asia/Shanghai")) if ZoneInfo else datetime.now().astimezone()
+    after_cutoff = (now.hour, now.minute) >= (16, 30)
+    if after_cutoff and now.weekday() < 5:
+        return now.strftime("%Y%m%d"), now.isoformat(timespec="seconds")
+    return None, now.isoformat(timespec="seconds")
+
+
 def replenish(rows: list[dict[str, Any]], target: str, refresh: bool = False) -> list[dict[str, Any]]:
     user = TDX_ROOT / "PYPlugins" / "user"
     init = user / "tdxdata_test.py"
@@ -262,26 +333,69 @@ def replenish(rows: list[dict[str, Any]], target: str, refresh: bool = False) ->
 
     candidates = [row for row in rows if row["status"] in {"stale", "missing_file", "corrupt"}]
     result: list[dict[str, Any]] = []
-    tq.initialize(str(init))
+    session = connection_script("repair")
     try:
+        try:
+            tq.initialize(str(session))
+        except Exception:
+            # TQ 初始化失败时仍生成完整性报告，避免网页只收到原始 Traceback。
+            return [{"status": "blocked", "reason": "通达信 TQ 未连接；请确认 TdxW 已登录并启用 TQ 插件后重试", "candidateCount": len(candidates), "sourcesTried": ["Tongdaxin TQ"]}]
         if refresh and candidates:
-            # 部分 TDX 版本只把 refresh_kline 当作异步提交；即使返回成功，
-            # 后面的 get_market_data 仍会再次读取并以文件实际写入结果验收。
-            try:
-                tq.refresh_kline(stock_list=[row["code"] for row in candidates], period="1d")
-            except Exception:
-                pass
+            # refresh_kline 是通达信官方的批量下载入口。一次把 5570 只
+            # 送入 get_market_data 会阻塞 TQ 分页数分钟，因此这里只提交
+            # 分批刷新；文件是否真正写入由后续 scan 验收。
+            candidate_codes = [row["code"] for row in candidates]
+            for offset in range(0, len(candidate_codes), 200):
+                try:
+                    tq.refresh_kline(stock_list=candidate_codes[offset:offset + 200], period="1d")
+                except Exception:
+                    # 单批失败不影响后续批次，最终在 unresolved 中保留。
+                    pass
+        # 旧日期 stale 文件通常只提交批量刷新；残留数量较少时，下面会
+        # 额外做一次批量读取并写入，实际缺失/损坏文件继续走公开源兜底。
+        # 少量 stale 项可以直接批量读取最新一根日线并写入本地；当缺口
+        # 很大时仍只提交 refresh_kline，避免一次 get_market_data 分页数千
+        # 只而再次阻塞。这样 10~20 只残留缺口可以在一次点击中真正闭环。
+        read_limit = max(0, int(os.environ.get("ZHANGCAI_TQ_REPAIR_READ_LIMIT", "200")))
+        stale_rows = [row for row in candidates if row["status"] == "stale"]
+        readable_stale_codes = {row["code"] for row in stale_rows} if len(stale_rows) <= read_limit else set()
+        stale_repairs = [
+            {"code": row["code"], "before": row["status"], "path": row["path"],
+             "status": "refresh_submitted", "fetchedDate": None,
+             "source": "Tongdaxin TQ refresh_kline(batch)"}
+            for row in stale_rows if row["code"] not in readable_stale_codes
+        ]
+        result.extend(stale_repairs)
+        candidates = [row for row in candidates if row["status"] in {"missing_file", "corrupt"} or row["code"] in readable_stale_codes]
+        # TQ 支持一次请求一批证券；逐只请求在收盘后全量切换到新日期时会
+        # 产生数千次 IPC，容易把刷新拖到超时。一次批量读取后逐行写入本地
+        # .day 文件，缺失文件再走有限的公开历史 K 线兜底。
+        data_batches: dict[str, Any] = {}
+        candidate_codes = [item["code"] for item in candidates]
+        try:
+            batch = tq.get_market_data(stock_list=candidate_codes, period="1d", count=1)
+            for code in candidate_codes:
+                data_batches[code] = batch
+        except Exception:
+            for code in candidate_codes:
+                data_batches[code] = {}
+        public_budget = max(0, int(os.environ.get("ZHANGCAI_PUBLIC_KLINE_FALLBACK_LIMIT", "200")))
+        public_attempts = 0
         for row in candidates:
             code = row["code"]
             item: dict[str, Any] = {"code": code, "before": row["status"], "path": row["path"], "status": "unresolved", "sourcesTried": []}
             try:
                 item["sourcesTried"].append("Tongdaxin TQ get_market_data")
-                data = tq.get_market_data(stock_list=[code], period="1d", count=1)
+                data = data_batches.get(code, {})
                 fetched_date = frame_date(data, code)
                 source = "Tongdaxin TQ get_market_data"
                 public = None
-                if fetched_date != target:
+                # 新目标日切换时，所有旧日期文件都会进入 candidates；对这类
+                # stale 项不逐只访问公开接口，避免收盘刷新触发数千次网络请求。
+                # 公开源仅用于实际缺失/损坏文件，并受预算保护。
+                if fetched_date != target and row["before"] in {"missing_file", "corrupt"} and public_attempts < public_budget:
                     item["sourcesTried"].append("东方财富历史K线(push2his)")
+                    public_attempts += 1
                     public = public_kline(code, target)
                     if public:
                         fetched_date = public["date"]
@@ -317,21 +431,34 @@ def replenish(rows: list[dict[str, Any]], target: str, refresh: bool = False) ->
             result.append(item)
     finally:
         tq.close()
+        session.unlink(missing_ok=True)
     return result
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--target-date", default="", help="YYYYMMDD；默认取股票列表中出现次数最多的日期")
+    parser.add_argument("--target-date", default="", help="YYYYMMDD；默认按上海时间 16:30 收盘切点选择目标日")
     parser.add_argument("--refresh", action="store_true", help="先通过 TQ 提交缺口刷新，再读取并写入 .day 文件")
     args = parser.parse_args()
     started = datetime.now().astimezone().isoformat(timespec="seconds")
-    codes = read_tq_stock_list()
-    before = scan(codes, args.target_date or None)
+    tdx_error = ""
+    try:
+        codes = read_tq_stock_list()
+    except Exception as exc:
+        tdx_error = "通达信 TQ 未连接；已使用本地日线文件生成审计结果，请登录 TdxW 并启用 TQ 后重试"
+        codes = existing_stock_codes()
+        if not codes:
+            print(json.dumps({"status": "BLOCKED", "reason": tdx_error}, ensure_ascii=False))
+            return 2
+    cutoff_target, shanghai_now = after_close_target_date()
+    requested_target = args.target_date or cutoff_target
+    before = scan(codes, requested_target or None)
     target = before["targetDate"]
     repairs = replenish(before["rows"], target, refresh=args.refresh) if target else []
     after = scan(codes, target)
-    non_trading = classify_non_trading(after["rows"], target) if target else []
+    # TQ 未连接时不能通过报价接口判定停牌/未上市；保留 stale/missing 为
+    # 未解决项，避免把整批旧日线误计入“有效完整”。
+    non_trading = classify_non_trading(after["rows"], target) if target and not tdx_error else []
     # 物理文件统计与业务有效完整率分开保留：未上市/停牌没有日线是正常状态，
     # 但仍在报告中记录其缺失文件数量，便于审计实际落盘情况。
     after["nonTradingCount"] = sum(row["status"] == "non_trading" for row in after["rows"])
@@ -347,6 +474,12 @@ def main() -> int:
         "finishedAt": datetime.now().astimezone().isoformat(timespec="seconds"),
         "tdxRoot": str(TDX_ROOT),
         "stockListSource": "Tongdaxin TQ get_stock_list(market=5)",
+        "timezone": "Asia/Shanghai",
+        "closeRefreshCutoff": "16:30",
+        "checkedAtShanghai": shanghai_now,
+        "targetSelection": "explicit --target-date" if args.target_date else ("after-close current weekday" if cutoff_target else "latest file date distribution"),
+        "tdxConnection": "connected" if not tdx_error else "unavailable",
+        "tdxConnectionMessage": tdx_error,
         "targetDate": target,
         "before": {key: value for key, value in before.items() if key != "rows"},
         "repairs": repairs,
@@ -355,6 +488,19 @@ def main() -> int:
         "unresolved": [item for item in after["rows"] if item["status"] not in {"complete", "non_trading"}],
         "complete": after["effectiveCompleteCount"] == after["stockCount"],
     }
+    submitted = sum(1 for item in repairs if item.get("status") == "refresh_submitted")
+    written = sum(1 for item in repairs if item.get("status") == "written")
+    report["refreshSubmissionCount"] = submitted
+    report["writtenCount"] = written
+    # refresh_kline 只向通达信提交下载请求；在客户端尚未完成“盘后数据下载”
+    # 时，TQ 可能返回成功但 .day 文件仍停在上一交易日。把这个事实写进报告，
+    # 网页和 Harness 可以明确提示用户完成一次客户端操作，而不是误报为已补齐。
+    if report["unresolved"] and submitted:
+        report["manualActionRequired"] = True
+        report["manualAction"] = "请在通达信客户端登录后执行一次“盘后数据下载/日线数据下载”，等待完成后再点击补齐；TQ refresh_kline 仅提交请求，不保证立即写入 .day 文件。"
+    else:
+        report["manualActionRequired"] = False
+        report["manualAction"] = ""
     stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     output = DATA_ROOT / "runtime" / f"tdx-daily-integrity-{stamp}.json"
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -365,21 +511,23 @@ def main() -> int:
         f"| {item['code']} | {item['market']} | {item['status']} | {item.get('latestDate') or '—'} |"
         for item in report['unresolved']
     ) or '| — | — | complete | — |'
-    markdown.write_text(
+    markdown_text = (
         f"# 通达信个股日线完整性报告\n\n"
         f"- 目标交易日：**{target or '—'}**\n"
         f"- 股票清单：**{after['stockCount']}** 只（来源：TQ get_stock_list(market=5)）\n"
         f"- 文件已对齐：**{after['completeCount']}** 只；未上市/停牌按规则计入有效完整：**{after['nonTradingCount']}** 只\n"
         f"- 有效完整率：**{after['effectiveCompleteCount']}/{after['stockCount']}**；stale：**{after['staleCount']}** 只；物理缺失文件：**{after['missingFileCount']}** 只；损坏：**{after['corruptCount']}** 只\n"
-        f"- 本轮写入：**{sum(1 for item in repairs if item.get('status') == 'written')}** 条；仍需补齐：**{len(report['unresolved'])}** 只\n\n"
-        f"## 未补齐清单\n\n| 代码 | 市场 | 状态 | 文件最后日期 |\n|---|---|---|---|\n{unresolved_lines}\n\n"
-        f"## 未上市/停牌豁免清单\n\n"
+        f"- 本轮写入：**{written}** 条；仍需补齐：**{len(report['unresolved'])}** 只\n\n"
+        + (f"- **需要人工完成通达信盘后数据下载**：TQ 已提交 {submitted} 批，但仍有 {len(report['unresolved'])} 只文件未切到目标日。\n\n" if report["manualActionRequired"] else "")
+        + f"## 未补齐清单\n\n| 代码 | 市场 | 状态 | 文件最后日期 |\n|---|---|---|---|\n{unresolved_lines}\n\n"
+        + "## 未上市/停牌豁免清单\n\n"
         + ('\n'.join(f"- **{item['code']}**：{item['type']}，{item['reason']}" for item in report['nonTrading']) or '- 无')
         + "\n\n## 补齐来源与结果\n\n"
-        f"每个缺口依次尝试通达信 TQ `get_market_data(period=1d)` 与带 Referer 的东方财富 `push2his` 历史 K 线。只有明确返回目标日期时才会写入 `.day`；没有返回的数据保持缺口，不用估算值。\n\n"
-        f"JSON 明细：`{output}`\n",
-        encoding='utf-8',
+        + "每个缺口依次尝试通达信 TQ `get_market_data(period=1d)` 与带 Referer 的东方财富 `push2his` 历史 K 线。只有明确返回目标日期时才会写入 `.day`；没有返回的数据保持缺口，不用估算值。\n\n"
+        + (f"人工动作：{report['manualAction']}\n\n" if report["manualActionRequired"] else "")
+        + f"JSON 明细：`{output}`\n"
     )
+    markdown.write_text(markdown_text, encoding='utf-8')
     report["markdown"] = str(markdown)
     # 将 markdown 路径同步回 JSON，方便网页和 Harness 直接定位人类可读版本。
     output.write_text(json.dumps(report, ensure_ascii=False, indent=2, default=str), encoding="utf-8")

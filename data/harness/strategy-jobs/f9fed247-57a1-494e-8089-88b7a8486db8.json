@@ -1,0 +1,8 @@
+{
+  "id": "f9fed247-57a1-494e-8089-88b7a8486db8",
+  "skill_id": "five-dimension-resonance",
+  "status": "failed",
+  "started_at": 1789031239945,
+  "error": "桥接服务在原始策略返回前重启，任务未完成；可重新执行。",
+  "completed_at": 1789031317488
+}

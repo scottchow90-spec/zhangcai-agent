@@ -8,6 +8,7 @@ import os
 import struct
 import sys
 import time
+import shutil
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
@@ -21,6 +22,15 @@ DAY_DIRS = {
     "SZ": TDX_ROOT / "vipdoc" / "sz" / "lday",
     "BJ": TDX_ROOT / "vipdoc" / "bj" / "lday",
 }
+
+
+def connection_script(tag: str) -> Path:
+    """每次补齐使用唯一 TQ 脚本名，避免与其他后台刷新任务冲突。"""
+    session_dir = Path(os.environ.get("ZHANGCAI_DATA_DIR", Path(__file__).resolve().parents[1] / "data")) / "runtime" / "tq-sessions"
+    session_dir.mkdir(parents=True, exist_ok=True)
+    target = session_dir / f"tdxdata_replenish_{tag}_{os.getpid()}_{time.time_ns()}.py"
+    shutil.copyfile(INIT_FILE, target)
+    return target
 
 
 def latest_date(path: Path) -> str | None:
@@ -89,8 +99,9 @@ def main() -> int:
         "batchSize": args.batch_size,
         "batches": [],
     }
+    session = connection_script("daily")
     try:
-        tq.initialize(str(INIT_FILE))
+        tq.initialize(str(session))
         stock_list = normalize_codes(tq.get_stock_list(market="5", list_type=0))
         missing = [code for code in stock_list if before_rows.get(code) != target] if target and not args.all else stock_list
         payload["stockListCount"] = len(stock_list)
@@ -120,6 +131,7 @@ def main() -> int:
             tq.close()
         except Exception:
             pass
+        session.unlink(missing_ok=True)
 
     target_after, after_rows, after_counts = local_dates()
     payload["finishedAt"] = datetime.now().astimezone().isoformat(timespec="seconds")

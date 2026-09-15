@@ -414,6 +414,24 @@ def parse_day(chunk: bytes) -> dict | None:
         return None
 
 
+def positive_quote(value: object, fallback: object = 0) -> float:
+    """Return a usable positive quote, treating 0/blank/NaN as unavailable.
+
+    TQ may return numeric fields as strings (including the literal ``"0.0"``)
+    during reconnects.  Using Python's truthiness check on that string lets a
+    zero quote overwrite the last known price and is what caused 上证指数 to
+    render as 0 on the home page.
+    """
+    for candidate in (value, fallback):
+        try:
+            number = float(candidate)  # type: ignore[arg-type]
+        except (TypeError, ValueError):
+            continue
+        if number > 0:
+            return number
+    return 0.0
+
+
 def latest_day(stock: dict) -> tuple[dict | None, dict | None]:
     path = day_path(stock)
     try:
@@ -540,16 +558,20 @@ def main() -> int:
                         stock_code=symbol,
                         field_list=["Now", "LastClose", "Open", "Max", "Min", "Amount", "Volume"],
                     ) or {}
-                    now = float(value.get("Now") or old.get("close") or 0)
-                    last = float(value.get("LastClose") or old.get("close") or 0)
+                    now = positive_quote(value.get("Now"), old.get("close"))
+                    last = positive_quote(value.get("LastClose"), old.get("previousClose") or old.get("close"))
+                    # Never publish an unusable index quote.  The browser keeps
+                    # the previous card value when a single index is omitted.
+                    if now <= 0:
+                        continue
                     change = round((now / last - 1) * 100, 2) if last else float(old.get("pct") or 0)
                     rows.append({
                         "code": code,
                         "name": name,
                         "date": trade_date or old.get("date") or market.get("date"),
-                        "open": float(value.get("Open") or old.get("open") or 0),
-                        "high": float(value.get("Max") or old.get("high") or 0),
-                        "low": float(value.get("Min") or old.get("low") or 0),
+                        "open": positive_quote(value.get("Open"), old.get("open")),
+                        "high": positive_quote(value.get("Max"), old.get("high")),
+                        "low": positive_quote(value.get("Min"), old.get("low")),
                         "close": now,
                         "previousClose": last,
                         "amount": float(value.get("Amount") or old.get("amount") or 0),

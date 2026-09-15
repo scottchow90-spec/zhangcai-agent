@@ -1,0 +1,6 @@
+interface:
+  display_name: "股票技能统一验收入口"
+  short_description: "股票技能统一验收入口；仅显式调用，负责目录与执行契约验收，不替代具体业务技能"
+  default_prompt: "Use $stock-unified only for the exact 股票技能统一验收入口 validation workflow without routing to sibling stock skills."
+policy:
+  allow_implicit_invocation: false

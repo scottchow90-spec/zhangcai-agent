@@ -1,0 +1,2360 @@
+{
+  "schema_version": 1,
+  "strategy_id": "strong-leader-first-yin-v1",
+  "generated_at": "2026-09-10T11:43:48+08:00",
+  "status": "CLEAN_PASS",
+  "selection_status": "SIGNAL",
+  "current_state": "STRICT_NONZERO",
+  "latest_trade_date": "20260909",
+  "data_source": {
+    "type": "local_tdx_raw_daily",
+    "root": "C:\\new_tdx_mock",
+    "index_path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh999999.day",
+    "index_sha256": "af9c023624776a1b5495bdfe31747a18a60d1fb31ed46623618ec96d5b7ff8c1",
+    "base_dbf": "C:\\new_tdx_mock\\T0002\\hq_cache\\base.dbf",
+    "base_dbf_sha256": "f1822e3980abc1518c36eff023e067363685ce9d5d779ec39d3bad9cdccda223",
+    "source_snapshot_sha256": "f51df42b75e53d9ca6003171bb1b478a9a8282eaeae5142e53aab2b55edcc9eb"
+  },
+  "universe": {
+    "base_records": 7930,
+    "eligible_security_records": 5016,
+    "scan_stats": {
+      "kline_loaded": 4994,
+      "latest_trade_date": 4987,
+      "insufficient_history": 21,
+      "not_latest_trade_date": 7,
+      "missing_day_file": 1
+    }
+  },
+  "market": {
+    "advances": 1672,
+    "declines": 3212,
+    "flats": 103,
+    "advance_ratio": 0.3353,
+    "limit_ups": 48,
+    "limit_downs": 9,
+    "limit_up_down_ratio": 5.3333,
+    "veto": false
+  },
+  "selection": {
+    "candidate_count": 4,
+    "candidates": [
+      {
+        "grade": "S",
+        "strict": true,
+        "turnover_divergence": false,
+        "practical": true,
+        "strict_conditions": {
+          "previous_session_is_limit_up": true,
+          "at_least_2_limit_ups_in_previous_8_sessions": true,
+          "previous_close_within_1pct_of_previous_20_session_high": true,
+          "previous_ma5_above_ma10": true,
+          "previous_amount_at_least_300m_cny": true,
+          "current_candle_is_bearish": true,
+          "current_return_not_below_minus_6pct": true,
+          "current_close_at_or_above_ma5": true,
+          "current_low_at_or_above_98pct_of_previous_low": true,
+          "volume_ratio_between_0_45_and_0_95": true,
+          "turnover_rate_between_4pct_and_25pct": true,
+          "close_location_at_least_0_35": true,
+          "upper_shadow_ratio_at_most_0_40": true
+        },
+        "turnover_divergence_conditions": {
+          "all_strict_conditions_except_shrinking_volume": true,
+          "at_least_3_limit_ups_in_previous_8_sessions": true,
+          "previous_8_session_return_at_least_30pct": true,
+          "volume_ratio_above_0_95_and_at_most_1_50": false,
+          "turnover_rate_between_8pct_and_25pct": false,
+          "current_amount_at_least_1b_cny": false,
+          "upper_shadow_ratio_at_most_0_35": true
+        },
+        "practical_conditions": {
+          "last_limit_up_within_3_sessions": true,
+          "at_least_1_limit_up_in_previous_8_sessions": true,
+          "previous_8_session_return_at_least_15pct": true,
+          "first_bearish_candle_after_last_limit_up": true,
+          "current_return_not_below_minus_7pct": true,
+          "current_close_at_or_above_ma10": true,
+          "current_low_holds_95pct_of_last_limit_up_low": true,
+          "volume_ratio_between_0_35_and_1_20": true,
+          "turnover_rate_between_2pct_and_30pct": true,
+          "current_amount_at_least_100m_cny": true,
+          "close_location_at_least_0_25": true,
+          "upper_shadow_ratio_at_most_0_50": true,
+          "previous_amount_at_least_150m_cny": true
+        },
+        "metrics": {
+          "date": "20260909",
+          "open": 22.6,
+          "high": 22.78,
+          "low": 21.19,
+          "close": 22.5,
+          "return_pct": -0.837,
+          "prior_8_return_pct": 36.194,
+          "prior_limit_up_count": 3,
+          "last_limit_up_distance": 1,
+          "volume_ratio": 0.7588,
+          "turnover_pct": 7.878,
+          "ma5": 20.514,
+          "ma10": 19.125,
+          "close_location": 0.8239,
+          "upper_shadow_ratio": 0.1132,
+          "amount_cny": 775540992.0,
+          "previous_amount_cny": 1010296640.0
+        },
+        "prior_two_consecutive_limit_ups": true,
+        "symbol": "601595.SH",
+        "code": "601595",
+        "market": "SH",
+        "name": "上海电影",
+        "industry": "T060102",
+        "listing_date": "20160817",
+        "source": {
+          "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh601595.day",
+          "size": 78208,
+          "sha256": "f0a5e2c3347cdcafad46a7c469e43b92b1e659a867862da583f445da606255b4"
+        },
+        "sector": {
+          "code": "T060102",
+          "five_session_median_return_pct": 1.007,
+          "strength_percentile": 0.5636
+        },
+        "score": 90,
+        "score_parts": {
+          "leader_strength": 40,
+          "first_yin_quality": 35,
+          "market_sector_environment": 15
+        },
+        "technical_trade_ready": true,
+        "invalidation": {
+          "first_yin_low": 21.19,
+          "close_below_first_yin_low": true,
+          "three_sessions_no_new_high_and_close_below_ma5": true
+        },
+        "selection_status": "SIGNAL"
+      },
+      {
+        "grade": "A",
+        "strict": false,
+        "turnover_divergence": false,
+        "practical": true,
+        "strict_conditions": {
+          "previous_session_is_limit_up": true,
+          "at_least_2_limit_ups_in_previous_8_sessions": true,
+          "previous_close_within_1pct_of_previous_20_session_high": true,
+          "previous_ma5_above_ma10": true,
+          "previous_amount_at_least_300m_cny": true,
+          "current_candle_is_bearish": true,
+          "current_return_not_below_minus_6pct": true,
+          "current_close_at_or_above_ma5": true,
+          "current_low_at_or_above_98pct_of_previous_low": true,
+          "volume_ratio_between_0_45_and_0_95": true,
+          "turnover_rate_between_4pct_and_25pct": true,
+          "close_location_at_least_0_35": false,
+          "upper_shadow_ratio_at_most_0_40": true
+        },
+        "turnover_divergence_conditions": {
+          "all_strict_conditions_except_shrinking_volume": false,
+          "at_least_3_limit_ups_in_previous_8_sessions": false,
+          "previous_8_session_return_at_least_30pct": false,
+          "volume_ratio_above_0_95_and_at_most_1_50": false,
+          "turnover_rate_between_8pct_and_25pct": false,
+          "current_amount_at_least_1b_cny": false,
+          "upper_shadow_ratio_at_most_0_35": true
+        },
+        "practical_conditions": {
+          "last_limit_up_within_3_sessions": true,
+          "at_least_1_limit_up_in_previous_8_sessions": true,
+          "previous_8_session_return_at_least_15pct": true,
+          "first_bearish_candle_after_last_limit_up": true,
+          "current_return_not_below_minus_7pct": true,
+          "current_close_at_or_above_ma10": true,
+          "current_low_holds_95pct_of_last_limit_up_low": true,
+          "volume_ratio_between_0_35_and_1_20": true,
+          "turnover_rate_between_2pct_and_30pct": true,
+          "current_amount_at_least_100m_cny": true,
+          "close_location_at_least_0_25": true,
+          "upper_shadow_ratio_at_most_0_50": true,
+          "previous_amount_at_least_150m_cny": true
+        },
+        "metrics": {
+          "date": "20260909",
+          "open": 6.15,
+          "high": 6.15,
+          "low": 5.87,
+          "close": 5.96,
+          "return_pct": -3.089,
+          "prior_8_return_pct": 21.542,
+          "prior_limit_up_count": 2,
+          "last_limit_up_distance": 1,
+          "volume_ratio": 0.9148,
+          "turnover_pct": 5.061,
+          "ma5": 5.858,
+          "ma10": 5.759,
+          "close_location": 0.3214,
+          "upper_shadow_ratio": 0.0,
+          "amount_cny": 481332640.0,
+          "previous_amount_cny": 521373760.0
+        },
+        "prior_two_consecutive_limit_ups": false,
+        "symbol": "000059.SZ",
+        "code": "000059",
+        "market": "SZ",
+        "name": "华锦股份",
+        "industry": "T010302",
+        "listing_date": "19970130",
+        "source": {
+          "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz000059.day",
+          "size": 223808,
+          "sha256": "c163437da0ccaa8cabe36a03afebda662865176e4609d8ecadaf3247b1b8347b"
+        },
+        "sector": {
+          "code": "T010302",
+          "five_session_median_return_pct": 3.588,
+          "strength_percentile": 0.8909
+        },
+        "score": 71,
+        "score_parts": {
+          "leader_strength": 21,
+          "first_yin_quality": 31,
+          "market_sector_environment": 19
+        },
+        "technical_trade_ready": false,
+        "invalidation": {
+          "first_yin_low": 5.87,
+          "close_below_first_yin_low": true,
+          "three_sessions_no_new_high_and_close_below_ma5": true
+        },
+        "selection_status": "SIGNAL"
+      },
+      {
+        "grade": "A",
+        "strict": false,
+        "turnover_divergence": false,
+        "practical": true,
+        "strict_conditions": {
+          "previous_session_is_limit_up": false,
+          "at_least_2_limit_ups_in_previous_8_sessions": true,
+          "previous_close_within_1pct_of_previous_20_session_high": true,
+          "previous_ma5_above_ma10": true,
+          "previous_amount_at_least_300m_cny": true,
+          "current_candle_is_bearish": true,
+          "current_return_not_below_minus_6pct": false,
+          "current_close_at_or_above_ma5": true,
+          "current_low_at_or_above_98pct_of_previous_low": false,
+          "volume_ratio_between_0_45_and_0_95": true,
+          "turnover_rate_between_4pct_and_25pct": true,
+          "close_location_at_least_0_35": false,
+          "upper_shadow_ratio_at_most_0_40": true
+        },
+        "turnover_divergence_conditions": {
+          "all_strict_conditions_except_shrinking_volume": false,
+          "at_least_3_limit_ups_in_previous_8_sessions": false,
+          "previous_8_session_return_at_least_30pct": false,
+          "volume_ratio_above_0_95_and_at_most_1_50": false,
+          "turnover_rate_between_8pct_and_25pct": true,
+          "current_amount_at_least_1b_cny": false,
+          "upper_shadow_ratio_at_most_0_35": true
+        },
+        "practical_conditions": {
+          "last_limit_up_within_3_sessions": true,
+          "at_least_1_limit_up_in_previous_8_sessions": true,
+          "previous_8_session_return_at_least_15pct": true,
+          "first_bearish_candle_after_last_limit_up": true,
+          "current_return_not_below_minus_7pct": true,
+          "current_close_at_or_above_ma10": true,
+          "current_low_holds_95pct_of_last_limit_up_low": true,
+          "volume_ratio_between_0_35_and_1_20": true,
+          "turnover_rate_between_2pct_and_30pct": true,
+          "current_amount_at_least_100m_cny": true,
+          "close_location_at_least_0_25": true,
+          "upper_shadow_ratio_at_most_0_50": true,
+          "previous_amount_at_least_150m_cny": true
+        },
+        "metrics": {
+          "date": "20260909",
+          "open": 17.69,
+          "high": 17.79,
+          "low": 15.93,
+          "close": 16.5,
+          "return_pct": -6.78,
+          "prior_8_return_pct": 25.71,
+          "prior_limit_up_count": 2,
+          "last_limit_up_distance": 2,
+          "volume_ratio": 0.7278,
+          "turnover_pct": 18.159,
+          "ma5": 15.944,
+          "ma10": 15.022,
+          "close_location": 0.3065,
+          "upper_shadow_ratio": 0.0538,
+          "amount_cny": 704300608.0,
+          "previous_amount_cny": 1039811136.0
+        },
+        "prior_two_consecutive_limit_ups": false,
+        "symbol": "603696.SH",
+        "code": "603696",
+        "market": "SH",
+        "name": "安记食品",
+        "industry": "T030403",
+        "listing_date": "20151209",
+        "source": {
+          "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh603696.day",
+          "size": 82560,
+          "sha256": "cddba4b3071837707756e3a29f094b68efe075e9cf89998f647e6cebc482f2f7"
+        },
+        "sector": {
+          "code": "T030403",
+          "five_session_median_return_pct": 2.637,
+          "strength_percentile": 0.8455
+        },
+        "score": 70,
+        "score_parts": {
+          "leader_strength": 21,
+          "first_yin_quality": 30,
+          "market_sector_environment": 19
+        },
+        "technical_trade_ready": false,
+        "invalidation": {
+          "first_yin_low": 15.93,
+          "close_below_first_yin_low": true,
+          "three_sessions_no_new_high_and_close_below_ma5": true
+        },
+        "selection_status": "SIGNAL"
+      },
+      {
+        "grade": "A",
+        "strict": false,
+        "turnover_divergence": false,
+        "practical": true,
+        "strict_conditions": {
+          "previous_session_is_limit_up": true,
+          "at_least_2_limit_ups_in_previous_8_sessions": true,
+          "previous_close_within_1pct_of_previous_20_session_high": true,
+          "previous_ma5_above_ma10": true,
+          "previous_amount_at_least_300m_cny": true,
+          "current_candle_is_bearish": true,
+          "current_return_not_below_minus_6pct": true,
+          "current_close_at_or_above_ma5": true,
+          "current_low_at_or_above_98pct_of_previous_low": true,
+          "volume_ratio_between_0_45_and_0_95": false,
+          "turnover_rate_between_4pct_and_25pct": false,
+          "close_location_at_least_0_35": false,
+          "upper_shadow_ratio_at_most_0_40": false
+        },
+        "turnover_divergence_conditions": {
+          "all_strict_conditions_except_shrinking_volume": false,
+          "at_least_3_limit_ups_in_previous_8_sessions": true,
+          "previous_8_session_return_at_least_30pct": true,
+          "volume_ratio_above_0_95_and_at_most_1_50": true,
+          "turnover_rate_between_8pct_and_25pct": false,
+          "current_amount_at_least_1b_cny": true,
+          "upper_shadow_ratio_at_most_0_35": false
+        },
+        "practical_conditions": {
+          "last_limit_up_within_3_sessions": true,
+          "at_least_1_limit_up_in_previous_8_sessions": true,
+          "previous_8_session_return_at_least_15pct": true,
+          "first_bearish_candle_after_last_limit_up": true,
+          "current_return_not_below_minus_7pct": true,
+          "current_close_at_or_above_ma10": true,
+          "current_low_holds_95pct_of_last_limit_up_low": true,
+          "volume_ratio_between_0_35_and_1_20": true,
+          "turnover_rate_between_2pct_and_30pct": true,
+          "current_amount_at_least_100m_cny": true,
+          "close_location_at_least_0_25": true,
+          "upper_shadow_ratio_at_most_0_50": true,
+          "previous_amount_at_least_150m_cny": true
+        },
+        "metrics": {
+          "date": "20260909",
+          "open": 20.49,
+          "high": 21.21,
+          "low": 19.59,
+          "close": 20.0,
+          "return_pct": 1.163,
+          "prior_8_return_pct": 42.435,
+          "prior_limit_up_count": 3,
+          "last_limit_up_distance": 1,
+          "volume_ratio": 1.0813,
+          "turnover_pct": 25.038,
+          "ma5": 18.454,
+          "ma10": 17.554,
+          "close_location": 0.2531,
+          "upper_shadow_ratio": 0.4444,
+          "amount_cny": 3465288448.0,
+          "previous_amount_cny": 2969452032.0
+        },
+        "prior_two_consecutive_limit_ups": false,
+        "symbol": "600722.SH",
+        "code": "600722",
+        "market": "SH",
+        "name": "金牛化工",
+        "industry": "T020401",
+        "listing_date": "19960626",
+        "source": {
+          "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh600722.day",
+          "size": 221216,
+          "sha256": "8d82b48806fc2340889ddefb4d648735b8b9b84dbd12400757c36ac235e80d8a"
+        },
+        "sector": {
+          "code": "T020401",
+          "five_session_median_return_pct": -0.161,
+          "strength_percentile": 0.3182
+        },
+        "score": 64,
+        "score_parts": {
+          "leader_strength": 30,
+          "first_yin_quality": 22,
+          "market_sector_environment": 12
+        },
+        "technical_trade_ready": false,
+        "invalidation": {
+          "first_yin_low": 19.59,
+          "close_below_first_yin_low": true,
+          "three_sessions_no_new_high_and_close_below_ma5": true
+        },
+        "selection_status": "SIGNAL"
+      }
+    ],
+    "strict_count": 1,
+    "turnover_divergence_count": 0,
+    "practical_count": 3,
+    "technical_trade_ready_count": 1,
+    "strict_candidates": [
+      {
+        "grade": "S",
+        "strict": true,
+        "turnover_divergence": false,
+        "practical": true,
+        "strict_conditions": {
+          "previous_session_is_limit_up": true,
+          "at_least_2_limit_ups_in_previous_8_sessions": true,
+          "previous_close_within_1pct_of_previous_20_session_high": true,
+          "previous_ma5_above_ma10": true,
+          "previous_amount_at_least_300m_cny": true,
+          "current_candle_is_bearish": true,
+          "current_return_not_below_minus_6pct": true,
+          "current_close_at_or_above_ma5": true,
+          "current_low_at_or_above_98pct_of_previous_low": true,
+          "volume_ratio_between_0_45_and_0_95": true,
+          "turnover_rate_between_4pct_and_25pct": true,
+          "close_location_at_least_0_35": true,
+          "upper_shadow_ratio_at_most_0_40": true
+        },
+        "turnover_divergence_conditions": {
+          "all_strict_conditions_except_shrinking_volume": true,
+          "at_least_3_limit_ups_in_previous_8_sessions": true,
+          "previous_8_session_return_at_least_30pct": true,
+          "volume_ratio_above_0_95_and_at_most_1_50": false,
+          "turnover_rate_between_8pct_and_25pct": false,
+          "current_amount_at_least_1b_cny": false,
+          "upper_shadow_ratio_at_most_0_35": true
+        },
+        "practical_conditions": {
+          "last_limit_up_within_3_sessions": true,
+          "at_least_1_limit_up_in_previous_8_sessions": true,
+          "previous_8_session_return_at_least_15pct": true,
+          "first_bearish_candle_after_last_limit_up": true,
+          "current_return_not_below_minus_7pct": true,
+          "current_close_at_or_above_ma10": true,
+          "current_low_holds_95pct_of_last_limit_up_low": true,
+          "volume_ratio_between_0_35_and_1_20": true,
+          "turnover_rate_between_2pct_and_30pct": true,
+          "current_amount_at_least_100m_cny": true,
+          "close_location_at_least_0_25": true,
+          "upper_shadow_ratio_at_most_0_50": true,
+          "previous_amount_at_least_150m_cny": true
+        },
+        "metrics": {
+          "date": "20260909",
+          "open": 22.6,
+          "high": 22.78,
+          "low": 21.19,
+          "close": 22.5,
+          "return_pct": -0.837,
+          "prior_8_return_pct": 36.194,
+          "prior_limit_up_count": 3,
+          "last_limit_up_distance": 1,
+          "volume_ratio": 0.7588,
+          "turnover_pct": 7.878,
+          "ma5": 20.514,
+          "ma10": 19.125,
+          "close_location": 0.8239,
+          "upper_shadow_ratio": 0.1132,
+          "amount_cny": 775540992.0,
+          "previous_amount_cny": 1010296640.0
+        },
+        "prior_two_consecutive_limit_ups": true,
+        "symbol": "601595.SH",
+        "code": "601595",
+        "market": "SH",
+        "name": "上海电影",
+        "industry": "T060102",
+        "listing_date": "20160817",
+        "source": {
+          "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh601595.day",
+          "size": 78208,
+          "sha256": "f0a5e2c3347cdcafad46a7c469e43b92b1e659a867862da583f445da606255b4"
+        },
+        "sector": {
+          "code": "T060102",
+          "five_session_median_return_pct": 1.007,
+          "strength_percentile": 0.5636
+        },
+        "score": 90,
+        "score_parts": {
+          "leader_strength": 40,
+          "first_yin_quality": 35,
+          "market_sector_environment": 15
+        },
+        "technical_trade_ready": true,
+        "invalidation": {
+          "first_yin_low": 21.19,
+          "close_below_first_yin_low": true,
+          "three_sessions_no_new_high_and_close_below_ma5": true
+        },
+        "selection_status": "SIGNAL"
+      }
+    ],
+    "turnover_divergence_candidates": [],
+    "practical_candidates": [
+      {
+        "grade": "A",
+        "strict": false,
+        "turnover_divergence": false,
+        "practical": true,
+        "strict_conditions": {
+          "previous_session_is_limit_up": true,
+          "at_least_2_limit_ups_in_previous_8_sessions": true,
+          "previous_close_within_1pct_of_previous_20_session_high": true,
+          "previous_ma5_above_ma10": true,
+          "previous_amount_at_least_300m_cny": true,
+          "current_candle_is_bearish": true,
+          "current_return_not_below_minus_6pct": true,
+          "current_close_at_or_above_ma5": true,
+          "current_low_at_or_above_98pct_of_previous_low": true,
+          "volume_ratio_between_0_45_and_0_95": true,
+          "turnover_rate_between_4pct_and_25pct": true,
+          "close_location_at_least_0_35": false,
+          "upper_shadow_ratio_at_most_0_40": true
+        },
+        "turnover_divergence_conditions": {
+          "all_strict_conditions_except_shrinking_volume": false,
+          "at_least_3_limit_ups_in_previous_8_sessions": false,
+          "previous_8_session_return_at_least_30pct": false,
+          "volume_ratio_above_0_95_and_at_most_1_50": false,
+          "turnover_rate_between_8pct_and_25pct": false,
+          "current_amount_at_least_1b_cny": false,
+          "upper_shadow_ratio_at_most_0_35": true
+        },
+        "practical_conditions": {
+          "last_limit_up_within_3_sessions": true,
+          "at_least_1_limit_up_in_previous_8_sessions": true,
+          "previous_8_session_return_at_least_15pct": true,
+          "first_bearish_candle_after_last_limit_up": true,
+          "current_return_not_below_minus_7pct": true,
+          "current_close_at_or_above_ma10": true,
+          "current_low_holds_95pct_of_last_limit_up_low": true,
+          "volume_ratio_between_0_35_and_1_20": true,
+          "turnover_rate_between_2pct_and_30pct": true,
+          "current_amount_at_least_100m_cny": true,
+          "close_location_at_least_0_25": true,
+          "upper_shadow_ratio_at_most_0_50": true,
+          "previous_amount_at_least_150m_cny": true
+        },
+        "metrics": {
+          "date": "20260909",
+          "open": 6.15,
+          "high": 6.15,
+          "low": 5.87,
+          "close": 5.96,
+          "return_pct": -3.089,
+          "prior_8_return_pct": 21.542,
+          "prior_limit_up_count": 2,
+          "last_limit_up_distance": 1,
+          "volume_ratio": 0.9148,
+          "turnover_pct": 5.061,
+          "ma5": 5.858,
+          "ma10": 5.759,
+          "close_location": 0.3214,
+          "upper_shadow_ratio": 0.0,
+          "amount_cny": 481332640.0,
+          "previous_amount_cny": 521373760.0
+        },
+        "prior_two_consecutive_limit_ups": false,
+        "symbol": "000059.SZ",
+        "code": "000059",
+        "market": "SZ",
+        "name": "华锦股份",
+        "industry": "T010302",
+        "listing_date": "19970130",
+        "source": {
+          "path": "C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz000059.day",
+          "size": 223808,
+          "sha256": "c163437da0ccaa8cabe36a03afebda662865176e4609d8ecadaf3247b1b8347b"
+        },
+        "sector": {
+          "code": "T010302",
+          "five_session_median_return_pct": 3.588,
+          "strength_percentile": 0.8909
+        },
+        "score": 71,
+        "score_parts": {
+          "leader_strength": 21,
+          "first_yin_quality": 31,
+          "market_sector_environment": 19
+        },
+        "technical_trade_ready": false,
+        "invalidation": {
+          "first_yin_low": 5.87,
+          "close_below_first_yin_low": true,
+          "three_sessions_no_new_high_and_close_below_ma5": true
+        },
+        "selection_status": "SIGNAL"
+      },
+      {
+        "grade": "A",
+        "strict": false,
+        "turnover_divergence": false,
+        "practical": true,
+        "strict_conditions": {
+          "previous_session_is_limit_up": false,
+          "at_least_2_limit_ups_in_previous_8_sessions": true,
+          "previous_close_within_1pct_of_previous_20_session_high": true,
+          "previous_ma5_above_ma10": true,
+          "previous_amount_at_least_300m_cny": true,
+          "current_candle_is_bearish": true,
+          "current_return_not_below_minus_6pct": false,
+          "current_close_at_or_above_ma5": true,
+          "current_low_at_or_above_98pct_of_previous_low": false,
+          "volume_ratio_between_0_45_and_0_95": true,
+          "turnover_rate_between_4pct_and_25pct": true,
+          "close_location_at_least_0_35": false,
+          "upper_shadow_ratio_at_most_0_40": true
+        },
+        "turnover_divergence_conditions": {
+          "all_strict_conditions_except_shrinking_volume": false,
+          "at_least_3_limit_ups_in_previous_8_sessions": false,
+          "previous_8_session_return_at_least_30pct": false,
+          "volume_ratio_above_0_95_and_at_most_1_50": false,
+          "turnover_rate_between_8pct_and_25pct": true,
+          "current_amount_at_least_1b_cny": false,
+          "upper_shadow_ratio_at_most_0_35": true
+        },
+        "practical_conditions": {
+          "last_limit_up_within_3_sessions": true,
+          "at_least_1_limit_up_in_previous_8_sessions": true,
+          "previous_8_session_return_at_least_15pct": true,
+          "first_bearish_candle_after_last_limit_up": true,
+          "current_return_not_below_minus_7pct": true,
+          "current_close_at_or_above_ma10": true,
+          "current_low_holds_95pct_of_last_limit_up_low": true,
+          "volume_ratio_between_0_35_and_1_20": true,
+          "turnover_rate_between_2pct_and_30pct": true,
+          "current_amount_at_least_100m_cny": true,
+          "close_location_at_least_0_25": true,
+          "upper_shadow_ratio_at_most_0_50": true,
+          "previous_amount_at_least_150m_cny": true
+        },
+        "metrics": {
+          "date": "20260909",
+          "open": 17.69,
+          "high": 17.79,
+          "low": 15.93,
+          "close": 16.5,
+          "return_pct": -6.78,
+          "prior_8_return_pct": 25.71,
+          "prior_limit_up_count": 2,
+          "last_limit_up_distance": 2,
+          "volume_ratio": 0.7278,
+          "turnover_pct": 18.159,
+          "ma5": 15.944,
+          "ma10": 15.022,
+          "close_location": 0.3065,
+          "upper_shadow_ratio": 0.0538,
+          "amount_cny": 704300608.0,
+          "previous_amount_cny": 1039811136.0
+        },
+        "prior_two_consecutive_limit_ups": false,
+        "symbol": "603696.SH",
+        "code": "603696",
+        "market": "SH",
+        "name": "安记食品",
+        "industry": "T030403",
+        "listing_date": "20151209",
+        "source": {
+          "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh603696.day",
+          "size": 82560,
+          "sha256": "cddba4b3071837707756e3a29f094b68efe075e9cf89998f647e6cebc482f2f7"
+        },
+        "sector": {
+          "code": "T030403",
+          "five_session_median_return_pct": 2.637,
+          "strength_percentile": 0.8455
+        },
+        "score": 70,
+        "score_parts": {
+          "leader_strength": 21,
+          "first_yin_quality": 30,
+          "market_sector_environment": 19
+        },
+        "technical_trade_ready": false,
+        "invalidation": {
+          "first_yin_low": 15.93,
+          "close_below_first_yin_low": true,
+          "three_sessions_no_new_high_and_close_below_ma5": true
+        },
+        "selection_status": "SIGNAL"
+      },
+      {
+        "grade": "A",
+        "strict": false,
+        "turnover_divergence": false,
+        "practical": true,
+        "strict_conditions": {
+          "previous_session_is_limit_up": true,
+          "at_least_2_limit_ups_in_previous_8_sessions": true,
+          "previous_close_within_1pct_of_previous_20_session_high": true,
+          "previous_ma5_above_ma10": true,
+          "previous_amount_at_least_300m_cny": true,
+          "current_candle_is_bearish": true,
+          "current_return_not_below_minus_6pct": true,
+          "current_close_at_or_above_ma5": true,
+          "current_low_at_or_above_98pct_of_previous_low": true,
+          "volume_ratio_between_0_45_and_0_95": false,
+          "turnover_rate_between_4pct_and_25pct": false,
+          "close_location_at_least_0_35": false,
+          "upper_shadow_ratio_at_most_0_40": false
+        },
+        "turnover_divergence_conditions": {
+          "all_strict_conditions_except_shrinking_volume": false,
+          "at_least_3_limit_ups_in_previous_8_sessions": true,
+          "previous_8_session_return_at_least_30pct": true,
+          "volume_ratio_above_0_95_and_at_most_1_50": true,
+          "turnover_rate_between_8pct_and_25pct": false,
+          "current_amount_at_least_1b_cny": true,
+          "upper_shadow_ratio_at_most_0_35": false
+        },
+        "practical_conditions": {
+          "last_limit_up_within_3_sessions": true,
+          "at_least_1_limit_up_in_previous_8_sessions": true,
+          "previous_8_session_return_at_least_15pct": true,
+          "first_bearish_candle_after_last_limit_up": true,
+          "current_return_not_below_minus_7pct": true,
+          "current_close_at_or_above_ma10": true,
+          "current_low_holds_95pct_of_last_limit_up_low": true,
+          "volume_ratio_between_0_35_and_1_20": true,
+          "turnover_rate_between_2pct_and_30pct": true,
+          "current_amount_at_least_100m_cny": true,
+          "close_location_at_least_0_25": true,
+          "upper_shadow_ratio_at_most_0_50": true,
+          "previous_amount_at_least_150m_cny": true
+        },
+        "metrics": {
+          "date": "20260909",
+          "open": 20.49,
+          "high": 21.21,
+          "low": 19.59,
+          "close": 20.0,
+          "return_pct": 1.163,
+          "prior_8_return_pct": 42.435,
+          "prior_limit_up_count": 3,
+          "last_limit_up_distance": 1,
+          "volume_ratio": 1.0813,
+          "turnover_pct": 25.038,
+          "ma5": 18.454,
+          "ma10": 17.554,
+          "close_location": 0.2531,
+          "upper_shadow_ratio": 0.4444,
+          "amount_cny": 3465288448.0,
+          "previous_amount_cny": 2969452032.0
+        },
+        "prior_two_consecutive_limit_ups": false,
+        "symbol": "600722.SH",
+        "code": "600722",
+        "market": "SH",
+        "name": "金牛化工",
+        "industry": "T020401",
+        "listing_date": "19960626",
+        "source": {
+          "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh600722.day",
+          "size": 221216,
+          "sha256": "8d82b48806fc2340889ddefb4d648735b8b9b84dbd12400757c36ac235e80d8a"
+        },
+        "sector": {
+          "code": "T020401",
+          "five_session_median_return_pct": -0.161,
+          "strength_percentile": 0.3182
+        },
+        "score": 64,
+        "score_parts": {
+          "leader_strength": 30,
+          "first_yin_quality": 22,
+          "market_sector_environment": 12
+        },
+        "technical_trade_ready": false,
+        "invalidation": {
+          "first_yin_low": 19.59,
+          "close_below_first_yin_low": true,
+          "three_sessions_no_new_high_and_close_below_ma5": true
+        },
+        "selection_status": "SIGNAL"
+      }
+    ],
+    "technical_trade_ready_candidates": [
+      {
+        "grade": "S",
+        "strict": true,
+        "turnover_divergence": false,
+        "practical": true,
+        "strict_conditions": {
+          "previous_session_is_limit_up": true,
+          "at_least_2_limit_ups_in_previous_8_sessions": true,
+          "previous_close_within_1pct_of_previous_20_session_high": true,
+          "previous_ma5_above_ma10": true,
+          "previous_amount_at_least_300m_cny": true,
+          "current_candle_is_bearish": true,
+          "current_return_not_below_minus_6pct": true,
+          "current_close_at_or_above_ma5": true,
+          "current_low_at_or_above_98pct_of_previous_low": true,
+          "volume_ratio_between_0_45_and_0_95": true,
+          "turnover_rate_between_4pct_and_25pct": true,
+          "close_location_at_least_0_35": true,
+          "upper_shadow_ratio_at_most_0_40": true
+        },
+        "turnover_divergence_conditions": {
+          "all_strict_conditions_except_shrinking_volume": true,
+          "at_least_3_limit_ups_in_previous_8_sessions": true,
+          "previous_8_session_return_at_least_30pct": true,
+          "volume_ratio_above_0_95_and_at_most_1_50": false,
+          "turnover_rate_between_8pct_and_25pct": false,
+          "current_amount_at_least_1b_cny": false,
+          "upper_shadow_ratio_at_most_0_35": true
+        },
+        "practical_conditions": {
+          "last_limit_up_within_3_sessions": true,
+          "at_least_1_limit_up_in_previous_8_sessions": true,
+          "previous_8_session_return_at_least_15pct": true,
+          "first_bearish_candle_after_last_limit_up": true,
+          "current_return_not_below_minus_7pct": true,
+          "current_close_at_or_above_ma10": true,
+          "current_low_holds_95pct_of_last_limit_up_low": true,
+          "volume_ratio_between_0_35_and_1_20": true,
+          "turnover_rate_between_2pct_and_30pct": true,
+          "current_amount_at_least_100m_cny": true,
+          "close_location_at_least_0_25": true,
+          "upper_shadow_ratio_at_most_0_50": true,
+          "previous_amount_at_least_150m_cny": true
+        },
+        "metrics": {
+          "date": "20260909",
+          "open": 22.6,
+          "high": 22.78,
+          "low": 21.19,
+          "close": 22.5,
+          "return_pct": -0.837,
+          "prior_8_return_pct": 36.194,
+          "prior_limit_up_count": 3,
+          "last_limit_up_distance": 1,
+          "volume_ratio": 0.7588,
+          "turnover_pct": 7.878,
+          "ma5": 20.514,
+          "ma10": 19.125,
+          "close_location": 0.8239,
+          "upper_shadow_ratio": 0.1132,
+          "amount_cny": 775540992.0,
+          "previous_amount_cny": 1010296640.0
+        },
+        "prior_two_consecutive_limit_ups": true,
+        "symbol": "601595.SH",
+        "code": "601595",
+        "market": "SH",
+        "name": "上海电影",
+        "industry": "T060102",
+        "listing_date": "20160817",
+        "source": {
+          "path": "C:\\new_tdx_mock\\vipdoc\\sh\\lday\\sh601595.day",
+          "size": 78208,
+          "sha256": "f0a5e2c3347cdcafad46a7c469e43b92b1e659a867862da583f445da606255b4"
+        },
+        "sector": {
+          "code": "T060102",
+          "five_session_median_return_pct": 1.007,
+          "strength_percentile": 0.5636
+        },
+        "score": 90,
+        "score_parts": {
+          "leader_strength": 40,
+          "first_yin_quality": 35,
+          "market_sector_environment": 15
+        },
+        "technical_trade_ready": true,
+        "invalidation": {
+          "first_yin_low": 21.19,
+          "close_below_first_yin_low": true,
+          "three_sessions_no_new_high_and_close_below_ma5": true
+        },
+        "selection_status": "SIGNAL"
+      }
+    ],
+    "near_miss_diagnostics": [
+      {
+        "symbol": "002909.SZ",
+        "name": "集泰股份",
+        "industry": "T020401",
+        "strict_pass_count": 9,
+        "practical_pass_count": 12,
+        "failed_strict_conditions": [
+          "volume_ratio_between_0_45_and_0_95",
+          "turnover_rate_between_4pct_and_25pct",
+          "close_location_at_least_0_35",
+          "upper_shadow_ratio_at_most_0_40"
+        ],
+        "failed_practical_conditions": [
+          "turnover_rate_between_2pct_and_30pct"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 8.99,
+          "high": 9.49,
+          "low": 8.25,
+          "close": 8.61,
+          "return_pct": -1.261,
+          "prior_8_return_pct": 62.384,
+          "prior_limit_up_count": 6,
+          "last_limit_up_distance": 1,
+          "volume_ratio": 1.0945,
+          "turnover_pct": 39.126,
+          "ma5": 8.096,
+          "ma10": 7.124,
+          "close_location": 0.2903,
+          "upper_shadow_ratio": 0.4032,
+          "amount_cny": 1305067648.0,
+          "previous_amount_cny": 1142562560.0
+        }
+      },
+      {
+        "symbol": "000560.SZ",
+        "name": "我爱我家",
+        "industry": "T110204",
+        "strict_pass_count": 7,
+        "practical_pass_count": 11,
+        "failed_strict_conditions": [
+          "current_return_not_below_minus_6pct",
+          "current_close_at_or_above_ma5",
+          "current_low_at_or_above_98pct_of_previous_low",
+          "volume_ratio_between_0_45_and_0_95",
+          "turnover_rate_between_4pct_and_25pct",
+          "close_location_at_least_0_35"
+        ],
+        "failed_practical_conditions": [
+          "current_return_not_below_minus_7pct",
+          "close_location_at_least_0_25"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 3.31,
+          "high": 3.37,
+          "low": 3.1,
+          "close": 3.12,
+          "return_pct": -9.302,
+          "prior_8_return_pct": 43.333,
+          "prior_limit_up_count": 5,
+          "last_limit_up_distance": 1,
+          "volume_ratio": 1.0253,
+          "turnover_pct": 28.347,
+          "ma5": 3.14,
+          "ma10": 3.001,
+          "close_location": 0.0741,
+          "upper_shadow_ratio": 0.2222,
+          "amount_cny": 2100580608.0,
+          "previous_amount_cny": 2179212544.0
+        }
+      },
+      {
+        "symbol": "600108.SH",
+        "name": "亚盛集团",
+        "industry": "T030201",
+        "strict_pass_count": 10,
+        "practical_pass_count": 10,
+        "failed_strict_conditions": [
+          "previous_amount_at_least_300m_cny",
+          "volume_ratio_between_0_45_and_0_95",
+          "turnover_rate_between_4pct_and_25pct"
+        ],
+        "failed_practical_conditions": [
+          "volume_ratio_between_0_35_and_1_20",
+          "turnover_rate_between_2pct_and_30pct",
+          "previous_amount_at_least_150m_cny"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 5.78,
+          "high": 5.81,
+          "low": 5.55,
+          "close": 5.71,
+          "return_pct": 8.144,
+          "prior_8_return_pct": 39.683,
+          "prior_limit_up_count": 4,
+          "last_limit_up_distance": 1,
+          "volume_ratio": 46.8613,
+          "turnover_pct": 40.55,
+          "ma5": 4.822,
+          "ma10": 4.292,
+          "close_location": 0.6154,
+          "upper_shadow_ratio": 0.1154,
+          "amount_cny": 4525026816.0,
+          "previous_amount_cny": 88953008.0
+        }
+      },
+      {
+        "symbol": "002403.SZ",
+        "name": "爱仕达",
+        "industry": "T0401",
+        "strict_pass_count": 9,
+        "practical_pass_count": 9,
+        "failed_strict_conditions": [
+          "current_return_not_below_minus_6pct",
+          "current_low_at_or_above_98pct_of_previous_low",
+          "volume_ratio_between_0_45_and_0_95",
+          "close_location_at_least_0_35"
+        ],
+        "failed_practical_conditions": [
+          "current_return_not_below_minus_7pct",
+          "current_low_holds_95pct_of_last_limit_up_low",
+          "volume_ratio_between_0_35_and_1_20",
+          "close_location_at_least_0_25"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 13.65,
+          "high": 13.7,
+          "low": 12.29,
+          "close": 12.41,
+          "return_pct": -9.084,
+          "prior_8_return_pct": 48.855,
+          "prior_limit_up_count": 4,
+          "last_limit_up_distance": 1,
+          "volume_ratio": 1.4832,
+          "turnover_pct": 21.796,
+          "ma5": 12.0,
+          "ma10": 10.643,
+          "close_location": 0.0851,
+          "upper_shadow_ratio": 0.0355,
+          "amount_cny": 825753728.0,
+          "previous_amount_cny": 592205184.0
+        }
+      },
+      {
+        "symbol": "003005.SZ",
+        "name": "竞业达",
+        "industry": "T1205",
+        "strict_pass_count": 7,
+        "practical_pass_count": 7,
+        "failed_strict_conditions": [
+          "previous_session_is_limit_up",
+          "previous_close_within_1pct_of_previous_20_session_high",
+          "current_return_not_below_minus_6pct",
+          "current_close_at_or_above_ma5",
+          "current_low_at_or_above_98pct_of_previous_low",
+          "close_location_at_least_0_35"
+        ],
+        "failed_practical_conditions": [
+          "last_limit_up_within_3_sessions",
+          "first_bearish_candle_after_last_limit_up",
+          "current_return_not_below_minus_7pct",
+          "current_close_at_or_above_ma10",
+          "current_low_holds_95pct_of_last_limit_up_low",
+          "close_location_at_least_0_25"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 18.11,
+          "high": 18.37,
+          "low": 16.85,
+          "close": 16.85,
+          "return_pct": -9.989,
+          "prior_8_return_pct": 37.042,
+          "prior_limit_up_count": 4,
+          "last_limit_up_distance": 5,
+          "volume_ratio": 0.5034,
+          "turnover_pct": 18.153,
+          "ma5": 18.752,
+          "ma10": 17.716,
+          "close_location": 0.0,
+          "upper_shadow_ratio": 0.1711,
+          "amount_cny": 419930560.0,
+          "previous_amount_cny": 925872128.0
+        }
+      },
+      {
+        "symbol": "000892.SZ",
+        "name": "欢瑞世纪",
+        "industry": "T060102",
+        "strict_pass_count": 6,
+        "practical_pass_count": 10,
+        "failed_strict_conditions": [
+          "previous_session_is_limit_up",
+          "previous_close_within_1pct_of_previous_20_session_high",
+          "current_return_not_below_minus_6pct",
+          "current_close_at_or_above_ma5",
+          "current_low_at_or_above_98pct_of_previous_low",
+          "turnover_rate_between_4pct_and_25pct",
+          "close_location_at_least_0_35"
+        ],
+        "failed_practical_conditions": [
+          "first_bearish_candle_after_last_limit_up",
+          "current_return_not_below_minus_7pct",
+          "close_location_at_least_0_25"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 5.3,
+          "high": 5.4,
+          "low": 5.02,
+          "close": 5.06,
+          "return_pct": -9.319,
+          "prior_8_return_pct": 47.23,
+          "prior_limit_up_count": 4,
+          "last_limit_up_distance": 3,
+          "volume_ratio": 0.8015,
+          "turnover_pct": 26.331,
+          "ma5": 5.434,
+          "ma10": 4.91,
+          "close_location": 0.1053,
+          "upper_shadow_ratio": 0.2632,
+          "amount_cny": 954968320.0,
+          "previous_amount_cny": 1305483392.0
+        }
+      },
+      {
+        "symbol": "601949.SH",
+        "name": "中国出版",
+        "industry": "T060101",
+        "strict_pass_count": 11,
+        "practical_pass_count": 12,
+        "failed_strict_conditions": [
+          "current_low_at_or_above_98pct_of_previous_low",
+          "volume_ratio_between_0_45_and_0_95"
+        ],
+        "failed_practical_conditions": [
+          "volume_ratio_between_0_35_and_1_20"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 7.05,
+          "high": 7.1,
+          "low": 6.36,
+          "close": 6.68,
+          "return_pct": -5.248,
+          "prior_8_return_pct": 36.628,
+          "prior_limit_up_count": 3,
+          "last_limit_up_distance": 1,
+          "volume_ratio": 2.8081,
+          "turnover_pct": 8.036,
+          "ma5": 6.254,
+          "ma10": 5.765,
+          "close_location": 0.4324,
+          "upper_shadow_ratio": 0.0676,
+          "amount_cny": 1010387008.0,
+          "previous_amount_cny": 378918400.0
+        }
+      },
+      {
+        "symbol": "002702.SZ",
+        "name": "海欣食品",
+        "industry": "T030403",
+        "strict_pass_count": 10,
+        "practical_pass_count": 11,
+        "failed_strict_conditions": [
+          "volume_ratio_between_0_45_and_0_95",
+          "turnover_rate_between_4pct_and_25pct",
+          "close_location_at_least_0_35"
+        ],
+        "failed_practical_conditions": [
+          "volume_ratio_between_0_35_and_1_20",
+          "turnover_rate_between_2pct_and_30pct"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 6.79,
+          "high": 6.87,
+          "low": 6.27,
+          "close": 6.45,
+          "return_pct": -5.007,
+          "prior_8_return_pct": 33.137,
+          "prior_limit_up_count": 3,
+          "last_limit_up_distance": 1,
+          "volume_ratio": 1.958,
+          "turnover_pct": 37.956,
+          "ma5": 6.024,
+          "ma10": 5.613,
+          "close_location": 0.3,
+          "upper_shadow_ratio": 0.1333,
+          "amount_cny": 1137994624.0,
+          "previous_amount_cny": 598325952.0
+        }
+      },
+      {
+        "symbol": "000011.SZ",
+        "name": "深物业A",
+        "industry": "T110204",
+        "strict_pass_count": 10,
+        "practical_pass_count": 11,
+        "failed_strict_conditions": [
+          "previous_close_within_1pct_of_previous_20_session_high",
+          "previous_ma5_above_ma10",
+          "close_location_at_least_0_35"
+        ],
+        "failed_practical_conditions": [
+          "previous_8_session_return_at_least_15pct",
+          "close_location_at_least_0_25"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 9.44,
+          "high": 9.6,
+          "low": 9.11,
+          "close": 9.18,
+          "return_pct": -3.267,
+          "prior_8_return_pct": 14.062,
+          "prior_limit_up_count": 3,
+          "last_limit_up_distance": 1,
+          "volume_ratio": 0.904,
+          "turnover_pct": 5.974,
+          "ma5": 8.83,
+          "ma10": 8.954,
+          "close_location": 0.1429,
+          "upper_shadow_ratio": 0.3265,
+          "amount_cny": 290745280.0,
+          "previous_amount_cny": 322931840.0
+        }
+      },
+      {
+        "symbol": "002172.SZ",
+        "name": "澳洋健康",
+        "industry": "T0403",
+        "strict_pass_count": 9,
+        "practical_pass_count": 9,
+        "failed_strict_conditions": [
+          "previous_ma5_above_ma10",
+          "volume_ratio_between_0_45_and_0_95",
+          "turnover_rate_between_4pct_and_25pct",
+          "close_location_at_least_0_35"
+        ],
+        "failed_practical_conditions": [
+          "previous_8_session_return_at_least_15pct",
+          "volume_ratio_between_0_35_and_1_20",
+          "turnover_rate_between_2pct_and_30pct",
+          "close_location_at_least_0_25"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 5.5,
+          "high": 5.6,
+          "low": 4.82,
+          "close": 4.88,
+          "return_pct": -4.126,
+          "prior_8_return_pct": 7.839,
+          "prior_limit_up_count": 3,
+          "last_limit_up_distance": 1,
+          "volume_ratio": 1.6494,
+          "turnover_pct": 36.672,
+          "ma5": 4.65,
+          "ma10": 4.603,
+          "close_location": 0.0769,
+          "upper_shadow_ratio": 0.1282,
+          "amount_cny": 1463483648.0,
+          "previous_amount_cny": 816754624.0
+        }
+      },
+      {
+        "symbol": "001330.SZ",
+        "name": "博纳影业",
+        "industry": "T060102",
+        "strict_pass_count": 8,
+        "practical_pass_count": 12,
+        "failed_strict_conditions": [
+          "previous_session_is_limit_up",
+          "previous_close_within_1pct_of_previous_20_session_high",
+          "current_close_at_or_above_ma5",
+          "current_low_at_or_above_98pct_of_previous_low",
+          "close_location_at_least_0_35"
+        ],
+        "failed_practical_conditions": [
+          "first_bearish_candle_after_last_limit_up"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 6.0,
+          "high": 6.05,
+          "low": 5.78,
+          "close": 5.86,
+          "return_pct": -4.248,
+          "prior_8_return_pct": 19.765,
+          "prior_limit_up_count": 3,
+          "last_limit_up_distance": 2,
+          "volume_ratio": 0.6684,
+          "turnover_pct": 12.668,
+          "ma5": 5.986,
+          "ma10": 5.768,
+          "close_location": 0.2963,
+          "upper_shadow_ratio": 0.1852,
+          "amount_cny": 864069312.0,
+          "previous_amount_cny": 1356342400.0
+        }
+      },
+      {
+        "symbol": "600551.SH",
+        "name": "时代出版",
+        "industry": "T060101",
+        "strict_pass_count": 7,
+        "practical_pass_count": 9,
+        "failed_strict_conditions": [
+          "previous_session_is_limit_up",
+          "previous_close_within_1pct_of_previous_20_session_high",
+          "current_return_not_below_minus_6pct",
+          "current_close_at_or_above_ma5",
+          "current_low_at_or_above_98pct_of_previous_low",
+          "close_location_at_least_0_35"
+        ],
+        "failed_practical_conditions": [
+          "last_limit_up_within_3_sessions",
+          "first_bearish_candle_after_last_limit_up",
+          "current_close_at_or_above_ma10",
+          "current_low_holds_95pct_of_last_limit_up_low"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 8.15,
+          "high": 8.23,
+          "low": 7.53,
+          "close": 7.74,
+          "return_pct": -6.182,
+          "prior_8_return_pct": 20.968,
+          "prior_limit_up_count": 3,
+          "last_limit_up_distance": 6,
+          "volume_ratio": 0.9104,
+          "turnover_pct": 7.745,
+          "ma5": 8.03,
+          "ma10": 8.042,
+          "close_location": 0.3,
+          "upper_shadow_ratio": 0.1143,
+          "amount_cny": 405923744.0,
+          "previous_amount_cny": 477238528.0
+        }
+      },
+      {
+        "symbol": "600227.SH",
+        "name": "赤天化",
+        "industry": "T020402",
+        "strict_pass_count": 7,
+        "practical_pass_count": 9,
+        "failed_strict_conditions": [
+          "previous_close_within_1pct_of_previous_20_session_high",
+          "previous_ma5_above_ma10",
+          "volume_ratio_between_0_45_and_0_95",
+          "turnover_rate_between_4pct_and_25pct",
+          "close_location_at_least_0_35",
+          "upper_shadow_ratio_at_most_0_40"
+        ],
+        "failed_practical_conditions": [
+          "volume_ratio_between_0_35_and_1_20",
+          "turnover_rate_between_2pct_and_30pct",
+          "close_location_at_least_0_25",
+          "upper_shadow_ratio_at_most_0_50"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 5.08,
+          "high": 5.35,
+          "low": 4.83,
+          "close": 4.92,
+          "return_pct": -0.806,
+          "prior_8_return_pct": 19.231,
+          "prior_limit_up_count": 3,
+          "last_limit_up_distance": 1,
+          "volume_ratio": 1.493,
+          "turnover_pct": 33.496,
+          "ma5": 4.62,
+          "ma10": 4.696,
+          "close_location": 0.1731,
+          "upper_shadow_ratio": 0.5192,
+          "amount_cny": 2154320384.0,
+          "previous_amount_cny": 1381113344.0
+        }
+      },
+      {
+        "symbol": "002855.SZ",
+        "name": "捷荣技术",
+        "industry": "T1204",
+        "strict_pass_count": 6,
+        "practical_pass_count": 8,
+        "failed_strict_conditions": [
+          "previous_session_is_limit_up",
+          "previous_close_within_1pct_of_previous_20_session_high",
+          "current_return_not_below_minus_6pct",
+          "current_close_at_or_above_ma5",
+          "current_low_at_or_above_98pct_of_previous_low",
+          "volume_ratio_between_0_45_and_0_95",
+          "close_location_at_least_0_35"
+        ],
+        "failed_practical_conditions": [
+          "last_limit_up_within_3_sessions",
+          "first_bearish_candle_after_last_limit_up",
+          "current_return_not_below_minus_7pct",
+          "current_close_at_or_above_ma10",
+          "close_location_at_least_0_25"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 18.09,
+          "high": 18.45,
+          "low": 16.65,
+          "close": 16.65,
+          "return_pct": -10.0,
+          "prior_8_return_pct": 38.993,
+          "prior_limit_up_count": 3,
+          "last_limit_up_distance": 6,
+          "volume_ratio": 0.3639,
+          "turnover_pct": 4.864,
+          "ma5": 17.872,
+          "ma10": 17.013,
+          "close_location": 0.0,
+          "upper_shadow_ratio": 0.2,
+          "amount_cny": 203963488.0,
+          "previous_amount_cny": 616581504.0
+        }
+      },
+      {
+        "symbol": "600892.SH",
+        "name": "大晟文化",
+        "industry": "T1206",
+        "strict_pass_count": 6,
+        "practical_pass_count": 8,
+        "failed_strict_conditions": [
+          "previous_session_is_limit_up",
+          "previous_close_within_1pct_of_previous_20_session_high",
+          "current_return_not_below_minus_6pct",
+          "current_close_at_or_above_ma5",
+          "current_low_at_or_above_98pct_of_previous_low",
+          "volume_ratio_between_0_45_and_0_95",
+          "close_location_at_least_0_35"
+        ],
+        "failed_practical_conditions": [
+          "last_limit_up_within_3_sessions",
+          "current_return_not_below_minus_7pct",
+          "current_close_at_or_above_ma10",
+          "current_low_holds_95pct_of_last_limit_up_low",
+          "close_location_at_least_0_25"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 4.71,
+          "high": 4.88,
+          "low": 4.42,
+          "close": 4.42,
+          "return_pct": -9.98,
+          "prior_8_return_pct": 23.058,
+          "prior_limit_up_count": 3,
+          "last_limit_up_distance": 5,
+          "volume_ratio": 0.9775,
+          "turnover_pct": 21.02,
+          "ma5": 4.904,
+          "ma10": 4.716,
+          "close_location": 0.0,
+          "upper_shadow_ratio": 0.3696,
+          "amount_cny": 531859872.0,
+          "previous_amount_cny": 583301056.0
+        }
+      },
+      {
+        "symbol": "002084.SZ",
+        "name": "海鸥住工",
+        "industry": "T0404",
+        "strict_pass_count": 6,
+        "practical_pass_count": 7,
+        "failed_strict_conditions": [
+          "previous_session_is_limit_up",
+          "previous_close_within_1pct_of_previous_20_session_high",
+          "current_return_not_below_minus_6pct",
+          "current_close_at_or_above_ma5",
+          "current_low_at_or_above_98pct_of_previous_low",
+          "volume_ratio_between_0_45_and_0_95",
+          "close_location_at_least_0_35"
+        ],
+        "failed_practical_conditions": [
+          "last_limit_up_within_3_sessions",
+          "first_bearish_candle_after_last_limit_up",
+          "current_return_not_below_minus_7pct",
+          "current_close_at_or_above_ma10",
+          "current_low_holds_95pct_of_last_limit_up_low",
+          "close_location_at_least_0_25"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 6.8,
+          "high": 6.92,
+          "low": 6.12,
+          "close": 6.12,
+          "return_pct": -10.0,
+          "prior_8_return_pct": 29.032,
+          "prior_limit_up_count": 3,
+          "last_limit_up_distance": 6,
+          "volume_ratio": 0.9866,
+          "turnover_pct": 20.068,
+          "ma5": 6.836,
+          "ma10": 6.577,
+          "close_location": 0.0,
+          "upper_shadow_ratio": 0.15,
+          "amount_cny": 822975680.0,
+          "previous_amount_cny": 912232768.0
+        }
+      },
+      {
+        "symbol": "603989.SH",
+        "name": "艾华集团",
+        "industry": "T1204",
+        "strict_pass_count": 12,
+        "practical_pass_count": 11,
+        "failed_strict_conditions": [
+          "previous_session_is_limit_up"
+        ],
+        "failed_practical_conditions": [
+          "last_limit_up_within_3_sessions",
+          "first_bearish_candle_after_last_limit_up"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 34.3,
+          "high": 34.38,
+          "low": 32.9,
+          "close": 33.65,
+          "return_pct": -1.866,
+          "prior_8_return_pct": 20.825,
+          "prior_limit_up_count": 2,
+          "last_limit_up_distance": 4,
+          "volume_ratio": 0.7557,
+          "turnover_pct": 9.857,
+          "ma5": 32.858,
+          "ma10": 31.17,
+          "close_location": 0.5068,
+          "upper_shadow_ratio": 0.0541,
+          "amount_cny": 1317066624.0,
+          "previous_amount_cny": 1719236864.0
+        }
+      },
+      {
+        "symbol": "002564.SZ",
+        "name": "天沃科技",
+        "industry": "T070501",
+        "strict_pass_count": 11,
+        "practical_pass_count": 12,
+        "failed_strict_conditions": [
+          "previous_session_is_limit_up",
+          "current_low_at_or_above_98pct_of_previous_low"
+        ],
+        "failed_practical_conditions": [
+          "first_bearish_candle_after_last_limit_up"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 5.41,
+          "high": 5.45,
+          "low": 5.14,
+          "close": 5.35,
+          "return_pct": -1.109,
+          "prior_8_return_pct": 19.956,
+          "prior_limit_up_count": 2,
+          "last_limit_up_distance": 2,
+          "volume_ratio": 0.6599,
+          "turnover_pct": 8.552,
+          "ma5": 5.118,
+          "ma10": 4.829,
+          "close_location": 0.6774,
+          "upper_shadow_ratio": 0.129,
+          "amount_cny": 385606080.0,
+          "previous_amount_cny": 615102784.0
+        }
+      },
+      {
+        "symbol": "600162.SH",
+        "name": "香江控股",
+        "industry": "T110201",
+        "strict_pass_count": 11,
+        "practical_pass_count": 10,
+        "failed_strict_conditions": [
+          "volume_ratio_between_0_45_and_0_95",
+          "close_location_at_least_0_35"
+        ],
+        "failed_practical_conditions": [
+          "previous_8_session_return_at_least_15pct",
+          "volume_ratio_between_0_35_and_1_20",
+          "close_location_at_least_0_25"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 5.55,
+          "high": 5.63,
+          "low": 5.18,
+          "close": 5.22,
+          "return_pct": -5.091,
+          "prior_8_return_pct": 12.936,
+          "prior_limit_up_count": 2,
+          "last_limit_up_distance": 1,
+          "volume_ratio": 1.3287,
+          "turnover_pct": 7.433,
+          "ma5": 5.034,
+          "ma10": 5.009,
+          "close_location": 0.0889,
+          "upper_shadow_ratio": 0.1778,
+          "amount_cny": 1302236160.0,
+          "previous_amount_cny": 974427200.0
+        }
+      },
+      {
+        "symbol": "600903.SH",
+        "name": "贵州燃气",
+        "industry": "T0804",
+        "strict_pass_count": 10,
+        "practical_pass_count": 12,
+        "failed_strict_conditions": [
+          "volume_ratio_between_0_45_and_0_95",
+          "close_location_at_least_0_35",
+          "upper_shadow_ratio_at_most_0_40"
+        ],
+        "failed_practical_conditions": [
+          "volume_ratio_between_0_35_and_1_20"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 7.52,
+          "high": 7.68,
+          "low": 7.35,
+          "close": 7.45,
+          "return_pct": 2.759,
+          "prior_8_return_pct": 16.747,
+          "prior_limit_up_count": 2,
+          "last_limit_up_distance": 1,
+          "volume_ratio": 2.4344,
+          "turnover_pct": 12.634,
+          "ma5": 6.956,
+          "ma10": 6.725,
+          "close_location": 0.303,
+          "upper_shadow_ratio": 0.4848,
+          "amount_cny": 1100580736.0,
+          "previous_amount_cny": 423518912.0
+        }
+      },
+      {
+        "symbol": "002059.SZ",
+        "name": "云南旅游",
+        "industry": "T060502",
+        "strict_pass_count": 10,
+        "practical_pass_count": 11,
+        "failed_strict_conditions": [
+          "previous_session_is_limit_up",
+          "close_location_at_least_0_35",
+          "upper_shadow_ratio_at_most_0_40"
+        ],
+        "failed_practical_conditions": [
+          "last_limit_up_within_3_sessions",
+          "first_bearish_candle_after_last_limit_up"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 6.18,
+          "high": 6.47,
+          "low": 5.77,
+          "close": 6.01,
+          "return_pct": -4.299,
+          "prior_8_return_pct": 36.522,
+          "prior_limit_up_count": 2,
+          "last_limit_up_distance": 4,
+          "volume_ratio": 0.8104,
+          "turnover_pct": 16.385,
+          "ma5": 5.962,
+          "ma10": 5.38,
+          "close_location": 0.3429,
+          "upper_shadow_ratio": 0.4143,
+          "amount_cny": 984848960.0,
+          "previous_amount_cny": 1252082688.0
+        }
+      },
+      {
+        "symbol": "002579.SZ",
+        "name": "中京电子",
+        "industry": "T1204",
+        "strict_pass_count": 10,
+        "practical_pass_count": 10,
+        "failed_strict_conditions": [
+          "volume_ratio_between_0_45_and_0_95",
+          "turnover_rate_between_4pct_and_25pct",
+          "close_location_at_least_0_35"
+        ],
+        "failed_practical_conditions": [
+          "volume_ratio_between_0_35_and_1_20",
+          "turnover_rate_between_2pct_and_30pct",
+          "close_location_at_least_0_25"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 17.74,
+          "high": 17.97,
+          "low": 16.59,
+          "close": 16.81,
+          "return_pct": -1.465,
+          "prior_8_return_pct": 17.493,
+          "prior_limit_up_count": 2,
+          "last_limit_up_distance": 1,
+          "volume_ratio": 3.7349,
+          "turnover_pct": 31.628,
+          "ma5": 15.444,
+          "ma10": 14.871,
+          "close_location": 0.1594,
+          "upper_shadow_ratio": 0.1667,
+          "amount_cny": 3137493760.0,
+          "previous_amount_cny": 836608896.0
+        }
+      },
+      {
+        "symbol": "603978.SH",
+        "name": "深圳新星",
+        "industry": "T020205",
+        "strict_pass_count": 10,
+        "practical_pass_count": 10,
+        "failed_strict_conditions": [
+          "previous_session_is_limit_up",
+          "previous_close_within_1pct_of_previous_20_session_high",
+          "current_close_at_or_above_ma5"
+        ],
+        "failed_practical_conditions": [
+          "last_limit_up_within_3_sessions",
+          "previous_8_session_return_at_least_15pct",
+          "first_bearish_candle_after_last_limit_up"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 21.61,
+          "high": 21.89,
+          "low": 21.06,
+          "close": 21.43,
+          "return_pct": -0.787,
+          "prior_8_return_pct": 14.105,
+          "prior_limit_up_count": 2,
+          "last_limit_up_distance": 5,
+          "volume_ratio": 0.7342,
+          "turnover_pct": 6.401,
+          "ma5": 21.878,
+          "ma10": 21.142,
+          "close_location": 0.4458,
+          "upper_shadow_ratio": 0.3373,
+          "amount_cny": 288329632.0,
+          "previous_amount_cny": 396073472.0
+        }
+      },
+      {
+        "symbol": "603608.SH",
+        "name": "天创时尚",
+        "industry": "T030302",
+        "strict_pass_count": 9,
+        "practical_pass_count": 12,
+        "failed_strict_conditions": [
+          "previous_session_is_limit_up",
+          "previous_close_within_1pct_of_previous_20_session_high",
+          "current_low_at_or_above_98pct_of_previous_low",
+          "volume_ratio_between_0_45_and_0_95"
+        ],
+        "failed_practical_conditions": [
+          "first_bearish_candle_after_last_limit_up"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 22.49,
+          "high": 22.88,
+          "low": 21.0,
+          "close": 22.14,
+          "return_pct": -1.425,
+          "prior_8_return_pct": 25.405,
+          "prior_limit_up_count": 2,
+          "last_limit_up_distance": 2,
+          "volume_ratio": 1.0711,
+          "turnover_pct": 4.979,
+          "ma5": 21.944,
+          "ma10": 20.767,
+          "close_location": 0.6064,
+          "upper_shadow_ratio": 0.2074,
+          "amount_cny": 467650944.0,
+          "previous_amount_cny": 447546560.0
+        }
+      },
+      {
+        "symbol": "002881.SZ",
+        "name": "美格智能",
+        "industry": "T1204",
+        "strict_pass_count": 9,
+        "practical_pass_count": 12,
+        "failed_strict_conditions": [
+          "previous_session_is_limit_up",
+          "current_return_not_below_minus_6pct",
+          "current_close_at_or_above_ma5",
+          "close_location_at_least_0_35"
+        ],
+        "failed_practical_conditions": [
+          "close_location_at_least_0_25"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 48.5,
+          "high": 49.2,
+          "low": 44.3,
+          "close": 44.35,
+          "return_pct": -6.651,
+          "prior_8_return_pct": 15.148,
+          "prior_limit_up_count": 2,
+          "last_limit_up_distance": 2,
+          "volume_ratio": 0.6929,
+          "turnover_pct": 13.548,
+          "ma5": 44.572,
+          "ma10": 43.857,
+          "close_location": 0.0102,
+          "upper_shadow_ratio": 0.1429,
+          "amount_cny": 1163371264.0,
+          "previous_amount_cny": 1660259712.0
+        }
+      },
+      {
+        "symbol": "600127.SH",
+        "name": "金健米业",
+        "industry": "T030206",
+        "strict_pass_count": 9,
+        "practical_pass_count": 11,
+        "failed_strict_conditions": [
+          "previous_session_is_limit_up",
+          "turnover_rate_between_4pct_and_25pct",
+          "close_location_at_least_0_35",
+          "upper_shadow_ratio_at_most_0_40"
+        ],
+        "failed_practical_conditions": [
+          "turnover_rate_between_2pct_and_30pct",
+          "upper_shadow_ratio_at_most_0_50"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 14.5,
+          "high": 15.07,
+          "low": 14.05,
+          "close": 14.33,
+          "return_pct": -3.11,
+          "prior_8_return_pct": 37.199,
+          "prior_limit_up_count": 2,
+          "last_limit_up_distance": 2,
+          "volume_ratio": 0.8349,
+          "turnover_pct": 38.926,
+          "ma5": 13.524,
+          "ma10": 12.785,
+          "close_location": 0.2745,
+          "upper_shadow_ratio": 0.5588,
+          "amount_cny": 3614297600.0,
+          "previous_amount_cny": 4347812864.0
+        }
+      },
+      {
+        "symbol": "603123.SH",
+        "name": "翠微股份",
+        "industry": "T1004",
+        "strict_pass_count": 9,
+        "practical_pass_count": 11,
+        "failed_strict_conditions": [
+          "previous_session_is_limit_up",
+          "current_return_not_below_minus_6pct",
+          "current_close_at_or_above_ma5",
+          "close_location_at_least_0_35"
+        ],
+        "failed_practical_conditions": [
+          "current_return_not_below_minus_7pct",
+          "close_location_at_least_0_25"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 11.68,
+          "high": 11.87,
+          "low": 11.05,
+          "close": 11.05,
+          "return_pct": -10.016,
+          "prior_8_return_pct": 23.915,
+          "prior_limit_up_count": 2,
+          "last_limit_up_distance": 3,
+          "volume_ratio": 0.7051,
+          "turnover_pct": 13.217,
+          "ma5": 11.286,
+          "ma10": 10.639,
+          "close_location": 0.0,
+          "upper_shadow_ratio": 0.2317,
+          "amount_cny": 973388096.0,
+          "previous_amount_cny": 1458814720.0
+        }
+      },
+      {
+        "symbol": "603533.SH",
+        "name": "掌阅科技",
+        "industry": "T1206",
+        "strict_pass_count": 9,
+        "practical_pass_count": 11,
+        "failed_strict_conditions": [
+          "previous_session_is_limit_up",
+          "current_close_at_or_above_ma5",
+          "close_location_at_least_0_35",
+          "upper_shadow_ratio_at_most_0_40"
+        ],
+        "failed_practical_conditions": [
+          "last_limit_up_within_3_sessions",
+          "first_bearish_candle_after_last_limit_up"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 24.22,
+          "high": 24.66,
+          "low": 23.7,
+          "close": 24.01,
+          "return_pct": -2.833,
+          "prior_8_return_pct": 19.314,
+          "prior_limit_up_count": 2,
+          "last_limit_up_distance": 6,
+          "volume_ratio": 0.7424,
+          "turnover_pct": 6.607,
+          "ma5": 24.142,
+          "ma10": 23.355,
+          "close_location": 0.3229,
+          "upper_shadow_ratio": 0.4583,
+          "amount_cny": 699089408.0,
+          "previous_amount_cny": 963113984.0
+        }
+      },
+      {
+        "symbol": "603679.SH",
+        "name": "华体科技",
+        "industry": "T0706",
+        "strict_pass_count": 9,
+        "practical_pass_count": 11,
+        "failed_strict_conditions": [
+          "previous_ma5_above_ma10",
+          "previous_amount_at_least_300m_cny",
+          "volume_ratio_between_0_45_and_0_95",
+          "close_location_at_least_0_35"
+        ],
+        "failed_practical_conditions": [
+          "previous_8_session_return_at_least_15pct",
+          "volume_ratio_between_0_35_and_1_20"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 25.89,
+          "high": 26.3,
+          "low": 24.8,
+          "close": 25.22,
+          "return_pct": -3.556,
+          "prior_8_return_pct": 11.991,
+          "prior_limit_up_count": 2,
+          "last_limit_up_distance": 1,
+          "volume_ratio": 2.3316,
+          "turnover_pct": 12.914,
+          "ma5": 23.736,
+          "ma10": 23.48,
+          "close_location": 0.28,
+          "upper_shadow_ratio": 0.2733,
+          "amount_cny": 581428800.0,
+          "previous_amount_cny": 252407328.0
+        }
+      },
+      {
+        "symbol": "002328.SZ",
+        "name": "新朋股份",
+        "industry": "T040202",
+        "strict_pass_count": 9,
+        "practical_pass_count": 10,
+        "failed_strict_conditions": [
+          "previous_session_is_limit_up",
+          "previous_close_within_1pct_of_previous_20_session_high",
+          "current_close_at_or_above_ma5",
+          "close_location_at_least_0_35"
+        ],
+        "failed_practical_conditions": [
+          "last_limit_up_within_3_sessions",
+          "first_bearish_candle_after_last_limit_up",
+          "close_location_at_least_0_25"
+        ],
+        "metrics": {
+          "date": "20260909",
+          "open": 9.32,
+          "high": 9.51,
+          "low": 9.01,
+          "close": 9.08,
+          "return_pct": -2.47,
+          "prior_8_return_pct": 19.974,
+          "prior_limit_up_count": 2,
+          "last_limit_up_distance": 4,
+          "volume_ratio": 0.8473,
+          "turnover_pct": 14.688,
+          "ma5": 9.602,
+          "ma10": 9.004,
+          "close_location": 0.14,
+          "upper_shadow_ratio": 0.38,
+          "amount_cny": 770958272.0,
+          "previous_amount_cny": 920203968.0
+        }
+      }
+    ]
+  },
+  "historical_replay": {
+    "purpose": "signal_trigger_replay_completed",
+    "lookback_sessions": 120,
+    "signal_count": 592,
+    "strict_signal_count": 25,
+    "turnover_divergence_signal_count": 15,
+    "practical_signal_count": 552,
+    "signal_date_count": 111,
+    "latest_signal_dates": [
+      [
+        "20260908",
+        5
+      ],
+      [
+        "20260907",
+        2
+      ],
+      [
+        "20260903",
+        1
+      ],
+      [
+        "20260902",
+        8
+      ],
+      [
+        "20260901",
+        6
+      ],
+      [
+        "20260831",
+        5
+      ],
+      [
+        "20260828",
+        1
+      ],
+      [
+        "20260827",
+        1
+      ],
+      [
+        "20260826",
+        3
+      ],
+      [
+        "20260825",
+        2
+      ],
+      [
+        "20260824",
+        9
+      ],
+      [
+        "20260821",
+        1
+      ],
+      [
+        "20260820",
+        2
+      ],
+      [
+        "20260819",
+        1
+      ],
+      [
+        "20260818",
+        15
+      ],
+      [
+        "20260817",
+        4
+      ],
+      [
+        "20260814",
+        8
+      ],
+      [
+        "20260813",
+        6
+      ],
+      [
+        "20260812",
+        3
+      ],
+      [
+        "20260811",
+        7
+      ]
+    ],
+    "samples": [
+      {
+        "date": "20260908",
+        "symbol": "002708.SZ",
+        "name": "光洋股份",
+        "grade": "T",
+        "return_pct": -3.274,
+        "prior_limit_up_count": 3
+      },
+      {
+        "date": "20260908",
+        "symbol": "301550.SZ",
+        "name": "斯菱智驱",
+        "grade": "A",
+        "return_pct": -0.348,
+        "prior_limit_up_count": 1
+      },
+      {
+        "date": "20260908",
+        "symbol": "600975.SH",
+        "name": "新五丰",
+        "grade": "A",
+        "return_pct": -0.847,
+        "prior_limit_up_count": 1
+      },
+      {
+        "date": "20260908",
+        "symbol": "603138.SH",
+        "name": "海量数据",
+        "grade": "A",
+        "return_pct": -2.644,
+        "prior_limit_up_count": 1
+      },
+      {
+        "date": "20260908",
+        "symbol": "603150.SH",
+        "name": "万朗磁塑",
+        "grade": "A",
+        "return_pct": 0.576,
+        "prior_limit_up_count": 1
+      },
+      {
+        "date": "20260907",
+        "symbol": "300830.SZ",
+        "name": "金现代",
+        "grade": "A",
+        "return_pct": -3.908,
+        "prior_limit_up_count": 1
+      },
+      {
+        "date": "20260907",
+        "symbol": "600869.SH",
+        "name": "远东股份",
+        "grade": "A",
+        "return_pct": -1.509,
+        "prior_limit_up_count": 1
+      },
+      {
+        "date": "20260903",
+        "symbol": "001326.SZ",
+        "name": "联域股份",
+        "grade": "A",
+        "return_pct": -0.504,
+        "prior_limit_up_count": 1
+      },
+      {
+        "date": "20260902",
+        "symbol": "000712.SZ",
+        "name": "锦龙股份",
+        "grade": "A",
+        "return_pct": -2.519,
+        "prior_limit_up_count": 4
+      },
+      {
+        "date": "20260902",
+        "symbol": "000721.SZ",
+        "name": "西安饮食",
+        "grade": "A",
+        "return_pct": -3.821,
+        "prior_limit_up_count": 1
+      },
+      {
+        "date": "20260902",
+        "symbol": "002295.SZ",
+        "name": "精艺股份",
+        "grade": "A",
+        "return_pct": -5.932,
+        "prior_limit_up_count": 2
+      },
+      {
+        "date": "20260902",
+        "symbol": "002721.SZ",
+        "name": "金一文化",
+        "grade": "A",
+        "return_pct": -3.774,
+        "prior_limit_up_count": 2
+      },
+      {
+        "date": "20260902",
+        "symbol": "300378.SZ",
+        "name": "鼎捷数智",
+        "grade": "A",
+        "return_pct": -2.123,
+        "prior_limit_up_count": 1
+      },
+      {
+        "date": "20260902",
+        "symbol": "300642.SZ",
+        "name": "透景生命",
+        "grade": "A",
+        "return_pct": -5.651,
+        "prior_limit_up_count": 2
+      },
+      {
+        "date": "20260902",
+        "symbol": "600103.SH",
+        "name": "青山纸业",
+        "grade": "A",
+        "return_pct": -6.205,
+        "prior_limit_up_count": 4
+      },
+      {
+        "date": "20260902",
+        "symbol": "600691.SH",
+        "name": "潞化科技",
+        "grade": "A",
+        "return_pct": -6.845,
+        "prior_limit_up_count": 2
+      },
+      {
+        "date": "20260901",
+        "symbol": "002072.SZ",
+        "name": "凯瑞德",
+        "grade": "A",
+        "return_pct": -0.873,
+        "prior_limit_up_count": 2
+      },
+      {
+        "date": "20260901",
+        "symbol": "002396.SZ",
+        "name": "星网锐捷",
+        "grade": "A",
+        "return_pct": -1.511,
+        "prior_limit_up_count": 4
+      },
+      {
+        "date": "20260901",
+        "symbol": "002636.SZ",
+        "name": "金安国纪",
+        "grade": "A",
+        "return_pct": -3.749,
+        "prior_limit_up_count": 1
+      },
+      {
+        "date": "20260901",
+        "symbol": "002881.SZ",
+        "name": "美格智能",
+        "grade": "A",
+        "return_pct": -0.334,
+        "prior_limit_up_count": 1
+      },
+      {
+        "date": "20260901",
+        "symbol": "301399.SZ",
+        "name": "英特科技",
+        "grade": "A",
+        "return_pct": -4.355,
+        "prior_limit_up_count": 1
+      },
+      {
+        "date": "20260901",
+        "symbol": "603580.SH",
+        "name": "艾艾精工",
+        "grade": "A",
+        "return_pct": -3.53,
+        "prior_limit_up_count": 2
+      },
+      {
+        "date": "20260831",
+        "symbol": "000017.SZ",
+        "name": "深中华A",
+        "grade": "A",
+        "return_pct": -2.096,
+        "prior_limit_up_count": 7
+      },
+      {
+        "date": "20260831",
+        "symbol": "002094.SZ",
+        "name": "青岛金王",
+        "grade": "A",
+        "return_pct": -4.145,
+        "prior_limit_up_count": 2
+      },
+      {
+        "date": "20260831",
+        "symbol": "002721.SZ",
+        "name": "金一文化",
+        "grade": "A",
+        "return_pct": -5.556,
+        "prior_limit_up_count": 1
+      },
+      {
+        "date": "20260831",
+        "symbol": "603200.SH",
+        "name": "上海洗霸",
+        "grade": "A",
+        "return_pct": -2.979,
+        "prior_limit_up_count": 2
+      },
+      {
+        "date": "20260831",
+        "symbol": "688209.SH",
+        "name": "英集芯",
+        "grade": "A",
+        "return_pct": -2.674,
+        "prior_limit_up_count": 1
+      },
+      {
+        "date": "20260828",
+        "symbol": "001268.SZ",
+        "name": "联合精密",
+        "grade": "A",
+        "return_pct": -0.539,
+        "prior_limit_up_count": 2
+      },
+      {
+        "date": "20260827",
+        "symbol": "002880.SZ",
+        "name": "卫光生物",
+        "grade": "A",
+        "return_pct": -4.377,
+        "prior_limit_up_count": 2
+      },
+      {
+        "date": "20260826",
+        "symbol": "000628.SZ",
+        "name": "高新发展",
+        "grade": "A",
+        "return_pct": -0.731,
+        "prior_limit_up_count": 1
+      }
+    ]
+  },
+  "validation": {
+    "selector_operational": true,
+    "full_market_latest_records_over_1000": true,
+    "historical_replay_nonzero": true,
+    "current_selection_nonzero": true,
+    "candidate_count_matches": true,
+    "unique_stock_candidates": true,
+    "all_strict_candidates_have_all_strict_conditions_true": true,
+    "all_practical_candidates_have_all_practical_conditions_true": true,
+    "all_turnover_divergence_candidates_have_all_conditions_true": true
+  },
+  "risk_boundary": {
+    "decision_scope": "local_tdx_end_of_day_technical_selection",
+    "external_event_data": "not_used_in_selection",
+    "entry_timing": "not_a_trade_instruction",
+    "historical_validation": "signal_trigger_replay_completed",
+    "guaranteed_profit": false
+  }
+}

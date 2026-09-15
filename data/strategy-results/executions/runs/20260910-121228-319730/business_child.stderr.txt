@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "C:\work\260907 掌财智能体\CodeX-st-wsp\zhangcai-demo\harness-skills\feilong-strategy\scripts\feilong_realtime_report.py", line 1909, in <module>
+    main()
+  File "C:\work\260907 掌财智能体\CodeX-st-wsp\zhangcai-demo\harness-skills\feilong-strategy\scripts\feilong_realtime_report.py", line 1895, in main
+    res = analyze(args.stock, args.out, args.as_of_date)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\work\260907 掌财智能体\CodeX-st-wsp\zhangcai-demo\harness-skills\feilong-strategy\scripts\feilong_realtime_report.py", line 1346, in analyze
+    return _analyze(query, tq, out, as_of_date, persist_artifacts)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\work\260907 掌财智能体\CodeX-st-wsp\zhangcai-demo\harness-skills\feilong-strategy\scripts\feilong_realtime_report.py", line 1301, in _analyze
+    VALIDATION.mkdir(parents=True, exist_ok=True)
+  File "C:\Users\Scott\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py", line 1311, in mkdir
+    os.mkdir(self, mode)
+PermissionError: [WinError 21] 设备未就绪。: 'E:\\Codex\\15_validation'

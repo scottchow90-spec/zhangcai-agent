@@ -1,0 +1,17 @@
+{
+  "id": "8f298a08-1d13-4847-ae4d-67891de7e83a",
+  "skill_id": "dragon-pullback",
+  "status": "completed",
+  "started_at": 1789011055207,
+  "strategy_status": "BLOCKED",
+  "output": "Traceback (most recent call last):\r\n  File \"C:\\work\\260907 �Ʋ�������\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\dragon-pullback\\scripts\\codex_entry.py\", line 15, in <module>\r\n    from stock_canonical_runtime import facade_main\r\nModuleNotFoundError: No module named 'stock_canonical_runtime'",
+  "result": {
+    "status": "BLOCKED",
+    "output": "Traceback (most recent call last):\r\n  File \"C:\\work\\260907 �Ʋ�������\\CodeX-st-wsp\\zhangcai-demo\\harness-skills\\dragon-pullback\\scripts\\codex_entry.py\", line 15, in <module>\r\n    from stock_canonical_runtime import facade_main\r\nModuleNotFoundError: No module named 'stock_canonical_runtime'",
+    "elapsed_ms": 234,
+    "receipt": null,
+    "skill_id": "dragon-pullback"
+  },
+  "elapsed_ms": 234,
+  "completed_at": 1789011092357
+}
