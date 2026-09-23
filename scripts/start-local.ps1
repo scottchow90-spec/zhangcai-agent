@@ -1,4 +1,8 @@
 $ErrorActionPreference = 'Stop'
+# A failed asset probe intentionally returns a non-zero native exit code. Do
+# not let PowerShell turn the probe's stderr into a terminating exception
+# before the recovery branch can restart the stale frontend process.
+$PSNativeCommandUseErrorActionPreference = $false
 
 # Use the application working directory for both pnpm and packaged launches.
 $appRoot = (Get-Location).Path
@@ -31,8 +35,34 @@ function Get-ListeningPids([int]$port) {
 
 function Stop-ListeningPids([int]$port) {
   foreach ($processId in (Get-ListeningPids $port)) {
+    $processInfo = Get-CimInstance Win32_Process -Filter "ProcessId=$processId" -ErrorAction SilentlyContinue
     Stop-Process -Id $processId -Force -ErrorAction SilentlyContinue
+
+    # pnpm.cmd starts Vinext through a cmd.exe parent. Killing only the
+    # listener leaves that parent holding redirected log files and can also
+    # leave a stale production process tree behind. Only terminate the parent
+    # when its command line is the verified frontend for this exact port.
+    if ($processInfo -and $processInfo.ParentProcessId) {
+      $parent = Get-CimInstance Win32_Process -Filter "ProcessId=$($processInfo.ParentProcessId)" -ErrorAction SilentlyContinue
+      if ($parent -and $parent.Name -eq 'cmd.exe' -and $parent.CommandLine -match "vinext start.*port $port") {
+        Stop-Process -Id ([int]$parent.ProcessId) -Force -ErrorAction SilentlyContinue
+      }
+    }
   }
+}
+
+function Stop-FrontendProcesses([int]$port) {
+  Stop-ListeningPids $port
+  # A failed launch can leave pnpm/cmd alive after the listener has already
+  # exited.  Match only the exact Vinext production command and port; never
+  # terminate the separate 3002/4318 runtime.
+  $candidates = Get-CimInstance Win32_Process -ErrorAction SilentlyContinue |
+    Where-Object { $_.CommandLine -and $_.CommandLine -match "vinext\s+start.*(?:--port\s+|port\s+)$port\b" }
+  foreach ($candidate in $candidates) {
+    & taskkill.exe /PID ([int]$candidate.ProcessId) /T /F *> $null
+  }
+  Start-Sleep -Milliseconds 250
+  Stop-ListeningPids $port
 }
 
 function Test-Http200([string]$url) {
@@ -57,28 +87,38 @@ if (-not (Test-Path -LiteralPath $runtimeNode)) {
 $runtimeNode = (Resolve-Path -LiteralPath $runtimeNode).Path
 $env:Path = "$(Split-Path -Parent $runtimeNode);$env:Path"
 
+function Test-ServedAssets([string]$url) {
+  try {
+    & $runtimeNode (Join-Path $appRoot 'scripts\verify-served-assets.mjs') $url 2>$null | Out-Null
+    return $LASTEXITCODE -eq 0
+  } catch {
+    return $false
+  }
+}
+
 # Verify the frontend and all referenced client chunks.
 $frontHealthy = Test-Http200 'http://127.0.0.1:3003/'
 $frontAssetHealthy = $false
 if ($frontHealthy) {
-  & $runtimeNode (Join-Path $appRoot 'scripts\verify-served-assets.mjs') 'http://127.0.0.1:3003/' 2>$null | Out-Null
-  $frontAssetHealthy = $LASTEXITCODE -eq 0
+  $frontAssetHealthy = Test-ServedAssets 'http://127.0.0.1:3003/'
 }
 if (-not ($frontHealthy -and $frontAssetHealthy)) {
-  Stop-ListeningPids 3003
-  $frontOut = Join-Path $appRoot 'prod-server-3003.out.log'
-  $frontErr = Join-Path $appRoot 'prod-server-3003.err.log'
-  # Do not carry a previous Vinext client-disconnect record into the next
-  # startup check; the log must describe the current frontend process.
-  Set-Content -LiteralPath $frontOut -Value '' -Encoding utf8
-  Set-Content -LiteralPath $frontErr -Value '' -Encoding utf8
+  Stop-FrontendProcesses 3003
+  # Use a fresh log pair for every launch.  A previous pnpm/cmd process may
+  # still hold a redirected handle for a short time even after its listener
+  # exits; reusing the fixed file made recovery fail before the new server
+  # could start.
+  $logRoot = Join-Path $appRoot 'app-data\runtime\logs'
+  New-Item -ItemType Directory -Force -Path $logRoot | Out-Null
+  $launchStamp = Get-Date -Format 'yyyyMMdd-HHmmss-fff'
+  $frontOut = Join-Path $logRoot "prod-server-3003-$launchStamp.out.log"
+  $frontErr = Join-Path $logRoot "prod-server-3003-$launchStamp.err.log"
   Start-Process -FilePath 'pnpm.cmd' -ArgumentList @('start') -WorkingDirectory $appRoot -WindowStyle Hidden -RedirectStandardOutput $frontOut -RedirectStandardError $frontErr | Out-Null
   $frontReady = $false
   for ($attempt = 0; $attempt -lt 60; $attempt++) {
     Start-Sleep -Milliseconds 500
     if (Test-Http200 'http://127.0.0.1:3003/') {
-      & $runtimeNode (Join-Path $appRoot 'scripts\verify-served-assets.mjs') 'http://127.0.0.1:3003/' 2>$null | Out-Null
-      if ($LASTEXITCODE -eq 0) { $frontReady = $true; break }
+      if (Test-ServedAssets 'http://127.0.0.1:3003/') { $frontReady = $true; break }
     }
   }
   if (-not $frontReady) { throw "3003 frontend failed the client asset check. See $frontErr." }

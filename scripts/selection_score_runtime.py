@@ -163,7 +163,7 @@ def iso_date(value: Any) -> str:
 def tdx_symbol(code: str, market: str = "") -> str:
     venue = str(market or "").lower()
     if venue not in {"sh", "sz", "bj"}:
-        venue = "sh" if code.startswith(("5", "6", "9")) else "sz"
+        venue = "bj" if code.startswith(("920", "4", "8")) else "sh" if code.startswith(("5", "6", "9")) else "sz"
     return venue + code
 
 
@@ -183,7 +183,11 @@ def load_tdx_history(target_date: str, codes: Iterable[str]) -> Tuple[Dict[str, 
 
     # 优先读取 TDX 原生 .day。tdx-bars.jsonl 是完整归档文件，当前约数 GB，
     # 不应为一次 30 只候选评分把整份归档从头扫描；.day 读取只 seek 最近 260 根。
-    tdx_root = Path(os.environ.get("ZHANGCAI_TDX_ROOT") or os.environ.get("TDX_ROOT") or r"C:\new_tdx_mock")
+    _tdx_root_text = (os.environ.get("ZHANGCAI_TDX_ROOT") or os.environ.get("TDX_ROOT") or "").strip()
+    _packaged_runtime = os.environ.get("ZHANGCAI_PACKAGED") == "1"
+    tdx_root = Path(_tdx_root_text) if _tdx_root_text else (
+        Path(r"C:\new_tdx_mock") if not _packaged_runtime else Path(r"C:\__zhangcai_tdx_root_not_configured__")
+    )
     day_record = struct.Struct("<IIIIIfII")
     binary_grouped: Dict[str, List[Dict[str, Any]]] = {}
     binary_paths: List[str] = []
@@ -330,6 +334,26 @@ def bars_for(grouped: Dict[str, List[Dict[str, Any]]], code: str, market: str) -
         if close is not None and close > 0:
             previous = close
     return out
+
+
+def latest_candidate_daily_date(
+    grouped: Dict[str, List[Dict[str, Any]]], candidates: Iterable[Dict[str, Any]]
+) -> Tuple[str, int]:
+    """Choose the most common latest TDX session among requested candidates."""
+    counts: Dict[str, int] = defaultdict(int)
+    for candidate in candidates:
+        if not isinstance(candidate, dict):
+            continue
+        code = code_only(candidate.get("code"))
+        rows = grouped.get(tdx_symbol(code, str(candidate.get("market") or ""))) or []
+        if rows:
+            session = iso_date(rows[-1].get("date"))
+            if len("".join(ch for ch in session if ch.isdigit())) == 8:
+                counts[session] += 1
+    if not counts:
+        return "", 0
+    selected = max(counts, key=lambda value: (counts[value], value))
+    return selected, counts[selected]
 
 
 def industry_identity(stock: Dict[str, Any]) -> str:
@@ -695,9 +719,13 @@ def base_metrics(stock: Dict[str, Any], bars: List[Dict[str, Any]], all_features
     avg_volume20 = mean(volumes[-21:-1]) if len(volumes) > 1 else None
     vol_ratio = close and ((volumes[-1] / avg_volume20) if avg_volume20 else None)
     volume_health = clamp(1.0 - abs((vol_ratio or 1.0) - 1.5) / 3.0)
-    pct = number(stock.get("pct"))
-    if pct is None and len(clean_closes) >= 2 and clean_closes[-2]:
+    # Strategy score is a close-to-close result for the selected daily date.
+    # Prefer the actual TDX bars over a possibly newer intraday market snapshot.
+    pct = None
+    if len(clean_closes) >= 2 and clean_closes[-2]:
         pct = (clean_closes[-1] / clean_closes[-2] - 1.0) * 100.0
+    if pct is None:
+        pct = number(stock.get("pct"))
     limit_pct = finite(stock.get("limitPct"), 20.0 if code.startswith(("300", "301", "688")) else 10.0)
     current_streak = max(int(finite(stock.get("limitStreak"))), streak(code, bars, limit_pct))
     industry = str(stock.get("industryName") or stock.get("sectorName") or "未知行业")
@@ -748,7 +776,7 @@ def base_metrics(stock: Dict[str, Any], bars: List[Dict[str, Any]], all_features
         "post_close_events": [],
         "data_quality": "normal",
         "feature_provenance": {
-            "source": "app-data/market/daily/<trade_date>/tdx-bars.jsonl",
+            "source": "app-data/market/daily/aggregate/tdx-bars.jsonl",
             "derived_fields": ["change_pct", "days_return", "close_location", "volume_ratio20", "breakout_20d_strength", "board_streak"],
             "not_available": ["turnover_rate", "free_float_mcap", "lhb", "event_feed", "industry_pit", "history_model"],
         },
@@ -1029,7 +1057,54 @@ def main() -> int:
     # the TDX read set before loading bars so the engine does not receive an
     # empty industry argument by construction.
     industry_codes = prepare_quant_industry_codes(candidates, market) if strategy_id == "quant-production-v65" else []
-    grouped, tdx_status = load_tdx_history(date_value, list(dict.fromkeys(codes + industry_codes)))
+    requested_date = date_value
+    grouped, tdx_status = load_tdx_history(requested_date, list(dict.fromkeys(codes + industry_codes)))
+    selected_date, selected_date_coverage = latest_candidate_daily_date(grouped, candidates)
+    if not selected_date:
+        print(json.dumps({
+            "status": "error",
+            "error": "候选股票均未找到可读取的本地通达信日线；不能用盘中快照替代日线策略输入。",
+            "requested_trade_date": requested_date,
+            "tdx_daily": tdx_status,
+        }, ensure_ascii=False))
+        return 2
+    date_value = "".join(ch for ch in selected_date if ch.isdigit())[:8]
+    selected_iso = iso_date(date_value)
+    # Establish one common, actually-available close date for this run. Trim
+    # any candidate/index bars newer than that date and exclude symbols whose
+    # last local bar is older, rather than silently mixing trading sessions.
+    for symbol, bars in list(grouped.items()):
+        grouped[symbol] = [bar for bar in bars if str(bar.get("date") or "") <= selected_iso]
+    eligible_candidates: List[Dict[str, Any]] = []
+    excluded_daily: List[str] = []
+    for candidate in candidates:
+        if not isinstance(candidate, dict):
+            continue
+        code = code_only(candidate.get("code"))
+        bars = grouped.get(tdx_symbol(code, str(candidate.get("market") or ""))) or []
+        last_date = str(bars[-1].get("date") or "") if bars else ""
+        if last_date != selected_iso:
+            excluded_daily.append(f"{code}:最新本地日线为 {last_date or '缺失'}，未混入 {selected_iso} 批次评分")
+            continue
+        eligible_candidates.append(candidate)
+    candidates = eligible_candidates
+    if not candidates:
+        print(json.dumps({
+            "status": "error",
+            "error": f"没有候选股票具有同一最新可用日线 {selected_iso}。",
+            "requested_trade_date": requested_date,
+            "selected_trade_date": date_value,
+            "tdx_daily": tdx_status,
+            "missing": excluded_daily,
+        }, ensure_ascii=False))
+        return 2
+    tdx_status = {
+        **tdx_status,
+        "requested_trade_date": requested_date,
+        "selected_trade_date": date_value,
+        "selected_date_coverage": selected_date_coverage,
+        "excluded_candidate_count": len(excluded_daily),
+    }
     same_day_fields, same_day_status = load_exact_date_market_fields(date_value)
     all_features: Dict[str, Dict[str, Optional[float]]] = {}
     base_rows: List[Dict[str, Any]] = []
@@ -1072,6 +1147,8 @@ def main() -> int:
     if strategy_id == "quant-production-v65":
         industry_contexts, industry_status = build_quant_industry_contexts(base_rows, market, grouped, date_value)
 
+    market_trade_date = "".join(ch for ch in str(market.get("tradeDate") or market.get("trade_date") or market.get("date") or "") if ch.isdigit())[:8]
+    market_date_mismatch = bool(market_trade_date and market_trade_date != date_value)
     if strategy_id == "golden-ignition-v8":
         result_rows, missing, score_status = run_golden(modules["golden"], base_rows, date_value)
     elif strategy_id == "short-burst-score-v5":
@@ -1090,12 +1167,27 @@ def main() -> int:
         print(json.dumps({"status": "error", "error": f"未支持的策略评分入口: {strategy_id}"}, ensure_ascii=False))
         return 2
 
+    date_degraded = requested_date != date_value or bool(excluded_daily) or market_date_mismatch
+    if requested_date != date_value:
+        missing.append(f"请求日线 {requested_date} 尚未落盘，已使用本地最新共同日线 {date_value}")
+    if excluded_daily:
+        missing.extend(excluded_daily)
+    if market_date_mismatch:
+        missing.append(f"行情快照日期 {market_trade_date} 与评分日线 {date_value} 不同；评分 OHLC 仅取通达信收盘日线")
+
     by_code = {str(x.get("code")): x for x in result_rows}
     ordered = [by_code[code] for code in codes if code in by_code]
     output = {
         "status": "ok",
         "strategy_id": strategy_id,
         "trade_date": date_value,
+        "requested_trade_date": requested_date,
+        "daily_data_quality": "DEGRADED" if date_degraded else "AVAILABLE",
+        "daily_data_notice": (
+            f"请求日线 {requested_date} 未就绪，本次使用最新共同可用收盘日线 {date_value}。"
+            if requested_date != date_value else
+            (f"本次使用通达信日线 {date_value}；{len(excluded_daily)} 个缺少同日 K 线的候选已排除。" if excluded_daily else "")
+        ),
         "score_status": score_status,
         "score_source": {
             "kind": "embedded_original_engine",

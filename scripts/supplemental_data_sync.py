@@ -329,7 +329,11 @@ def read_index_daily(requested_date: str) -> dict[str, Any]:
     wanted = {"sh000001", "sz399001", "sz399006", "sh000300", "sh000016", "sh000688", "sz399005", "sh000905", "sh000852"}
     # 指数先读 TDX 原始 .day 文件，只打开 9 个小文件，不能为了找指数扫描
     # 15,722,263 行、约 2.5GB 的全市场 JSONL 归档。
-    tdx_root = Path(os.environ.get("ZHANGCAI_TDX_ROOT", r"C:\new_tdx_mock"))
+    _tdx_root_text = os.environ.get("ZHANGCAI_TDX_ROOT", "").strip()
+    _packaged_runtime = os.environ.get("ZHANGCAI_PACKAGED") == "1"
+    tdx_root = Path(_tdx_root_text) if _tdx_root_text else (
+        Path(r"C:\new_tdx_mock") if not _packaged_runtime else Path(r"C:\__zhangcai_tdx_root_not_configured__")
+    )
     rows: dict[str, list[dict[str, Any]]] = {key: [] for key in wanted}
     for symbol in wanted:
         market, code = symbol[:2], symbol[2:]

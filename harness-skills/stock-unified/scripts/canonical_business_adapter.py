@@ -293,7 +293,9 @@ def business_command(run_dir: Path) -> list[str]:
             "--as-of",
             datetime.now().strftime("%Y-%m-%d"),
             "--tdx",
-            r"C:\new_tdx_mock",
+            os.environ.get("ZHANGCAI_TDX_ROOT")
+            or os.environ.get("TDX_ROOT")
+            or os.environ.get("ZHANGCAI_DEV_TDX_ROOT", r"C:\new_tdx_mock"),
             "--json",
             str(run_dir / "old-leader-result.json"),
             "--csv",

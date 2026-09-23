@@ -10,7 +10,7 @@
 
 | 资产 | 本地路径 | 用途与真值边界 |
 | --- | --- | --- |
-| `tdx_daily_history` | 以 `latest_tdx_archive.path` 为准；增量模式为 `market/daily/aggregate/tdx-bars.jsonl` | 通达信 `.day` 解码后的全部可用历史日线；历史策略、复盘和公式输入的主数据 |
+| `tdx_daily_history` | 以 `latest_tdx_archive.path` 为准；默认 canonical 为 `market/daily/aggregate/tdx-bars.jsonl` | 通达信 `.day` 解码后的全部可用历史日线；历史策略、复盘和公式输入的主数据 |
 | 日线清单 | `market/daily/<trade-date>/manifest.json`、`status/tdx-daily-history.json` | 同日覆盖数、归档记录数、源目录、时间、SHA-256、完整/降级状态 |
 | `tdx_daily_index` | `market/daily/index/tdx-symbol-index.json` | 六位代码/市场到 TDX `.day` 的快速索引，含记录数和首尾日期 |
 | `daily_data_index` | `market/daily/index/daily-data-index.json`、`market/daily/<trade-date>/daily-data-index.json` | TDX 主源与公开降级层的统一可用性、日期、记录数和字段缺失索引 |
@@ -40,7 +40,7 @@
 1. 读取 `harness/context/latest-archive.json`；若不存在，再读取 `harness/context/latest-data.json`，确定最近一次归档日期、入口类型和归档状态。
 2. 读取 `harness/context/local-data-page.json`，确定 `data_root` 与 `latest_tdx_trade_date`。
 3. 读取 `status/current.json`，只将状态为 `available` 的必需资产作为可用输入；`degraded`、`blocked`、`missing` 必须传入降级原因。
-4. 读取目标交易日的日线 `manifest.json`，再按需读取 `tdx-bars.jsonl`。同时核对 `history_scope`、`archive_mode`、`incremental_from`、`incremental_records` 和 `incremental_trade_dates`；默认 `history_scope=all_available_source_history`，`incremental_append` 表示只追加了 TDX 源中上次归档日之后的全部记录，`delta_file` 是本次新增记录，`file` 是可持续累积的聚合文件，`unchanged` 表示同日重复执行未改写文件。不要用 `runtime/market-latest.json` 的榜单子集冒充日线全量。
+4. 读取目标交易日的日线 `manifest.json`，再按需读取 `file` 指向的 canonical 主库。交易日目录只保存 `manifest.json` 和 `delta_file`；同时核对 `history_scope`、`archive_mode`、`incremental_from`、`incremental_records` 和 `incremental_trade_dates`。默认 `history_scope=all_available_source_history`，`incremental_append` 表示只追加了 TDX 源中上次归档日之后的全部记录，`incremental_append_new_symbols` 表示仅为新增证券补写其历史，`delta_file` 是本次新增记录，`unchanged` 表示同日重复执行未改写文件。不要用 `runtime/market-latest.json` 的榜单子集冒充日线全量。
 4. 先读 `market/daily/index/tdx-symbol-index.json` 定位主文件，再读 `market/daily/index/daily-data-index.json` 和 `runtime/daily-jsonl-integrity-<trade-date>.json`。若主文件不存在或不可读，按索引读取 `market/daily/fallback/<trade-date>/<symbol>.jsonl`；逐行核对 `date == target_date`、OHLCV、`source_date`、`status=degraded`、`source_sha256` 和 `missing_fields`，并在 Harness 结果标注 `quality=degraded`。
 5. 读取 `public/`、`evidence/` 中对应日期的快照，核对来源日期和哈希；空响应只能记录为空或降级。
 6. 读取 `evidence/sources/latest.json` 和对应交易日的 `manifest.json`，只使用状态为 `available` 且文件存在、日期一致的资产；`partial`、`declared_not_snapshotted`、`not_configured` 和 `blocked` 必须写入降级说明。

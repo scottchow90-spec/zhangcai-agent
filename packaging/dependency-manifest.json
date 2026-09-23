@@ -1,0 +1,120 @@
+{
+  "schema": "ZHANGCAI_DESKTOP_DEPENDENCY_MANIFEST_V1",
+  "purpose": "主安装包携带完整桌面运行链路；市场数据和通达信原始数据独立于主程序，公开补充源按需下载后落盘。",
+  "packagingPolicy": {
+    "spec": "packaging/main-installer-policy.json",
+    "mainInstallerDataPackInput": "forbidden",
+    "mainInstallerDataPackRequired": false,
+    "baselineRuntime": "embedded-in-main-installer-and-reused-by-program-updates",
+    "formulaSeedOnly": "electron-app/resource-library",
+    "independentDataPack": "optional-post-install-only"
+  },
+  "releaseLayers": {
+    "environmentBaseline": {
+      "role": "embedded blank-machine installation baseline",
+      "reusable": true,
+      "mustRemainStableForProgramUpdates": true,
+      "marker": "resources/runtime/environment-version.ini",
+      "installer": "掌财桌面端-<version>-x64.exe",
+      "uninstaller": "legacy optional: 掌财桌面端-运行环境卸载-<version>-x64.exe",
+      "doesNotIncludeMainProgram": false,
+      "reuseRule": "the verified runtime staging is embedded into the main installer; later program updates reuse it and do not rebuild it"
+    },
+    "mainProgram": {
+      "role": "Electron shell, Zhangcai program files and the embedded private runtime baseline",
+      "requiresEnvironmentBaseline": false,
+      "contains": ["resources/runtime", "resources/deepseek-harness", "resources/app/node_modules"],
+      "doesNotInclude": ["data/resource-library", "app-data", "independent data-pack payload"]
+    },
+    "programUpdate": {
+      "role": "small subsequent update for code, web assets, skills, bridge and formula seed",
+      "doesNotInclude": ["Electron", "resources/runtime", "resources/deepseek-harness", "resources/app/node_modules", "data/resource-library"],
+      "targetValidation": ["resources/runtime/node/node.exe", "resources/runtime/python/python.exe", "resources/deepseek-harness/lib/bin.js", "resources/app/node_modules/vinext/dist/cli.js"]
+    }
+  },
+  "requiredEmbeddedRuntime": [
+    {
+      "name": "Electron",
+      "role": "Windows 桌面外壳和 Chromium 页面运行时",
+      "source": "electron-builder"
+    },
+    {
+      "name": "Node.js",
+      "role": "启动网页生产服务和本地桥接脚本",
+      "source": ".runtime/node/node.exe",
+      "version": "24.19.0",
+      "installPolicy": "private_embedded; reuse same-version install; replace only the copy owned by this desktop install"
+    },
+    {
+      "name": "Python",
+      "role": "执行本地行情、通达信公式和数据校验脚本",
+      "source": ".runtime/python/python.exe",
+      "version": "3.12.14",
+      "installPolicy": "private_embedded; reuse same-version install; replace only the copy owned by this desktop install"
+    },
+    {
+      "name": "Vinext runtime",
+      "role": "承载首页和 /chat 页面",
+      "source": "packaging/runtime-node-modules"
+    },
+    {
+      "name": "DeepSeek Harness",
+      "role": "唯一智能体解释和任务编排运行时",
+      "source": "packaging/vendor/deepseek-harness",
+      "version": "0.1.2-rc.1",
+      "installPolicy": "private_embedded; reuse same-version install; replace only the copy owned by this desktop install"
+    },
+    {
+      "name": "Zhangcai web scripts and skills",
+      "role": "本地数据读取、公式桥接、数据门禁和报告落盘",
+      "source": ["agent-server.mjs", "scripts", "harness-skills", "lib", "config"]
+    }
+  ],
+  "allowedExternalInputs": [
+    {
+      "name": "TDX installation or TDX mock data",
+      "role": "只读行情、公式和按需分钟数据",
+      "policy": "user-selected-or-user-downloaded; never copied into the main program"
+    },
+    {
+      "name": "DeepSeek credentials",
+      "role": "Harness authentication",
+      "policy": "user-provided-only; never bundled"
+    },
+    {
+      "name": "Public market, news and research sources",
+      "role": "TDX unavailable fallback and scheduled/on-demand supplemental snapshots",
+      "policy": "network access only from an explicit update or fallback task; write source/date/retrieval/hash evidence into the user resource library before Harness use"
+    }
+  ],
+  "runtimeNetworkPolicy": {
+    "mode": "local_first_on_demand",
+    "pythonMarketScripts": "TDX/local data first; public quote, news and third-party sources are available only in an explicit update/fallback task and must be persisted into the user resource library",
+    "harness": "DeepSeek API access is limited to the bundled Harness process",
+    "installerDownload": "the TDX Mock download page is an installer-time user action; runtime public-source downloads are explicit data-update actions and are not embedded in the main program"
+  },
+  "mainProgramMustExclude": [
+    "app-data",
+    "skill-archives",
+    "*.lc5",
+    "*.LC5",
+    ".env.local",
+    "DEEPSEEK_API_KEY",
+    "C:\\new_tdx_mock",
+    "node_modules used only by the build toolchain",
+    "Python headers, static libraries, Tcl/Tk development files, tests and bytecode caches"
+  ],
+  "separateDataPack": {
+    "enabled": true,
+    "mustNotOverwrite": ["resources/app", "resources/deepseek-harness", "resources/runtime"],
+    "target": "<client-install-root>\\data\\resource-library",
+    "recommendedContents": [
+      "canonical daily market aggregate",
+      "trade-date deltas",
+      "formula evidence and manifests",
+      "report archive seed",
+      "data integrity receipts"
+    ],
+    "minuteData": "external-on-demand-only; do not copy raw .lc5 into the data pack by default"
+  }
+}

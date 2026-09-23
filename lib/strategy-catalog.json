@@ -26,6 +26,10 @@
   {
     "id": "convertible-bond-screening-strategy",
     "dataStatus": "missing",
+    "minuteData": {
+      "mode": "optional_degraded",
+      "purpose": "部分可转债分钟特征按任务读取外部 LC5；原始 .lc5 不进入 EXE。"
+    },
     "missingData": [
       "可转债日线行情",
       "可转债基础资料/转股价与赎回公告快照"
@@ -73,6 +77,10 @@
   {
     "id": "feilong-strategy",
     "dataStatus": "available",
+    "minuteData": {
+      "mode": "optional_degraded",
+      "purpose": "飞龙高级因子需要外部 LC5；缺少时只允许输出日线/公式部分，并标记 DEGRADED。"
+    },
     "missingData": [],
     "dataNote": "日线行情、数据新鲜度与对应技能依赖已发现，可提交 Harness 运行。",
     "businessEntry": "scripts/feilong_realtime_report.py",
@@ -117,6 +125,10 @@
   {
     "id": "nana-teacher-five-strategies",
     "dataStatus": "available",
+    "minuteData": {
+      "mode": "optional_degraded",
+      "purpose": "5 分钟复核属于可选辅助证据，不阻塞普通日线任务。"
+    },
     "missingData": [],
     "dataNote": "日线行情、数据新鲜度与对应技能依赖已发现，可提交 Harness 运行。",
     "businessEntry": "scripts/business_entry.py",

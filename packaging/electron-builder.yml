@@ -1,0 +1,2 @@
+# Compatibility alias: keep a single desktop packaging configuration.
+extends: ../electron-app/electron-builder.yml

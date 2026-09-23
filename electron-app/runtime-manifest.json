@@ -1,0 +1,151 @@
+{
+  "schema": "ZHANGCAI_DESKTOP_PACKAGE_PLAN_V4",
+  "product": "掌财桌面端",
+  "packageVersion": "0.1.13",
+  "scope": "electron-app-main-program-4319-3003-3004",
+  "releaseMode": "integrated-main-installer-plus-program-update",
+  "packagingPolicy": {
+    "spec": "packaging/main-installer-policy.json",
+    "mainInstallerBypassesDataPack": true,
+    "baselineRuntimeEmbedded": true,
+    "programUpdatesReuseBaseline": true,
+    "dataPackMode": "optional-post-install"
+  },
+  "releaseLayers": {
+    "environment": {
+      "baseline": "dist-installer/releases/0.1.13/掌财桌面端-0.1.13-x64.exe",
+      "reusable": true,
+      "contains": ["private Node.js", "private Python", "DeepSeek Harness", "pruned Vinext runtime dependencies"],
+      "doesNotContain": ["user market data", "TDX executable", "DeepSeek credentials"],
+      "baselineVersion": "packaging/environment-baseline-version.txt",
+      "reuseRule": "the verified baseline runtime is embedded in the 0.1.13 main installer; later program updates reuse it and do not rebuild it",
+      "legacyArtifacts": [
+        "dist-installer/releases/0.1.6/掌财桌面端-运行环境-0.1.6-x64.exe",
+        "dist-installer/releases/0.1.6/掌财桌面端-运行环境卸载-0.1.6-x64.exe"
+      ]
+    },
+    "mainProgram": {
+      "installerArtifact": "dist-installer/releases/0.1.13/掌财桌面端-0.1.13-x64.exe",
+      "requiresEnvironmentLayer": false,
+      "contains": [
+        "Electron",
+        "resources/app.asar",
+        "resources/app",
+        "resources/app/node_modules",
+        "resources/runtime",
+        "resources/deepseek-harness",
+        "resources/resource-library formula seed"
+      ],
+      "excludes": ["data/resource-library", "TDX executable", "DeepSeek credentials"]
+    },
+    "programUpdate": {
+      "installerArtifact": "dist-installer/releases/0.1.13/掌财桌面端-程序更新-0.1.13-x64.exe",
+      "sourceScript": "scripts/package-program-update.ps1",
+      "contains": ["resources/app.asar", "resources/app without node_modules", "formula seed"],
+      "excludes": ["Electron", "resources/runtime", "resources/deepseek-harness", "resources/app/node_modules", "data/resource-library"],
+      "requiresIntegratedMainInstall": true
+    }
+  },
+  "dataPack": {
+    "includedInMainInstaller": false,
+    "plannedAsSeparateArtifact": true,
+    "artifact": "dist-installer/data-pack-0.1.0",
+    "installerArtifact": "dist-installer/掌财桌面端-日线数据包-0.1.0-x64.exe",
+    "installTarget": "selected-client-directory\\data\\resource-library",
+    "clientDirectorySelection": "required-for-client-validation-and-recording"
+  },
+  "frontend": {
+    "desktopUiPreferredPort": 34303,
+    "desktopUiRoute": "/",
+    "chatRoute": "/chat",
+    "legacyWebPorts": [3003, 3004],
+    "recommendedMode": "single-frontend-process",
+    "note": "桌面版用同一 Vinext 进程承载首页和聊天页，聊天页通过 /chat 打开。"
+  },
+  "bridge": {
+    "host": "127.0.0.1",
+    "desktopPreferredPort": 44319,
+    "legacyWebPort": 4319,
+    "entry": "agent-server.mjs",
+    "dataMode": "user-writable",
+    "tdxMode": "user-selected-external-install"
+  },
+  "portIsolation": {
+    "desktopNeverUses": [3003, 3004, 4319],
+    "allocation": "probe-free-local-port-with-preferred-range",
+    "identityCheck": "health.appRoot-dataRoot-and-resourceLibrary-must-match-current-package"
+  },
+  "runtime": {
+    "node": "24.19.0",
+    "python": "3.12.14",
+    "nodeEngine": ">=22.13.0",
+    "vinext": "1.0.0-beta.5",
+    "harness": {
+      "requiredForRelease": true,
+      "bundledPath": "resources/deepseek-harness/lib/bin.js",
+      "currentWorkspaceStatus": "rebuilt-after-runtime-prune-fix",
+      "policy": "pin-and-bundle-in-main-installer; do-not-rebuild-unless-baseline-changes"
+    }
+  },
+  "dependencyPolicy": {
+    "manifest": "packaging/dependency-manifest.json",
+    "agent": "DeepSeek Harness plus the bundled Zhangcai web scripts only",
+    "data": "local data first; user-selected TDX/mock data plus on-demand public-source snapshots",
+    "dataPolicy": "local_first_on_demand",
+    "network": "DeepSeek Harness API plus explicit on-demand public data/news downloads; downloaded source files must land in the user resource library before Harness use",
+    "mainProgramExcludes": ["app-data", "skill-archives", "*.lc5", ".env.local", "DEEPSEEK_API_KEY"],
+    "dataPack": "self-contained-separate-installer; never overwrite embedded code or runtimes"
+  },
+  "desktopExperience": {
+    "chatIntegrated": true,
+    "clientActions": ["首页", "聊天", "同步行情", "打开通达信", "运行环境", "设置通达信目录"],
+    "lastPagePersisted": true,
+    "browserStoragePersisted": true,
+    "webUiUnchanged": true
+  },
+  "resourceLibrary": {
+    "defaultRoot": "<client-install-root>\\data\\resource-library",
+    "embeddedSeed": "resources/resource-library/manifest.json + resources/resource-library/evidence/formulas/package/",
+    "formulaSeedIncludedInMainInstaller": true,
+    "formulaSeedMergePolicy": "copy-missing-only-on-first-launch-or-upgrade",
+    "runtimeWrites": "resource-library-root",
+    "fullDataTestSeed": "dist-installer/win-unpacked/resources/resource-library",
+    "releaseInstallerIncludesFullData": false
+  },
+  "minuteData": {
+    "packaged": false,
+    "source": "external_tdx_lc5",
+    "mode": "on-demand-only",
+    "ordinaryTasks": "not_required",
+    "missingForDeclaredSkill": "DEGRADED",
+    "rawFilesInInstaller": false,
+    "note": "需要分钟特征的技能读取用户选择的通达信目录；原始 .lc5 不写入 EXE resource-library。"
+  },
+  "credentials": {
+    "requiredForHarness": true,
+    "configuration": "desktop-runtime-panel-or-resource-library/.env.local",
+    "bundled": false,
+    "policy": "user-provided-only"
+  },
+  "data": {
+    "developmentRoot": "app-data",
+    "packagedRoot": "<client-install-root>\\data\\resource-library",
+    "doNotPackage": [".env.local", "DEEPSEEK_API_KEY", "C:\\new_tdx_mock"],
+    "preserveOnUninstall": true
+  },
+  "installer": {
+    "desktopShell": "Electron",
+    "windowsInstaller": "electron-builder + NSIS",
+    "architecture": "x64",
+    "icon": "electron-app/resources/zhangcai-icon.ico",
+    "installerIcon": "electron-app/resources/installer-icon.ico",
+    "installationOrder": ["掌财桌面端-<version>-x64.exe"],
+    "environmentDetection": "embedded runtime manifest plus Node/Python/Harness/Vinext required-file checks; never a pre-install gate",
+    "legacyEnvironmentInstaller": "electron-app/nsis/environment-installer.nsi",
+    "legacyEnvironmentUninstaller": "electron-app/nsis/environment-uninstaller.nsi",
+    "dataPackIcon": "packaging/data-pack-icon.png",
+    "tdxDistribution": "user-download-and-select",
+    "dataDistribution": "self-contained-nsis-data-installer",
+    "dataPackInstallerIcon": "packaging/data-pack-icon.ico"
+  }
+}

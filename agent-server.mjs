@@ -1,23 +1,42 @@
 import http from 'node:http';
-import { spawn, execFileSync } from 'node:child_process';
+import { spawn } from 'node:child_process';
 import path from 'node:path';
-import { closeSync, cpSync, existsSync, mkdirSync, openSync, readFileSync, readSync, readdirSync, statSync } from 'node:fs';
-import { mkdir, writeFile, unlink } from 'node:fs/promises';
+import { accessSync, closeSync, cpSync, createReadStream, existsSync, mkdirSync, openSync, readFileSync, readSync, readdirSync, statSync, constants as fsConstants } from 'node:fs';
+import { mkdir, rename, writeFile, unlink } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
+
+let deepSeekCredentialSource = '';
+const runtimeJsonWrites = new Map();
 
 // Load the ignored local environment file before resolving the bridge
 // configuration. This keeps scheduled/restarted bridge processes consistent
 // without committing credentials to the project.
 function loadLocalEnvFile() {
-  const file = path.join(path.resolve(process.env.ZHANGCAI_APP_ROOT || process.cwd()), '.env.local');
-  if (!existsSync(file)) return;
-  try {
-    for (const line of readFileSync(file, 'utf8').split(/\r?\n/)) {
-      const match = line.match(/^\s*([A-Z_][A-Z0-9_]*)\s*=\s*(.*?)\s*$/);
-      if (match && !process.env[match[1]]) process.env[match[1]] = match[2].replace(/^['"]|['"]$/g, '');
+  const appRoot = path.resolve(process.env.ZHANGCAI_APP_ROOT || process.cwd());
+  const packagedResourceRoot = process.env.LOCALAPPDATA && process.env.ZHANGCAI_PACKAGED === '1'
+    ? path.join(process.env.LOCALAPPDATA, '掌财智能体-4319', 'resource-library')
+    : '';
+  const configuredResourceRoot = process.env.ZHANGCAI_RESOURCE_LIBRARY || packagedResourceRoot;
+  const candidates = [
+    process.env.ZHANGCAI_CREDENTIALS_FILE,
+    configuredResourceRoot ? path.join(configuredResourceRoot, '.env.local') : '',
+    process.env.ZHANGCAI_DATA_DIR ? path.join(process.env.ZHANGCAI_DATA_DIR, '.env.local') : '',
+    path.join(appRoot, '.env.local'),
+  ].filter(Boolean);
+  for (const file of [...new Set(candidates)]) {
+    if (!existsSync(file)) continue;
+    try {
+      for (const line of readFileSync(file, 'utf8').split(/\r?\n/)) {
+        const match = line.match(/^\s*([A-Z_][A-Z0-9_]*)\s*=\s*(.*?)\s*$/);
+        if (match && !process.env[match[1]]) {
+          process.env[match[1]] = match[2].replace(/^['"]|['"]$/g, '');
+          if (match[1] === 'DEEPSEEK_API_KEY' && process.env.DEEPSEEK_API_KEY) deepSeekCredentialSource = file;
+        }
+      }
+      if (process.env.DEEPSEEK_API_KEY) return;
+    } catch (error) {
+      console.warn(`[agent] 无法读取凭据配置：${error instanceof Error ? error.message : String(error)}`);
     }
-  } catch (error) {
-    console.warn(`[agent] 无法读取本地环境文件：${error instanceof Error ? error.message : String(error)}`);
   }
 }
 loadLocalEnvFile();
@@ -28,10 +47,19 @@ const HOST = process.env.ZHANGCAI_HOST || '127.0.0.1';
 const PORT = Number(process.env.ZHANGCAI_BRIDGE_PORT || 4319);
 const BRIDGE_CAPABILITIES = ['runtime/tdx/open', 'runtime/environment'];
 const APP_ROOT = path.resolve(process.env.ZHANGCAI_APP_ROOT || process.cwd());
-// All production data assets stay beside the 3003 program. Do not allow an
-// inherited environment variable to redirect web/Harness reads or writes to
-// another app, a 3002 snapshot, or an external user directory.
-const DATA_ROOT = path.join(APP_ROOT, 'app-data');
+// Development keeps data beside the project. The packaged desktop launcher
+// sets ZHANGCAI_PACKAGED=1 and points ZHANGCAI_DATA_DIR at a user-writable
+// directory so an install under Program Files never receives runtime writes.
+const PACKAGED_RUNTIME = process.env.ZHANGCAI_PACKAGED === '1';
+const configuredDataRoot = PACKAGED_RUNTIME ? process.env.ZHANGCAI_DATA_DIR : '';
+const RESOURCE_LIBRARY_ROOT = path.resolve(
+  process.env.ZHANGCAI_RESOURCE_LIBRARY
+    || (PACKAGED_RUNTIME && process.env.LOCALAPPDATA
+      ? path.join(process.env.LOCALAPPDATA, '掌财智能体-4319', 'resource-library')
+      : path.join(APP_ROOT, 'app-data')),
+);
+const DATA_ROOT = path.resolve(configuredDataRoot || RESOURCE_LIBRARY_ROOT);
+const CREDENTIALS_ENV_FILE = path.join(RESOURCE_LIBRARY_ROOT, '.env.local');
 const RUNTIME_ROOT = path.join(DATA_ROOT, 'runtime');
 const HARNESS_ROOT = path.join(DATA_ROOT, 'harness');
 const HARNESS_CONTEXT_ROOT = path.join(HARNESS_ROOT, 'context');
@@ -46,16 +74,45 @@ const UNIFIED_ARCHIVE_REPORT_ROOT = path.join(DATA_ROOT, 'reports', 'unified-arc
 const UNIFIED_ARCHIVE_OUTPUT_ROOT = path.join(DATA_ROOT, 'runtime', 'unified-archive-output');
 const SKILL_SOURCE = path.resolve(process.env.ZHANGCAI_SKILLS_DIR || path.join(APP_ROOT, 'harness-skills'));
 const DAILY_STATE_FILE = path.join(RUNTIME_ROOT, 'daily-refresh-state.json');
+const DAILY_INDEX_INITIALIZATION_STATE_FILE = path.join(RUNTIME_ROOT, 'daily-index-initialization-state.json');
 const SUPPLEMENTAL_STATE_FILE = path.join(RUNTIME_ROOT, 'supplemental-refresh-state.json');
 const UNIFIED_ARCHIVE_STATE_FILE = path.join(RUNTIME_ROOT, 'unified-data-archive-state.json');
 const UNIFIED_VERIFY_STATE_FILE = path.join(RUNTIME_ROOT, 'unified-data-verification-state.json');
 const SKILL14_CATALOG_FILE = path.join(APP_ROOT, 'config', 'skill14-catalog.json');
 const TDX_DAY_RECORD_SIZE = 32;
 const TDX_HISTORY_INDEX_FILE = path.join(DATA_ROOT, 'market', 'daily', 'index', 'tdx-symbol-index.json');
+const CANONICAL_DAILY_FILE = path.join(DATA_ROOT, 'market', 'daily', 'aggregate', 'tdx-bars.jsonl');
+const CANONICAL_DAILY_INDEX_FILE = path.join(DATA_ROOT, 'market', 'daily', 'index', 'canonical-symbol-index.json');
 const DAILY_DATA_INDEX_FILE = path.join(DATA_ROOT, 'market', 'daily', 'index', 'daily-data-index.json');
 const DAILY_FALLBACK_ROOT = path.join(DATA_ROOT, 'market', 'daily', 'fallback');
 const SUPPLEMENTAL_ROOT = path.join(DATA_ROOT, 'evidence', 'supplemental');
 const SUPPLEMENTAL_LATEST_FILE = path.join(SUPPLEMENTAL_ROOT, 'latest.json');
+
+function bridgeTdxRoot() {
+  const configured = String(process.env.ZHANGCAI_TDX_ROOT || '').trim();
+  // A packaged desktop without a configured client must report “not
+  // configured”, never silently inspect the development machine's C: path.
+  return configured || (PACKAGED_RUNTIME ? '' : 'C:\\new_tdx_mock');
+}
+
+function credentialStatus() {
+  const value = String(process.env.DEEPSEEK_API_KEY || '');
+  const configured = value.length > 0;
+  return {
+    configured,
+    source: configured ? (deepSeekCredentialSource || 'process environment') : 'missing',
+    keyHint: configured ? `${value.slice(0, 3)}…${value.slice(-4)}` : '',
+  };
+}
+
+function resourceLibraryStatus() {
+  let writable = false;
+  try {
+    accessSync(RESOURCE_LIBRARY_ROOT, fsConstants.W_OK);
+    writable = true;
+  } catch { /* startup creates the directory on first write */ }
+  return { root: RESOURCE_LIBRARY_ROOT, writable };
+}
 // 复盘任务会携带 TDX 行业/主题、涨停梯队和榜单上下文；完整 JSON
 // 通常超过 128KB。保留本地服务的明确上限，但避免超限时直接 socket hang up。
 const MAX_BODY = 4 * 1024 * 1024;
@@ -75,19 +132,53 @@ function localPythonExecutable() {
   // cache because that would make the EXE depend on the host agent.
   return candidates.find((candidate) => candidate && existsSync(candidate)) || (process.platform === 'win32' ? 'python.exe' : 'python3');
 }
+
+function isLocalOnlyDataPolicy() {
+  // Keep strict local-only mode available for diagnostics, but do not enable
+  // it merely because the bridge is packaged. The desktop product supports
+  // explicit public-source updates and TDX -> public fallback; each script
+  // still writes its result into DATA_ROOT before Harness use.
+  return process.env.ZHANGCAI_DATA_POLICY === 'local_tdx_only';
+}
+
+function localScriptEnvironment(extra = {}) {
+  const requestedPythonPath = extra.PYTHONPATH || process.env.PYTHONPATH || '';
+  const configuredTdxRoot = bridgeTdxRoot();
+  // Python skill packages historically used both TDX_ROOT and
+  // ZHANGCAI_TDX_ROOT. Always pass both names, and use an explicit sentinel
+  // when the user has not selected a TDX directory. Passing an empty string
+  // would make Path('') resolve to the current data directory on Windows.
+  const childTdxRoot = configuredTdxRoot || path.join(DATA_ROOT, 'runtime', '__tdx_root_not_configured__');
+  return {
+    ...process.env,
+    ...extra,
+    ZHANGCAI_APP_ROOT: APP_ROOT,
+    ZHANGCAI_DATA_DIR: DATA_ROOT,
+    ZHANGCAI_TDX_ROOT: childTdxRoot,
+    TDX_ROOT: childTdxRoot,
+    TDX_ROOTS: childTdxRoot,
+    BAIMAO_TDX_ROOT: childTdxRoot,
+    ONESTOCK_STOCK_DATA_ROOT: DATA_ROOT,
+    STOCK_SKILLS_ROOT: SKILL_SOURCE,
+    ZHANGCAI_SKILLS_DIR: SKILL_SOURCE,
+    ZHANGCAI_DATA_POLICY: isLocalOnlyDataPolicy() ? 'local_tdx_only' : (process.env.ZHANGCAI_DATA_POLICY || ''),
+    PYTHONPATH: [path.join(APP_ROOT, 'scripts'), requestedPythonPath].filter(Boolean).join(path.delimiter),
+  };
+}
+
 const HARNESS_JSON_SCHEMA = '最终只返回一个严格 JSON 对象，不要 Markdown、代码围栏或前后解释。字段必须为：status(string)、summary(string)、data_date(string)、data_scope(string)、cautions(string[])、findings({title:string,text:string}[])、tables({title:string,columns:string[],rows:string[][]}[])。所有结论只能引用传入数据，缺失项写入 cautions，不得虚构。报告按网页重点摘要标准输出：summary 不超过 120 字，findings 最多 5 条且每条不超过 100 字，tables 只保留最关键的 3 张表、每张最多 10 行；优先保留主线结论、核心指标、Top 候选和风险边界，省略重复解释。';
-// DeepSeek Harness 启动和读取本地技能文件本身通常需要几十秒；复杂复盘
-// 若仍固定 240 秒会在模型刚开始输出前被桥接层杀掉。默认给足 10 分钟，
-// 仍可通过 DSH_TIMEOUT_MS 在独立运行时收紧。
-const DEFAULT_TIMEOUT_MS = Number(process.env.DSH_TIMEOUT_MS || 600000);
+// DeepSeek Harness 启动、读取本地技能文件和补充数据通常需要较长时间；
+// 研究技能统一给足 20 分钟，避免模型刚开始输出前被桥接层杀掉。独立
+// 运行时仍可通过 DSH_TIMEOUT_MS 覆盖，但默认值必须适合完整研究链路。
+const DEFAULT_TIMEOUT_MS = Number(process.env.DSH_TIMEOUT_MS || 1200000);
 const SKILL_TIMEOUT_MS = {
-  'five-dimension-resonance': 600000,
-  'a-share-leader-deep-research': 600000,
-  'a-share-limit-up-mining': 600000,
-  'limit-up-review': 600000,
-  'stock-analysis': 600000,
-  'stock-study': 600000,
-  'stock-research-engine': 600000,
+  'five-dimension-resonance': 1200000,
+  'a-share-leader-deep-research': 1200000,
+  'a-share-limit-up-mining': 1200000,
+  'limit-up-review': 1200000,
+  'stock-analysis': 1200000,
+  'stock-study': 1200000,
+  'stock-research-engine': 1200000,
 };
 const CANONICAL_STRATEGY_IDS = new Set([
   'a-share-15d-selection',
@@ -106,6 +197,12 @@ const CANONICAL_STRATEGY_IDS = new Set([
   'quant-strategy-bundle-chen',
   'quantitative-trading',
 ]);
+const MINUTE_DATA_POLICIES = new Map([
+  ['feilong-strategy', { mode: 'optional_degraded', purpose: '飞龙高级因子需要外部 LC5；缺少时只输出日线/公式部分。' }],
+  ['convertible-bond-screening-strategy', { mode: 'optional_degraded', purpose: '部分可转债分钟特征按任务读取外部 LC5。' }],
+  ['nana-teacher-five-strategies', { mode: 'optional_degraded', purpose: '5 分钟复核是可选辅助证据，不阻塞普通日线任务。' }],
+  ['a-share-leader-deep-research', { mode: 'optional_degraded', purpose: '精确首封、炸板和重封时序需要外部 LC5；缺少时保留日线降级边界。' }],
+]);
 // 技能包目录使用带版本的展示 ID，但原始策略脚本保留历史目录名。
 // 所有策略入口在桥接层统一归一化，避免把展示 ID 直接拼成不存在的路径。
 const STRATEGY_ID_ALIASES = new Map([
@@ -117,20 +214,84 @@ function canonicalStrategyId(skillId) {
 const PARAMETER_REQUIRED_STRATEGIES = new Set(['golden-ignition']);
 const SPECIAL_DATA_STRATEGIES = new Set(['convertible-bond-screening-strategy']);
 const harnessJobs = new Map();
+const harnessJobWriteChains = new Map();
 const strategyJobs = new Map();
 const dailyJobs = new Map();
 const supplementalJobs = new Map();
 const supplementalTargetJobs = new Map();
 const unifiedArchiveJobs = new Map();
 const unifiedVerificationJobs = new Map();
+const dailyIndexInitializationJobs = new Map();
+// A stock detail view and the Harness preparation step can request the same
+// five-formula receipt at nearly the same time. Keep one live TQ child per
+// symbol so the second request does not wait on the Python file lock and then
+// report a misleading partial/HTTP-200 error.
+const tqFormulaRequests = new Map();
+// Index and full-market refreshes can finish in either order.  Serialize the
+// read/merge/write cycle so a late request cannot write from an older file
+// snapshot and erase the other refresh's newer fields.
+let marketSnapshotWriteChain = Promise.resolve();
+// DeepSeek Harness 使用本地单任务锁。没有这个锁时，启动个股技能会在
+// 真正创建任务之前抛出 ReferenceError，前端看到的就是“连接被关闭”。
+let activeHarnessExecution = null;
+let tdxDailyIntegrityScanCache = null;
+const TDX_DAILY_INTEGRITY_CACHE_TTL_MS = 60_000;
+
+function formatHarnessElapsed(startedAt) {
+  const seconds = Math.max(0, Math.floor((Date.now() - Number(startedAt || Date.now())) / 1000));
+  return `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
+}
+
+function harnessBusyPayload(active = activeHarnessExecution) {
+  const skillId = String(active?.skill_id || '通用研究');
+  return {
+    status: 'busy',
+    error: `Harness 正在执行长任务（${skillId}，已运行 ${formatHarnessElapsed(active?.started_at)}），请稍后再试。`,
+    active_job: active ? {
+      id: active.id,
+      skill_id: active.skill_id || null,
+      started_at: active.started_at,
+    } : null,
+  };
+}
+
+function createHarnessBusyError(active = activeHarnessExecution) {
+  const error = new Error(harnessBusyPayload(active).error);
+  error.code = 'HARNESS_BUSY';
+  return error;
+}
+
+function reserveHarnessExecution(id, skillId = '') {
+  if (activeHarnessExecution && activeHarnessExecution.id !== id) return activeHarnessExecution;
+  activeHarnessExecution = { id, skill_id: skillId || null, started_at: Date.now() };
+  return null;
+}
+
+function releaseHarnessExecution(id) {
+  if (activeHarnessExecution?.id === id) activeHarnessExecution = null;
+}
+
+function isHarnessBusyError(error) {
+  return Boolean(error && typeof error === 'object' && error.code === 'HARNESS_BUSY');
+}
 
 function harnessJobFile(id) {
   return path.join(HARNESS_JOBS_ROOT, `${id}.json`);
 }
 
 function persistHarnessJob(job) {
-  void writeRuntimeJson(harnessJobFile(job.id), job).catch((error) => {
-    console.error(`[agent] 无法保存 Harness 任务 ${job.id.slice(0, 8)}：${error instanceof Error ? error.message : String(error)}`);
+  const id = String(job?.id || '');
+  if (!id) return;
+  const previous = harnessJobWriteChains.get(id) || Promise.resolve();
+  const next = previous
+    .catch(() => undefined)
+    .then(() => writeRuntimeJson(harnessJobFile(id), job))
+    .catch((error) => {
+      console.error(`[agent] 无法保存 Harness 任务 ${id.slice(0, 8)}：${error instanceof Error ? error.message : String(error)}`);
+    });
+  harnessJobWriteChains.set(id, next);
+  void next.finally(() => {
+    if (harnessJobWriteChains.get(id) === next) harnessJobWriteChains.delete(id);
   });
 }
 
@@ -146,10 +307,10 @@ function persistStrategyJob(job) {
 
 function timeoutForSkill(skillId) {
   const configured = SKILL_TIMEOUT_MS[skillId] || DEFAULT_TIMEOUT_MS;
-  return Number.isFinite(configured) && configured > 0 ? configured : 240000;
+  return Number.isFinite(configured) && configured > 0 ? configured : 1200000;
 }
 
-function readTdxPrivateFormulaNames(tdxRoot = 'C:\\new_tdx_mock') {
+function readTdxPrivateFormulaNames(tdxRoot = bridgeTdxRoot()) {
   const registryPath = path.join(tdxRoot, 'T0002', 'PriLoc.dat');
   if (!existsSync(registryPath)) return { path: registryPath, names: [] };
   try {
@@ -184,8 +345,18 @@ function resolveSkillEntry(skillRoot) {
 
 function corsHeaders(req) {
   const requestOrigin = req.headers?.origin;
-  const localOrigins = new Set(['http://127.0.0.1:3003', 'http://localhost:3003']);
-  const allowOrigin = typeof requestOrigin === 'string' && localOrigins.has(requestOrigin)
+  const localOrigins = new Set([
+    'http://127.0.0.1:3003',
+    'http://localhost:3003',
+    'http://127.0.0.1:3004',
+    'http://localhost:3004',
+  ]);
+  // The packaged Electron UI and bridge intentionally use different,
+  // dynamically allocated loopback ports. Allow only local HTTP origins so
+  // this does not broaden the bridge to LAN or public callers.
+  const isLocalDynamicOrigin = typeof requestOrigin === 'string'
+    && /^http:\/\/(?:127\.0\.0\.1|localhost):\d+$/.test(requestOrigin);
+  const allowOrigin = typeof requestOrigin === 'string' && (localOrigins.has(requestOrigin) || isLocalDynamicOrigin)
     ? requestOrigin
     : 'http://127.0.0.1:3003';
   return {
@@ -244,6 +415,9 @@ function buildPrompt(task, market, skillId, context) {
   const dailyDataIndex = readJson(DAILY_DATA_INDEX_FILE);
   const runtimePolicy = readJson(RUNTIME_POLICY_FILE);
   const supplementalData = context?.supplementalData || null;
+  const resources = context?.resourceLibrary && typeof context.resourceLibrary === 'object'
+    ? context.resourceLibrary
+    : resourceLibraryContext();
   return [
     '你是掌财智能体的本地研究助手。',
     `当前技能：${skillId || '通用行情研究'}`,
@@ -275,6 +449,7 @@ function buildPrompt(task, market, skillId, context) {
     dailyDataIndex ? `统一日线索引与降级状态（按 source_precedence 使用，不可将 degraded 当成 TDX 全历史）：${JSON.stringify({ path: DAILY_DATA_INDEX_FILE, source_precedence: dailyDataIndex.source_precedence, summary: dailyDataIndex.summary, dates: dailyDataIndex.dates })}` : '统一日线索引：未提供；如任务需要历史日线，必须在 cautions 中说明。',
     runtimePolicy ? `3003 自包含运行时政策（必须遵守）：${JSON.stringify(runtimePolicy)}` : '',
     dailyContext ? `本地每日更新上下文：${JSON.stringify(dailyContext)}` : '',
+    resources ? `统一资源库上下文（所有公开研究、公式依赖、日线索引和统一清单均以此路径为准；资源状态为 DEGRADED 时必须保留边界）：${JSON.stringify(resources)}` : '',
     context ? `补充上下文：${JSON.stringify(context)}` : '',
     `如果信息不足，请在 cautions 中明确写出。${HARNESS_JSON_SCHEMA}`,
   ].join(' ');
@@ -311,6 +486,72 @@ function findLocalDshEntry() {
   return '';
 }
 
+function inspectMinuteData(tdxRoot = bridgeTdxRoot()) {
+  const root = String(tdxRoot || '').trim();
+  const policies = {
+    source: 'external_tdx_lc5',
+    mode: 'external_on_demand',
+    packaged: false,
+    sourceRoot: root,
+    fileCount: 0,
+    bytes: 0,
+  };
+  if (!root) return { ...policies, status: 'missing', reason: '未配置通达信目录；普通日线任务不受影响。' };
+  for (const market of ['sh', 'sz', 'bj']) {
+    const directory = path.join(root, 'vipdoc', market, 'fzline');
+    let names = [];
+    try { names = readdirSync(directory); } catch { names = []; }
+    for (const name of names) {
+      if (!String(name).toLowerCase().endsWith('.lc5')) continue;
+      try {
+        policies.fileCount += 1;
+        policies.bytes += statSync(path.join(directory, name)).size;
+      } catch { /* 由外部 TDX 文件状态决定是否可用 */ }
+    }
+  }
+  return {
+    ...policies,
+    status: policies.fileCount > 0 ? 'available' : 'missing',
+    reason: policies.fileCount > 0
+      ? '原始 .lc5 不进入 EXE；仅由声明需要分钟数据的技能按股票按需读取。'
+      : '未发现外部 .lc5；普通日线任务不受影响，需要分钟特征的技能标记 DEGRADED。',
+  };
+}
+
+function strategyMinuteDataPreflight(skillId, tdxRoot = bridgeTdxRoot()) {
+  const policy = MINUTE_DATA_POLICIES.get(skillId) || { mode: 'not_required', purpose: '普通任务不依赖 5 分钟线。' };
+  const source = inspectMinuteData(tdxRoot);
+  const degraded = policy.mode === 'optional_degraded' && source.status !== 'available';
+  return {
+    ...source,
+    requirement: policy.mode,
+    purpose: policy.purpose,
+    result: degraded ? 'DEGRADED' : policy.mode === 'not_required' ? 'NOT_REQUIRED' : 'AVAILABLE',
+  };
+}
+
+// 3002 个股页的十项技能在 3003 中使用同一批业务入口，但运行副本必须
+// 固化在 resource-library/harness/skills，不能因为目录曾经存在就继续使用旧副本。
+// 这样 DeepSeek Harness 直接从 3003 运行时读取技能，不回退到 3002。
+const INDIVIDUAL_STOCK_SKILL_IDS = new Set([
+  'baimao-score-system',
+  'big-bull-analysis-scoring-system',
+  'financial-roe-analysis',
+  'stock-analysis',
+  'stock-research-engine',
+  'stock-study',
+  'support-pressure-analysis-system',
+  'risk-mine-clearance',
+  'baimao-teacher-system',
+  'technical-analysis',
+  // These migrated runtimes also contain TDX readers. Sync their copies so
+  // an upgrade cannot retain a stale C:\new_tdx_mock implementation.
+  'golden-ignition',
+  'stock-unified',
+  'tdx-local-hub',
+  'a-share-15d-selection',
+]);
+
 function ensureBundledSkills() {
   const source = SKILL_SOURCE;
   const destination = path.join(HARNESS_ROOT, 'skills');
@@ -324,7 +565,9 @@ function ensureBundledSkills() {
       // Always sync it so a packaged/restarted bridge cannot keep an older
       // runtime copy after the source contract changes. Other bundled skills
       // remain immutable runtime copies.
-      if (!existsSync(target) || name === 'market-data-replenishment') cpSync(path.join(source, name), target, { recursive: true, force: true });
+      if (!existsSync(target) || name === 'market-data-replenishment' || INDIVIDUAL_STOCK_SKILL_IDS.has(name)) {
+        cpSync(path.join(source, name), target, { recursive: true, force: true });
+      }
     }
     return { status: 'ready', source, destination, count: names.length };
   } catch (error) {
@@ -342,7 +585,7 @@ async function persistRuntimePolicy() {
     web_runtime: '3003 web scripts',
     report_runtime: 'DeepSeek Harness headless',
     local_skill_root: SKILL_SOURCE,
-    allowed_data_roots: [DATA_ROOT, HARNESS_ROOT, RUNTIME_ROOT],
+    allowed_data_roots: [...new Set([DATA_ROOT, RESOURCE_LIBRARY_ROOT, HARNESS_ROOT, RUNTIME_ROOT])],
     disabled_runtime_roots: [
       'imported-3002/',
       '3002/',
@@ -350,11 +593,13 @@ async function persistRuntimePolicy() {
       'external report directories',
     ],
     rules: [
-      '数据根目录固定为 application_root/app-data，忽略外部 ZHANGCAI_DATA_DIR 覆盖。',
-      '网页、数据状态、任务回执和报告只读取或写入本应用 app-data。',
+      '开发环境使用 application_root/app-data 兼容目录；桌面打包环境由 ZHANGCAI_DATA_DIR 指向 resource-library 内的用户可写目录。',
+      '网页、数据状态、任务回执和报告只读取或写入本应用资源库。',
       'DeepSeek Harness 只接收 3003 网页脚本传入的本地结构化证据。',
       '历史兼容目录保留作人工追溯，但不参与任何生产查询、提示词、数据源清单或报告生成。',
-      '公开源只能补齐明确日期的数据并标记 degraded，不覆盖 TDX 主数据。',
+      ...(isLocalOnlyDataPolicy()
+        ? ['当前运行在严格本地模式：只允许本地数据和通达信/Mock 目录，公网行情、新闻和第三方补充入口均阻断。']
+        : ['桌面版采用本地优先、按需公网补充：补充源先下载到本地资源库，保留 source/source_date/retrieved_at/sha256，并标记 degraded；TDX 不可用时允许公开源降级补齐。']),
     ],
   };
   await writeRuntimeJson(RUNTIME_POLICY_FILE, policy);
@@ -362,6 +607,9 @@ async function persistRuntimePolicy() {
 }
 
 function commandFor(prompt) {
+  if (PACKAGED_RUNTIME && (!process.env.DSH_ENTRY || !existsSync(process.env.DSH_ENTRY))) {
+    throw new Error('内置 DeepSeek Harness 缺失，请修复主程序安装。');
+  }
   const node = process.env.DSH_NODE || process.execPath;
   const entry = process.env.DSH_ENTRY || findLocalDshEntry();
   const cli = process.env.DSH_CLI;
@@ -376,9 +624,9 @@ function commandFor(prompt) {
     const pnpmEntry = process.platform === 'win32' && /\.cmd$/i.test(pnpm)
       ? path.resolve(path.dirname(pnpm), '..', '..', 'node', 'node_modules', 'pnpm', 'bin', 'pnpm.mjs')
       : pnpm;
-    return { command: node, args: [pnpmEntry, 'dlx', '@deepseek-ai/dsh', '--profile', 'headless', ...patchArgs, prompt] };
+    return { command: node, args: [pnpmEntry, 'dlx', '@deepseek-ai/dsh@0.1.2-rc.1', '--profile', 'headless', ...patchArgs, prompt] };
   }
-  return { command: process.platform === 'win32' ? 'npx.cmd' : 'npx', args: ['@deepseek-ai/dsh', '--profile', 'headless', ...patchArgs, prompt] };
+  return { command: process.platform === 'win32' ? 'npx.cmd' : 'npx', args: ['@deepseek-ai/dsh@0.1.2-rc.1', '--profile', 'headless', ...patchArgs, prompt] };
 }
 
 function coerceHarnessJson(text) {
@@ -470,6 +718,8 @@ function coerceHarnessJson(text) {
 // Harness 只接收 DeepSeek 凭据。不要继承父进程中可能存在的其他模型
 // 服务商密钥，以免未来桌面版误切换到非预期的 AI 提供方。
 function harnessEnvironment() {
+  const configuredTdxRoot = bridgeTdxRoot();
+  const childTdxRoot = configuredTdxRoot || path.join(DATA_ROOT, 'runtime', '__tdx_root_not_configured__');
   const env = {
     DEEPSEEK_API_KEY: process.env.DEEPSEEK_API_KEY,
     DSH_HOME: process.env.DSH_HOME || HARNESS_ROOT,
@@ -477,6 +727,28 @@ function harnessEnvironment() {
     ZHANGCAI_APP_ROOT: APP_ROOT,
     ZHANGCAI_DATA_DIR: DATA_ROOT,
     DSH_TELEMETRY_DISABLED: '1',
+    ZHANGCAI_RESOURCE_LIBRARY: DATA_ROOT,
+    ZHANGCAI_PACKAGED: PACKAGED_RUNTIME ? '1' : '0',
+    // Keep the aliases together. The current tdx-local-hub uses TDX_ROOT,
+    // while several migrated skills use ZHANGCAI_TDX_ROOT or BAIMAO_TDX_ROOT.
+    // Omitting TDX_ROOT here made Harness fall back to C:\\new_tdx_mock on a
+    // different computer even though the desktop bridge had the correct
+    // user-selected directory.
+    ZHANGCAI_TDX_ROOT: childTdxRoot,
+    TDX_ROOT: childTdxRoot,
+    TDX_ROOTS: childTdxRoot,
+    BAIMAO_TDX_ROOT: childTdxRoot,
+    ONESTOCK_STOCK_DATA_ROOT: DATA_ROOT,
+    STOCK_SKILLS_ROOT: SKILL_SOURCE,
+    ZHANGCAI_SKILLS_DIR: SKILL_SOURCE,
+    TDX_HUB_PATH: path.join(SKILL_SOURCE, 'tdx-local-hub', 'scripts', 'tdx_hub.py'),
+    STOCK_BACKTEST_RUNTIME_PATH: path.join(SKILL_SOURCE, 'stock-unified', 'scripts', 'stock_strategy_backtest.py'),
+    ZHANGCAI_STRATEGY_RESULTS_DIR: path.join(DATA_ROOT, 'strategy-results'),
+    ZHANGCAI_PYTHON: localPythonExecutable(),
+    TDX_PYTHON: localPythonExecutable(),
+    PYTHONPATH: path.join(APP_ROOT, 'scripts'),
+    PYTHONIOENCODING: 'utf-8',
+    ZHANGCAI_DATA_POLICY: process.env.ZHANGCAI_DATA_POLICY || 'local_first_on_demand',
   };
   const requiredSystemVariables = [
     'PATH', 'Path', 'PATHEXT', 'SystemRoot', 'SYSTEMROOT', 'WINDIR', 'ComSpec',
@@ -486,35 +758,47 @@ function harnessEnvironment() {
   for (const name of requiredSystemVariables) {
     if (process.env[name]) env[name] = process.env[name];
   }
+  const inheritedPath = env.PATH || env.Path || '';
+  delete env.Path;
+  env.PATH = [path.dirname(process.execPath), path.dirname(localPythonExecutable()), inheritedPath].filter(Boolean).join(path.delimiter);
   return env;
 }
 
-function runHarness(prompt, skillId = '', options = {}) {
-  return new Promise(async (resolve, reject) => {
+function stopHarnessProcess(child) {
+  return new Promise((resolve) => {
+    if (!child?.pid || child.exitCode !== null) { resolve(); return; }
+    if (process.platform !== 'win32') { child.kill('SIGKILL'); resolve(); return; }
+    const killer = spawn('taskkill.exe', ['/PID', String(child.pid), '/T', '/F'], { windowsHide: true, stdio: 'ignore' });
+    killer.once('error', () => { child.kill(); resolve(); });
+    killer.once('close', () => resolve());
+  });
+}
+
+async function runHarness(prompt, skillId = '', options = {}) {
+  // Resolve before entering the Promise: a thrown launcher error must reject
+  // the task instead of escaping an async Promise executor and keeping its lock.
+  const taskDir = path.join(HARNESS_ROOT, 'tasks');
+  const taskFile = path.join(taskDir, `task-${randomUUID()}.txt`);
+  const inline = options.inline === true && Buffer.byteLength(prompt, 'utf8') < 7000;
+  const launchTask = inline ? prompt : `请读取并执行任务文件 ${taskFile}，最终只输出文件要求的结果。`;
+  const spec = commandFor(launchTask);
+  await mkdir(taskDir, { recursive: true });
+  await writeFile(taskFile, prompt, 'utf8');
+  return new Promise((resolve, reject) => {
     const timeoutMs = timeoutForSkill(skillId);
     const startedAt = Date.now();
-    const taskDir = path.join(HARNESS_ROOT, 'tasks');
-    const taskFile = path.join(taskDir, `task-${randomUUID()}.txt`);
-    try {
-      await mkdir(taskDir, { recursive: true });
-      await writeFile(taskFile, prompt, 'utf8');
-    } catch (error) {
-      reject(new Error(`无法写入 Harness 任务文件：${error instanceof Error ? error.message : String(error)}`));
-      return;
-    }
     // Windows command lines are limited to roughly 8K. Deep research keeps the
     // full context in a local task file; daily validation receives an intentionally
     // compact metadata snapshot inline so it never needs to scan large raw data.
-    const inline = options.inline === true && Buffer.byteLength(prompt, 'utf8') < 7000;
-    const launchTask = inline ? prompt : `请读取并执行任务文件 ${taskFile}，最终只输出文件要求的结果。`;
-    const spec = commandFor(launchTask);
     const cleanup = () => { unlink(taskFile).catch(() => {}); };
     let child;
     try {
       child = spawn(spec.command, spec.args, {
         env: harnessEnvironment(),
+        cwd: DATA_ROOT,
         windowsHide: true,
       });
+      if (typeof options.onProcess === 'function') options.onProcess(child);
     } catch (error) {
       cleanup();
       reject(error);
@@ -522,21 +806,25 @@ function runHarness(prompt, skillId = '', options = {}) {
     }
     let stdout = '';
     let stderr = '';
+    let timeoutError = null;
     const timer = setTimeout(() => {
-      if (process.platform === 'win32' && child.pid) {
-        spawn('taskkill', ['/pid', String(child.pid), '/t', '/f'], { windowsHide: true });
-      } else {
-        child.kill('SIGKILL');
-      }
-      cleanup();
-      reject(new Error(`DeepSeek Harness 超时（${Math.round(timeoutMs / 1000)} 秒，技能 ${skillId || '通用研究'}）`));
+      timeoutError = new Error(`DeepSeek Harness 超时（${Math.round(timeoutMs / 1000)} 秒，技能 ${skillId || '通用研究'}）`);
+      void stopHarnessProcess(child).then(() => { cleanup(); reject(timeoutError); });
     }, timeoutMs);
-    child.stdout.on('data', (chunk) => { stdout += chunk.toString(); });
-    child.stderr.on('data', (chunk) => { stderr += chunk.toString(); });
+    let outputOverflow = false;
+    child.stdout.setEncoding('utf8');
+    child.stderr.setEncoding('utf8');
+    child.stdout.on('data', (chunk) => {
+      if (stdout.length + chunk.length > MAX_OUTPUT * 4) { outputOverflow = true; return; }
+      stdout += chunk;
+    });
+    child.stderr.on('data', (chunk) => { stderr = (stderr + chunk).slice(-16000); });
     child.on('error', (error) => { clearTimeout(timer); cleanup(); reject(error); });
     child.on('close', (code) => {
       clearTimeout(timer);
       cleanup();
+      if (timeoutError) { reject(timeoutError); return; }
+      if (outputOverflow) { reject(new Error('Harness 输出超过容量限制，未保存截断报告。')); return; }
       if (code !== 0) {
         const detail = (stderr || stdout).trim().slice(-2000);
         reject(new Error(`DeepSeek Harness 退出码 ${code}${detail ? `：${detail}` : ''}`));
@@ -549,7 +837,7 @@ function runHarness(prompt, skillId = '', options = {}) {
       }
       output = coerceHarnessJson(output);
       resolve({
-        output: output.slice(0, MAX_OUTPUT),
+        output,
         diagnostics: stderr.trim().slice(-2000),
         elapsedMs: Date.now() - startedAt,
         timeoutMs,
@@ -567,13 +855,14 @@ async function runHarnessWithRetry(prompt, skillId = '', options = {}) {
   try {
     let lastError;
     for (let attempt = 0; attempt < 3; attempt += 1) {
+      if (options.cancelled?.()) throw new Error('用户已取消 Harness 任务。');
       try {
         return await runHarness(prompt, skillId, options);
       } catch (error) {
         lastError = error;
         const message = error instanceof Error ? error.message : String(error);
         const retryable = /TRANSPORT|fetch failed|ECONNRESET|ECONNREFUSED|ETIMEDOUT|ENETUNREACH|EAI_AGAIN/i.test(message);
-        if (!retryable || attempt >= 2) throw error;
+        if (!retryable || attempt >= 2 || options.cancelled?.()) throw error;
         const waitMs = 1500 * (attempt + 1);
         console.warn(`[agent] Harness 网络错误，${waitMs}ms 后重试 ${attempt + 1}/2：${message}`);
         await new Promise((resolve) => setTimeout(resolve, waitMs));
@@ -585,46 +874,189 @@ async function runHarnessWithRetry(prompt, skillId = '', options = {}) {
   }
 }
 
-function startHarnessJob(prompt, skillId = '') {
+const STOCK_RESEARCH_SKILL_IDS = new Set([
+  'individual-stock-analysis-v31',
+  'stock-analysis',
+  'stock-study',
+  'stock-research-engine',
+  'technical-analysis',
+  'risk-mine-clearance',
+  'financial-roe-analysis',
+  'baimao-score-system',
+  'big-bull-analysis-scoring-system',
+  'support-pressure-analysis-system',
+  'baimao-teacher-system',
+]);
+
+function isStockResearchSkill(skillId) {
+  return STOCK_RESEARCH_SKILL_IDS.has(String(skillId || ''));
+}
+
+function harnessProgressTemplate(skillId) {
+  const stockResearch = isStockResearchSkill(skillId);
+  return [
+    {
+      key: 'accepted',
+      label: stockResearch ? 'Harness 接收高级股票研究任务' : 'Harness 接收研究任务',
+      status: 'pending',
+      started_at: null,
+      finished_at: null,
+      detail: '',
+    },
+    {
+      key: 'tdx',
+      label: stockResearch ? '完成本地 TDX 日线指标计算' : '完成本地行情与技能数据处理',
+      status: 'pending',
+      started_at: null,
+      finished_at: null,
+      detail: '',
+    },
+    {
+      key: 'supplemental',
+      label: stockResearch ? '完成财务、股本等补充数据处理' : '完成市场、板块等补充数据处理',
+      status: 'pending',
+      started_at: null,
+      finished_at: null,
+      detail: '',
+    },
+    {
+      key: 'json',
+      label: '生成最终 JSON 研究结果',
+      status: 'pending',
+      started_at: null,
+      finished_at: null,
+      detail: '',
+    },
+    {
+      key: 'persist',
+      label: '桥接写入 Harness job 和报告文件',
+      status: 'pending',
+      started_at: null,
+      finished_at: null,
+      detail: '',
+    },
+  ];
+}
+
+function updateHarnessJobProgress(job, key, status, detail = '') {
+  if (!job || !Array.isArray(job.progress_steps)) return;
+  const stage = job.progress_steps.find((item) => item.key === key);
+  if (!stage) return;
+  const now = Date.now();
+  stage.status = status;
+  if (detail) stage.detail = String(detail).slice(0, 500);
+  if (status === 'running' && !stage.started_at) stage.started_at = now;
+  if (['completed', 'failed', 'cancelled'].includes(status)) {
+    if (!stage.started_at) stage.started_at = now;
+    stage.finished_at = now;
+  }
+  job.current_stage = key;
+  job.progress_updated_at = now;
+  persistHarnessJob(job);
+}
+
+function startHarnessJob(prompt = '', skillId = '', options = {}) {
   const id = randomUUID();
   const busy = reserveHarnessExecution(id, skillId);
   if (busy) throw createHarnessBusyError(busy);
-  const job = { id, status: 'running', skill_id: skillId || null, started_at: Date.now() };
+  const job = {
+    id,
+    status: 'running',
+    skill_id: skillId || null,
+    started_at: Date.now(),
+    timeout_seconds: Math.round(timeoutForSkill(skillId) / 1000),
+    progress_steps: harnessProgressTemplate(skillId),
+  };
   harnessJobs.set(id, job);
-  persistHarnessJob(job);
-  void runHarnessWithRetry(prompt, skillId, { executionId: id }).then((result) => {
+  updateHarnessJobProgress(
+    job,
+    'accepted',
+    'completed',
+    '任务已接收，正在准备本地研究上下文。',
+  );
+  updateHarnessJobProgress(job, 'tdx', 'running', '正在整理本地行情与 TDX 输入。');
+  let childProcess = null;
+  job.cancel = () => {
+    if (!childProcess?.pid) return false;
+    void stopHarnessProcess(childProcess);
+    return true;
+  };
+  const updateProgress = (key, status, detail = '') => {
     const current = harnessJobs.get(id);
-    if (!current) return;
-    void persistHarnessReport({ skillId, output: result.output, diagnostics: result.diagnostics, task: prompt, jobId: id })
-      .then((reportPath) => {
-        const latest = harnessJobs.get(id);
-        if (latest) { latest.report_path = reportPath; persistHarnessJob(latest); }
-      })
-      .catch((error) => console.error(`[agent] Harness 报告本地落盘失败：${error instanceof Error ? error.message : String(error)}`));
-    Object.assign(current, {
-      status: 'completed',
-      output: result.output,
-      diagnostics: result.diagnostics,
-      elapsed_ms: result.elapsedMs,
-      timeout_seconds: Math.round(result.timeoutMs / 1000),
-      completed_at: Date.now(),
-    });
-    persistHarnessJob(current);
-  }).catch((error) => {
-    const current = harnessJobs.get(id);
-    if (!current) return;
-    Object.assign(current, {
-      status: 'failed',
-      error: error instanceof Error ? error.message : String(error),
-      elapsed_ms: Date.now() - current.started_at,
-      completed_at: Date.now(),
-    });
-    persistHarnessJob(current);
-  });
+    if (current) updateHarnessJobProgress(current, key, status, detail);
+  };
+  const cancelled = () => Boolean(harnessJobs.get(id)?.cancel_requested);
+  void (async () => {
+    let finalPrompt = prompt;
+    try {
+      if (typeof options.prepare === 'function') {
+        finalPrompt = await options.prepare({
+          job,
+          updateProgress,
+          cancelled,
+        });
+      } else {
+        updateProgress('tdx', 'completed', '本地研究输入已准备完成。');
+        updateProgress('supplemental', 'completed', '本技能无需额外个股补充快照。');
+      }
+      if (cancelled()) throw new Error('用户已取消 Harness 任务。');
+      updateProgress('json', 'running', '正在调用 DeepSeek Harness，生成严格 JSON 研究结果。');
+      const result = await runHarnessWithRetry(finalPrompt, skillId, {
+        executionId: id,
+        cancelled,
+        onProcess: (child) => { childProcess = child; },
+      });
+      const current = harnessJobs.get(id);
+      if (!current) return;
+      if (cancelled()) throw new Error('用户已取消 Harness 任务。');
+      updateProgress('json', 'completed', '最终 JSON 研究结果已生成。');
+      updateProgress('persist', 'running', '正在写入任务记录和报告文件。');
+      const reportPath = await persistHarnessReport({
+        skillId,
+        output: result.output,
+        diagnostics: result.diagnostics,
+        task: finalPrompt,
+        jobId: id,
+      });
+      const latest = harnessJobs.get(id);
+      if (!latest) return;
+      latest.report_path = reportPath;
+      updateProgress('persist', 'completed', 'Harness job 和研究报告已落盘。');
+      Object.assign(latest, {
+        status: 'completed',
+        output: result.output,
+        diagnostics: result.diagnostics,
+        elapsed_ms: result.elapsedMs,
+        timeout_seconds: Math.round(result.timeoutMs / 1000),
+        completed_at: Date.now(),
+      });
+      persistHarnessJob(latest);
+    } catch (error) {
+      const current = harnessJobs.get(id);
+      releaseHarnessExecution(id);
+      if (!current) return;
+      const status = current.cancel_requested ? 'cancelled' : 'failed';
+      const message = current.cancel_requested
+        ? '用户已取消 Harness 任务。'
+        : (error instanceof Error ? error.message : String(error));
+      const activeStage = current.progress_steps?.find((item) => item.status === 'running');
+      if (activeStage) updateHarnessJobProgress(current, activeStage.key, status, message);
+      Object.assign(current, {
+        status,
+        error: message,
+        elapsed_ms: Date.now() - current.started_at,
+        completed_at: Date.now(),
+      });
+      persistHarnessJob(current);
+    }
+  })();
   return job;
 }
 
 async function runPublicMarketRefresh() {
+  if (isLocalOnlyDataPolicy()) {
+    throw new Error('当前运行在严格本地模式，已阻断公网行情补充。');
+  }
   const date = localTradeDate();
   await runLocalScript('public_market_sync.py', ['--date', date], 90000);
   const snapshot = readJson(path.join(DATA_ROOT, 'public', 'latest.json'));
@@ -656,41 +1088,597 @@ async function runPublicMarketRefresh() {
 // 基线快照，不能把运行时 TQ 数据只放在前端内存里，否则页面重载会退回
 // 到基线日期。运行时快照单独落到 data/runtime，既不污染源码，也方便
 // exe 安装后继续复用最近一次成功数据。
+function queueMarketSnapshotWrite(task) {
+  const next = marketSnapshotWriteChain.then(task, task);
+  marketSnapshotWriteChain = next.catch(() => undefined);
+  return next;
+}
+
+function timestampOf(value) {
+  const timestamp = Date.parse(String(value || ''));
+  return Number.isFinite(timestamp) ? timestamp : 0;
+}
+
 async function persistMarketSnapshot(scope, result) {
   if (!result || result.status !== 'ok') return;
-  const baseline = readJson(path.join(APP_ROOT, 'lib', 'market.json')) || {};
-  const previous = readJson(MARKET_LATEST_FILE) || {};
-  const merged = { ...baseline, ...previous };
-  if (Array.isArray(result.indices) && result.indices.length) {
-    const baselineIndices = Array.isArray(baseline.indices) ? baseline.indices : [];
-    const previousIndices = Array.isArray(previous.indices) ? previous.indices : [];
-    const baselineByCode = new Map(baselineIndices.map((row) => [row.code, row]));
-    const previousByCode = new Map(previousIndices.map((row) => [row.code, row]));
-    merged.indices = result.indices.map((row) => {
-      const previousRow = previousByCode.get(row.code);
-      const baselineRow = baselineByCode.get(row.code);
-      const existing = previousRow || baselineRow;
-      return existing
-        ? { ...existing, ...row, history: Array.isArray(row.history) && row.history.length ? row.history : (Array.isArray(existing.history) && existing.history.length ? existing.history : baselineRow?.history) }
-        : row;
+  return queueMarketSnapshotWrite(async () => {
+    const baseline = readJson(path.join(APP_ROOT, 'lib', 'market.json')) || {};
+    const previous = readJson(MARKET_LATEST_FILE) || {};
+    const merged = { ...baseline, ...previous };
+    const incomingFetchedAt = result.fetchedAt || new Date().toISOString();
+    const incomingTimestamp = timestampOf(incomingFetchedAt);
+
+    if (Array.isArray(result.indices) && result.indices.length) {
+      const previousIndicesTimestamp = timestampOf(previous.indicesLatestDataAt || previous.indicesFetchedAt);
+      // A slow retry must not roll the index cards back to an older quote.
+      if (incomingTimestamp >= previousIndicesTimestamp || !previousIndicesTimestamp) {
+        const baselineIndices = Array.isArray(baseline.indices) ? baseline.indices : [];
+        const previousIndices = Array.isArray(previous.indices) ? previous.indices : [];
+        const baselineByCode = new Map(baselineIndices.map((row) => [row.code, row]));
+        const previousByCode = new Map(previousIndices.map((row) => [row.code, row]));
+        merged.indices = result.indices.map((row) => {
+          const previousRow = previousByCode.get(row.code);
+          const baselineRow = baselineByCode.get(row.code);
+          const existing = previousRow || baselineRow;
+          return existing
+            ? { ...existing, ...row, history: Array.isArray(row.history) && row.history.length ? row.history : (Array.isArray(existing.history) && existing.history.length ? existing.history : baselineRow?.history) }
+            : row;
+        });
+        merged.indicesSource = result.source || previous.indicesSource || '';
+        merged.indicesQuality = result.quality || result.dataQuality || 'primary';
+        merged.indicesFallback = result.fallback === true || result.quality === 'degraded';
+        merged.indicesQuoteMode = result.quoteMode || (merged.indicesFallback ? 'public_delayed' : 'tdx_realtime');
+        merged.indicesLatestDataAt = incomingFetchedAt;
+        merged.indicesFetchedAt = incomingFetchedAt;
+      }
+    }
+
+    if (scope === 'market') {
+      const isFallback = result.fallback === true || result.quality === 'degraded';
+      const allStocks = Array.isArray(result.allStocks) ? result.allStocks : [];
+      const previousMarketTimestamp = timestampOf(previous.marketLatestDataAt || previous.marketFetchedAt);
+      // A valid local market snapshot must be a full same-day universe.  A
+      // public fallback is intentionally compact and is allowed to replace
+      // the homepage payload, but it must clear the old allStocks universe.
+      const validLocal = !isFallback && allStocks.length >= 3000;
+      const validFallback = isFallback && Array.isArray(result.stocks) && result.stocks.length > 0;
+      if ((validLocal || validFallback) && (incomingTimestamp >= previousMarketTimestamp || !previousMarketTimestamp)) {
+        merged.stocks = Array.isArray(result.stocks) ? result.stocks : allStocks;
+        merged.allStocks = isFallback ? [] : allStocks;
+        merged.date = result.tradeDate || result.date || merged.date;
+        merged.tradeDate = result.tradeDate || result.date || merged.tradeDate;
+        if (result.marketSummary) Object.assign(merged, result.marketSummary);
+        merged.marketLatestDataAt = incomingFetchedAt;
+        merged.marketFetchedAt = incomingFetchedAt;
+        merged.fallback = isFallback;
+         merged.quality = result.quality || (isFallback ? 'degraded' : 'primary');
+         merged.dataQuality = result.dataQuality || result.quality || (isFallback ? 'degraded' : 'primary');
+         merged.degraded = result.degraded === true || isFallback;
+         merged.requestedTradeDate = result.requestedTradeDate || merged.requestedTradeDate || '';
+         merged.degradationReason = result.degradationReason || merged.degradationReason || '';
+        merged.provider = result.provider || merged.provider;
+        merged.fallbackReason = result.fallbackReason || merged.fallbackReason || '';
+      }
+    } else if (scope === 'watchlist' && Array.isArray(result.stocks) && result.stocks.length) {
+      const existing = new Map((merged.allStocks || merged.stocks || []).map((row) => [row.code, row]));
+      for (const row of result.stocks) existing.set(row.code, { ...existing.get(row.code), ...row });
+      merged.allStocks = [...existing.values()];
+      merged.stocks = merged.allStocks;
+    }
+
+    merged.dataSources = { ...(merged.dataSources || {}), runtimeMarket: result.source || 'Tongdaxin TQ realtime snapshot' };
+    merged.status = 'ok';
+    merged.runtimeFetchedAt = new Date().toISOString();
+    merged.runtimeScope = scope;
+    merged.latestDataAt = [merged.marketLatestDataAt, merged.indicesLatestDataAt].map(timestampOf).reduce((latest, value) => Math.max(latest, value), 0)
+      ? new Date(Math.max(timestampOf(merged.marketLatestDataAt), timestampOf(merged.indicesLatestDataAt))).toISOString()
+      : incomingFetchedAt;
+    merged.persistedAt = new Date().toISOString();
+    await writeRuntimeJson(MARKET_LATEST_FILE, merged);
+  });
+}
+
+async function persistPublicResearchFallback(result, reason = '') {
+  if (!result || result.fallback !== true) return null;
+  const fallbackRoot = path.join(DATA_ROOT, 'evidence', 'public');
+  const fallbackPath = path.join(fallbackRoot, 'fallback-latest.json');
+  const primaryPath = path.join(fallbackRoot, 'latest.json');
+  const current = readJson(primaryPath) || {};
+  const currentIsReal = current && typeof current === 'object' && !current.fallback_kind
+    && Number(current.same_day_record_count || current.sameDayRecordCount || 0) > 0;
+  const rows = [
+    ...(Array.isArray(result.stocks) ? result.stocks : []),
+    ...(Array.isArray(result.indices) ? result.indices : []),
+  ].slice(0, 200);
+  const source = ['eastmoney', 'tencent', 'public_market'].includes(String(result.provider || '').toLowerCase())
+    ? 'public_market'
+    : 'local_market';
+  const tradeDate = String(result.tradeDate || result.dataDate || '').replace(/^(\d{4})(\d{2})(\d{2})$/, '$1-$2-$3');
+  const fetchedAt = result.fetchedAt || new Date().toISOString();
+  const record = {
+    provider: source,
+    source: result.source || source,
+    title: source === 'public_market' ? 'Public market fallback snapshot' : 'Local daily close fallback snapshot',
+    content: JSON.stringify({
+      scope: result.dataScope || result.scope || '',
+      tradeDate,
+      rowCount: rows.length,
+      rows: rows.slice(0, 20),
+      marketSummary: result.marketSummary || {},
+    }),
+    source_timestamp: fetchedAt,
+    source_date: tradeDate,
+    kind: 'market_snapshot',
+    degraded: true,
+    fallback_reason: String(result.fallbackReason || reason || '').slice(0, 500),
+    record_count: rows.length,
+  };
+  const payload = {
+    schema: 'ZHANGCAI_PUBLIC_RESEARCH_FALLBACK_V1',
+    status: 'degraded',
+    fallback_kind: source === 'public_market' ? 'public_market_snapshot' : 'local_market_snapshot',
+    archived_at: new Date().toISOString(),
+    source_date: tradeDate,
+    same_day_record_count: 1,
+    provider_counts: { [source]: 1 },
+    historical_fallback: false,
+    data_boundary: source === 'public_market'
+      ? 'Market-only public evidence. No news, announcement, sentiment or same-day article is inferred.'
+      : 'Local daily close only. This is not public research, news or intraday evidence.',
+    records: [record],
+    snapshot: { schema: 'ZHANGCAI_PUBLIC_RESEARCH_FALLBACK_SNAPSHOT_V1', date: tradeDate, source_date: tradeDate, fetchedAt, records: [record] },
+  };
+  await writeRuntimeJson(fallbackPath, payload);
+  if (!currentIsReal) await writeRuntimeJson(primaryPath, payload);
+  return { path: dataRelativePath(fallbackPath), fallbackKind: payload.fallback_kind, sourceDate: tradeDate };
+}
+
+const PUBLIC_INDEX_QUOTES = [
+  { key: 'sh000001', code: '000001', market: 'SH', secid: '1.000001', name: '上证指数' },
+  { key: 'sz399001', code: '399001', market: 'SZ', secid: '0.399001', name: '深证成指' },
+  { key: 'sz399006', code: '399006', market: 'SZ', secid: '0.399006', name: '创业板指' },
+  { key: 'sh000688', code: '000688', market: 'SH', secid: '1.000688', name: '科创50' },
+  { key: 'sh000016', code: '000016', market: 'SH', secid: '1.000016', name: '上证50' },
+  { key: 'bj899050', code: '899050', market: 'BJ', secid: '0.899050', name: '北证50' },
+];
+
+function compactMarketDate(value) {
+  return String(value || '').replace(/\D/g, '').slice(0, 8);
+}
+
+function publicTradeDateKey(now = new Date()) {
+  // Eastmoney's quote payload does not expose a reliable trade date. Use the
+  // latest Shanghai weekday visible to the quote service and keep the result
+  // explicitly marked as a delayed public fallback.
+  const shifted = new Date(now.getTime() + 8 * 60 * 60 * 1000);
+  const beforeOpen = shifted.getUTCHours() < 9 || (shifted.getUTCHours() === 9 && shifted.getUTCMinutes() < 30);
+  if (beforeOpen || shifted.getUTCDay() === 0 || shifted.getUTCDay() === 6) shifted.setUTCDate(shifted.getUTCDate() - 1);
+  while (shifted.getUTCDay() === 0 || shifted.getUTCDay() === 6) shifted.setUTCDate(shifted.getUTCDate() - 1);
+  return `${shifted.getUTCFullYear()}${String(shifted.getUTCMonth() + 1).padStart(2, '0')}${String(shifted.getUTCDate()).padStart(2, '0')}`;
+}
+
+function numericMarketField(value, fallback = 0) {
+  const number = Number(String(value ?? '').replace(/,/g, ''));
+  return Number.isFinite(number) ? number : fallback;
+}
+
+function localTdxHistory(code, market, limit = 60) {
+  const root = bridgeTdxRoot();
+  if (!root) return [];
+  const normalized = normalizeHistorySymbol(`${code}.${market}`);
+  if (!normalized) return [];
+  const marketDir = normalized.market.toLowerCase();
+  const file = path.join(path.resolve(root), 'vipdoc', marketDir, 'lday', `${marketDir}${normalized.code}.day`);
+  try {
+    if (!existsSync(file)) return [];
+    return readTdxDayHistory(file, limit).map((row) => ({ ...row, date: compactMarketDate(row.date) }));
+  } catch {
+    return [];
+  }
+}
+
+function appendMarketHistory(history, latest, limit = 60) {
+  const bars = new Map();
+  for (const row of Array.isArray(history) ? history : []) {
+    const date = compactMarketDate(row?.date);
+    if (date && numericMarketField(row?.close) > 0) bars.set(date, { ...row, date });
+  }
+  const latestDate = compactMarketDate(latest?.date);
+  if (latestDate && numericMarketField(latest?.close) > 0) {
+    bars.set(latestDate, {
+      date: latestDate,
+      open: numericMarketField(latest.open), high: numericMarketField(latest.high),
+      low: numericMarketField(latest.low), close: numericMarketField(latest.close),
+      amount: numericMarketField(latest.amount), volume: numericMarketField(latest.volume),
     });
   }
-  if (scope === 'market' && Array.isArray(result.allStocks) && result.allStocks.length) {
-    merged.stocks = result.stocks || result.allStocks;
-    merged.allStocks = result.allStocks;
-    merged.date = result.tradeDate || merged.date;
-    if (result.marketSummary) Object.assign(merged, result.marketSummary);
-  } else if (scope === 'watchlist' && Array.isArray(result.stocks) && result.stocks.length) {
-    const existing = new Map((merged.allStocks || merged.stocks || []).map((row) => [row.code, row]));
-    for (const row of result.stocks) existing.set(row.code, { ...existing.get(row.code), ...row });
-    merged.allStocks = [...existing.values()];
-    merged.stocks = merged.allStocks;
+  return [...bars.values()].sort((a, b) => a.date.localeCompare(b.date)).slice(-limit);
+}
+
+function localTdxDailyProjection(row, historyLimit = 60) {
+  const normalized = normalizeHistorySymbol(`${row?.code || ''}.${String(row?.market || '')}`);
+  if (!normalized) return row;
+  const history = localTdxHistory(normalized.code, normalized.market, historyLimit);
+  if (!history.length) return row;
+  const latest = history.at(-1);
+  const previous = history.at(-2);
+  const previousClose = numericMarketField(previous?.close, numericMarketField(row?.previousClose, numericMarketField(latest.close)));
+  return {
+    ...row,
+    ...latest,
+    code: String(row?.code || normalized.code),
+    market: String(row?.market || normalized.market.toLowerCase()).toLowerCase(),
+    date: compactMarketDate(latest.date),
+    previousClose,
+    pct: previousClose > 0 ? Number((((numericMarketField(latest.close) / previousClose) - 1) * 100).toFixed(2)) : 0,
+    history,
+    realtime: false,
+    quoteMode: 'local_daily_close',
+    latestDataAt: new Date().toISOString(),
+    source: '通达信本地最近交易日收盘数据（降级）',
+    quality: 'degraded',
+  };
+}
+
+function publicQueryString(params) {
+  return Object.entries(params).map(([key, value]) => (
+    `${encodeURIComponent(key)}=${encodeURIComponent(String(value)).replace(/%2C/gi, ',').replace(/%2E/gi, '.')}`
+  )).join('&');
+}
+
+function publicJsonViaPowerShell(endpoint, params, timeoutMs = 12000) {
+  return new Promise((resolve, reject) => {
+    const target = `${endpoint}?${publicQueryString(params)}`;
+    const escapedTarget = target.replace(/'/g, "''");
+    const timeoutSeconds = Math.max(3, Math.ceil(timeoutMs / 1000));
+    const script = [
+      "$ErrorActionPreference='Stop'",
+      "$ProgressPreference='SilentlyContinue'",
+      `$r=Invoke-WebRequest -UseBasicParsing -TimeoutSec ${timeoutSeconds} -Uri '${escapedTarget}' -Headers @{'User-Agent'='Mozilla/5.0';'Referer'='https://quote.eastmoney.com/';'Accept'='application/json,text/plain,*/*'}`,
+      '$b=$r.RawContentStream.ToArray()',
+      '$o=[Console]::OpenStandardOutput()',
+      '$o.Write($b,0,$b.Length)',
+      '$o.Flush()',
+    ].join(';');
+    const encoded = Buffer.from(script, 'utf16le').toString('base64');
+    const child = spawn('powershell.exe', ['-NoProfile', '-NonInteractive', '-EncodedCommand', encoded], { windowsHide: true });
+    const stdout = [];
+    let stderr = '';
+    let finished = false;
+    const finish = (error, value) => {
+      if (finished) return;
+      finished = true;
+      clearTimeout(timer);
+      if (error) reject(error); else resolve(value);
+    };
+    const timer = setTimeout(() => {
+      if (child.pid) spawn('taskkill', ['/pid', String(child.pid), '/t', '/f'], { windowsHide: true });
+      finish(new Error('公开行情请求超时'));
+    }, timeoutMs + 1500);
+    child.stdout.on('data', (chunk) => stdout.push(Buffer.from(chunk)));
+    child.stderr.on('data', (chunk) => { stderr += chunk.toString(); });
+    child.on('error', (error) => finish(error));
+    child.on('close', (code) => {
+      if (finished) return;
+      if (code !== 0) {
+        finish(new Error(`公开行情请求失败${stderr.trim() ? `：${stderr.trim().slice(0, 180)}` : ''}`));
+        return;
+      }
+      try { finish(null, JSON.parse(Buffer.concat(stdout).toString('utf8').replace(/^\uFEFF/, ''))); }
+      catch { finish(new Error('公开行情返回格式无效')); }
+    });
+  });
+}
+
+function publicTextViaPowerShell(target, timeoutMs = 10000) {
+  return new Promise((resolve, reject) => {
+    const escapedTarget = String(target).replace(/'/g, "''");
+    const timeoutSeconds = Math.max(3, Math.ceil(timeoutMs / 1000));
+    const script = [
+      "$ErrorActionPreference='Stop'",
+      "$ProgressPreference='SilentlyContinue'",
+      `$r=Invoke-WebRequest -UseBasicParsing -TimeoutSec ${timeoutSeconds} -Uri '${escapedTarget}' -Headers @{'User-Agent'='Mozilla/5.0';'Referer'='https://finance.qq.com/';'Accept'='*/*'}`,
+      '$b=[Text.Encoding]::UTF8.GetBytes([string]$r.Content)',
+      '$o=[Console]::OpenStandardOutput()',
+      '$o.Write($b,0,$b.Length)',
+      '$o.Flush()',
+    ].join(';');
+    const encoded = Buffer.from(script, 'utf16le').toString('base64');
+    const child = spawn('powershell.exe', ['-NoProfile', '-NonInteractive', '-EncodedCommand', encoded], { windowsHide: true });
+    const stdout = [];
+    let stderr = '';
+    let finished = false;
+    const finish = (error, value) => {
+      if (finished) return;
+      finished = true;
+      clearTimeout(timer);
+      if (error) reject(error); else resolve(value);
+    };
+    const timer = setTimeout(() => {
+      if (child.pid) spawn('taskkill', ['/pid', String(child.pid), '/t', '/f'], { windowsHide: true });
+      finish(new Error('腾讯公开行情请求超时'));
+    }, timeoutMs + 1500);
+    child.stdout.on('data', (chunk) => stdout.push(Buffer.from(chunk)));
+    child.stderr.on('data', (chunk) => { stderr += chunk.toString(); });
+    child.on('error', (error) => finish(error));
+    child.on('close', (code) => {
+      if (finished) return;
+      if (code !== 0) {
+        finish(new Error(`腾讯公开行情请求失败${stderr.trim() ? `：${stderr.trim().slice(0, 180)}` : ''}`));
+        return;
+      }
+      finish(null, Buffer.concat(stdout).toString('utf8').replace(/^\uFEFF/, ''));
+    });
+  });
+}
+
+function parseTencentQuotes(text) {
+  const rows = [];
+  for (const match of String(text || '').matchAll(/v_([^=]+)="([^"]*)";?/g)) {
+    const fields = match[2].split('~');
+    if (fields.length < 35) continue;
+    const amountParts = String(fields[35] || '').split('/');
+    const stamp = String(fields[30] || '');
+    const latestDataAt = /^\d{14}$/.test(stamp)
+      ? `${stamp.slice(0, 4)}-${stamp.slice(4, 6)}-${stamp.slice(6, 8)}T${stamp.slice(8, 10)}:${stamp.slice(10, 12)}:${stamp.slice(12, 14)}+08:00`
+      : new Date().toISOString();
+    rows.push({
+      key: match[1], name: fields[1], code: fields[2], close: numericMarketField(fields[3]),
+      previousClose: numericMarketField(fields[4]), open: numericMarketField(fields[5]),
+      volume: numericMarketField(fields[6]), date: compactMarketDate(stamp) || publicTradeDateKey(),
+      pct: numericMarketField(fields[32]), high: numericMarketField(fields[33]), low: numericMarketField(fields[34]),
+      amount: numericMarketField(amountParts[2], numericMarketField(fields[37]) * 10000), latestDataAt,
+    });
   }
-  merged.dataSources = { ...(merged.dataSources || {}), runtimeMarket: result.source || 'Tongdaxin TQ realtime snapshot' };
-  merged.status = 'ok';
-  merged.runtimeFetchedAt = result.fetchedAt || new Date().toISOString();
-  merged.runtimeScope = scope;
-  await writeRuntimeJson(MARKET_LATEST_FILE, merged);
+  return rows;
+}
+
+function marketSeedRows() {
+  const snapshot = readJson(MARKET_LATEST_FILE) || readJson(path.join(APP_ROOT, 'lib', 'market.json')) || {};
+  return {
+    snapshot,
+    stocks: Array.isArray(snapshot.allStocks) && snapshot.allStocks.length
+      ? snapshot.allStocks
+      : Array.isArray(snapshot.stocks) ? snapshot.stocks : [],
+    indices: Array.isArray(snapshot.indices) ? snapshot.indices : [],
+  };
+}
+
+function publicFallbackEnvelope(scope, rows, reason, source) {
+  const fetchedAt = new Date().toISOString();
+  const tradeDate = rows.map((row) => compactMarketDate(row?.date)).filter(Boolean).sort().at(-1) || publicTradeDateKey();
+  return {
+    status: 'ok', source, provider: source.includes('腾讯') ? 'tencent' : 'eastmoney', quality: 'degraded', fallback: true,
+    fallbackReason: String(reason || '').slice(0, 500), fetchedAt, latestDataAt: fetchedAt,
+    tradeDate, quoteMode: 'public_delayed', dataScope: scope,
+    indices: scope === 'indices' ? rows : [],
+    stocks: scope === 'watchlist' ? rows : [],
+    allStocks: [], replaceLeaderboard: scope === 'watchlist',
+    scope: `通达信实时行情暂不可用，已切换公开行情延时降级，数据日期 ${tradeDate}`,
+    dataSources: {
+      primary: 'TongdaXin/TQ', fallback: source,
+      fallbackQuality: 'DEGRADED', fallbackReason: String(reason || '').slice(0, 500),
+    },
+  };
+}
+
+async function eastmoneyPublicWatchlistRefresh(codes, reason) {
+  const requested = [...new Set(String(codes || '').split(',').map((value) => value.trim().split('.', 1)[0]).filter((value) => /^\d{6}$/.test(value)))];
+  if (requested.length !== 1) throw new Error('快速公开行情仅处理单只股票');
+  const code = requested[0];
+  const normalized = normalizeHistorySymbol(code);
+  if (!normalized) throw new Error('股票代码无效');
+  const { stocks } = marketSeedRows();
+  const old = stocks.find((row) => String(row?.code || '') === code) || {};
+  const secid = `${normalized.market === 'SH' ? '1' : '0'}.${code}`;
+  const body = await publicJsonViaPowerShell('https://push2delay.eastmoney.com/api/qt/stock/get', {
+    secid, fields: 'f43,f44,f45,f46,f47,f48,f57,f58,f59,f60,f170',
+  }, 10000);
+  const data = body?.data;
+  if (body?.rc !== 0 || !data || typeof data !== 'object') throw new Error('公开个股行情为空');
+  const decimals = Math.max(0, Math.min(4, Math.trunc(numericMarketField(data.f59, 2))));
+  const scale = 10 ** decimals;
+  const close = numericMarketField(data.f43) / scale;
+  const previousClose = numericMarketField(data.f60) / scale;
+  if (!(close > 0)) throw new Error('公开个股行情没有有效价格');
+  const tradeDate = publicTradeDateKey();
+  const row = {
+    ...old,
+    code,
+    market: normalized.market.toLowerCase(),
+    name: String(data.f58 || old.name || code).replace(/\s+/g, ''),
+    date: tradeDate,
+    open: numericMarketField(data.f46) / scale || close,
+    high: numericMarketField(data.f44) / scale || close,
+    low: numericMarketField(data.f45) / scale || close,
+    close,
+    previousClose: previousClose > 0 ? previousClose : numericMarketField(old.previousClose, close),
+    pct: Number((numericMarketField(data.f170) / 100).toFixed(2)),
+    amount: numericMarketField(data.f48),
+    volume: numericMarketField(data.f47),
+    realtime: false,
+    quoteMode: 'public_delayed',
+    latestDataAt: new Date().toISOString(),
+    source: '东方财富公开行情（延时降级）',
+    quality: 'degraded',
+  };
+  const localHistory = localTdxHistory(code, normalized.market, 60);
+  row.history = appendMarketHistory(localHistory.length ? localHistory : old.history, row);
+  return publicFallbackEnvelope('watchlist', [row], reason, '东方财富公开个股行情（延时降级）');
+}
+
+async function eastmoneyPublicIndicesRefresh(reason) {
+  const body = await publicJsonViaPowerShell('https://push2delay.eastmoney.com/api/qt/ulist.np/get', {
+    fltt: '2', fields: 'f2,f3,f4,f5,f6,f12,f14,f15,f16,f17,f18',
+    secids: PUBLIC_INDEX_QUOTES.map((item) => item.secid).join(','),
+  }, 12000);
+  const items = body?.data?.diff;
+  if (body?.rc !== 0 || !Array.isArray(items)) throw new Error('公开指数行情为空');
+  const { indices } = marketSeedRows();
+  const oldByCode = new Map(indices.map((row) => [String(row?.code || ''), row]));
+  const tradeDate = publicTradeDateKey();
+  const rows = [];
+  for (const item of items) {
+    const config = PUBLIC_INDEX_QUOTES.find((entry) => entry.code === String(item?.f12 || '').padStart(6, '0'));
+    if (!config) continue;
+    const close = numericMarketField(item.f2);
+    if (!(close > 0)) continue;
+    const old = oldByCode.get(config.key) || {};
+    const previousClose = numericMarketField(item.f18, numericMarketField(old.previousClose, close));
+    const row = {
+      ...old,
+      code: config.key,
+      market: config.market.toLowerCase(),
+      name: String(item.f14 || old.name || config.name),
+      date: tradeDate,
+      open: numericMarketField(item.f17, close), high: numericMarketField(item.f15, close),
+      low: numericMarketField(item.f16, close), close, previousClose,
+      pct: Number(numericMarketField(item.f3, previousClose > 0 ? ((close / previousClose) - 1) * 100 : 0).toFixed(2)),
+      amount: numericMarketField(item.f6), volume: numericMarketField(item.f5),
+      realtime: false, quoteMode: 'public_delayed', latestDataAt: new Date().toISOString(),
+      source: '东方财富公开指数行情（延时降级）', quality: 'degraded',
+    };
+    const localHistory = localTdxHistory(config.code, config.market, 60);
+    row.historySource = localHistory.length ? '通达信本地日线历史 + 公开最新行情' : '页面历史 + 公开最新行情';
+    row.history = appendMarketHistory(localHistory.length ? localHistory : old.history, row);
+    rows.push(row);
+  }
+  if (rows.length < 3) throw new Error('公开指数有效数量不足');
+  return publicFallbackEnvelope('indices', rows, reason, '东方财富公开指数行情（延时降级）');
+}
+
+async function tencentPublicWatchlistRefresh(codes, reason) {
+  const requested = [...new Set(String(codes || '').split(',').map((value) => value.trim().split('.', 1)[0]).filter((value) => /^\d{6}$/.test(value)))];
+  if (requested.length !== 1) throw new Error('腾讯快速公开行情仅处理单只股票');
+  const code = requested[0];
+  const normalized = normalizeHistorySymbol(code);
+  if (!normalized) throw new Error('股票代码无效');
+  const prefix = normalized.market === 'SH' ? 'sh' : normalized.market === 'BJ' ? 'bj' : 'sz';
+  const text = await publicTextViaPowerShell(`https://qt.gtimg.cn/q=${prefix}${code}`, 8000);
+  const quote = parseTencentQuotes(text).find((row) => row.code === code);
+  if (!quote || !(quote.close > 0)) throw new Error('腾讯公开个股行情为空');
+  const { stocks } = marketSeedRows();
+  const old = stocks.find((row) => String(row?.code || '') === code) || {};
+  const row = {
+    ...old,
+    ...quote,
+    code,
+    market: normalized.market.toLowerCase(),
+    name: String(quote.name || old.name || code).replace(/\s+/g, ''),
+    realtime: false,
+    quoteMode: 'public_delayed',
+    source: '腾讯公开行情（延时降级）',
+    quality: 'degraded',
+  };
+  const localHistory = localTdxHistory(code, normalized.market, 60);
+  row.history = appendMarketHistory(localHistory.length ? localHistory : old.history, row);
+  return publicFallbackEnvelope('watchlist', [row], reason, '腾讯公开个股行情（延时降级）');
+}
+
+async function tencentPublicIndicesRefresh(reason) {
+  const target = `https://qt.gtimg.cn/q=${PUBLIC_INDEX_QUOTES.map((item) => `${item.market.toLowerCase()}${item.code}`).join(',')}`;
+  const text = await publicTextViaPowerShell(target, 10000);
+  const quotes = parseTencentQuotes(text);
+  const { indices } = marketSeedRows();
+  const oldByCode = new Map(indices.map((row) => [String(row?.code || ''), row]));
+  const rows = [];
+  for (const config of PUBLIC_INDEX_QUOTES) {
+    const quote = quotes.find((item) => item.key.toLowerCase() === `${config.market.toLowerCase()}${config.code}`);
+    if (!quote || !(quote.close > 0)) continue;
+    const old = oldByCode.get(config.key) || {};
+    const row = {
+      ...old,
+      ...quote,
+      code: config.key,
+      market: config.market.toLowerCase(),
+      name: quote.name || old.name || config.name,
+      realtime: false,
+      quoteMode: 'public_delayed',
+      source: '腾讯公开指数行情（延时降级）',
+      quality: 'degraded',
+    };
+    const localHistory = localTdxHistory(config.code, config.market, 60);
+    row.historySource = localHistory.length ? '通达信本地日线历史 + 公开最新行情' : '页面历史 + 公开最新行情';
+    row.history = appendMarketHistory(localHistory.length ? localHistory : old.history, row);
+    rows.push(row);
+  }
+  if (rows.length < 3) throw new Error('腾讯公开指数有效数量不足');
+  return publicFallbackEnvelope('indices', rows, reason, '腾讯公开指数行情（延时降级）');
+}
+
+async function fastPublicWatchlistRefresh(codes, reason) {
+  try { return await eastmoneyPublicWatchlistRefresh(codes, reason); }
+  catch { return tencentPublicWatchlistRefresh(codes, reason); }
+}
+
+async function fastPublicIndicesRefresh(reason) {
+  try { return await eastmoneyPublicIndicesRefresh(reason); }
+  catch { return tencentPublicIndicesRefresh(reason); }
+}
+
+async function fastPublicMarketRefresh(scope, codes, reason) {
+  if (scope === 'watchlist') return fastPublicWatchlistRefresh(codes, reason);
+  if (scope === 'indices') return fastPublicIndicesRefresh(reason);
+  throw new Error('该范围不使用快速公开行情');
+}
+
+function localMarketFallback(scope, codes, reason) {
+  const snapshot = readJson(MARKET_LATEST_FILE) || readJson(path.join(APP_ROOT, 'lib', 'market.json')) || {};
+  const requested = new Set(String(codes || '').split(',').map((value) => value.trim().split('.', 1)[0]).filter(Boolean));
+  const sourceRows = Array.isArray(snapshot.allStocks) && snapshot.allStocks.length
+    ? snapshot.allStocks
+    : Array.isArray(snapshot.stocks) ? snapshot.stocks : [];
+  const selectedRows = scope === 'watchlist'
+    ? sourceRows.filter((row) => requested.has(String(row?.code || '')))
+    : sourceRows;
+  const rows = selectedRows.map((row) => localTdxDailyProjection(row));
+  const indices = (Array.isArray(snapshot.indices) ? snapshot.indices : []).map((row) => {
+    const config = PUBLIC_INDEX_QUOTES.find((item) => item.key === String(row?.code || ''));
+    return config
+      ? localTdxDailyProjection({ ...row, code: config.code, market: config.market })
+      : localTdxDailyProjection(row);
+  }).map((row) => {
+    const config = PUBLIC_INDEX_QUOTES.find((item) => item.code === String(row?.code || ''));
+    return config ? { ...row, code: config.key, market: config.market.toLowerCase(), name: row.name || config.name } : row;
+  });
+  if (scope === 'indices' && !indices.length) return null;
+  if (scope !== 'indices' && !rows.length) return null;
+  const fetchedAt = new Date().toISOString();
+  const source = '通达信本地最近交易日收盘数据（降级）';
+  const withFallbackMetadata = (row) => ({ ...row, realtime: false, quoteMode: 'local_daily_close', source, quality: 'degraded' });
+  const tradeDate = [...rows, ...indices].map((row) => compactMarketDate(row?.date)).filter(Boolean).sort().at(-1)
+    || compactMarketDate(snapshot.tradeDate || snapshot.date);
+  return {
+    status: 'ok', source, provider: 'local_resource_library', quality: 'degraded', fallback: true,
+    fallbackReason: String(reason || '').slice(0, 500), fetchedAt, latestDataAt: fetchedAt,
+    tradeDate, quoteMode: 'local_daily_close',
+    indices: scope === 'indices' ? indices.map(withFallbackMetadata) : [],
+    stocks: scope === 'indices' ? [] : rows.slice(0, 200).map(withFallbackMetadata),
+    allStocks: scope === 'market' ? rows.map(withFallbackMetadata) : [],
+    marketSummary: scope === 'market' ? {
+      currentCount: Number(snapshot.currentCount || rows.length), up: Number(snapshot.up || 0),
+      down: Number(snapshot.down || 0), flat: Number(snapshot.flat || 0),
+      amount: Number(snapshot.amount || 0), bins: Array.isArray(snapshot.bins) ? snapshot.bins : [],
+    } : undefined,
+    replaceLeaderboard: scope !== 'indices',
+    scope: `通达信实时行情和公开行情暂不可用，已使用 ${tradeDate || '最近交易日'} 本地收盘数据`,
+    dataSources: {
+      primary: 'TongdaXin/TQ', fallback: 'Local TDX daily archive', fallbackQuality: 'DEGRADED',
+      fallbackReason: String(reason || '').slice(0, 500),
+    },
+  };
+}
+
+async function runPublicOnlyMarketRefresh(scope, codes, reason) {
+  const args = ['--scope', scope, '--public-only'];
+  if (scope === 'watchlist' && codes) args.push('--codes', codes);
+  const result = await runLocalScript('market_overview_refresh.py', args, 30000, 0);
+  let value;
+  try { value = JSON.parse(result.output || '{}'); } catch { throw new Error('Public fallback returned invalid JSON'); }
+  if (!value || value.status === 'error') throw new Error(String(value?.error || 'Public fallback unavailable'));
+  const normalized = { ...value, fallback: true, quality: 'degraded', fallbackReason: String(value.fallbackReason || reason || '').slice(0, 500) };
+  await persistPublicResearchFallback(normalized, reason).catch(() => undefined);
+  return normalized;
 }
 
 async function runMarketRefresh(scope = 'indices', codes = '') {
@@ -698,28 +1686,41 @@ async function runMarketRefresh(scope = 'indices', codes = '') {
     try {
       // 市场全量快照包含数千只股票，不能使用普通脚本的 12KB 尾部截断，
       // 否则 JSON 会被截断后触发降级到旧的公开快照。
-      const value = JSON.parse((await runLocalScript('market_overview_refresh.py', ['--scope', 'market'], 180000, 0)).output);
-      await persistMarketSnapshot(scope, value);
+      const value = JSON.parse((await runLocalScript('market_overview_refresh.py', ['--scope', 'market'], 600000, 0)).output);
       return value;
     } catch (error) {
+      if (isLocalOnlyDataPolicy()) throw error;
       // 本地完整日线不可用时保留公开涨停池作为降级数据，但把来源和日期
       // 明确交给页面，不能静默继续使用旧 market.json。
       const fallback = await runPublicMarketRefresh();
       return { ...fallback, scope: `${fallback.scope}；本地日线刷新失败：${error instanceof Error ? error.message : String(error)}` };
     }
   }
-  return new Promise((resolve, reject) => {
+  const publicHedge = isLocalOnlyDataPolicy()
+    ? null
+    : new Promise((resolve) => setTimeout(resolve, 1200))
+      .then(() => fastPublicMarketRefresh(scope, codes, '通达信实时请求等待中'))
+      .then((value) => ({ ok: true, value }), (error) => ({ ok: false, error }));
+  const primary = new Promise((resolve, reject) => {
     const python = localPythonExecutable();
     const script = path.join(APP_ROOT, 'scripts', 'market_overview_refresh.py');
     const args = [script, '--scope', scope];
     if (scope === 'watchlist' && codes) args.push('--codes', codes);
-    const child = spawn(python, args, { windowsHide: true });
+    const child = spawn(python, args, {
+      windowsHide: true,
+      env: localScriptEnvironment(scope === 'watchlist' && codes
+        ? { ZHANGCAI_PUBLIC_WATCHLIST_CODES: codes }
+        : {}),
+    });
     let stdout = '';
     let stderr = '';
+    const timeoutMs = scope === 'watchlist'
+      ? Number(process.env.ZHANGCAI_TDX_QUOTE_TIMEOUT_MS || 15000)
+      : Number(process.env.ZHANGCAI_TDX_INDEX_TIMEOUT_MS || 30000);
     const timer = setTimeout(() => {
       if (child.pid) spawn('taskkill', ['/pid', String(child.pid), '/t', '/f'], { windowsHide: true });
-      reject(new Error('通达信实时行情刷新超时（120 秒）'));
-    }, 120000);
+      reject(new Error(scope === 'watchlist' ? 'TDX signal timed out' : '通达信实时行情刷新超时'));
+    }, timeoutMs);
     child.stdout.on('data', (chunk) => { stdout += chunk.toString(); });
     child.stderr.on('data', (chunk) => { stderr += chunk.toString(); });
     child.on('error', (error) => { clearTimeout(timer); reject(error); });
@@ -728,86 +1729,74 @@ async function runMarketRefresh(scope = 'indices', codes = '') {
       if (code !== 0) { reject(new Error(readableScriptError('market_overview_refresh.py', stderr || stdout, code))); return; }
       try {
         const value = JSON.parse(stdout.trim());
-        void persistMarketSnapshot(scope, value).then(() => resolve(value)).catch(() => resolve(value));
+        if (!value || value.status === 'error') {
+          reject(new Error(String(value?.error || '实时行情刷新失败')));
+          return;
+        }
+        if (value.fallback === true) void persistPublicResearchFallback(value).catch(() => undefined);
+        if (scope === 'watchlist') void persistMarketSnapshot(scope, value).catch(() => undefined);
+        resolve(value);
       } catch { reject(new Error('实时行情返回格式无效')); }
     });
   });
+  try {
+    const primaryResult = primary.then(
+      (value) => ({ kind: 'primary', value }),
+      (error) => ({ kind: 'primary-error', error }),
+    );
+    const candidates = [primaryResult];
+    if (publicHedge) {
+      const eligiblePublic = Promise.all([
+        new Promise((resolve) => setTimeout(resolve, 7000)),
+        publicHedge,
+      ]).then(([, result]) => (
+        result.ok
+          ? { kind: 'public', value: result.value }
+          : new Promise(() => {})
+      ));
+      candidates.push(eligiblePublic);
+    }
+    const winner = await Promise.race(candidates);
+    if (winner.kind === 'primary') return winner.value;
+    if (winner.kind === 'public') {
+      const value = {
+        ...winner.value,
+        fallback: true,
+        quality: 'degraded',
+        fallbackReason: '通达信实时请求超过 7 秒，已先返回公开行情延时降级数据',
+      };
+      await persistPublicResearchFallback(value, value.fallbackReason).catch(() => undefined);
+      return value;
+    }
+    throw winner.error;
+  } catch (error) {
+    const reason = error instanceof Error ? error.message : String(error);
+    if (publicHedge) {
+      const fast = await publicHedge;
+      if (fast.ok) {
+        const value = {
+          ...fast.value,
+          fallback: true,
+          quality: 'degraded',
+          fallbackReason: `TDX_SIGNAL_TIMEOUT: ${reason}`.slice(0, 500),
+        };
+        await persistPublicResearchFallback(value, reason).catch(() => undefined);
+        return value;
+      }
+    }
+    try {
+      return await runPublicOnlyMarketRefresh(scope, codes, `TDX_SIGNAL_TIMEOUT: ${reason}`);
+    } catch (publicError) {
+      const local = localMarketFallback(scope, codes, `TDX_SIGNAL_TIMEOUT: ${reason}; public fallback failed: ${publicError instanceof Error ? publicError.message : String(publicError)}`);
+      if (local) {
+        await persistPublicResearchFallback(local).catch(() => undefined);
+        return local;
+      }
+      throw error;
+    }
+  }
 }
 
-async function persistLatestMarketSnapshot(result, scope = 'market') {
-  if (!result || result.status !== 'ok') return;
-  const runtimePath = path.join(RUNTIME_ROOT, 'market-latest.json');
-  if (scope === 'indices') {
-    const existing = readJson(runtimePath) || {};
-    const indexRows = Array.isArray(result.indices) ? result.indices : [];
-    if (indexRows.length === 0) return;
-    const persistedAt = new Date().toISOString();
-    await writeRuntimeJson(runtimePath, {
-      ...existing,
-      status: 'ok',
-      indices: indexRows,
-      // An index-only refresh must not erase the last complete market
-      // snapshot.  Its own freshness/source are recorded separately so a
-      // reload cannot silently confuse the two data scopes.
-      stocks: Array.isArray(existing.stocks) ? existing.stocks : [],
-      allStocks: Array.isArray(existing.allStocks) ? existing.allStocks : [],
-      date: existing.date || result.tradeDate || '',
-      tradeDate: existing.tradeDate || result.tradeDate || '',
-      indicesSource: result.source || existing.indicesSource || '',
-      indicesQuality: result.quality || 'primary',
-      indicesFallback: result.fallback === true,
-      indicesLatestDataAt: result.fetchedAt || persistedAt,
-      latestDataAt: result.fetchedAt || existing.latestDataAt || persistedAt,
-      persistedAt,
-      dataSources: { ...(existing.dataSources || {}), ...(result.dataSources || {}) },
-    });
-    return;
-  }
-  const allStocks = Array.isArray(result.allStocks) ? result.allStocks : [];
-  const sourceText = String(result.source || '').toLowerCase();
-  const isLocalTdx = sourceText.includes('tongdaxin');
-  const isPublicFallback = result.fallback === true || result.quality === 'degraded';
-  const hasHomepageSnapshot = Array.isArray(result.stocks) && result.stocks.length > 0
-    && result.marketSummary && Number(result.marketSummary.currentCount || 0) > 0;
-  // A local refresh must contain the complete universe.  A public fallback is
-  // deliberately allowed to persist only its compact homepage payload, so a
-  // refresh never falls back to the previous day's packaged headline values.
-  if ((!isLocalTdx && !isPublicFallback) || (isLocalTdx && allStocks.length < 3000) || (isPublicFallback && !hasHomepageSnapshot)) return;
-  const summary = result.marketSummary && typeof result.marketSummary === 'object' ? result.marketSummary : {};
-  const dailyArchive = readJson(path.join(DATA_ROOT, 'status', 'tdx-daily-history.json')) || {};
-  const existingRuntime = readJson(runtimePath) || {};
-  const persistedAt = new Date().toISOString();
-  const isCompactFallback = !isLocalTdx;
-  await writeRuntimeJson(runtimePath, {
-    ...existingRuntime,
-    ...result,
-    indices: Array.isArray(result.indices) && result.indices.length ? result.indices : (existingRuntime.indices || []),
-    indicesSource: Array.isArray(result.indices) && result.indices.length ? (result.source || '') : (existingRuntime.indicesSource || ''),
-    indicesQuality: Array.isArray(result.indices) && result.indices.length ? (result.quality || 'primary') : (existingRuntime.indicesQuality || 'primary'),
-    indicesFallback: Array.isArray(result.indices) && result.indices.length ? result.fallback === true : existingRuntime.indicesFallback === true,
-    indicesLatestDataAt: Array.isArray(result.indices) && result.indices.length ? (result.fetchedAt || persistedAt) : (existingRuntime.indicesLatestDataAt || persistedAt),
-    dataSources: { ...(existingRuntime.dataSources || {}), ...(result.dataSources || {}) },
-    date: result.tradeDate || result.date || '',
-    total: Number(summary.currentCount || allStocks.length),
-    currentCount: Number(summary.currentCount || allStocks.length),
-    up: Number(summary.up || 0),
-    down: Number(summary.down || 0),
-    flat: Number(summary.flat || 0),
-    amount: Number(summary.amount || 0),
-    bins: Array.isArray(summary.bins) ? summary.bins : [],
-    latestDataAt: result.fetchedAt || persistedAt,
-    persistedAt,
-    persistence: {
-      status: isCompactFallback ? 'degraded-public-homepage-snapshot' : 'complete-local-tdx-universe',
-      dataRoot: DATA_ROOT,
-      archivePath: isCompactFallback
-        ? path.join(RUNTIME_ROOT, 'market-public-fallback.json')
-        : dailyArchive.file
-          ? path.join(DATA_ROOT, dailyArchive.file)
-          : path.join(DATA_ROOT, 'market', 'daily', String(result.tradeDate || '').replace(/-/g, ''), 'tdx-bars.jsonl'),
-    },
-  });
-}
 
 function runCanonicalStrategy(requestedSkillId) {
   return new Promise((resolve, reject) => {
@@ -822,6 +1811,8 @@ function runCanonicalStrategy(requestedSkillId) {
       reject(new Error(`未找到原始策略入口：${skillId}`));
       return;
     }
+    const tdxRoot = bridgeTdxRoot();
+    const minuteData = strategyMinuteDataPreflight(skillId, tdxRoot);
     if (PARAMETER_REQUIRED_STRATEGIES.has(skillId)) {
       resolve({
         status: 'PARAMETER_REQUIRED',
@@ -846,36 +1837,92 @@ function runCanonicalStrategy(requestedSkillId) {
       });
       return;
     }
+    let dataDate = null;
+    let requestedDataDate = null;
+    let dailySource = '';
+    let dailyDegraded = false;
+    let dailyDegradationReason = '';
     try {
-      // Strategy preflight must use the canonical 3003 archive manifest.  The
-      // packaged UI seed and the live TDX source are not valid substitutes for
-      // a locally persisted, date-addressable research dataset.
+      // Prefer the newest date physically present in the configured TDX .day
+      // files. The resource-library archive remains the fallback; a lagging
+      // archive date must not block skills that can read the local TDX history.
       const dailyManifest = readJson(path.join(DATA_ROOT, 'status', 'tdx-daily-history.json')) || {};
       const dailyIndex = readJson(DAILY_DATA_INDEX_FILE) || {};
-      const currentCount = Number(
+      const archiveCount = Number(
         dailyManifest.current_trade_date_symbols
           || dailyManifest.latest_date_source_files
           || dailyIndex.summary?.latest_symbol_count
           || 0,
       );
-      const dataDate = String(dailyManifest.trade_date || dailyIndex.latest_trade_date || '').replace(/\D/g, '') || null;
-      const archiveReady = dailyManifest.status === 'available'
-        && dailyManifest.freshness_status !== 'stale'
-        && Boolean(dailyManifest.file);
-      const tdxRoot = process.env.ZHANGCAI_TDX_ROOT || 'C:\\new_tdx_mock';
-      if (!archiveReady) {
+      const runtimeMarket = readJson(path.join(DATA_ROOT, 'runtime', 'market-latest.json')) || {};
+      const archiveDate = String(dailyManifest.trade_date || '').replace(/\D/g, '') || null;
+      const liveDaily = inspectTdxDailyIntegrity(tdxRoot);
+      const liveDate = String(liveDaily.latestDate || '').replace(/\D/g, '') || null;
+      const liveCount = Number(liveDaily.latestCount || 0);
+      const archiveRequestedDate = String(
+        dailyManifest.expected_trade_date
+          || dailyManifest.freshness?.expected_trade_date
+          || dailyIndex.latest_trade_date
+          || archiveDate
+          || '',
+      ).replace(/\D/g, '') || null;
+      const liveFreshness = dailyFreshnessSnapshot({ latestDate: liveDate || '' });
+      requestedDataDate = liveDate
+        ? (liveFreshness.updateDue ? liveFreshness.currentDate : liveDate)
+        : String([
+          archiveRequestedDate,
+          runtimeMarket.tradeDate,
+          runtimeMarket.trade_date,
+          runtimeMarket.date,
+        ].map((value) => String(value || '').replace(/\D/g, '')).filter((value) => /^\d{8}$/.test(value)).sort().at(-1) || archiveRequestedDate || '').replace(/\D/g, '') || null;
+      const archiveFile = String(dailyManifest.file || 'market/daily/aggregate/tdx-bars.jsonl');
+      const archivePath = path.isAbsolute(archiveFile) ? archiveFile : path.join(DATA_ROOT, archiveFile);
+      const archiveUsable = Boolean(
+        archiveDate
+          && existsSync(archivePath)
+          && archiveCount > 0
+          && Number(dailyManifest.bar_records || 0) > 0,
+      );
+      const archiveStatus = String(dailyManifest.status || '').toLowerCase();
+      const archiveReady = archiveUsable && ['available', 'degraded', 'stale'].includes(archiveStatus);
+      const useLiveDaily = Boolean(liveDate && liveCount > 0 && (!archiveReady || liveDate > archiveDate));
+      const selectedArchiveReady = archiveReady || useLiveDaily;
+      const currentCount = useLiveDaily ? liveCount : archiveCount;
+      dataDate = useLiveDaily ? liveDate : archiveReady ? archiveDate : null;
+      dailySource = useLiveDaily ? 'configured_tdx_day_files' : archiveReady ? 'resource_library_archive' : '';
+      dailyDegraded = Boolean(
+        selectedArchiveReady
+          && (useLiveDaily || (requestedDataDate && dataDate && requestedDataDate !== dataDate) || currentCount < 3000),
+      );
+      const degradationNotes = [];
+      if (useLiveDaily && archiveDate && liveDate > archiveDate) {
+        degradationNotes.push(`资源库归档停留在 ${archiveDate}，已改用通达信本地最新日线 ${liveDate}`);
+      } else if (useLiveDaily && !archiveReady) {
+        degradationNotes.push(`resource-library 日线归档不可用，本次直接读取通达信本地日线 ${liveDate}`);
+      }
+      if (requestedDataDate && dataDate && requestedDataDate !== dataDate) {
+        degradationNotes.push(`请求日线 ${requestedDataDate} 尚未落盘，已使用最近可用日线 ${dataDate}`);
+      }
+      if (currentCount < 3000 && dataDate) {
+        degradationNotes.push(`该日期可用证券覆盖 ${currentCount}，只允许按实际覆盖范围研究`);
+      }
+      dailyDegradationReason = degradationNotes.join('；');
+      if (!archiveReady && !useLiveDaily) {
         resolve({
           status: 'BLOCKED',
           skill_id: skillId,
           output: JSON.stringify({
             status: 'BLOCKED',
-            message: '3003 本地日线归档尚未达到可运行状态，原始策略已阻断。',
+            message: '未找到可用的通达信本地日线或 resource-library 日线归档，原始策略已阻断。',
             data_date: dataDate,
+            requested_data_date: requestedDataDate,
             archive_status: dailyManifest.status || 'missing',
             archive_file: dailyManifest.file || '',
-            action: '先在数据与设置页执行日线落盘与校验，确认同日归档完成后再运行策略。',
+            action: '请确认通达信安装目录下存在 .day 历史，或先在数据与设置页完成日线落盘。',
+            minute_data: minuteData,
           }, null, 2),
           data_date: dataDate,
+          minute_data: minuteData,
         });
         return;
       }
@@ -885,12 +1932,16 @@ function runCanonicalStrategy(requestedSkillId) {
           skill_id: skillId,
           output: JSON.stringify({
             status: 'BLOCKED',
-            message: '通达信当日全市场日线覆盖不足，原始策略已按完整样本契约阻断。',
+            message: '最新可用日线的全市场覆盖不足，原始策略按完整样本契约阻断；日期已回退至实际日线日期。',
             required_current_count: 3000,
             actual_current_count: currentCount,
             data_date: dataDate,
-            action: '刷新并补齐沪深北日线后重新运行；不会使用部分样本替代全市场扫描。',
+            requested_data_date: requestedDataDate,
+            daily_source: dailySource,
+            action: '对要求全市场完整覆盖的策略，补齐沪深北日线后重试；不会将部分样本标成全市场结果。',
+            minute_data: minuteData,
           }, null, 2),
+          minute_data: minuteData,
         });
         return;
       }
@@ -920,8 +1971,10 @@ function runCanonicalStrategy(requestedSkillId) {
               required_formulas: requiredFormulaFiles,
               formula_files: formulaFiles,
               action: '在通达信中打开“公式管理器/公式系统”，导入五个 .tn6 文件；导入完成后重新点击运行原始策略。',
+              minute_data: minuteData,
             }, null, 2),
             data_date: dataDate,
+            minute_data: minuteData,
           });
           return;
         }
@@ -936,12 +1989,18 @@ function runCanonicalStrategy(requestedSkillId) {
     const child = spawn(python, [entry, 'run'], {
       cwd: skillRoot,
       windowsHide: true,
-      env: {
-        ...process.env,
+      env: localScriptEnvironment({
         ONESTOCK_STOCK_DATA_ROOT: outputRoot,
         STOCK_SKILLS_ROOT: SKILL_SOURCE,
-        PYTHONPATH: [path.join(APP_ROOT, 'scripts'), path.join(SKILL_SOURCE, 'stock-unified', 'scripts'), process.env.PYTHONPATH || ''].filter(Boolean).join(path.delimiter),
-      },
+        PYTHONPATH: [path.join(SKILL_SOURCE, 'stock-unified', 'scripts'), process.env.PYTHONPATH || ''].filter(Boolean).join(path.delimiter),
+        ZHANGCAI_ANALYSIS_TRADE_DATE: dataDate || '',
+        ZHANGCAI_REQUESTED_TRADE_DATE: requestedDataDate || '',
+        ZHANGCAI_DAILY_DATA_QUALITY: dailyDegraded ? 'DEGRADED' : 'AVAILABLE',
+        ZHANGCAI_DAILY_DATA_NOTICE: dailyDegradationReason,
+        ZHANGCAI_DAILY_DATA_SOURCE: dailySource,
+        ZHANGCAI_TDX_LATEST_DAILY_DATE: liveDate || '',
+        ZHANGCAI_TDX_LATEST_DAILY_SYMBOLS: String(liveCount || 0),
+      }),
     });
     let stdout = '';
     let stderr = '';
@@ -962,13 +2021,33 @@ function runCanonicalStrategy(requestedSkillId) {
         try { receipt = JSON.parse(receiptMatch[1]); } catch { /* 保留原始输出 */ }
       }
       const structured = collectStrategyStructured(receipt, combined, skillId);
+      const rawStatus = receipt?.status || (code === 0 ? 'CLEAN_PASS' : 'BLOCKED');
+      const minuteDegraded = minuteData.result === 'DEGRADED';
+      const resultStatus = minuteDegraded && ['CLEAN_PASS', 'PASS', 'READY_FOR_VALIDATED_RUN', 'ok'].includes(String(rawStatus))
+        ? 'DEGRADED'
+        : rawStatus;
+      const output = [
+        combined,
+        dailyDegraded
+          ? `[日线降级] ${dailyDegradationReason}。本次结果仅使用该交易日收盘数据，不代表请求日盘中数据。`
+          : '',
+        minuteDegraded
+          ? `[分钟线降级] ${minuteData.purpose} 当前未将原始 .lc5 写入 EXE，结果不得解释为完整分钟级结论。`
+          : '',
+      ].filter(Boolean).join('\n');
       resolve({
-        status: receipt?.status || (code === 0 ? 'CLEAN_PASS' : 'BLOCKED'),
-        output: combined.slice(-MAX_OUTPUT),
+        status: resultStatus,
+        output: output.slice(-MAX_OUTPUT),
         elapsed_ms: Date.now() - startedAt,
         receipt,
         structured,
         skill_id: skillId,
+        minute_data: minuteData,
+        data_date: dataDate,
+        requested_data_date: requestedDataDate,
+        daily_source: dailySource,
+        data_quality: dailyDegraded ? 'DEGRADED' : 'AVAILABLE',
+        data_degradation: dailyDegradationReason,
       });
     });
   });
@@ -1125,7 +2204,12 @@ async function ensureStockSupplemental(rawCode, date) {
   if (running) return running;
   const job = (async () => {
     try {
-      await runLocalScript('supplemental_data_sync.py', ['--date', key, '--mode', 'stock', '--code', normalized.code], 180000, 0);
+      await runLocalScript(
+        'supplemental_data_sync.py',
+        ['--date', key, '--mode', 'stock', '--code', normalized.code],
+        Number(process.env.ZHANGCAI_STOCK_SUPPLEMENTAL_TIMEOUT_MS || 600000),
+        0,
+      );
       return readSupplementalSnapshot(key, normalized.code);
     } catch (error) {
       console.warn(`[agent] 个股补充数据刷新失败 ${normalized.symbol}: ${error instanceof Error ? error.message : String(error)}`);
@@ -1141,12 +2225,27 @@ async function ensureStockSupplemental(rawCode, date) {
   return job;
 }
 
-async function enrichHarnessContext(context) {
+async function enrichHarnessContext(context, onProgress) {
   if (!context || typeof context !== 'object') return context;
   const targetCode = context?.targetStock?.code;
-  if (!targetCode) return context;
+  if (!targetCode) {
+    onProgress?.('supplemental', 'completed', '本技能无需额外个股补充快照。');
+    return context;
+  }
   const date = context?.targetStock?.date || context?.historyMeta?.lastDate || localTradeDate();
+  onProgress?.(
+    'supplemental',
+    'running',
+    `正在处理 ${targetCode} 的财务、股本等补充快照。`,
+  );
   const supplementalData = await ensureStockSupplemental(targetCode, date);
+  onProgress?.(
+    'supplemental',
+    'completed',
+    supplementalData?.status === 'unavailable'
+      ? '补充数据处理完成，但部分来源不可用。'
+      : '财务、股本等补充数据已写入研究上下文。',
+  );
   return { ...context, supplementalData: supplementalData || { status: 'missing', requested_date: date, coverage: {} } };
 }
 
@@ -1205,7 +2304,8 @@ function readTdxDayBoundary(file) {
 }
 
 async function buildTdxHistoryIndex(force = false) {
-  const tdxRoot = path.resolve(process.env.ZHANGCAI_TDX_ROOT || 'C:\\new_tdx_mock');
+  const configuredRoot = bridgeTdxRoot();
+  const tdxRoot = configuredRoot ? path.resolve(configuredRoot) : '';
   const cached = readJson(TDX_HISTORY_INDEX_FILE);
   if (!force && cached?.schema === 'ZHANGCAI_TDX_SYMBOL_INDEX_V1' && cached.source_root === tdxRoot && cached.symbols && Object.keys(cached.symbols).length) {
     return { ...cached, cached: true };
@@ -1248,6 +2348,147 @@ async function buildTdxHistoryIndex(force = false) {
   };
   await writeRuntimeJson(TDX_HISTORY_INDEX_FILE, index);
   return { ...index, cached: false };
+}
+
+// The data installer carries one canonical, append-only JSONL archive.  Keep
+// a small byte-range index beside it so a single-stock research request does
+// not scan the multi-gigabyte archive from the beginning.  The archive is
+// written by symbol, but the lookup still checks the symbol on every row so a
+// future writer that interleaves symbols remains safe.
+let canonicalDailyIndexBuild = null;
+
+async function forEachCanonicalDailyLine(file, onLine) {
+  const stream = createReadStream(file, { highWaterMark: 1024 * 1024 });
+  let pending = Buffer.alloc(0);
+  let pendingOffset = 0;
+  for await (const chunk of stream) {
+    const current = pending.length ? Buffer.concat([pending, chunk]) : chunk;
+    let cursor = 0;
+    while (true) {
+      const newline = current.indexOf(0x0a, cursor);
+      if (newline < 0) break;
+      await onLine(current.subarray(cursor, newline), pendingOffset + cursor);
+      cursor = newline + 1;
+    }
+    pendingOffset += cursor;
+    pending = current.subarray(cursor);
+  }
+  if (pending.length) await onLine(pending, pendingOffset);
+}
+
+function canonicalDate(value) {
+  const raw = String(value || '').replace(/\D/g, '');
+  return /^\d{8}$/.test(raw) ? `${raw.slice(0, 4)}-${raw.slice(4, 6)}-${raw.slice(6)}` : String(value || '');
+}
+
+async function buildCanonicalDailyIndex(force = false) {
+  if (!existsSync(CANONICAL_DAILY_FILE)) return null;
+  let source;
+  try { source = statSync(CANONICAL_DAILY_FILE); } catch { return null; }
+  const cached = readJson(CANONICAL_DAILY_INDEX_FILE);
+  if (!force
+    && cached?.schema === 'ZHANGCAI_CANONICAL_DAILY_SYMBOL_INDEX_V1'
+    && Number(cached.source_size) === Number(source.size)
+    && Math.abs(Number(cached.source_mtime_ms) - Number(source.mtimeMs)) < 1
+    && cached.symbols
+    && Object.keys(cached.symbols).length) {
+    return { ...cached, cached: true };
+  }
+  if (canonicalDailyIndexBuild) return canonicalDailyIndexBuild;
+  canonicalDailyIndexBuild = (async () => {
+    const symbols = {};
+    let recordCount = 0;
+    await forEachCanonicalDailyLine(CANONICAL_DAILY_FILE, async (line, offset) => {
+      const text = line.toString('utf8').replace(/\r$/, '').trim();
+      if (!text) return;
+      let value;
+      try { value = JSON.parse(text); } catch { return; }
+      const normalized = normalizeHistorySymbol(value?.market ? `${value.symbol}.${value.market}` : String(value?.symbol || ''));
+      if (!normalized) return;
+      const endOffset = offset + line.length + 1;
+      const date = canonicalDate(value.date);
+      const existing = symbols[normalized.key];
+      if (!existing) {
+        symbols[normalized.key] = {
+          symbol: normalized.symbol,
+          code: normalized.code,
+          market: normalized.market,
+          start_offset: offset,
+          end_offset: endOffset,
+          record_count: 1,
+          first_date: date,
+          last_date: date,
+        };
+      } else {
+        existing.start_offset = Math.min(Number(existing.start_offset || offset), offset);
+        existing.end_offset = Math.max(Number(existing.end_offset || endOffset), endOffset);
+        existing.record_count = Number(existing.record_count || 0) + 1;
+        if (date && (!existing.first_date || date < existing.first_date)) existing.first_date = date;
+        if (date && (!existing.last_date || date > existing.last_date)) existing.last_date = date;
+      }
+      recordCount += 1;
+    });
+    const index = {
+      schema: 'ZHANGCAI_CANONICAL_DAILY_SYMBOL_INDEX_V1',
+      generated_at: new Date().toISOString(),
+      source_file: dataRelativePath(CANONICAL_DAILY_FILE),
+      source_size: source.size,
+      source_mtime_ms: source.mtimeMs,
+      source_kind: 'Packaged canonical daily JSONL · byte-range lookup',
+      symbol_count: Object.keys(symbols).length,
+      record_count: recordCount,
+      symbols,
+    };
+    await writeRuntimeJson(CANONICAL_DAILY_INDEX_FILE, index);
+    return { ...index, cached: false };
+  })();
+  try { return await canonicalDailyIndexBuild; } finally { canonicalDailyIndexBuild = null; }
+}
+
+async function readCanonicalDailyHistory(normalized, limit = 0, forceIndex = false) {
+  const index = await buildCanonicalDailyIndex(forceIndex);
+  const entry = index?.symbols?.[normalized.key];
+  if (!entry || !existsSync(CANONICAL_DAILY_FILE)) return null;
+  const start = Math.max(0, Number(entry.start_offset || 0));
+  const end = Math.max(start, Number(entry.end_offset || 0));
+  if (end <= start) return null;
+  const stream = createReadStream(CANONICAL_DAILY_FILE, { start, end: end - 1, encoding: 'utf8' });
+  let pending = '';
+  const rows = [];
+  for await (const chunk of stream) {
+    pending += chunk;
+    const parts = pending.split(/\r?\n/);
+    pending = parts.pop() || '';
+    for (const line of parts) {
+      if (!line.trim()) continue;
+      try {
+        const value = JSON.parse(line);
+        const rowSymbol = normalizeHistorySymbol(value?.market ? `${value.symbol}.${value.market}` : String(value?.symbol || ''));
+        if (!rowSymbol || rowSymbol.key !== normalized.key) continue;
+        rows.push({
+          date: canonicalDate(value.date),
+          open: Number(value.open), high: Number(value.high), low: Number(value.low),
+          close: Number(value.close), amount: value.amount == null ? null : Number(value.amount),
+          volume: Number(value.volume), source: 'packaged-canonical-daily',
+        });
+      } catch { /* 跳过损坏行，保留同一股票的其他日线 */ }
+    }
+  }
+  if (pending.trim()) {
+    try {
+      const value = JSON.parse(pending);
+      const rowSymbol = normalizeHistorySymbol(value?.market ? `${value.symbol}.${value.market}` : String(value?.symbol || ''));
+      if (rowSymbol?.key === normalized.key) rows.push({
+        date: canonicalDate(value.date),
+        open: Number(value.open), high: Number(value.high), low: Number(value.low),
+        close: Number(value.close), amount: value.amount == null ? null : Number(value.amount),
+        volume: Number(value.volume), source: 'packaged-canonical-daily',
+      });
+    } catch { /* ignore a truncated final line */ }
+  }
+  const unique = new Map(rows.filter((row) => row.date).map((row) => [row.date, row]));
+  const ordered = [...unique.values()].sort((a, b) => a.date.localeCompare(b.date));
+  return { index, entry, history: limit > 0 ? ordered.slice(-limit) : ordered, total: ordered.length };
 }
 
 function readPublicDailyFallbackHistory(normalized, limit = 0) {
@@ -1303,24 +2544,44 @@ async function queryTdxHistory(rawSymbol, rawLimit, forceIndex = false) {
   }
   const parsedLimit = rawLimit === '0' ? 0 : Math.max(1, Math.min(Number(rawLimit) || 120, 20000));
   if (entry) {
-    const configuredTdxRoot = path.resolve(process.env.ZHANGCAI_TDX_ROOT || 'C:\\new_tdx_mock');
-    const tdxRoot = path.resolve(index.source_available === false ? configuredTdxRoot : (index.source_root || configuredTdxRoot));
-    const sourceFile = path.resolve(tdxRoot, entry.file);
-    try {
-      if (existsSync(sourceFile)) {
-        const history = readTdxDayHistory(sourceFile, parsedLimit);
-        if (history.length) {
-          return {
-            status: 'ok', quality: 'primary', symbol: entry.symbol, code: entry.code, market: entry.market,
-            source: 'Tongdaxin local .day · indexed lookup', source_root: tdxRoot, source_file: sourceFile,
-            index_path: TDX_HISTORY_INDEX_FILE, daily_data_index_path: DAILY_DATA_INDEX_FILE,
-            history_scope: 'FULL_LOCAL_TDX_FILE', full_history_verified: history.length === entry.record_count || parsedLimit === 0,
-            history_count: entry.record_count, returned_count: history.length, first_date: entry.first_date,
-            last_date: entry.last_date, data_date: entry.last_date, history,
-          };
+    const configuredTdxRoot = bridgeTdxRoot();
+    const selectedTdxRoot = index.source_available === false ? configuredTdxRoot : (index.source_root || configuredTdxRoot);
+    const tdxRoot = selectedTdxRoot ? path.resolve(selectedTdxRoot) : '';
+    if (tdxRoot) {
+      const sourceFile = path.resolve(tdxRoot, entry.file);
+      try {
+        if (existsSync(sourceFile)) {
+          const history = readTdxDayHistory(sourceFile, parsedLimit);
+          if (history.length) {
+            return {
+              status: 'ok', quality: 'primary', symbol: entry.symbol, code: entry.code, market: entry.market,
+              source: 'Tongdaxin local .day · indexed lookup', source_root: tdxRoot, source_file: sourceFile,
+              index_path: TDX_HISTORY_INDEX_FILE, daily_data_index_path: DAILY_DATA_INDEX_FILE,
+              history_scope: 'FULL_LOCAL_TDX_FILE', full_history_verified: history.length === entry.record_count || parsedLimit === 0,
+              history_count: entry.record_count, returned_count: history.length, first_date: entry.first_date,
+              last_date: entry.last_date, data_date: entry.last_date, history,
+            };
+          }
         }
-      }
-    } catch { /* TDX 文件在查询期间不可读，继续走公开降级层 */ }
+      } catch { /* TDX 文件在查询期间不可读，继续走本地 canonical 降级层 */ }
+    }
+  }
+  // A packaged data installer contains the complete canonical daily archive.
+  // Use it before the small public fallback layer when the selected TDX
+  // directory is missing, stale, or temporarily locked by the client.
+  const canonical = await readCanonicalDailyHistory(normalized, parsedLimit, false);
+  if (canonical?.history?.length) {
+    return {
+      status: 'ok', quality: 'canonical', symbol: normalized.symbol, code: normalized.code, market: normalized.market,
+      source: 'Packaged canonical daily archive · indexed lookup', source_root: DATA_ROOT, source_file: CANONICAL_DAILY_FILE,
+      index_path: canonical.index ? CANONICAL_DAILY_INDEX_FILE : TDX_HISTORY_INDEX_FILE,
+      daily_data_index_path: DAILY_DATA_INDEX_FILE,
+      history_scope: 'FULL_PACKAGED_CANONICAL_ARCHIVE', full_history_verified: parsedLimit === 0,
+      history_count: canonical.total, returned_count: canonical.history.length,
+      first_date: canonical.history[0].date, last_date: canonical.history.at(-1).date,
+      data_date: canonical.history.at(-1).date, history: canonical.history,
+      cautions: ['通达信当前目录不可读或目标 .day 文件不可用；本次读取使用安装到 EXE 资源库的全历史日线归档。'],
+    };
   }
   const fallback = readPublicDailyFallbackHistory(normalized, parsedLimit);
   if (fallback.length) {
@@ -1414,7 +2675,7 @@ function collectStrategyStructured(receipt, combined = '', skillId = '') {
   };
 }
 
-function dailySnapshotSummary() {
+function dailySnapshotSummary(dailyIntegritySnapshot = null) {
   const publicSnapshot = readJson(path.join(DATA_ROOT, 'public', 'latest.json'));
   const newsSnapshot = readJson(path.join(DATA_ROOT, 'news', 'latest.json'));
   const supplementalDate = String(publicSnapshot?.date || '').replace(/\D/g, '');
@@ -1435,7 +2696,7 @@ function dailySnapshotSummary() {
   const kpi = publicSnapshot?.sources?.lianban?.data?.kpi || {};
   const up = Number(kpi.adv || 0), down = Number(kpi.dec || 0);
   const newsSource = newsSnapshot?.source && typeof newsSnapshot.source === 'object' ? newsSnapshot.source : {};
-  const dailyIntegrity = inspectTdxDailyIntegrity();
+  const dailyIntegrity = dailyIntegritySnapshot || inspectTdxDailyIntegrity();
   const localDataPage = readJson(path.join(HARNESS_CONTEXT_ROOT, 'local-data-page.json'));
   const dailyDataIndex = readJson(DAILY_DATA_INDEX_FILE);
   const dailyDataSummary = dailyDataIndex?.summary || { symbol_count: 0, fallback_symbol_count: 0, fallback_record_count: 0, date_count: 0 };
@@ -1504,6 +2765,177 @@ function dailySnapshotSummary() {
   };
 }
 
+function latestFormulaReceipt(symbol = '') {
+  const root = path.join(DATA_ROOT, 'evidence', 'formulas');
+  if (!existsSync(root)) return null;
+  const files = [];
+  const queue = [{ directory: root, depth: 0 }];
+  while (queue.length) {
+    const current = queue.shift();
+    if (!current) continue;
+    let entries = [];
+    try { entries = readdirSync(current.directory, { withFileTypes: true }); } catch { continue; }
+    for (const entry of entries) {
+      const file = path.join(current.directory, entry.name);
+      if (entry.isDirectory() && current.depth < 3) queue.push({ directory: file, depth: current.depth + 1 });
+      else if (entry.isFile() && entry.name.toLowerCase().endsWith('.json')) files.push(file);
+    }
+  }
+  const expectedSymbol = String(symbol || '').trim().toUpperCase();
+  const valid = files.map((file) => ({ file, value: readJson(file) })).filter(({ value }) => {
+    const formulas = value?.formulas;
+    return value?.schema === 'ZHANGCAI_TDX_TQ_FORMULA_RECEIPT_V1'
+      && (!expectedSymbol || String(value.symbol || '').trim().toUpperCase() === expectedSymbol)
+      && Array.isArray(formulas)
+      && formulas.length >= 5
+      && Array.isArray(value.failed_formulas)
+      && value.failed_formulas.length === 0
+      && formulas.every((item) => item && item.ok === true);
+  });
+  valid.sort((a, b) => String(a.value.executed_at || '').localeCompare(String(b.value.executed_at || '')));
+  const latest = valid.at(-1);
+  if (!latest) return null;
+  return {
+    path: dataRelativePath(latest.file),
+    executedAt: latest.value.executed_at || '',
+    dataDate: latest.value.data_date || '',
+    symbol: latest.value.symbol || '',
+    source: latest.value.source || '',
+    formulas: latest.value.formulas,
+    failedFormulas: latest.value.failed_formulas,
+  };
+}
+
+function formulaReceiptFallback(symbol, reason = '') {
+  const receipt = latestFormulaReceipt(symbol);
+  if (!receipt) return null;
+  return {
+    status: 'degraded',
+    symbol: receipt.symbol || symbol,
+    source: 'resource-library · tdx_tq_formula receipt',
+    elapsed_ms: 0,
+    formulas: receipt.formulas,
+    failed_formulas: [],
+    client_open_required: false,
+    resource_library_fallback: true,
+    receipt_path: receipt.path,
+    live_error: reason,
+    action: '当前使用资源库最近一次完整五公式回执；如需实时刷新，请绑定并打开通达信客户端。',
+  };
+}
+
+function resourceLibraryContext() {
+  const status = readJson(path.join(DATA_ROOT, 'status', 'current.json')) || {};
+  const statusAssets = status.assets && typeof status.assets === 'object' ? status.assets : {};
+  const publicMarket = readJson(path.join(DATA_ROOT, 'public', 'latest.json')) || {};
+  const publicResearchPrimaryFile = path.join(DATA_ROOT, 'evidence', 'public', 'latest.json');
+  const publicResearchFallbackFile = path.join(DATA_ROOT, 'evidence', 'public', 'fallback-latest.json');
+  const publicResearchFile = existsSync(publicResearchPrimaryFile)
+    ? publicResearchPrimaryFile
+    : publicResearchFallbackFile;
+  const publicResearch = readJson(publicResearchFile)
+    || readJson(publicResearchFallbackFile)
+    || readJson(path.join(DATA_ROOT, 'news', 'latest.json'))
+    || {};
+  const formulaManifestFile = path.join(DATA_ROOT, 'evidence', 'formulas', 'package', 'manifest.json');
+  const formulaManifest = readJson(formulaManifestFile) || {};
+  const formulaPackageRoot = path.dirname(formulaManifestFile);
+  const formulaRequiredFiles = Array.isArray(formulaManifest.required_files) && formulaManifest.required_files.length
+    ? formulaManifest.required_files.map((item) => String(item).replace(/\\/g, '/'))
+    : [
+      'T0002/PriLoc.dat',
+      'T0002/PriGS.dat',
+      'T0002/PriCS.dat',
+      'T0002/PriPack.dat',
+      'T0002/gs_bak/大牛线撑压版.tn6',
+      'T0002/gs_bak/飞龙在天.tn6',
+      'T0002/gs_bak/游资资金监控.tn6',
+      'T0002/gs_bak/机构资金监控.tn6',
+      'T0002/gs_bak/庄家资金监控.tn6',
+      'T0002/gs_bak/黄金点火选股.tn6',
+      'PYPlugins/user/tdxdata_test.py',
+    ];
+  const formulaMissingFiles = formulaRequiredFiles.filter((item) => !existsSync(path.join(formulaPackageRoot, item)));
+  const formulaCopiedFiles = formulaRequiredFiles.filter((item) => existsSync(path.join(formulaPackageRoot, item)));
+  const formulaPackageStatus = formulaRequiredFiles.length === 0
+    ? 'missing'
+    : formulaMissingFiles.length === 0
+      ? 'available'
+      : formulaCopiedFiles.length
+        ? 'degraded'
+        : 'missing';
+  const formulaAsset = statusAssets.tdx_tq_formula && typeof statusAssets.tdx_tq_formula === 'object'
+    ? statusAssets.tdx_tq_formula
+    : {};
+  const publicAsset = statusAssets.public_research && typeof statusAssets.public_research === 'object'
+    ? statusAssets.public_research
+    : {};
+  const publicSnapshot = publicResearch?.snapshot && typeof publicResearch.snapshot === 'object'
+    ? publicResearch.snapshot
+    : publicResearch;
+  const publicResearchFallback = Boolean(publicResearch?.fallback_kind);
+  const publicResearchStatus = publicAsset.status
+    || (publicSnapshot && Object.keys(publicSnapshot).length ? (publicResearchFallback ? 'degraded' : 'available') : 'missing');
+  const latestReceipt = latestFormulaReceipt();
+  const formulaRuntimeStatus = formulaAsset.status === 'available' || latestReceipt
+    ? 'available'
+    : formulaAsset.status === 'degraded' || formulaPackageStatus !== 'missing'
+      ? 'degraded'
+      : 'missing';
+  return {
+    schema: 'ZHANGCAI_RESOURCE_LIBRARY_CONTEXT_V1',
+    generatedAt: new Date().toISOString(),
+    root: DATA_ROOT,
+    paths: {
+      publicMarket: path.join(DATA_ROOT, 'public', 'latest.json'),
+      publicResearch: publicResearchFile,
+      publicResearchFallback: publicResearchFallbackFile,
+      formulaPackage: path.join(DATA_ROOT, 'evidence', 'formulas', 'package'),
+      formulaManifest: formulaManifestFile,
+      formulaReceipts: path.join(DATA_ROOT, 'evidence', 'formulas'),
+      dailyIndex: DAILY_DATA_INDEX_FILE,
+      unifiedManifest: path.join(DATA_ROOT, 'evidence', 'sources', 'latest.json'),
+    },
+    assets: {
+      public_research: publicResearchStatus,
+      tdx_tq_formula: formulaRuntimeStatus,
+      security_master: statusAssets.security_master?.status || 'missing',
+      tdx_daily_history: statusAssets.tdx_daily_history?.status || 'missing',
+      unified_source_manifest: statusAssets.unified_source_manifest?.status || 'missing',
+    },
+    public_research: {
+      status: publicResearchStatus,
+      path: dataRelativePath(publicResearchFile),
+      sourceDate: publicResearch.source_date || publicResearch.date || publicSnapshot.date || '',
+      sameDayRecordCount: Number(publicResearch.same_day_record_count || publicResearch.sameDayRecordCount || 0),
+      providerCounts: publicResearch.provider_counts || {},
+      fallbackKind: publicResearch.fallback_kind || '',
+      fallbackPath: dataRelativePath(publicResearchFallbackFile),
+      snapshot: publicSnapshot,
+    },
+    public_market: {
+      status: publicMarket.sources ? 'available' : 'missing',
+      path: dataRelativePath(path.join(DATA_ROOT, 'public', 'latest.json')),
+      date: publicMarket.date || '',
+      sources: publicMarket.sources || {},
+    },
+    tdx_tq_formula: {
+      status: formulaRuntimeStatus,
+      path: 'evidence/formulas/',
+      package: {
+        status: formulaPackageStatus,
+        path: 'evidence/formulas/package/',
+        requiredFiles: formulaRequiredFiles,
+        copiedFiles: formulaCopiedFiles,
+        missingFiles: formulaMissingFiles,
+        sourceRoot: formulaManifest.source_root || formulaAsset.portable_package?.source_root || '',
+      },
+      latestReceipt,
+      reason: formulaAsset.reason || '',
+    },
+  };
+}
+
 function archiveDateKey(value) {
   return compactDateText(value) || shanghaiDateText().replace(/-/g, '');
 }
@@ -1518,6 +2950,10 @@ function buildHarnessArchiveContext(date, state, archiveType, stateFile) {
   const dateKey = archiveDateKey(date);
   const dateText = displayDateText(dateKey);
   const dailyManifestPath = path.join(DATA_ROOT, 'market', 'daily', dateKey, 'manifest.json');
+  const dailyManifest = readJson(dailyManifestPath) || {};
+  const dailyAggregate = String(dailyManifest.file || '').trim()
+    ? path.join(DATA_ROOT, ...String(dailyManifest.file).split(/[\\/]/))
+    : path.join(DATA_ROOT, 'market', 'daily', 'aggregate', 'tdx-bars.jsonl');
   const snapshots = dailySnapshotSummary();
   const context = {
     schema: 'ZHANGCAI_HARNESS_DATA_ARCHIVE_CONTEXT_V1',
@@ -1532,7 +2968,7 @@ function buildHarnessArchiveContext(date, state, archiveType, stateFile) {
       localDataPage: path.join(HARNESS_CONTEXT_ROOT, 'local-data-page.json'),
       tdxDailyHistory: path.join(DATA_ROOT, 'status', 'tdx-daily-history.json'),
       dailyManifest: dailyManifestPath,
-      dailyAggregate: path.join(DATA_ROOT, 'market', 'daily', dateKey, 'tdx-bars.jsonl'),
+      dailyAggregate,
       tdxDailyIndex: TDX_HISTORY_INDEX_FILE,
       dailyDataIndex: DAILY_DATA_INDEX_FILE,
       dailyJsonlIntegrity: path.join(DATA_ROOT, 'runtime', `daily-jsonl-integrity-${dateKey}.json`),
@@ -1547,7 +2983,7 @@ function buildHarnessArchiveContext(date, state, archiveType, stateFile) {
     },
     localDataPage: readJson(path.join(HARNESS_CONTEXT_ROOT, 'local-data-page.json')),
     tdxDailyHistory: readJson(path.join(DATA_ROOT, 'status', 'tdx-daily-history.json')),
-    dailyManifest: readJson(dailyManifestPath),
+    dailyManifest,
     dailyJsonlIntegrity: readJson(path.join(DATA_ROOT, 'runtime', `daily-jsonl-integrity-${dateKey}.json`)),
     unifiedManifest: readJson(path.join(DATA_ROOT, 'evidence', 'sources', 'latest.json')),
     unifiedVerification: readJson(path.join(DATA_ROOT, 'evidence', 'sources', 'latest-verification.json')),
@@ -1631,9 +3067,41 @@ async function persistHarnessArchiveContext({ date, state, archiveType, stateFil
   return { ...built, context: finalContext, contextFile, harness };
 }
 
-async function writeRuntimeJson(file, value) {
+async function writeRuntimeJsonAtomically(file, value) {
   await mkdir(path.dirname(file), { recursive: true });
-  await writeFile(file, JSON.stringify(value, null, 2), 'utf8');
+  // Runtime state is read by the desktop UI and by the smoke/repair tools while
+  // the bridge may be refreshing it.  Writing directly to the final path lets
+  // readers observe a truncated JSON document (especially on slower disks).
+  // Write a per-operation sibling first, then replace the visible file in one
+  // rename so resource-library consumers only ever see a complete document.
+  const temporaryFile = `${file}.tmp-${process.pid}-${randomUUID()}`;
+  try {
+    await writeFile(temporaryFile, JSON.stringify(value, null, 2), 'utf8');
+    for (let attempt = 0; ; attempt += 1) {
+      try {
+        await rename(temporaryFile, file);
+        break;
+      } catch (error) {
+        // Windows can briefly hold the destination while a UI/tool is reading
+        // it. A bounded retry keeps the bridge alive without ever exposing a
+        // partial JSON document.
+        if (!['EPERM', 'EBUSY', 'EACCES'].includes(error?.code) || attempt >= 5) throw error;
+        await new Promise((resolve) => setTimeout(resolve, 20 * (attempt + 1)));
+      }
+    }
+  } finally {
+    try { await unlink(temporaryFile); } catch { /* already renamed or absent */ }
+  }
+}
+
+function writeRuntimeJson(file, value) {
+  const prior = runtimeJsonWrites.get(file) || Promise.resolve();
+  const current = prior.catch(() => undefined).then(() => writeRuntimeJsonAtomically(file, value));
+  runtimeJsonWrites.set(file, current);
+  void current.finally(() => {
+    if (runtimeJsonWrites.get(file) === current) runtimeJsonWrites.delete(file);
+  }).catch(() => undefined);
+  return current;
 }
 
 function compactDateKey(value) {
@@ -1836,7 +3304,7 @@ function unifiedArchiveReportHtml(payload) {
   const cautions = payload.harness.cautions.length ? payload.harness.cautions.map((item) => `<li>${htmlEscape(item)}</li>`).join('') : '<li>无 Harness 结构化提示</li>';
   return `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>统一数据落盘报告 · ${htmlEscape(payload.date)}</title><style>
 body{margin:0;background:#f7f8fa;color:#1f2937;font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif}.wrap{max-width:1180px;margin:28px auto;padding:0 20px}.hero,.card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 2px 8px rgba(15,23,42,.04)}.hero{padding:24px 28px;margin-bottom:16px}.hero h1{margin:0 0 6px;font-size:24px}.meta{color:#64748b}.status{display:inline-block;padding:3px 12px;border-radius:999px;font-weight:600}.status.ok,.pill.ok{color:#047857;background:#d1fae5}.status.running,.pill.running{color:#1d4ed8;background:#dbeafe}.status.warn,.pill.warn{color:#b45309;background:#fef3c7}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}.card{padding:16px}.card b{display:block;color:#64748b;font-size:12px;margin-bottom:4px}.card strong{font-size:20px}.section{padding:20px 22px;margin-bottom:16px}.section h2{margin:0 0 12px;font-size:17px}table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{text-align:left;vertical-align:top;border-bottom:1px solid #eef2f7;padding:9px 8px;overflow-wrap:anywhere}th{color:#64748b;background:#f8fafc;font-weight:600}th:nth-child(1){width:25%}th:nth-child(2){width:12%}th:nth-child(3){width:10%}.pill{display:inline-block;border-radius:999px;padding:1px 8px;font-size:12px}.columns{display:grid;grid-template-columns:1fr 1fr;gap:16px}.columns ul{margin:6px 0 0;padding-left:20px}.path{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;overflow-wrap:anywhere;color:#475569}@media(max-width:800px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.columns{grid-template-columns:1fr}}
-</style></head><body><main class="wrap"><section class="hero"><h1>统一数据落盘运行报告</h1><div class="meta">数据日期：${htmlEscape(payload.date)} · 生成时间：${fmt(payload.generatedAt)} · <span class="status ${statusClass}">${statusText}</span></div><p>${htmlEscape(payload.message)}</p></section><section class="grid"><div class="card"><b>步骤进度</b><strong>${payload.progress.completed}/${payload.progress.total}</strong><div>${payload.progress.percent}%${payload.progress.currentStep ? ` · ${htmlEscape(payload.progress.currentStep)}` : ''}</div></div><div class="card"><b>Harness 校验</b><strong>${htmlEscape(payload.harness.status)}</strong><div>${fmt(payload.harness.finishedAt)}</div></div><div class="card"><b>来源清单</b><strong>${payload.sources.available}/${payload.sources.total}</strong><div>可用 · 部分 ${payload.sources.partial}</div></div><div class="card"><b>运行时间</b><strong>${fmt(payload.startedAt)}</strong><div>结束：${fmt(payload.finishedAt)}</div></div></section><section class="card section"><h2>步骤状态</h2><table><thead><tr><th>步骤</th><th>状态</th><th>退出码</th><th>结果</th></tr></thead><tbody>${stepRows || '<tr><td colspan="4">尚未开始执行</td></tr>'}</tbody></table></section><section class="columns"><section class="card section"><h2>来源缺失或降级</h2><ul>${missing}</ul></section><section class="card section"><h2>Harness 摘要</h2><div>${htmlEscape(payload.harness.summary || '暂无结构化摘要')}</div><ul>${cautions}</ul></section></section><section class="card section"><h2>本地资产</h2><p>以下路径均位于 3003 的 app-data 内，供后续 EXE 和 Harness 独立读取：</p><div class="path">报告 JSON：${htmlEscape(payload.artifacts.reportJson)}<br>运行状态：${htmlEscape(payload.artifacts.state)}<br>Harness 上下文：${htmlEscape(payload.artifacts.harnessContext)}<br>数据目录：${htmlEscape(payload.artifacts.dataRoot)}</div></section></main></body></html>`;
+</style></head><body><main class="wrap"><section class="hero"><h1>统一数据落盘运行报告</h1><div class="meta">数据日期：${htmlEscape(payload.date)} · 生成时间：${fmt(payload.generatedAt)} · <span class="status ${statusClass}">${statusText}</span></div><p>${htmlEscape(payload.message)}</p></section><section class="grid"><div class="card"><b>步骤进度</b><strong>${payload.progress.completed}/${payload.progress.total}</strong><div>${payload.progress.percent}%${payload.progress.currentStep ? ` · ${htmlEscape(payload.progress.currentStep)}` : ''}</div></div><div class="card"><b>Harness 校验</b><strong>${htmlEscape(payload.harness.status)}</strong><div>${fmt(payload.harness.finishedAt)}</div></div><div class="card"><b>来源清单</b><strong>${payload.sources.available}/${payload.sources.total}</strong><div>可用 · 部分 ${payload.sources.partial}</div></div><div class="card"><b>运行时间</b><strong>${fmt(payload.startedAt)}</strong><div>结束：${fmt(payload.finishedAt)}</div></div></section><section class="card section"><h2>步骤状态</h2><table><thead><tr><th>步骤</th><th>状态</th><th>退出码</th><th>结果</th></tr></thead><tbody>${stepRows || '<tr><td colspan="4">尚未开始执行</td></tr>'}</tbody></table></section><section class="columns"><section class="card section"><h2>来源缺失或降级</h2><ul>${missing}</ul></section><section class="card section"><h2>Harness 摘要</h2><div>${htmlEscape(payload.harness.summary || '暂无结构化摘要')}</div><ul>${cautions}</ul></section></section><section class="card section"><h2>本地资产</h2><p>以下路径均位于 resource-library 内，供 EXE 和 Harness 独立读取：</p><div class="path">报告 JSON：${htmlEscape(payload.artifacts.reportJson)}<br>运行状态：${htmlEscape(payload.artifacts.state)}<br>Harness 上下文：${htmlEscape(payload.artifacts.harnessContext)}<br>数据目录：${htmlEscape(payload.artifacts.dataRoot)}</div></section></main></body></html>`;
 }
 
 async function writeUnifiedArchiveReport(state, context = null) {
@@ -1930,61 +3398,152 @@ function isHarnessTaskRecord(record) {
   return record?.content?.kind === 'harness-task' || record?.reportType === 'Harness任务';
 }
 
-function reportArchiveSlot(record) {
-  const content = record?.content && typeof record.content === 'object' ? record.content : {};
-  const kind = String(content.kind || record?.reportType || 'report');
-  let subject = String(record?.title || record?.reportType || 'report');
-  if (kind === 'harness-skill') subject = String(content.skillId || subject);
-  else if (kind === 'strategy-selection-harness' || kind === 'strategy-run') subject = String(content.strategyId || subject);
-  else if (kind === 'stock-research') {
-    const stock = content.stock && typeof content.stock === 'object' ? content.stock : {};
-    subject = `${String(stock.code || '')}|${record?.reportType || subject}`;
+function safeReportArchivePart(value) {
+  return String(value || '')
+    .trim()
+    .replace(/[^a-zA-Z0-9._:-]+/g, '_')
+    .slice(0, 160);
+}
+
+function reportArchiveDate(value) {
+  const digits = String(value || '').replace(/\D/g, '');
+  return digits.length >= 8 ? digits.slice(0, 8) : safeReportArchivePart(value) || 'undated';
+}
+
+function cleanReportArchiveText(value) {
+  return String(value || '')
+    .replace(/3004\s+聊天研究报告/g, '聊天完整研究报告')
+    .replace(/3004\s+Demo/g, '股票研究工作台')
+    .replace(/3004\s+WEB\s+DEMO/g, '研究工作台')
+    .replace(/3003\s+app-data\/runtime/g, 'resource-library/runtime')
+    .replace(/3003\s+app-data/g, 'resource-library')
+    .replace(/3003\s+网页脚本/g, '网页脚本')
+    .replace(/3003\s+本地/g, '本地')
+    .replace(/3003\s+原始/g, '原始')
+    .replace(/3003(?=[\u4e00-\u9fff])/g, '')
+    .replace(/3004(?=[\u4e00-\u9fffA-Za-z])/g, '')
+    .trim();
+}
+
+function normalizeReportArchiveValue(value) {
+  if (typeof value === 'string') return cleanReportArchiveText(value);
+  if (Array.isArray(value)) return value.map(normalizeReportArchiveValue);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, normalizeReportArchiveValue(item)]));
   }
-  return `${String(record?.date || '')}|${kind}|${subject}`;
+  return value;
+}
+
+function normalizeReportArchiveRecord(record) {
+  return {
+    ...record,
+    title: cleanReportArchiveText(record.title),
+    reportType: cleanReportArchiveText(record.reportType),
+    generatedBy: cleanReportArchiveText(record.generatedBy),
+    summary: cleanReportArchiveText(record.summary),
+    dataScope: cleanReportArchiveText(record.dataScope),
+    content: normalizeReportArchiveValue(record.content),
+    raw: typeof record.raw === 'string' ? cleanReportArchiveText(record.raw) : record.raw,
+  };
+}
+
+function reportArchiveKey(record) {
+  const explicit = safeReportArchivePart(record?.archiveKey);
+  if (explicit) {
+    const dated = explicit.match(/^(chat|stock|skill14|strategy|golden):([^:]+):(.*)$/);
+    return dated ? `${dated[1]}:${reportArchiveDate(dated[2])}:${dated[3]}` : explicit;
+  }
+  const content = record?.content && typeof record.content === 'object' ? record.content : {};
+  const kind = String(content.kind || '');
+  const date = reportArchiveDate(record?.date);
+  const reportLabel = `${record?.title || ''} ${record?.reportType || ''}`;
+  if (kind === 'market-report' || /行情复盘|历史复盘|结构化复盘|Harness 复盘/.test(reportLabel)) return 'market-review';
+  if (kind === 'chat-report') {
+    const skill = Number(content.planLength || 0) > 1 ? 'complete-plan' : safeReportArchivePart(content.skillId || 'complete-plan');
+    return `chat:${date}:${skill}`;
+  }
+  if (kind === 'stock-research') {
+    const stock = content.stock && typeof content.stock === 'object' ? content.stock : {};
+    return `stock:${date}:${safeReportArchivePart(stock.code || 'unknown-stock')}:${safeReportArchivePart(record?.generatedBy || 'stock-research')}`;
+  }
+  if (kind === 'harness-skill') return `skill14:${date}:${safeReportArchivePart(content.skillId || record?.generatedBy || 'unknown-skill')}`;
+  if (kind === 'strategy-selection-harness' || kind === 'strategy-run') return `strategy:${date}:${safeReportArchivePart(content.strategyId || record?.generatedBy || 'unknown-strategy')}`;
+  if (kind === 'golden-ignition-single-signal') {
+    const result = content.result && typeof content.result === 'object' ? content.result : {};
+    return `golden:${date}:${safeReportArchivePart(result.analysis_symbol || result.symbol || 'unknown-stock')}`;
+  }
+  return `report:${date}:${safeReportArchivePart(record?.reportType || kind || record?.title || 'general')}`;
+}
+
+function reportArchiveTimestamp(value) {
+  if (typeof value === 'number' && Number.isFinite(value)) return value < 1e12 ? value * 1000 : value;
+  const text = String(value || '').trim();
+  if (!text) return 0;
+  const numeric = Number(text);
+  if (Number.isFinite(numeric) && numeric > 0) return numeric < 1e12 ? numeric * 1000 : numeric;
+  const digits = text.replace(/\D/g, '');
+  if (digits.length >= 14) {
+    const timestamp = Date.UTC(
+      Number(digits.slice(0, 4)), Number(digits.slice(4, 6)) - 1, Number(digits.slice(6, 8)),
+      Number(digits.slice(8, 10)), Number(digits.slice(10, 12)), Number(digits.slice(12, 14)),
+    );
+    if (Number.isFinite(timestamp)) return timestamp;
+  }
+  if (digits.length >= 8) {
+    const timestamp = Date.UTC(Number(digits.slice(0, 4)), Number(digits.slice(4, 6)) - 1, Number(digits.slice(6, 8)));
+    if (Number.isFinite(timestamp)) return timestamp;
+  }
+  const parsed = Date.parse(text);
+  return Number.isFinite(parsed) ? parsed : 0;
 }
 
 function collapseReportArchiveRows(records) {
-  const seen = new Set();
-  return [...records]
+  const latest = new Map();
+  const sorted = [...records]
+    .map(normalizeReportArchiveRecord)
     .filter((item) => item && typeof item.id === 'string' && !isHarnessTaskRecord(item))
-    .sort((a, b) => String(b.updatedAt || '').localeCompare(String(a.updatedAt || '')))
-    .filter((item) => {
-      const slot = reportArchiveSlot(item);
-      if (seen.has(slot)) return false;
-      seen.add(slot);
-      return true;
-    })
-    .slice(0, 100);
+    .sort((a, b) => (
+      reportArchiveTimestamp(b.updatedAt || b.createdAt) - reportArchiveTimestamp(a.updatedAt || a.createdAt)
+      || String(b.id || '').localeCompare(String(a.id || ''))
+    ));
+  for (const item of sorted) {
+    const key = reportArchiveKey(item);
+    if (!latest.has(key)) latest.set(key, { ...item, archiveKey: key });
+  }
+  return [...latest.values()].slice(0, 100);
 }
 
-function readLocalReportArchive() {
-  const indexed = readJson(REPORT_ARCHIVE_INDEX_FILE, []);
-  if (Array.isArray(indexed)) return collapseReportArchiveRows(indexed);
+function readRawLocalReportArchive() {
+  const indexed = readJson(REPORT_ARCHIVE_INDEX_FILE, null);
+  if (Array.isArray(indexed)) return indexed;
   if (!existsSync(REPORT_ARCHIVE_ROOT)) return [];
   try {
-    const rows = readdirSync(REPORT_ARCHIVE_ROOT)
+    return readdirSync(REPORT_ARCHIVE_ROOT)
       .filter((name) => name.toLowerCase().endsWith('.json') && name !== 'index.json')
-      .map((name) => readJson(path.join(REPORT_ARCHIVE_ROOT, name)))
+      .map((name) => readJson(path.join(REPORT_ARCHIVE_ROOT, name), null))
       .filter((item) => item && typeof item.id === 'string');
-    return collapseReportArchiveRows(rows);
   } catch { return []; }
 }
 
+function readLocalReportArchive() {
+  return collapseReportArchiveRows(readRawLocalReportArchive());
+}
+
 async function compactLocalReportArchive() {
-  const indexed = readJson(REPORT_ARCHIVE_INDEX_FILE, []);
-  if (!Array.isArray(indexed)) return { reports: [], removed: 0 };
+  const indexed = readRawLocalReportArchive();
   const reports = collapseReportArchiveRows(indexed);
   const keepIds = new Set(reports.map((item) => item.id));
   const removedIds = [...new Set(indexed
     .filter((item) => item && typeof item.id === 'string' && !keepIds.has(item.id))
     .map((item) => item.id))];
-  // Older versions could leave an unindexed failed/running task mirror on
-  // disk. It is not a report and must not survive the one-report policy.
+  // Also remove orphaned JSON files and old reports that were hidden by the
+  // semantic-key collapse. The user-facing archive is a latest-result store,
+  // not an append-only run log.
   try {
     for (const name of readdirSync(REPORT_ARCHIVE_ROOT)) {
       if (!name.toLowerCase().endsWith('.json') || name === 'index.json') continue;
       const item = readJson(path.join(REPORT_ARCHIVE_ROOT, name), null);
-      if (isHarnessTaskRecord(item) && item?.id && !removedIds.includes(item.id)) removedIds.push(item.id);
+      if (item?.id && !keepIds.has(item.id) && !removedIds.includes(item.id)) removedIds.push(item.id);
     }
   } catch { /* index cleanup remains valid even if an orphan file disappears */ }
   for (const id of removedIds) {
@@ -2002,17 +3561,19 @@ async function persistLocalReportArchive(record) {
   if (isHarnessTaskRecord(record)) {
     return { status: 'ignored', id, reason: '任务状态只保留在后台任务缓存，不作为第二份报告归档', count: readLocalReportArchive().length };
   }
-  const existing = readLocalReportArchive().filter((item) => item.id !== id);
-  const slot = reportArchiveSlot(record);
-  const replaced = existing.filter((item) => reportArchiveSlot(item) === slot);
-  for (const old of replaced) {
-    const oldId = safeReportArchiveId(old.id);
-    if (oldId && oldId !== id) {
-      try { await unlink(path.join(REPORT_ARCHIVE_ROOT, `${oldId}.json`)); } catch { /* 已不存在 */ }
+  const normalized = { ...record, archiveKey: reportArchiveKey(record) };
+  const existing = readRawLocalReportArchive().filter((item) => item.id !== id);
+  const next = collapseReportArchiveRows([normalized, ...existing]);
+  const keepIds = new Set(next.map((item) => item.id));
+  for (const item of existing) {
+    if (item?.id && !keepIds.has(item.id)) {
+      const staleId = safeReportArchiveId(item.id);
+      if (staleId) {
+        try { await unlink(path.join(REPORT_ARCHIVE_ROOT, `${staleId}.json`)); } catch { /* 已不存在 */ }
+      }
     }
   }
-  const next = collapseReportArchiveRows([record, ...existing.filter((item) => reportArchiveSlot(item) !== slot)]);
-  await writeRuntimeJson(path.join(REPORT_ARCHIVE_ROOT, `${id}.json`), record);
+  await writeRuntimeJson(path.join(REPORT_ARCHIVE_ROOT, `${id}.json`), normalized);
   await writeRuntimeJson(REPORT_ARCHIVE_INDEX_FILE, next);
   return { status: 'ok', id, path: path.join(DATA_ROOT, 'reports', 'archive', `${id}.json`), count: next.length };
 }
@@ -2040,14 +3601,14 @@ function readableScriptError(scriptName, raw, code = 1) {
   return (text || `${scriptName} 退出码 ${code}`).slice(-2000);
 }
 
-function runLocalScript(scriptName, args = [], timeoutMs = 120000, outputLimit = 12000, acceptedExitCodes = []) {
+function runLocalScript(scriptName, args = [], timeoutMs = 600000, outputLimit = 12000, acceptedExitCodes = [], extraEnv = {}) {
   return new Promise((resolve, reject) => {
     const python = localPythonExecutable();
     const script = path.join(APP_ROOT, 'scripts', scriptName);
     const child = spawn(python, [script, ...args], {
       cwd: APP_ROOT,
       windowsHide: true,
-      env: { ...process.env, ZHANGCAI_APP_ROOT: APP_ROOT, ZHANGCAI_DATA_DIR: DATA_ROOT },
+      env: localScriptEnvironment(extraEnv),
     });
     let stdout = '';
     let stderr = '';
@@ -2072,19 +3633,20 @@ function runLocalScript(scriptName, args = [], timeoutMs = 120000, outputLimit =
 async function runSelectionScoreRuntime(payload) {
   const runId = randomUUID();
   const requestPath = path.join(DATA_ROOT, 'strategy-results', 'selection-runtime', 'requests', `${runId}.json`);
-  const artifactPath = path.join(
-    DATA_ROOT,
-    'strategy-results',
-    'selection-runtime',
-    String(payload?.strategyId || 'unknown'),
-    `${String(payload?.date || localTradeDate()).replace(/[^0-9]/g, '').slice(0, 8)}-${runId}.json`,
-  );
   await writeRuntimeJson(requestPath, payload);
   try {
-    const result = await runLocalScript('selection_score_runtime.py', [requestPath], 180000, 4 * 1024 * 1024);
+    const result = await runLocalScript('selection_score_runtime.py', [requestPath], 600000, 4 * 1024 * 1024);
     let value;
     try { value = JSON.parse(result.output || '{}'); } catch { throw new Error('原始策略评分运行时返回了无效 JSON'); }
     if (!value || value.status !== 'ok') throw new Error(String(value?.error || '原始策略评分运行时失败'));
+    const resultDate = String(value.trade_date || payload?.date || localTradeDate()).replace(/[^0-9]/g, '').slice(0, 8);
+    const artifactPath = path.join(
+      DATA_ROOT,
+      'strategy-results',
+      'selection-runtime',
+      String(payload?.strategyId || 'unknown'),
+      `${resultDate}-${runId}.json`,
+    );
     value.artifact_path = artifactPath;
     value.persisted_at = new Date().toISOString();
     await writeRuntimeJson(artifactPath, value);
@@ -2100,8 +3662,25 @@ function skill14Catalog() {
   return value;
 }
 
-async function runSkill14Runtime(command, args = [], timeoutMs = 120000) {
-  const result = await runLocalScript('skill14_data_runtime.py', [command, ...args], timeoutMs, 2 * 1024 * 1024);
+async function runSkill14Runtime(command, args = [], timeoutMs = 600000) {
+  const needsDailySource = command === 'status' || command === 'preflight';
+  const liveDaily = needsDailySource ? inspectTdxDailyIntegrity() : null;
+  const dailyFreshness = liveDaily ? dailyFreshnessSnapshot({ latestDate: liveDaily.latestDate }) : null;
+  const requestedDailyDate = dailyFreshness?.updateDue
+    ? dailyFreshness.currentDate
+    : String(liveDaily?.latestDate || '');
+  const result = await runLocalScript(
+    'skill14_data_runtime.py',
+    [command, ...args],
+    timeoutMs,
+    2 * 1024 * 1024,
+    [],
+    liveDaily ? {
+      ZHANGCAI_TDX_LATEST_DAILY_DATE: liveDaily.latestDate || '',
+      ZHANGCAI_TDX_LATEST_DAILY_SYMBOLS: String(liveDaily.latestCount || 0),
+      ZHANGCAI_DAILY_REQUESTED_TRADE_DATE: requestedDailyDate,
+    } : {},
+  );
   let value;
   try { value = JSON.parse(result.output || '{}'); } catch { throw new Error('14 技能运行时返回了无效 JSON'); }
   if (value?.status === 'error') throw new Error(String(value.error || '14 技能运行时失败'));
@@ -2121,13 +3700,30 @@ async function runSkill14Runtime(command, args = [], timeoutMs = 120000) {
   return value;
 }
 
-function inspectTdxDailyIntegrity(tdxRoot = process.env.ZHANGCAI_TDX_ROOT || 'C:\\new_tdx_mock') {
+function inspectTdxDailyIntegrity(tdxRoot = bridgeTdxRoot()) {
+  const rootText = String(tdxRoot || '').trim();
+  if (!rootText) {
+    return {
+      root: '', directories: {}, fileCount: 0, latestDate: '', latestCount: 0,
+      fileLatestCount: 0, stockListCount: null, stockCompleteCount: null,
+      stockFileCompleteCount: null, stockNonTradingCount: 0, stockMissingCount: null,
+      integrityReportPath: null, integrity: null, requiredMinimum: 3000, complete: false,
+    };
+  }
+  const resolvedRoot = path.resolve(rootText);
+  // A full scan opens several thousand .day files. Keep one verified snapshot
+  // long enough to serve environment/status refreshes without rescanning on
+  // every low-end desktop request; daily bars do not change intraday often.
+  if (tdxDailyIntegrityScanCache?.root === resolvedRoot
+    && Date.now() - tdxDailyIntegrityScanCache.checkedAt < TDX_DAILY_INTEGRITY_CACHE_TTL_MS) {
+    return tdxDailyIntegrityScanCache.value;
+  }
   const markets = ['sh', 'sz', 'bj'];
   const byMarket = {};
   const dateCounts = new Map();
   let fileCount = 0;
   for (const market of markets) {
-    const directory = path.join(tdxRoot, 'vipdoc', market, 'lday');
+    const directory = path.join(resolvedRoot, 'vipdoc', market, 'lday');
     let names = [];
     try { names = readdirSync(directory); } catch { names = []; }
     let marketCount = 0;
@@ -2135,7 +3731,7 @@ function inspectTdxDailyIntegrity(tdxRoot = process.env.ZHANGCAI_TDX_ROOT || 'C:
     for (const name of names) {
       if (!name.toLowerCase().endsWith('.day')) continue;
       try {
-        const date = readDayFileDate(path.join(directory, name));
+        const date = readTdxDayBoundary(path.join(directory, name))?.last_date;
         if (!date) continue;
         marketCount += 1;
         fileCount += 1;
@@ -2162,7 +3758,12 @@ function inspectTdxDailyIntegrity(tdxRoot = process.env.ZHANGCAI_TDX_ROOT || 'C:
     }
   } catch { /* 完整性报告尚未生成时仍返回文件级扫描结果 */ }
   const stockAfter = integrityReport?.after && typeof integrityReport.after === 'object' ? integrityReport.after : null;
-  const stockTargetDate = String(integrityReport?.targetDate || stockAfter?.targetDate || latestDate);
+  const reportTargetDate = String(integrityReport?.targetDate || stockAfter?.targetDate || '');
+  const reportMatchesLatestFiles = Boolean(
+    reportTargetDate.replace(/\D/g, '')
+      && latestDate.replace(/\D/g, '')
+      && reportTargetDate.replace(/\D/g, '') === latestDate.replace(/\D/g, ''),
+  );
   const stockFileLatestCount = Number(stockAfter?.completeCount || 0);
   const stockNonTradingCount = Number(stockAfter?.nonTradingCount || 0);
   const stockLatestCount = Number(stockAfter?.effectiveCompleteCount ?? (stockFileLatestCount + stockNonTradingCount));
@@ -2172,7 +3773,9 @@ function inspectTdxDailyIntegrity(tdxRoot = process.env.ZHANGCAI_TDX_ROOT || 'C:
   const reportUnresolved = Array.isArray(integrityReport?.unresolved) ? integrityReport.unresolved : [];
   const integritySummary = integrityReport ? {
     schema: integrityReport.schema,
-    targetDate: integrityReport.targetDate || stockTargetDate,
+    targetDate: reportTargetDate,
+    latestFileDate: latestDate,
+    reportMatchesLatestFiles,
     before: integrityReport.before,
     after: integrityReport.after,
     repairs: reportRepairs.slice(0, 100), repairsCount: reportRepairs.length,
@@ -2182,25 +3785,34 @@ function inspectTdxDailyIntegrity(tdxRoot = process.env.ZHANGCAI_TDX_ROOT || 'C:
     writtenCount: Number(integrityReport.writtenCount || reportRepairs.filter((item) => item?.status === 'written').length),
     manualActionRequired: integrityReport.manualActionRequired === true,
     manualAction: String(integrityReport.manualAction || ''),
-    complete: integrityReport.complete === true,
+    complete: reportMatchesLatestFiles && integrityReport.complete === true,
   } : null;
-  return {
-    root: tdxRoot,
+  const result = {
+    root: resolvedRoot,
     directories: byMarket,
     fileCount,
-    latestDate: stockTargetDate,
-    latestCount: stockLatestCount || fileLatestCount,
+    // The integrity report records its requested target date. Strategy
+    // freshness must instead follow the newest date physically present in
+    // the configured TDX .day files; an older report cannot override it.
+    latestDate,
+    latestCount: reportMatchesLatestFiles ? (stockLatestCount || fileLatestCount) : fileLatestCount,
     fileLatestCount,
-    stockListCount: stockExpectedCount || null,
-    stockCompleteCount: stockLatestCount || null,
-    stockFileCompleteCount: stockFileLatestCount || null,
-    stockNonTradingCount,
-    stockMissingCount: stockExpectedCount ? Math.max(0, stockExpectedCount - stockLatestCount) : null,
+    reportTargetDate,
+    reportMatchesLatestFiles,
+    stockListCount: reportMatchesLatestFiles ? (stockExpectedCount || null) : null,
+    stockCompleteCount: reportMatchesLatestFiles ? (stockLatestCount || null) : null,
+    stockFileCompleteCount: reportMatchesLatestFiles ? (stockFileLatestCount || null) : null,
+    stockNonTradingCount: reportMatchesLatestFiles ? stockNonTradingCount : 0,
+    stockMissingCount: reportMatchesLatestFiles && stockExpectedCount ? Math.max(0, stockExpectedCount - stockLatestCount) : null,
     integrityReportPath: integrityReportPath || null,
     integrity: integritySummary,
     requiredMinimum: 3000,
-    complete: stockAfter ? stockExpectedCount > 0 && stockLatestCount === stockExpectedCount : fileLatestCount >= 3000 && ['SH', 'SZ', 'BJ'].every((market) => byMarket[market].latestDate === latestDate),
+    complete: reportMatchesLatestFiles
+      ? stockExpectedCount > 0 && stockLatestCount === stockExpectedCount
+      : fileLatestCount >= 3000 && ['SH', 'SZ', 'BJ'].every((market) => byMarket[market].latestDate === latestDate),
   };
+  tdxDailyIntegrityScanCache = { root: resolvedRoot, checkedAt: Date.now(), value: result };
+  return result;
 }
 
 function dailyFreshnessSnapshot(daily, now = new Date()) {
@@ -2254,7 +3866,7 @@ async function persistFormulaReceipt(result, requestedSymbol, startedAt) {
     data_date: dataDate,
     symbol: result.symbol || requestedSymbol,
     source: result.source || '通达信 TQ · tdx-local-hub',
-    source_root: process.env.ZHANGCAI_TDX_ROOT || 'C:\\new_tdx_mock',
+    source_root: bridgeTdxRoot(),
     formulas: Array.isArray(result.formulas) ? result.formulas : [],
     failed_formulas: Array.isArray(result.failed_formulas) ? result.failed_formulas : [],
     elapsed_ms: result.elapsed_ms || Math.max(0, Date.now() - startedAt),
@@ -2265,33 +3877,42 @@ async function persistFormulaReceipt(result, requestedSymbol, startedAt) {
   return path.relative(DATA_ROOT, receiptPath).replace(/\\/g, '/');
 }
 
-function runFiveFormulas(symbol, timeoutMs = 120000) {
+function runFiveFormulasLive(symbol, timeoutMs = 120000) {
+  const portableFallback = formulaReceiptFallback(symbol);
   return new Promise((resolve, reject) => {
     const python = localPythonExecutable();
     const script = path.join(SKILL_SOURCE, 'tdx-local-hub', 'scripts', 'tdx_hub.py');
     if (!existsSync(script)) {
-      reject(new Error(`未找到通达信公式桥接脚本：${script}`));
+      const fallback = portableFallback || formulaReceiptFallback(symbol, `未找到通达信公式桥接脚本：${script}`);
+      if (fallback) resolve(fallback);
+      else reject(new Error(`未找到通达信公式桥接脚本：${script}`));
       return;
     }
     const child = spawn(python, [script, 'five', symbol], {
       cwd: APP_ROOT,
       windowsHide: true,
-      env: {
-        ...process.env,
-        TDX_ROOT: process.env.ZHANGCAI_TDX_ROOT || 'C:\\new_tdx_mock',
+      env: localScriptEnvironment({
+        TDX_ROOT: bridgeTdxRoot(),
         ONESTOCK_STOCK_DATA_ROOT: DATA_ROOT,
-      },
+      }),
     });
     let stdout = '';
     let stderr = '';
     const startedAt = Date.now();
     const timer = setTimeout(() => {
       if (child.pid) spawn('taskkill', ['/pid', String(child.pid), '/t', '/f'], { windowsHide: true });
-      reject(new Error(`五公式计算超时（${Math.round(timeoutMs / 1000)} 秒）`));
+      const fallback = portableFallback || formulaReceiptFallback(symbol, `五公式计算超时（${Math.round(timeoutMs / 1000)} 秒）`);
+      if (fallback) resolve(fallback);
+      else reject(new Error(`五公式计算超时（${Math.round(timeoutMs / 1000)} 秒）`));
     }, timeoutMs);
     child.stdout.on('data', (chunk) => { stdout += chunk.toString(); });
     child.stderr.on('data', (chunk) => { stderr += chunk.toString(); });
-    child.on('error', (error) => { clearTimeout(timer); reject(error); });
+     child.on('error', (error) => {
+       clearTimeout(timer);
+       const fallback = portableFallback || formulaReceiptFallback(symbol, error instanceof Error ? error.message : String(error));
+       if (fallback) resolve(fallback);
+       else reject(error);
+     });
     child.on('close', async (code) => {
       clearTimeout(timer);
       const text = stdout.trim();
@@ -2303,7 +3924,7 @@ function runFiveFormulas(symbol, timeoutMs = 120000) {
         return;
       }
       const result = {
-        status: 'ok',
+        status: 'partial',
         symbol: payload.symbol || symbol,
         source: '通达信 TQ · tdx-local-hub',
         elapsed_ms: payload.elapsed_ms || Date.now() - startedAt,
@@ -2318,10 +3939,30 @@ function runFiveFormulas(symbol, timeoutMs = 120000) {
             ? (item.result[item.symbol || payload.symbol || symbol] || {})
             : {},
           error: item.error,
+          client_open_required: Boolean(item.client_open_required),
+          action: item.action,
         })) : [],
         failed_formulas: Array.isArray(payload.failed_formulas) ? payload.failed_formulas : [],
+        client_open_required: Boolean(payload.client_open_required),
+        action: payload.action || '',
+        tdx_process: payload.tdx_process || null,
+        tdx_root: payload.tdx_root || bridgeTdxRoot(),
+        tq_init_path: payload.tq_init_path || '',
+        session_reused: Boolean(payload.session_reused),
+        lock_waited_ms: Number(payload.lock_waited_ms || 0),
         bridge_exit_code: code,
       };
+      const liveFormulaSuccess = result.formulas.length >= 5
+        && result.failed_formulas.length === 0
+        && result.formulas.every((item) => item.ok === true);
+      result.status = liveFormulaSuccess ? 'ok' : 'partial';
+      if (!liveFormulaSuccess) {
+        const fallback = portableFallback || formulaReceiptFallback(symbol, result.action || '通达信 TQ 未返回完整五公式结果');
+        if (fallback) {
+          resolve({ ...fallback, live_result: result });
+          return;
+        }
+      }
       try {
         result.receipt_path = await persistFormulaReceipt(result, symbol, startedAt);
       } catch (error) {
@@ -2333,7 +3974,20 @@ function runFiveFormulas(symbol, timeoutMs = 120000) {
   });
 }
 
-function runFiveFormulasBatch(symbols, timeoutMs = 180000) {
+function runFiveFormulas(symbol, timeoutMs = 120000) {
+  const key = String(symbol || '').trim().toUpperCase();
+  const running = tqFormulaRequests.get(key);
+  if (running) {
+    return running.then((result) => ({ ...result, request_coalesced: true }));
+  }
+  const request = runFiveFormulasLive(symbol, timeoutMs).finally(() => {
+    if (tqFormulaRequests.get(key) === request) tqFormulaRequests.delete(key);
+  });
+  tqFormulaRequests.set(key, request);
+  return request;
+}
+
+function runFiveFormulasBatch(symbols, timeoutMs = 600000) {
   return new Promise((resolve, reject) => {
     const python = localPythonExecutable();
     const script = path.join(SKILL_SOURCE, 'tdx-local-hub', 'scripts', 'tdx_hub.py');
@@ -2344,11 +3998,10 @@ function runFiveFormulasBatch(symbols, timeoutMs = 180000) {
     const child = spawn(python, [script, 'batch', ...symbols], {
       cwd: APP_ROOT,
       windowsHide: true,
-      env: {
-        ...process.env,
-        TDX_ROOT: process.env.ZHANGCAI_TDX_ROOT || 'C:\\new_tdx_mock',
+      env: localScriptEnvironment({
+        TDX_ROOT: bridgeTdxRoot(),
         ONESTOCK_STOCK_DATA_ROOT: DATA_ROOT,
-      },
+      }),
     });
     let stdout = '';
     let stderr = '';
@@ -2433,7 +4086,7 @@ function parseLastJsonLine(output) {
   return null;
 }
 
-function runGoldenIgnitionSymbol(symbol, lookback = 5, timeoutMs = 180000) {
+function runGoldenIgnitionSymbol(symbol, lookback = 5, timeoutMs = 600000) {
   return new Promise((resolve, reject) => {
     const normalized = normalizeSingleSignalSymbol(symbol);
     if (!normalized) {
@@ -2448,26 +4101,31 @@ function runGoldenIgnitionSymbol(symbol, lookback = 5, timeoutMs = 180000) {
     const python = localPythonExecutable();
     const safeLookback = Math.max(1, Math.min(30, Number(lookback) || 5));
     const startedAt = Date.now();
+    const liveDaily = inspectTdxDailyIntegrity();
+    const liveDailyFreshness = dailyFreshnessSnapshot({ latestDate: liveDaily.latestDate || '' });
+    const requestedDailyDate = liveDailyFreshness.updateDue
+      ? liveDailyFreshness.currentDate
+      : String(liveDaily.latestDate || '');
     const child = spawn(python, [script, normalized, '--lookback', String(safeLookback)], {
       cwd: path.join(SKILL_SOURCE, 'golden-ignition'),
       windowsHide: true,
-      env: {
-        ...process.env,
+      env: localScriptEnvironment({
         ZHANGCAI_APP_ROOT: APP_ROOT,
         ZHANGCAI_DATA_DIR: DATA_ROOT,
-        ZHANGCAI_TDX_ROOT: process.env.ZHANGCAI_TDX_ROOT || 'C:\\new_tdx_mock',
-        TDX_ROOT: process.env.ZHANGCAI_TDX_ROOT || 'C:\\new_tdx_mock',
+        ZHANGCAI_TDX_ROOT: bridgeTdxRoot(),
+        TDX_ROOT: bridgeTdxRoot(),
         TDX_HUB_PATH: path.join(SKILL_SOURCE, 'tdx-local-hub', 'scripts', 'tdx_hub.py'),
-        TDX_BOND_MAP_PATH: path.join(process.env.ZHANGCAI_TDX_ROOT || 'C:\\new_tdx_mock', 'T0002', 'hq_cache', 'speckzzdata.txt'),
+        TDX_BOND_MAP_PATH: path.join(bridgeTdxRoot(), 'T0002', 'hq_cache', 'speckzzdata.txt'),
         ZHANGCAI_STRATEGY_RESULTS_DIR: path.join(DATA_ROOT, 'strategy-results'),
         ONESTOCK_STOCK_DATA_ROOT: path.join(DATA_ROOT, 'strategy-results'),
         ONESTOCK_STOCK_CANONICAL_CHILD: '1',
+        ZHANGCAI_DAILY_REQUESTED_TRADE_DATE: requestedDailyDate,
+        ZHANGCAI_TDX_LATEST_DAILY_DATE: liveDaily.latestDate || '',
         PYTHONPATH: [
-          path.join(APP_ROOT, 'scripts'),
           path.join(SKILL_SOURCE, 'stock-unified', 'scripts'),
           process.env.PYTHONPATH || '',
         ].filter(Boolean).join(path.delimiter),
-      },
+      }),
     });
     let stdout = '';
     let stderr = '';
@@ -2503,6 +4161,9 @@ function runGoldenIgnitionSymbol(symbol, lookback = 5, timeoutMs = 180000) {
         input_symbol: result.input_symbol || summary.input_symbol || normalized,
         analysis_symbol: result.analysis_symbol || summary.analysis_symbol || normalized,
         latest_trading_date: result.latest_trading_date || summary.latest_trading_date || '',
+        requested_trade_date: result.requested_trade_date || '',
+        daily_data_quality: result.daily_data_quality || 'AVAILABLE',
+        daily_data_notice: result.daily_data_notice || '',
         signal_status: result.signal_status || summary.signal_status || '',
         ignition_signal: Boolean(result.ignition_signal),
         lookback_trading_days: Number(result.lookback_trading_days || safeLookback),
@@ -2535,7 +4196,7 @@ async function runDailyRecovery(date, codes = '', maxSymbols = 0) {
   try { local = JSON.parse(String(result.output || '').trim()); } catch { local = parseLastJsonLine(result.output); }
   if (!local || typeof local !== 'object' || Array.isArray(local)) local = { status: result.partial ? 'degraded' : 'available', output: result.output };
   try { await runLocalScript('skill14_data_runtime.py', ['status'], 120000, 4000); } catch { /* 日线索引已先落盘，状态页下次刷新可恢复 */ }
-  try { await runLocalScript('unified_data_archive.py', ['snapshot', '--date', date], 180000, 4000); } catch { /* 不阻断公开降级层本身 */ }
+  try { await runLocalScript('unified_data_archive.py', ['snapshot', '--date', date], 600000, 4000); } catch { /* 不阻断公开降级层本身 */ }
   const stateFile = path.join(RUNTIME_ROOT, `daily-fallback-recovery-${archiveDateKey(date)}.json`);
   const state = {
     schema: 'ZHANGCAI_DAILY_FALLBACK_RECOVERY_V1', date, startedAt: new Date().toISOString(),
@@ -2590,15 +4251,25 @@ async function runDailyRefresh(date) {
   const effectiveDate = targetDateFromTdxResult(tdxRefresh, localTradeDate());
   state.date = effectiveDate;
   await writeRuntimeJson(DAILY_STATE_FILE, state);
-  // TDX 正常时只检查真正缺口；TDX 关闭/源目录不可读时，脚本把明确返回
-  // 目标交易日的公开 OHLCV 写入应用可写 fallback 层，不触碰 TDX 目录。
-  await execute('公开日线缺口降级补齐', 'daily_data_recovery.py', ['--date', effectiveDate], Number(process.env.ZHANGCAI_PUBLIC_DAILY_RECOVERY_TIMEOUT_MS || 300000), [2]);
-  await Promise.all([
-    execute('公开行情补齐', 'public_market_sync.py', ['--date', effectiveDate], 90000),
-    execute('新闻快讯补齐', 'news_sync.py', ['--date', effectiveDate], 90000),
-  ]);
-  await execute('财务、股本、指数、龙虎榜、融资融券统一落盘', 'supplemental_data_sync.py', ['--date', effectiveDate, '--mode', 'daily'], 240000);
-  await execute('行情资讯能力包来源补充', 'package_source_sync.py', ['--date', effectiveDate], 360000);
+  if (isLocalOnlyDataPolicy()) {
+    state.steps.push({
+      name: '公网行情、新闻和第三方补充源',
+      status: 'blocked',
+      finishedAt: new Date().toISOString(),
+      error: 'desktop_local_tdx_only_policy',
+    });
+    await writeRuntimeJson(DAILY_STATE_FILE, state);
+  } else {
+    // 正常桌面模式也执行公开源补充：它是明确的本地落盘步骤，
+    // 既用于补齐资讯，也用于 TDX 不可用时的降级层。
+    await execute('公开日线缺口降级补齐', 'daily_data_recovery.py', ['--date', effectiveDate], Number(process.env.ZHANGCAI_PUBLIC_DAILY_RECOVERY_TIMEOUT_MS || 300000), [2]);
+    await Promise.all([
+      execute('公开行情补齐', 'public_market_sync.py', ['--date', effectiveDate], 90000),
+      execute('新闻快讯补齐', 'news_sync.py', ['--date', effectiveDate], 90000),
+    ]);
+    await execute('财务、股本、指数、龙虎榜、融资融券统一落盘', 'supplemental_data_sync.py', ['--date', effectiveDate, '--mode', 'daily'], 240000);
+    await execute('行情资讯能力包来源补充', 'package_source_sync.py', ['--date', effectiveDate], 360000);
+  }
   // 先刷新会变化的状态页，再生成哈希清单，避免清单刚生成就被状态页覆盖。
   await execute('统一数据状态刷新', 'skill14_data_runtime.py', ['status'], 120000);
   await execute('统一数据源清单生成', 'unified_data_archive.py', ['snapshot', '--date', effectiveDate], 180000);
@@ -2610,6 +4281,116 @@ async function runDailyRefresh(date) {
   return state;
 }
 
+async function runDailyIndexInitialization(job) {
+  const state = {
+    schema: 'ZHANGCAI_DAILY_INDEX_INITIALIZATION_V1',
+    operation: 'rebuild-full-stock-index',
+    startedAt: new Date().toISOString(),
+    status: 'running',
+    steps: [],
+    tdxRoot: bridgeTdxRoot(),
+    dataRoot: DATA_ROOT,
+  };
+  await writeRuntimeJson(DAILY_INDEX_INITIALIZATION_STATE_FILE, state);
+  const step = async (name, run) => {
+    const current = { name, status: 'running', startedAt: new Date().toISOString() };
+    state.steps.push(current);
+    await writeRuntimeJson(DAILY_INDEX_INITIALIZATION_STATE_FILE, state);
+    try {
+      const value = await run();
+      Object.assign(current, { status: 'completed', finishedAt: new Date().toISOString(), result: value || null });
+      await writeRuntimeJson(DAILY_INDEX_INITIALIZATION_STATE_FILE, state);
+      return value;
+    } catch (error) {
+      Object.assign(current, { status: 'failed', finishedAt: new Date().toISOString(), error: error instanceof Error ? error.message : String(error) });
+      await writeRuntimeJson(DAILY_INDEX_INITIALIZATION_STATE_FILE, state);
+      return null;
+    }
+  };
+
+  const tdxRoot = bridgeTdxRoot();
+  const tdxHasLayout = Boolean(tdxRoot && (
+    existsSync(path.join(tdxRoot, 'vipdoc')) || existsSync(path.join(tdxRoot, 'T0002'))
+  ));
+  let tdxIndex = await step('扫描通达信全部 .day 文件并重建股票索引', async () => {
+    const index = await buildTdxHistoryIndex(true);
+    return { symbolCount: Number(index?.symbol_count || 0), sourceAvailable: index?.source_available !== false, path: TDX_HISTORY_INDEX_FILE };
+  });
+
+  if (tdxHasLayout) {
+    await step('读取通达信全历史并重建 canonical 日线主库', async () => {
+      const value = await runSkill14Runtime(
+        'archive-daily',
+        [],
+        Number(process.env.ZHANGCAI_DAILY_INDEX_INIT_TIMEOUT_MS || 1200000),
+      );
+      return {
+        tradeDate: value?.trade_date || value?.tradeDate || '',
+        archiveMode: value?.archive_mode || '',
+        archivedSymbols: Number(value?.archived_symbols || 0),
+        barRecords: Number(value?.bar_records || 0),
+      };
+    });
+    // The Python archive refreshes this file as part of the same transaction.
+    // Read it again so the completion receipt reflects the actual post-run
+    // source set rather than the pre-run snapshot.
+    tdxIndex = await step('复核通达信股票索引与最新日期', async () => {
+      const index = await buildTdxHistoryIndex(true);
+      return { symbolCount: Number(index?.symbol_count || 0), sourceAvailable: index?.source_available !== false, path: TDX_HISTORY_INDEX_FILE };
+    });
+  } else {
+    const current = state.steps.at(-1);
+    if (current?.status === 'completed') Object.assign(current, {
+      status: 'partial',
+      finishedAt: new Date().toISOString(),
+      error: '未配置可读的通达信目录；保留本地数据包全历史并继续建立 canonical 索引。',
+    });
+    await writeRuntimeJson(DAILY_INDEX_INITIALIZATION_STATE_FILE, state);
+  }
+
+  const canonicalIndex = await step('建立全历史 JSONL 按股票定位索引', async () => {
+    const index = await buildCanonicalDailyIndex(true);
+    if (!index?.symbol_count) throw new Error('本地 canonical 日线归档为空，无法建立个股索引');
+    return {
+      symbolCount: Number(index.symbol_count || 0),
+      recordCount: Number(index.record_count || 0),
+      path: CANONICAL_DAILY_INDEX_FILE,
+      sourceFile: CANONICAL_DAILY_FILE,
+    };
+  });
+  state.finishedAt = new Date().toISOString();
+  state.result = {
+    tdxSymbolCount: Number(tdxIndex?.symbolCount || 0),
+    canonicalSymbolCount: Number(canonicalIndex?.symbolCount || 0),
+    canonicalRecordCount: Number(canonicalIndex?.recordCount || 0),
+    tdxIndexPath: TDX_HISTORY_INDEX_FILE,
+    canonicalIndexPath: CANONICAL_DAILY_INDEX_FILE,
+    canonicalFile: CANONICAL_DAILY_FILE,
+  };
+  const hasFailedStep = state.steps.some((item) => item.status === 'failed');
+  state.status = canonicalIndex?.symbolCount ? (hasFailedStep || state.steps.some((item) => item.status === 'partial') ? 'partial' : 'completed') : 'failed';
+  await writeRuntimeJson(DAILY_INDEX_INITIALIZATION_STATE_FILE, state);
+  return state;
+}
+
+function startDailyIndexInitialization(force = false) {
+  const existing = readJson(DAILY_INDEX_INITIALIZATION_STATE_FILE);
+  const running = [...dailyIndexInitializationJobs.values()].find((item) => item.status === 'running');
+  if (running) return { status: 'accepted', job: running, state: existing };
+  const conflictingDaily = [...dailyJobs.values()].find((item) => item.status === 'running');
+  const conflictingArchive = [...unifiedArchiveJobs.values()].find((item) => item.status === 'running');
+  if (conflictingDaily || conflictingArchive) {
+    return { status: 'busy', error: '日线或统一落盘任务正在运行，请等待当前任务完成后再初始化。' };
+  }
+  if (!force && existing?.status === 'completed') return { status: 'current', state: existing };
+  const job = { id: randomUUID(), operation: 'rebuild-full-stock-index', status: 'running', started_at: Date.now() };
+  dailyIndexInitializationJobs.set(job.id, job);
+  void runDailyIndexInitialization(job)
+    .then((state) => Object.assign(job, { status: state.status, completed_at: Date.now(), state }))
+    .catch((error) => Object.assign(job, { status: 'failed', completed_at: Date.now(), error: error instanceof Error ? error.message : String(error) }));
+  return { status: 'accepted', job, state: existing };
+}
+
 // 只补齐公开行情、龙虎榜、涨停池与新闻，不重复触发通达信日线扫描。
 // 该入口供设置页手动使用；完成后同样交给 DeepSeek Harness 做来源、日期和条数校验。
 async function runSupplementalRefresh(date) {
@@ -2618,6 +4399,18 @@ async function runSupplementalRefresh(date) {
     startedAt: new Date().toISOString(), status: 'running', steps: [], harness: { status: 'pending' },
   };
   await writeRuntimeJson(SUPPLEMENTAL_STATE_FILE, state);
+  if (isLocalOnlyDataPolicy()) {
+    state.steps.push({
+      name: '公网行情、新闻和第三方补充源',
+      status: 'blocked',
+      finishedAt: new Date().toISOString(),
+      error: 'desktop_local_tdx_only_policy',
+    });
+    state.finishedAt = new Date().toISOString();
+    state.status = 'blocked';
+    await writeRuntimeJson(SUPPLEMENTAL_STATE_FILE, state);
+    return state;
+  }
   const execute = async (name, script, args, timeout) => {
     try {
       const result = await runLocalScript(script, args, timeout);
@@ -2701,13 +4494,23 @@ async function runUnifiedDataArchive(date) {
   state.date = effectiveDate;
   await saveUnifiedArchiveState(state);
   await execute('通达信日线与证券资料归档', 'skill14_data_runtime.py', ['archive-daily'], Number(process.env.ZHANGCAI_DAILY_ARCHIVE_TIMEOUT_MS || 300000));
-  await execute('公开日线缺口降级补齐', 'daily_data_recovery.py', ['--date', effectiveDate], Number(process.env.ZHANGCAI_PUBLIC_DAILY_RECOVERY_TIMEOUT_MS || 300000), [2]);
-  await execute('财务、股本、指数、龙虎榜、融资融券统一落盘', 'supplemental_data_sync.py', ['--date', effectiveDate, '--mode', 'daily'], 240000);
-  await execute('行情资讯能力包来源补充', 'package_source_sync.py', ['--date', effectiveDate], 360000);
-  await Promise.all([
-    execute('公开行情、涨停池与龙虎榜归档', 'public_market_sync.py', ['--date', effectiveDate], 90000),
-    execute('东方财富 7×24 新闻归档', 'news_sync.py', ['--date', effectiveDate], 90000),
-  ]);
+  if (isLocalOnlyDataPolicy()) {
+    state.steps.push({
+      name: '公网行情、新闻和第三方补充源',
+      status: 'blocked',
+      finishedAt: new Date().toISOString(),
+      error: 'desktop_local_tdx_only_policy',
+    });
+    await saveUnifiedArchiveState(state);
+  } else {
+    await execute('公开日线缺口降级补齐', 'daily_data_recovery.py', ['--date', effectiveDate], Number(process.env.ZHANGCAI_PUBLIC_DAILY_RECOVERY_TIMEOUT_MS || 300000), [2]);
+    await execute('财务、股本、指数、龙虎榜、融资融券统一落盘', 'supplemental_data_sync.py', ['--date', effectiveDate, '--mode', 'daily'], 240000);
+    await execute('行情资讯能力包来源补充', 'package_source_sync.py', ['--date', effectiveDate], 360000);
+    await Promise.all([
+      execute('公开行情、涨停池与龙虎榜归档', 'public_market_sync.py', ['--date', effectiveDate], 90000),
+      execute('东方财富 7×24 新闻归档', 'news_sync.py', ['--date', effectiveDate], 90000),
+    ]);
+  }
   await execute('统一数据状态刷新', 'skill14_data_runtime.py', ['status'], 120000);
   await execute('统一数据源清单生成', 'unified_data_archive.py', ['snapshot', '--date', effectiveDate], 180000);
 
@@ -2810,7 +4613,7 @@ function startUnifiedDataArchive(date, force = false) {
     state: initialState,
     progress: unifiedArchiveProgress(initialState),
     report: initialState?.report || unifiedArchiveReportDescriptor(date),
-    message: '统一数据落盘任务已受理，正在后台执行；状态和报告会持续写入 app-data。',
+    message: '统一数据落盘任务已受理，正在后台执行；状态和报告会持续写入 resource-library。',
   };
 }
 
@@ -2857,6 +4660,14 @@ function nextAfterCloseTime(now = new Date()) {
   const today = `${year}${String(month).padStart(2, '0')}${String(day).padStart(2, '0')}`;
   const afterClose = now.getTime() >= target.getTime();
   const existing = readJson(DAILY_STATE_FILE);
+  const refreshAlreadyRunning = [...dailyJobs.values()].some((job) => job.date === displayDateText(today) && job.status === 'running');
+  if (afterClose && refreshAlreadyRunning) {
+    // Starting after 16:30 may arm an immediate recovery run. Do not arm a
+    // second one-second timer while that run is still persisting its state.
+    target = new Date(target.getTime() + 24 * 60 * 60 * 1000);
+    while (!isTradingDayDate(target.toISOString().slice(0, 10).replace(/-/g, ''))) target = new Date(target.getTime() + 24 * 60 * 60 * 1000);
+    return target;
+  }
   // 服务若在当天 16:30 后才启动，立即补跑当天交易日；否则不要等到
   // 第二天，避免“重启后计划已存在但当天数据一直没刷新”。
   if (afterClose && isTradingDayDate(today) && existing?.date !== displayDateText(today)) return new Date(now.getTime() + 1000);
@@ -2876,6 +4687,8 @@ function scheduleAfterCloseDailyRefresh() {
       guard: '本地交易日历；周末和闭市日跳过；日期以本地可核验数据为准',
       nextRunAt: next.toISOString(),
       pipeline: ['通达信日线补齐', '公开行情与新闻同步', '统一数据源落盘', 'DeepSeek Harness 数据校验'],
+      dataPolicy: isLocalOnlyDataPolicy() ? 'strict_local_only' : 'local_first_on_demand',
+      fallback: 'TDX 不可用时按明确交易日下载公开日线/行情/资讯到本地降级层，再交给 Harness 校验',
     });
     const delay = Math.max(1000, next.getTime() - Date.now());
     setTimeout(() => {
@@ -2890,6 +4703,8 @@ function scheduleAfterCloseDailyRefresh() {
         guard: '本地交易日历；周末和闭市日跳过；日期以本地可核验数据为准',
         lastTriggeredAt: new Date().toISOString(), lastTradeDate: date, result: started,
         pipeline: ['通达信日线补齐', '公开行情与新闻同步', '统一数据源落盘', 'DeepSeek Harness 数据校验'],
+        dataPolicy: isLocalOnlyDataPolicy() ? 'strict_local_only' : 'local_first_on_demand',
+        fallback: 'TDX 不可用时按明确交易日下载公开日线/行情/资讯到本地降级层，再交给 Harness 校验',
       });
       console.log(`[agent] 收盘后静默刷新触发：${date} · ${started.status}`);
       arm();
@@ -2899,6 +4714,12 @@ function scheduleAfterCloseDailyRefresh() {
 }
 
 const server = http.createServer(async (req, res) => {
+  // CORS alone cannot prevent cross-site POST side effects. The packaged
+  // bridge accepts browser requests only from its own allocated UI origin.
+  if (PACKAGED_RUNTIME && req.headers.origin && req.headers.origin !== process.env.ZHANGCAI_DESKTOP_ORIGIN) {
+    json(res, 403, { status: 'error', error: '请求来源不属于当前桌面客户端。' });
+    return;
+  }
   // 浏览器、旧版网页或手工配置可能把根地址和接口路径拼成
   // `//agent/start`。Node 不会自动折叠重复斜杠，原来会直接落到
   // “路径不存在”；在路由前只规范化 URL 路径，不改变查询参数。
@@ -2914,8 +4735,30 @@ const server = http.createServer(async (req, res) => {
     req.url = rawRequestUrl.replace(/^\/{2,}/, '/');
   }
   if (req.method === 'OPTIONS') { res.writeHead(204, corsHeaders(req)); res.end(); return; }
-if (req.method === 'GET' && req.url === '/health') {
-    json(res, 200, { status: 'ok', service: 'zhangcai-local-bridge', port: PORT, appRoot: APP_ROOT, dataRoot: DATA_ROOT, skills: SKILL_SOURCE, harness: 'DeepSeek Harness headless', runtimePolicy: RUNTIME_POLICY_FILE, capabilities: BRIDGE_CAPABILITIES });
+  if (req.method === 'GET' && req.url === '/health') {
+    json(res, 200, { status: 'ok', service: 'zhangcai-local-bridge', port: PORT, appRoot: APP_ROOT, dataRoot: DATA_ROOT, resourceLibrary: RESOURCE_LIBRARY_ROOT, codePolicy: PACKAGED_RUNTIME ? 'embedded-in-exe-resources' : 'workspace', skills: SKILL_SOURCE, harness: 'DeepSeek Harness headless', runtimePolicy: RUNTIME_POLICY_FILE, capabilities: BRIDGE_CAPABILITIES });
+    return;
+  }
+  if (req.method === 'GET' && req.url === '/runtime/credentials') {
+    json(res, 200, { status: 'ok', ...credentialStatus() });
+    return;
+  }
+  if (req.method === 'POST' && req.url === '/runtime/credentials') {
+    try {
+      const payload = JSON.parse(await readBody(req) || '{}');
+      const apiKey = typeof payload?.apiKey === 'string' ? payload.apiKey.trim() : '';
+      if (apiKey.length < 12 || /[\r\n]/.test(apiKey)) {
+        json(res, 422, { status: 'error', error: 'DeepSeek API 密钥格式无效' });
+        return;
+      }
+      await mkdir(RESOURCE_LIBRARY_ROOT, { recursive: true });
+      await writeFile(CREDENTIALS_ENV_FILE, `# 掌财桌面 Harness 凭据；仅保存在当前用户资源库。\nDEEPSEEK_API_KEY=${apiKey}\n`, { encoding: 'utf8', mode: 0o600 });
+      process.env.DEEPSEEK_API_KEY = apiKey;
+      deepSeekCredentialSource = CREDENTIALS_ENV_FILE;
+      json(res, 200, { status: 'ok', ...credentialStatus(), resourceLibrary: resourceLibraryStatus() });
+    } catch (error) {
+      json(res, 500, { status: 'error', error: error instanceof Error ? error.message : 'Harness 凭据保存失败' });
+    }
     return;
   }
   if (req.method === 'GET' && req.url === '/reports/archive') {
@@ -2955,7 +4798,7 @@ if (req.method === 'GET' && req.url === '/health') {
     return;
   }
   if (req.method === 'POST' && req.url === '/skill14/archive-daily') {
-    try { json(res, 200, await runSkill14Runtime('archive-daily', [], Number(process.env.ZHANGCAI_DAILY_ARCHIVE_TIMEOUT_MS || 300000))); } catch (error) { json(res, 502, { status: 'error', error: error instanceof Error ? error.message : '日线归档失败' }); }
+    try { json(res, 200, await runSkill14Runtime('archive-daily', [], Number(process.env.ZHANGCAI_DAILY_ARCHIVE_TIMEOUT_MS || 600000))); } catch (error) { json(res, 502, { status: 'error', error: error instanceof Error ? error.message : '日线归档失败' }); }
     return;
   }
   if (req.method === 'POST' && req.url === '/skill14/prepare-packages') {
@@ -2984,14 +4827,18 @@ if (req.method === 'GET' && req.url === '/health') {
     }
     return;
   }
+  if (req.method === 'GET' && req.url === '/runtime/resource-context') {
+    json(res, 200, resourceLibraryContext());
+    return;
+  }
   if (req.method === 'GET' && req.url === '/runtime/environment') {
     try {
-      const tdxRoot = process.env.ZHANGCAI_TDX_ROOT || 'C:\\new_tdx_mock';
+      const tdxRoot = bridgeTdxRoot();
       const tdxStatusResult = await runLocalScript('tdx_runtime_bridge.py', ['status'], 60000, 0);
       const tdxStatus = JSON.parse(tdxStatusResult.output || '{}');
       const daily = inspectTdxDailyIntegrity(tdxRoot);
       const dailyFreshness = dailyFreshnessSnapshot(daily);
-      const snapshots = dailySnapshotSummary();
+      const snapshots = dailySnapshotSummary(daily);
       const dailyState = readJson(DAILY_STATE_FILE) || {};
       const unifiedArchive = compactUnifiedArchiveState(readJson(UNIFIED_ARCHIVE_STATE_FILE) || {});
       const unifiedVerification = readJson(UNIFIED_VERIFY_STATE_FILE) || {};
@@ -3029,12 +4876,16 @@ if (req.method === 'GET' && req.url === '/health') {
         fresh: snapshots.news.status === 'available' && snapshots.news.date === targetDataDate,
       });
       const launcher = commandFor('environment-probe').command;
-      const harnessReady = Boolean(process.env.DEEPSEEK_API_KEY);
+      const credentials = credentialStatus();
+      const resourceContext = resourceLibraryContext();
       json(res, 200, {
         status: 'ok',
         checkedAt: new Date().toISOString(),
         bridge: { status: 'ok', host: HOST, port: PORT },
-        harness: { status: harnessReady ? 'ready' : 'missing_credentials', launcher, credentialsConfigured: harnessReady, base: 'DeepSeek Harness' },
+        harness: { status: credentials.configured ? 'ready' : 'missing_credentials', launcher, credentialsConfigured: credentials.configured, credentialSource: credentials.source, keyHint: credentials.keyHint, base: 'DeepSeek Harness' },
+        resourceLibrary: { ...resourceLibraryStatus(), assets: resourceContext.assets, paths: resourceContext.paths },
+        codePolicy: PACKAGED_RUNTIME ? 'embedded-in-exe-resources' : 'workspace',
+        minuteData: inspectMinuteData(tdxRoot),
         tdx: { status: Array.isArray(tdxStatus.processes) && tdxStatus.processes.length > 0 ? 'open' : 'closed', processes: tdxStatus.processes || [], root: tdxRoot, formulas: tdxStatus.formulaRegistry || {}, freshness: tdxStatus.freshness || {} },
         daily: { ...daily, ...dailyFreshness },
         dailyArchive,
@@ -3043,6 +4894,15 @@ if (req.method === 'GET' && req.url === '/health') {
         harnessValidation,
         supplemental: snapshots.supplemental,
         dailyRefresh: dailyState,
+        dailyIndexInitialization: readJson(DAILY_INDEX_INITIALIZATION_STATE_FILE),
+        canonicalDailyIndex: (() => {
+          const index = readJson(CANONICAL_DAILY_INDEX_FILE);
+          return index ? {
+            status: 'ready', path: CANONICAL_DAILY_INDEX_FILE,
+            symbolCount: Number(index.symbol_count || 0), recordCount: Number(index.record_count || 0),
+            generatedAt: index.generated_at || '', sourceFile: CANONICAL_DAILY_FILE,
+          } : { status: 'missing', path: CANONICAL_DAILY_INDEX_FILE, symbolCount: 0, recordCount: 0, generatedAt: '', sourceFile: CANONICAL_DAILY_FILE };
+        })(),
         supplementalRefresh: readJson(SUPPLEMENTAL_STATE_FILE),
         unifiedArchive,
         unifiedVerification,
@@ -3069,7 +4929,7 @@ if (req.method === 'GET' && req.url === '/health') {
     const message = runningJob
       ? `统一数据落盘正在运行：${progress.currentStep || '准备下一步'}（${progress.completed}/${progress.total}）`
       : state?.status === 'completed'
-        ? '统一数据落盘已完成，报告和 Harness 上下文已写入 app-data。'
+        ? '统一数据落盘已完成，报告和 Harness 上下文已写入 resource-library。'
         : state?.status === 'partial'
           ? '统一数据落盘已结束，但存在降级来源或未通过步骤，详见报告。'
           : state?.status === 'failed'
@@ -3133,8 +4993,31 @@ if (req.method === 'GET' && req.url === '/health') {
     }
     return;
   }
+  if (req.method === 'POST' && req.url === '/data/daily/initialize') {
+    try {
+      const payload = JSON.parse(await readBody(req) || '{}');
+      const result = startDailyIndexInitialization(payload?.force === true);
+      json(res, result.status === 'busy' ? 409 : 202, result);
+    } catch (error) {
+      json(res, 400, { status: 'error', error: error instanceof Error ? error.message : '全量个股索引初始化启动失败' });
+    }
+    return;
+  }
+  if (req.method === 'GET' && req.url === '/data/daily/initialize/status') {
+    json(res, 200, {
+      status: 'ok',
+      state: readJson(DAILY_INDEX_INITIALIZATION_STATE_FILE),
+      jobs: [...dailyIndexInitializationJobs.values()].slice(-3),
+    });
+    return;
+  }
   if (req.method === 'GET' && req.url === '/data/daily/status') {
-    json(res, 200, { status: 'ok', state: readJson(DAILY_STATE_FILE), jobs: [...dailyJobs.values()].slice(-3) });
+    json(res, 200, {
+      status: 'ok',
+      state: readJson(DAILY_STATE_FILE),
+      jobs: [...dailyJobs.values()].slice(-3),
+      initialization: readJson(DAILY_INDEX_INITIALIZATION_STATE_FILE),
+    });
     return;
   }
   if (req.method === 'GET' && req.url === '/data/daily/integrity') {
@@ -3281,6 +5164,7 @@ if (req.method === 'GET' && req.url === '/health') {
           degraded_reason: index.degraded_reason || '',
           symbol_count: index.symbol_count,
           fallback_index_summary: (() => { const daily = readJson(DAILY_DATA_INDEX_FILE); return daily?.summary || { symbol_count: 0, fallback_symbol_count: 0, fallback_record_count: 0, date_count: 0 }; })(),
+          canonical_index: (() => { const canonical = readJson(CANONICAL_DAILY_INDEX_FILE); return canonical ? { path: CANONICAL_DAILY_INDEX_FILE, symbol_count: canonical.symbol_count || 0, record_count: canonical.record_count || 0, generated_at: canonical.generated_at || '', source_size: canonical.source_size || 0 } : { path: CANONICAL_DAILY_INDEX_FILE, symbol_count: 0, record_count: 0, generated_at: '', source_size: 0 }; })(),
           entry: normalized ? index.symbols?.[normalized.key] || null : undefined,
         });
         return;
@@ -3315,10 +5199,50 @@ if (req.method === 'GET' && req.url === '/health') {
       const scope = requestedScope === 'market' ? 'market' : requestedScope === 'watchlist' ? 'watchlist' : 'indices';
       const codes = url.searchParams.get('codes') || '';
       const result = await runMarketRefresh(scope, codes);
-      if (scope === 'market' || scope === 'indices') await persistLatestMarketSnapshot(result, scope);
+      if (scope === 'market' || scope === 'indices') await persistMarketSnapshot(scope, result);
       json(res, 200, result);
     } catch (error) {
       json(res, 502, { status: 'error', error: error instanceof Error ? error.message : '实时行情刷新失败' });
+    }
+    return;
+  }
+  if (req.method === 'GET' && req.url.startsWith('/stock/quote')) {
+    try {
+      const url = new URL(req.url, `http://${HOST}:${PORT}`);
+      const normalized = normalizeHistorySymbol(url.searchParams.get('symbol') || url.searchParams.get('code') || '');
+      if (!normalized) {
+        json(res, 400, { status: 'error', error: '需要六位股票代码，可附带 .SH、.SZ 或 .BJ' });
+        return;
+      }
+      const result = await runMarketRefresh('watchlist', normalized.code);
+      const quote = (Array.isArray(result.stocks) ? result.stocks : [])
+        .find((row) => String(row?.code || '') === normalized.code);
+      if (!quote || Number(quote.close || 0) <= 0) {
+        json(res, 404, {
+          status: 'missing',
+          symbol: normalized.symbol,
+          source: result.source || '',
+          fallback: result.fallback === true,
+          error: '当前行情源没有返回该股票的最新价格',
+        });
+        return;
+      }
+      await persistMarketSnapshot('watchlist', result);
+      json(res, 200, {
+        status: 'ok',
+        symbol: normalized.symbol,
+        quote,
+        source: result.source || '',
+        quality: result.quality || (result.fallback === true ? 'degraded' : 'primary'),
+        fallback: result.fallback === true,
+        fallbackReason: result.fallbackReason || '',
+        quoteMode: result.quoteMode || quote.quoteMode || '',
+        fetchedAt: result.fetchedAt || new Date().toISOString(),
+        tradeDate: result.tradeDate || quote.date || '',
+        scope: result.scope || '个股最新价格',
+      });
+    } catch (error) {
+      json(res, 502, { status: 'error', error: error instanceof Error ? error.message : '个股最新价格读取失败' });
     }
     return;
   }
@@ -3450,6 +5374,22 @@ if (req.method === 'GET' && req.url === '/health') {
     }
     return;
   }
+  if (req.method === 'POST' && req.url.startsWith('/agent/job/') && req.url.endsWith('/cancel')) {
+    const id = req.url.slice('/agent/job/'.length, -'/cancel'.length);
+    let job = harnessJobs.get(id) || readJson(harnessJobFile(id));
+    if (!job) { json(res, 404, { status: 'error', error: 'Harness 任务不存在或已过期' }); return; }
+    if (job.status !== 'running') {
+      json(res, 200, { status: job.status, job_id: id, message: '任务已经结束，无需取消。' });
+      return;
+    }
+    job.cancel_requested = true;
+    job.cancelled_at = Date.now();
+    harnessJobs.set(id, job);
+    persistHarnessJob(job);
+    if (typeof job.cancel === 'function') job.cancel();
+    json(res, 202, { status: 'accepted', job_id: id, message: '已请求取消 Harness 任务。' });
+    return;
+  }
   if (req.method === 'GET' && req.url.startsWith('/agent/job/')) {
     const id = req.url.slice('/agent/job/'.length).split('?')[0];
     let job = harnessJobs.get(id);
@@ -3488,8 +5428,31 @@ if (req.method === 'GET' && req.url === '/health') {
         return;
       }
       const skillId = typeof payload.skillId === 'string' ? payload.skillId.slice(0, 160) : '';
-      const context = await enrichHarnessContext(payload.context);
-      const job = startHarnessJob(buildPrompt(payload.task.trim(), payload.market, skillId, context), skillId);
+      const task = payload.task.trim();
+      const market = payload.market;
+      const rawContext = payload.context;
+      const job = startHarnessJob('', skillId, {
+        prepare: async ({ updateProgress, cancelled }) => {
+          const history = rawContext?.history;
+          const count = Array.isArray(history?.bars) ? history.bars.length : 0;
+          updateProgress(
+            'tdx',
+            'running',
+            count
+              ? `正在整理 ${count} 根本地 TDX 日线指标输入。`
+              : '正在整理本地行情与技能输入。',
+          );
+          if (count) {
+            updateProgress('tdx', 'completed', `已载入 ${count} 根本地日线指标输入。`);
+          } else {
+            updateProgress('tdx', 'completed', '本技能使用市场与技能上下文输入。');
+          }
+          if (cancelled()) throw new Error('用户已取消 Harness 任务。');
+          const context = await enrichHarnessContext(rawContext, updateProgress);
+          if (cancelled()) throw new Error('用户已取消 Harness 任务。');
+          return buildPrompt(task, market, skillId, context);
+        },
+      });
       console.log(`[agent] start ${job.id.slice(0, 8)} skill=${skillId || 'generic'}`);
       json(res, 202, { status: 'accepted', job_id: job.id, skill_id: skillId || null, started_at: job.started_at, timeout_seconds: Math.round(timeoutForSkill(skillId) / 1000) });
     } catch (error) {

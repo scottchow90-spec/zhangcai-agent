@@ -15,6 +15,7 @@ if _onestock_embedded_dir not in _onestock_embedded_sys.path:
 
 import argparse
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -25,7 +26,11 @@ try:
 except Exception:
     pass
 
-DEFAULT_TDX_ROOT = Path(r"C:\new_tdx_mock")
+DEFAULT_TDX_ROOT = Path(
+    os.environ.get("ZHANGCAI_TDX_ROOT")
+    or os.environ.get("TDX_ROOT")
+    or os.environ.get("ZHANGCAI_DEV_TDX_ROOT", r"C:\new_tdx_mock")
+).expanduser().resolve()
 
 
 def read_text(path: Path) -> str:

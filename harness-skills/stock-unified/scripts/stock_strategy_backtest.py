@@ -12,6 +12,7 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import statistics
 import struct
 from dataclasses import asdict, dataclass
@@ -20,7 +21,13 @@ from pathlib import Path
 from typing import Any, Callable, Iterable
 
 
-TDX_ROOT = Path("C:/new_tdx_mock")
+_tdx_root_text = (
+    os.environ.get("ZHANGCAI_TDX_ROOT")
+    or os.environ.get("TDX_ROOT")
+    or os.environ.get("TDX_ROOTS")
+    or ""
+).strip()
+TDX_ROOT = Path(_tdx_root_text or os.environ.get("ZHANGCAI_DEV_TDX_ROOT", r"C:\new_tdx_mock")).expanduser().resolve()
 DAY_RECORD = struct.Struct("<IIIIIfII")
 DAY_DIRS = {
     "SH": TDX_ROOT / "vipdoc" / "sh" / "lday",
@@ -913,7 +920,7 @@ def run(
     equities = load_universe("equity", start_date, end_date, max_equities, names)
     bonds = load_universe("convertible_bond", start_date, end_date, max_bonds, names)
     if not equities:
-        raise RuntimeError("no eligible equity history was loaded from C:/new_tdx_mock")
+        raise RuntimeError(f"no eligible equity history was loaded from {TDX_ROOT}")
     all_dates = sorted({bar.date for bars in equities.values() for bar in bars if start_date <= bar.date <= end_date})
     split = chronological_split(all_dates)
     results = []
@@ -941,7 +948,7 @@ def run(
         "status": "PASS" if not failed and paper_debug_validation["status"] == "PASS" else "FAIL",
         "generated_at": datetime.now().astimezone().isoformat(timespec="seconds"),
         "data": {
-            "source": "C:/new_tdx_mock local daily bars",
+            "source": f"{TDX_ROOT} local daily bars",
             "start_date": start_date,
             "end_date": end_date,
             "equity_universe_size": len(equities),

@@ -27,7 +27,18 @@ try:
 except ImportError:  # pragma: no cover - this skill is deployed on Windows.
     msvcrt = None
 
-TDX_ROOT = Path(os.environ.get("TDX_ROOT", r"C:\new_tdx_mock"))
+_PACKAGED_RUNTIME = os.environ.get("ZHANGCAI_PACKAGED") == "1"
+_CONFIGURED_TDX_ROOT = (os.environ.get("TDX_ROOT") or os.environ.get("ZHANGCAI_TDX_ROOT") or "").strip()
+if _CONFIGURED_TDX_ROOT:
+    TDX_ROOT = Path(_CONFIGURED_TDX_ROOT).expanduser().resolve()
+elif _PACKAGED_RUNTIME:
+    # Never inspect the development machine's C: path from an installed EXE.
+    # The bridge passes this sentinel when the user has not selected TDX yet.
+    TDX_ROOT = (Path(os.environ.get("ZHANGCAI_DATA_DIR", Path.cwd())) / "runtime" / "__tdx_root_not_configured__").resolve()
+else:
+    # Development compatibility only. Packaged and Harness child processes
+    # always receive an explicit user-selected path through the environment.
+    TDX_ROOT = Path(os.environ.get("ZHANGCAI_DEV_TDX_ROOT", "C:\\new_tdx_mock")).expanduser().resolve()
 TQ_USER_DIR = TDX_ROOT / "PYPlugins" / "user"
 TQCENTER = TQ_USER_DIR / "tqcenter.py"
 TQ_INIT_PRIMARY = TQ_USER_DIR / "openclaw_tq_test.py"
@@ -63,6 +74,14 @@ CORE_FORMULAS: dict[str, dict[str, Any]] = {
     "庄家资金监控": {"kind": "zb", "count": 5, "dividend_type": 0},
     "飞龙在天选股": {"kind": "xg", "count": 0, "dividend_type": 0},
 }
+
+
+class TdxClientUnavailableError(RuntimeError):
+    """A user-actionable error for the local Tongdaxin/TQ bridge."""
+
+
+def tdx_open_hint() -> str:
+    return "通达信客户端未打开，请先点击“打开通达信”，确认客户端已登录后再执行本地公式。"
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -254,13 +273,26 @@ def load_tq():
         raise FileNotFoundError(str(TDX_ROOT))
     if not TQCENTER.exists():
         raise FileNotFoundError(str(TQCENTER))
+    # A TQ connection can only be created by the running Tongdaxin desktop
+    # client.  The vendor module collapses this condition into the misleading
+    # “连接路径为空” message, so check the process before importing it and
+    # expose the action the web page can show to the user.
+    if not detect_tdx_process().get("running"):
+        raise TdxClientUnavailableError(tdx_open_hint())
     os.chdir(str(TDX_ROOT))
     sys.path.insert(0, str(TQ_USER_DIR))
     from tqcenter import tq  # type: ignore
     init_path = TQ_INIT_PRIMARY if TQ_INIT_PRIMARY.exists() else TQ_INIT_FALLBACK
     if not init_path.exists():
         raise FileNotFoundError(f"missing TQ init: {TQ_INIT_PRIMARY} / {TQ_INIT_FALLBACK}")
-    tq.initialize(str(init_path))
+    try:
+        tq.initialize(str(init_path))
+    except Exception as exc:
+        if not detect_tdx_process().get("running"):
+            raise TdxClientUnavailableError(tdx_open_hint()) from exc
+        raise RuntimeError(
+            "通达信客户端已打开，但 TQ 数据接口初始化失败；请确认客户端已登录，关闭占用 TQ 的其他公式任务后重试。"
+        ) from exc
     return tq, init_path
 
 
@@ -307,9 +339,20 @@ def formula_registry() -> dict[str, Any]:
     for name, meta in CORE_FORMULAS.items():
         formulas[name] = {"name": name, "core": True, **meta}
     if GS_BAK.exists():
-        for path in sorted(GS_BAK.glob("*.txt")):
+        # Different TDX builds retain the editable source as .txt and the
+        # imported/private formula as .tn6. The old .txt-only scan made a
+        # freshly installed Mock client look as if its formula registry was
+        # missing even though the .tn6 files were present.
+        paths = []
+        for pattern in ("*.txt", "*.tn6", "*.tn5", "*.tnf"):
+            paths.extend(GS_BAK.glob(pattern))
+        for path in sorted(set(paths), key=lambda item: item.name.casefold()):
             name = path.stem
             meta = formulas.get(name, {"name": name, "core": False})
+            # Prefer the readable .txt source when both forms exist, but keep
+            # the imported file metadata available when only .tn6 is present.
+            if meta.get("path") and str(meta.get("path", "")).lower().endswith(".txt") and path.suffix.lower() != ".txt":
+                continue
             meta.update(file_meta(path))
             if "kind" not in meta:
                 meta["kind"] = "xg" if "选股" in name else "zb"
@@ -502,6 +545,52 @@ def cmd_block(args: argparse.Namespace) -> None:
     )
 
 
+def call_formula_on_session(
+    tq: Any,
+    runtime_formula: str,
+    symbol: str,
+    count: int,
+    resolved_kind: str,
+    resolved_dividend: int,
+) -> Any:
+    """Execute one formula using an already initialized TQ session."""
+    normalized = symbol_suffix(symbol)
+    if resolved_kind == "xg":
+        return tq.formula_process_mul_xg(
+            runtime_formula,
+            stock_list=[normalized],
+            count=0,
+            dividend_type=resolved_dividend,
+        )
+    if runtime_formula == "庄家资金监控":
+        setup = tq.formula_set_data_info(
+            normalized,
+            count=count,
+            dividend_type=resolved_dividend,
+        )
+        if str(setup.get("ErrorId")) != "0":
+            return {
+                "ErrorId": str(setup.get("ErrorId", "1")),
+                "Error": f"formula_set_data_info failed: {setup}",
+            }
+        direct = tq.formula_zb(runtime_formula, normalized.split(".", 1)[0], xsflag=2)
+        if (
+            isinstance(direct, dict)
+            and str(direct.get("ErrorId")) == "0"
+            and isinstance(direct.get("Value"), dict)
+            and direct.get("Value")
+        ):
+            return {normalized: direct["Value"], "ErrorId": "0"}
+        return direct
+    return tq.formula_process_mul_zb(
+        runtime_formula,
+        stock_list=[normalized],
+        count=count,
+        return_date=False,
+        dividend_type=resolved_dividend,
+    )
+
+
 def tq_formula(formula: str, symbol: str, count: int, kind: str | None = None, dividend_type: int | None = None) -> dict[str, Any]:
     start = time.perf_counter()
     stdout_log = io.StringIO()
@@ -527,39 +616,14 @@ def tq_formula(formula: str, symbol: str, count: int, kind: str | None = None, d
                 for attempt_index in range(3):
                     tq, init_path = load_tq()
                     try:
-                        if resolved_kind == "xg":
-                            result = tq.formula_process_mul_xg(runtime_formula, stock_list=[symbol_suffix(symbol)], count=0, dividend_type=resolved_dividend)
-                        elif runtime_formula == "庄家资金监控":
-                            setup = tq.formula_set_data_info(
-                                symbol_suffix(symbol),
-                                count=count,
-                                dividend_type=resolved_dividend,
-                            )
-                            if str(setup.get("ErrorId")) != "0":
-                                result = {
-                                    "ErrorId": str(setup.get("ErrorId", "1")),
-                                    "Error": f"formula_set_data_info failed: {setup}",
-                                }
-                            else:
-                                direct = tq.formula_zb(
-                                    runtime_formula,
-                                    symbol_suffix(symbol).split(".", 1)[0],
-                                    xsflag=2,
-                                )
-                                if (
-                                    isinstance(direct, dict)
-                                    and str(direct.get("ErrorId")) == "0"
-                                    and isinstance(direct.get("Value"), dict)
-                                    and direct.get("Value")
-                                ):
-                                    result = {
-                                        symbol_suffix(symbol): direct["Value"],
-                                        "ErrorId": "0",
-                                    }
-                                else:
-                                    result = direct
-                        else:
-                            result = tq.formula_process_mul_zb(runtime_formula, stock_list=[symbol_suffix(symbol)], count=count, return_date=False, dividend_type=resolved_dividend)
+                        result = call_formula_on_session(
+                            tq,
+                            runtime_formula,
+                            symbol,
+                            count,
+                            resolved_kind,
+                            resolved_dividend,
+                        )
                     finally:
                         if hasattr(tq, "_release"):
                             tq._release()
@@ -589,7 +653,85 @@ def tq_formula(formula: str, symbol: str, count: int, kind: str | None = None, d
         "elapsed_ms": round((time.perf_counter() - start) * 1000, 3),
     }
     if error:
-        payload["error"] = error
+        tdx_process = detect_tdx_process()
+        payload["tdx_process"] = tdx_process
+        payload["client_open_required"] = not bool(tdx_process.get("running"))
+        payload["error"] = error if not payload["client_open_required"] else (
+            error if str(error).startswith(tdx_open_hint()) else f"{tdx_open_hint()} 原始原因：{error}"
+        )
+        payload["action"] = tdx_open_hint() if payload["client_open_required"] else "请确认通达信已登录且没有其他 TQ 任务占用连接，然后重试。"
+    stdout_text = stdout_log.getvalue().strip()
+    stderr_text = stderr_log.getvalue().strip()
+    if stdout_text:
+        payload["tq_stdout"] = stdout_text
+    if stderr_text:
+        payload["tq_stderr"] = stderr_text
+    return payload
+
+
+def tq_formula_on_session(
+    formula: str,
+    symbol: str,
+    count: int,
+    tq: Any,
+    init_path: Path,
+    lock_waited_ms: float = 0.0,
+) -> dict[str, Any]:
+    """Build one formula receipt without reopening TQ.
+
+    The original five-formula command initialized and closed the TQ worker once
+    per formula. On a slower client that added roughly 2-6 seconds per formula
+    and made a page request appear to hang for 27 seconds. The fast path keeps
+    one lock and one initialized worker for the complete five-formula receipt.
+    """
+    start = time.perf_counter()
+    registry = formula_registry()["formulas"]
+    known = next((item for item in registry if item["name"] == formula), {})
+    meta = CORE_FORMULAS.get(formula, {})
+    resolved_kind = str(meta.get("kind") or known.get("kind") or ("xg" if "选股" in formula else "zb"))
+    resolved_dividend = int(meta.get("dividend_type", known.get("dividend_type", 0)) or 0)
+    runtime_formula = str(meta.get("call_name") or known.get("call_name") or formula)
+    stdout_log = io.StringIO()
+    stderr_log = io.StringIO()
+    result: Any = {}
+    error: str | None = None
+    try:
+        with contextlib.redirect_stdout(stdout_log), contextlib.redirect_stderr(stderr_log):
+            result = call_formula_on_session(
+                tq,
+                runtime_formula,
+                symbol,
+                count,
+                resolved_kind,
+                resolved_dividend,
+            )
+    except Exception as exc:
+        error = str(exc)
+    ok = bool(result) and isinstance(result, dict) and str(result.get("ErrorId", "0")) == "0"
+    payload: dict[str, Any] = {
+        "ok": ok,
+        "formula": formula,
+        "tq_formula": runtime_formula,
+        "kind": resolved_kind,
+        "symbol": symbol_suffix(symbol),
+        "count": count,
+        "init_path": str(init_path),
+        "registered": bool(known),
+        "registry_path": known.get("path"),
+        "result": result,
+        "attempts": [{"attempt": 1, "ok": ok, "empty": not bool(result)}],
+        "lock_waited_ms": lock_waited_ms,
+        "session_reused": True,
+        "elapsed_ms": round((time.perf_counter() - start) * 1000, 3),
+    }
+    if error:
+        tdx_process = detect_tdx_process()
+        payload["tdx_process"] = tdx_process
+        payload["client_open_required"] = not bool(tdx_process.get("running"))
+        payload["error"] = error if not payload["client_open_required"] else (
+            error if str(error).startswith(tdx_open_hint()) else f"{tdx_open_hint()} 原始原因：{error}"
+        )
+        payload["action"] = tdx_open_hint() if payload["client_open_required"] else "请确认通达信已登录且没有其他 TQ 任务占用连接，然后重试。"
     stdout_text = stdout_log.getvalue().strip()
     stderr_text = stderr_log.getvalue().strip()
     if stdout_text:
@@ -609,31 +751,91 @@ def cmd_formula(args: argparse.Namespace) -> None:
 
 def cmd_five(args: argparse.Namespace) -> None:
     start = time.perf_counter()
-    items = []
-    for formula in ["大牛线4.0", "飞龙在天", "游资资金监控", "机构资金监控", "庄家资金监控"]:
-        meta = CORE_FORMULAS[formula]
-        try:
-            item = tq_formula(formula, args.symbol, int(meta["count"]), "zb", int(meta["dividend_type"]))
-            item["required"] = bool(meta.get("required", True))
-            item["reserved"] = bool(meta.get("reserved", False))
-            items.append(item)
-        except Exception as exc:
+    formulas = ["大牛线4.0", "飞龙在天", "游资资金监控", "机构资金监控", "庄家资金监控"]
+    items: list[dict[str, Any]] = []
+    stdout_log = io.StringIO()
+    stderr_log = io.StringIO()
+    tq = None
+    init_path: Path | None = None
+    lock_waited_ms = 0.0
+    shared_error = ""
+    try:
+        # One process-level lock and one initialized TQ session for all five
+        # formulas. This keeps formula semantics unchanged while removing four
+        # repeated worker handshakes from every stock-page request.
+        with TQLock() as lock:
+            lock_waited_ms = lock.waited_ms
+            with contextlib.redirect_stdout(stdout_log), contextlib.redirect_stderr(stderr_log):
+                tq, init_path = load_tq()
+                for formula in formulas:
+                    meta = CORE_FORMULAS[formula]
+                    item = tq_formula_on_session(
+                        formula,
+                        args.symbol,
+                        int(meta["count"]),
+                        tq,
+                        init_path,
+                        lock_waited_ms,
+                    )
+                    item["required"] = bool(meta.get("required", True))
+                    item["reserved"] = bool(meta.get("reserved", False))
+                    items.append(item)
+    except Exception as exc:
+        shared_error = str(exc)
+    finally:
+        if tq is not None:
+            try:
+                if hasattr(tq, "_release"):
+                    tq._release()
+                else:
+                    tq.close()
+            except Exception:
+                pass
+    if shared_error:
+        tdx_process = detect_tdx_process()
+        client_open_required = not bool(tdx_process.get("running"))
+        action = tdx_open_hint() if client_open_required else "请确认通达信已登录且没有其他 TQ 任务占用连接，然后重试。"
+        error_text = shared_error if not client_open_required else (
+            shared_error if shared_error.startswith(tdx_open_hint()) else f"{tdx_open_hint()} 原始原因：{shared_error}"
+        )
+        for formula in formulas:
+            meta = CORE_FORMULAS[formula]
             items.append({
                 "ok": False,
                 "formula": formula,
-                "error": str(exc),
+                "tq_formula": meta.get("call_name", formula),
+                "symbol": symbol_suffix(args.symbol),
+                "error": error_text,
+                "action": action,
+                "tdx_process": tdx_process,
+                "client_open_required": client_open_required,
                 "required": bool(meta.get("required", True)),
                 "reserved": bool(meta.get("reserved", False)),
+                "lock_waited_ms": lock_waited_ms,
             })
     failed = [item.get("formula") for item in items if not item.get("ok") and item.get("required", True)]
     ok = not failed
+    failed_items = [item for item in items if not item.get("ok")]
+    client_open_required = any(bool(item.get("client_open_required")) for item in failed_items)
+    tdx_process = detect_tdx_process()
+    stdout_text = stdout_log.getvalue().strip()
+    stderr_text = stderr_log.getvalue().strip()
     emit(
         {
             "ok": ok,
             "symbol": symbol_suffix(args.symbol),
+            "tdx_root": str(TDX_ROOT),
+            "tq_init_path": str(init_path) if init_path else None,
             "items": items,
             "failed_formulas": failed,
+            "tdx_process": tdx_process,
+            "client_open_required": client_open_required,
+            "action": tdx_open_hint() if client_open_required else ("请确认通达信已登录且没有其他 TQ 任务占用连接，然后重试。" if failed else ""),
             "reserved_failed_formulas": [],
+            "lock_waited_ms": lock_waited_ms,
+            "session_reused": bool(items) and not shared_error,
+            "tq_stdout": stdout_text[-2000:] if stdout_text else "",
+            "tq_stderr": stderr_text[-2000:] if stderr_text else "",
             "elapsed_ms": round((time.perf_counter() - start) * 1000, 3),
         },
         0 if ok else 2,
@@ -709,7 +911,13 @@ def _batch_formula(formula: str, symbols: list[str], count: int, dividend_type: 
         "elapsed_ms": round((time.perf_counter() - start) * 1000, 3),
     }
     if error:
-        payload["error"] = error
+        tdx_process = detect_tdx_process()
+        payload["tdx_process"] = tdx_process
+        payload["client_open_required"] = not bool(tdx_process.get("running"))
+        payload["error"] = error if not payload["client_open_required"] else (
+            error if str(error).startswith(tdx_open_hint()) else f"{tdx_open_hint()} 原始原因：{error}"
+        )
+        payload["action"] = tdx_open_hint() if payload["client_open_required"] else "请确认通达信已登录且没有其他 TQ 任务占用连接，然后重试。"
     stdout_text = stdout_log.getvalue().strip()
     stderr_text = stderr_log.getvalue().strip()
     if stdout_text:

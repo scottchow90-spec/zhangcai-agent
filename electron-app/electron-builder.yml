@@ -1,0 +1,107 @@
+appId: com.zhangcai.agent
+productName: 掌财桌面端
+artifactName: ${productName}-${version}-${arch}.${ext}
+asar: true
+compression: store
+npmRebuild: false
+# Main installer policy: the independent data pack is never a build input.
+# Only the small formula seed below is embedded; the verified baseline runtime
+# is embedded alongside the program and reused by later program updates.
+directories:
+  output: dist-installer/releases/0.1.18
+  buildResources: electron-app/resources
+files:
+  - package.json
+  - electron-app/main.mjs
+  - electron-app/preload.cjs
+  - electron-app/runtime-ports.mjs
+  - '!**/node_modules/**/*'
+extraResources:
+  # The pinned runtime staging is a verified, reusable build cache. These
+  # mappings put that same runtime into the one-shot 0.1.18 main installer;
+  # stage-desktop-runtime.ps1 reuses the files instead of rebuilding them.
+  - from: packaging/staging/desktop-runtime/app-node-modules
+    to: app/node_modules
+    filter:
+      - '**/*'
+  - from: .runtime/node/node.exe
+    to: runtime/node/node.exe
+  - from: packaging/staging/desktop-runtime/python
+    to: runtime/python
+    filter:
+      - '**/*'
+  - from: packaging/staging/desktop-runtime/manifest.json
+    to: runtime/environment-manifest.json
+  - from: packaging/staging/desktop-runtime/environment-version.ini
+    to: runtime/environment-version.ini
+  - from: harness-headless.patch.yml
+    to: app/harness-headless.patch.yml
+  - from: packaging/staging/desktop-runtime/deepseek-harness
+    to: deepseek-harness
+    filter:
+      - '**/*'
+  # electron-builder excludes root node_modules by default; map Harness's
+  # private dependencies explicitly so the embedded bridge is self-contained.
+  - from: packaging/staging/desktop-runtime/deepseek-harness/node_modules
+    to: deepseek-harness/node_modules
+    filter:
+      - '**/*'
+  # Built from a slim isolated source tree; do not replace the live web dist.
+  - from: packaging/staging/site-build-0.1.18/dist
+    to: app/dist
+  - from: agent-server.mjs
+    to: app/agent-server.mjs
+  - from: scripts
+    to: app/scripts
+    filter:
+      - '**/*'
+      - '!**/__pycache__/**'
+      - '!**/*.pyc'
+      - '!**/*.pyo'
+      - '!**/tests/**'
+      - '!test-*.mjs'
+      - '!**/*.bak-*'
+      - '!**/.DS_Store'
+  - from: harness-skills
+    to: app/harness-skills
+    filter:
+      - '**/*'
+      - '!**/__pycache__/**'
+      - '!**/*.pyc'
+      - '!**/*.pyo'
+      - '!**/tests/**'
+      - '!**/*.bak-*'
+      - '!**/.DS_Store'
+  - from: config
+    to: app/config
+  - from: packaging/dependency-manifest.json
+    to: app/dependency-manifest.json
+  - from: lib
+    to: app/lib
+  - from: public
+    to: app/public
+  - from: electron-app/resource-library
+    to: resource-library
+    filter:
+      - '**/*'
+      - '!**/*.lc5'
+      - '!**/*.LC5'
+  - from: packaging/runtime-app-package.json
+    to: app/package.json
+win:
+  icon: electron-app/resources/zhangcai-icon.ico
+  target:
+    - target: nsis
+      arch:
+        - x64
+nsis:
+  include: electron-app/nsis/tdx-selection.nsh
+  installerIcon: electron-app/resources/installer-icon.ico
+  installerHeaderIcon: electron-app/resources/installer-icon.ico
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: always
+  createStartMenuShortcut: true
+  deleteAppDataOnUninstall: false
+  runAfterFinish: true

@@ -37,8 +37,16 @@ from docx.oxml.ns import qn
 from docx.shared import Cm, Pt, RGBColor
 
 
-TDX_ROOT = Path(r"C:\new_tdx_mock")
 SKILL_DIR = Path(__file__).resolve().parent.parent
+# The packaged desktop passes the user-selected TDX directory through the
+# environment. Keep the development default behind an explicit variable so a
+# copied EXE never silently reads C:\\new_tdx_mock on another computer.
+_configured_tdx_root = (
+    os.environ.get("ZHANGCAI_TDX_ROOT")
+    or os.environ.get("TDX_ROOT")
+    or os.environ.get("ZHANGCAI_DEV_TDX_ROOT", r"C:\\new_tdx_mock")
+).strip()
+TDX_ROOT = Path(_configured_tdx_root).expanduser().resolve()
 
 
 def runtime_home(skill_dir: Path) -> Path:

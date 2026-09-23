@@ -15,15 +15,27 @@ import struct
 import sys
 from pathlib import Path
 
-# ═══════════════════════════════════════════════════════════════
-# K线数据源硬闸（2026-05-28）：只允许 C:\new_tdx_mock
-# ═══════════════════════════════════════════════════════════════
-DEFAULT_ROOT = Path(r"C:\new_tdx_mock")
-_REQUIRED_ROOT = Path(r"C:\new_tdx_mock")
-if not _REQUIRED_ROOT.exists():
-    print(json.dumps({"ok": False, "error": "KLINE_DATA_SOURCE_BLOCKED: C:\\new_tdx_mock does not exist", "gate": "tdx_local_data.py::D-drive-check"}, ensure_ascii=False), file=sys.stderr)
-    sys.exit(73)
-DEFAULT_ROOTS = [("tdxmoni_raw", DEFAULT_ROOT)]
+# The old migrated copy enforced the developer machine's C: path.  The EXE
+# supplies the selected client directory through these aliases; keep the C:
+# default only for an explicit development invocation.
+_tdx_root_text = (
+    os.environ.get("ZHANGCAI_TDX_ROOT")
+    or os.environ.get("TDX_ROOT")
+    or os.environ.get("TDX_ROOTS")
+    or ""
+).strip()
+_packaged_runtime = os.environ.get("ZHANGCAI_PACKAGED") == "1"
+DEFAULT_ROOT = Path(
+    _tdx_root_text
+    or (
+        Path(os.environ.get("ZHANGCAI_DATA_DIR", Path.cwd()))
+        / "runtime"
+        / "__tdx_root_not_configured__"
+        if _packaged_runtime
+        else os.environ.get("ZHANGCAI_DEV_TDX_ROOT", r"C:\new_tdx_mock")
+    )
+).expanduser().resolve()
+DEFAULT_ROOTS = [("tdx_selected", DEFAULT_ROOT)]
 DAY_RECORD = struct.Struct("<IIIIIfII")
 LC5_RECORD = struct.Struct("<HHfffffII")
 
@@ -36,7 +48,6 @@ def json_out(payload: object) -> None:
 
 
 def parse_roots(root_arg: str | None) -> list[tuple[str, Path]]:
-    _REQUIRED_ROOT = Path(r"C:\new_tdx_mock")
     if not root_arg or root_arg == "auto":
         return DEFAULT_ROOTS
     items: list[tuple[str, Path]] = []
@@ -49,9 +60,6 @@ def parse_roots(root_arg: str | None) -> list[tuple[str, Path]]:
         else:
             label, path_str = f"root{index + 1}", raw_item
         p = Path(path_str.strip())
-        if p.resolve() != _REQUIRED_ROOT.resolve():
-            json_out({"ok": False, "error": f"KLINE_DATA_SOURCE_BLOCKED: --root must be {_REQUIRED_ROOT}, got {p}", "gate": "tdx_local_data.py::parse_roots"})
-            sys.exit(73)
         items.append((label.strip() or f"root{index + 1}", p))
     return items or DEFAULT_ROOTS
 

@@ -27,7 +27,21 @@ from typing import Any
 
 APP_ROOT = Path(os.environ.get("ZHANGCAI_APP_ROOT", Path(__file__).resolve().parents[1]))
 DATA_ROOT = Path(os.environ.get("ZHANGCAI_DATA_DIR", APP_ROOT / "app-data"))
-TDX_ROOT = Path(os.environ.get("ZHANGCAI_TDX_ROOT", r"C:\new_tdx_mock"))
+_tdx_root_text = (
+    os.environ.get("ZHANGCAI_TDX_ROOT")
+    or os.environ.get("TDX_ROOT")
+    or ""
+).strip()
+_packaged_runtime = os.environ.get("ZHANGCAI_PACKAGED") == "1"
+# Path("") resolves to the process working directory. In the packaged EXE
+# that made an unset TDX directory look like the resource-library root and
+# allowed a status probe to overwrite a valid portable formula package with a
+# missing manifest. Keep an explicit, impossible sentinel instead.
+TDX_ROOT = Path(_tdx_root_text) if _tdx_root_text else (
+    Path(os.environ.get("ZHANGCAI_DEV_TDX_ROOT", r"C:\new_tdx_mock"))
+    if not _packaged_runtime
+    else DATA_ROOT / "runtime" / "__tdx_root_not_configured__"
+)
 CATALOG_PATH = APP_ROOT / "config" / "skill14-catalog.json"
 ARCHIVE_ROOT = Path(os.environ.get("ZHANGCAI_SKILL_ARCHIVE_DIR", APP_ROOT / "skill-archives"))
 MARKET_BASELINE_PATH = APP_ROOT / "lib" / "market.json"
@@ -77,6 +91,10 @@ def read_json(path: Path, default: Any = None) -> Any:
         return json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return default
+
+
+def tdx_root_available(root: Path = TDX_ROOT) -> bool:
+    return root.is_dir() and (root / "vipdoc").is_dir() and (root / "T0002").is_dir()
 
 
 def supplemental_stock_coverage(trade_date: str) -> dict[str, Any]:
@@ -248,6 +266,32 @@ def compact_trade_date(value: Any) -> str:
     return "".join(match.groups()) if match else ""
 
 
+def report_sort_timestamp(value: Any) -> float:
+    """Return a comparable timestamp for mixed legacy report date formats."""
+    text = str(value or "").strip()
+    if not text:
+        return 0.0
+    try:
+        parsed = datetime.fromisoformat(text.replace("Z", "+00:00"))
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=timezone.utc)
+        return parsed.timestamp()
+    except ValueError:
+        pass
+    digits = re.sub(r"\D", "", text)
+    if len(digits) >= 14:
+        try:
+            return datetime.strptime(digits[:14], "%Y%m%d%H%M%S").replace(tzinfo=timezone.utc).timestamp()
+        except ValueError:
+            pass
+    if len(digits) >= 8:
+        try:
+            return datetime.strptime(digits[:8], "%Y%m%d").replace(tzinfo=timezone.utc).timestamp()
+        except ValueError:
+            pass
+    return 0.0
+
+
 def known_market_trade_dates() -> list[str]:
     """Read dates already produced by the local market pipeline.
 
@@ -294,6 +338,9 @@ def known_market_trade_dates() -> list[str]:
 
 def expected_market_trade_date(daily: dict[str, Any] | None = None) -> str:
     """Return the latest locally observed analysis date, not wall-clock date."""
+    requested = compact_trade_date(os.environ.get("ZHANGCAI_DAILY_REQUESTED_TRADE_DATE", ""))
+    if requested:
+        return requested
     candidates = known_market_trade_dates()
     if isinstance(daily, dict):
         archive_date = compact_trade_date(daily.get("trade_date"))
@@ -303,30 +350,33 @@ def expected_market_trade_date(daily: dict[str, Any] | None = None) -> str:
 
 
 def daily_archive_freshness(daily: dict[str, Any] | None) -> dict[str, Any]:
-    """Verify that the TDX archive is complete for the current local date.
+    """Select the newest usable local daily source without requiring today's bar.
 
-    A status file with ``status=available`` only proves that *some* complete
-    historical archive exists.  It does not prove that it is the same date as
-    the latest market snapshot.  This gate keeps those two facts separate.
+    The bridge supplies the latest date physically present in the configured
+    Tongdaxin ``.day`` files.  Prefer that source when it is newer than the
+    resource-library archive, while retaining the archive as a fallback.  A
+    date mismatch or partial universe is reported as DEGRADED, not as a
+    missing daily-data gate; individual strategy contracts still validate
+    their own history length, symbol coverage, formulas, and other evidence.
     """
     value = daily if isinstance(daily, dict) else {}
     archive_date = compact_trade_date(value.get("trade_date"))
     expected_date = expected_market_trade_date(value)
     issues: list[str] = []
-    archive_file = str(value.get("file") or (f"market/daily/{archive_date}/tdx-bars.jsonl" if archive_date else ""))
+    archive_file = str(value.get("file") or ("market/daily/aggregate/tdx-bars.jsonl" if archive_date else ""))
     archive_path = DATA_ROOT / archive_file if archive_file else DATA_ROOT / "__missing__"
     day_manifest_path = DATA_ROOT / "market" / "daily" / archive_date / "manifest.json" if archive_date else DATA_ROOT / "__missing__"
     day_manifest = read_json(day_manifest_path, {})
 
-    if str(value.get("status") or "") != "available":
+    raw_status = str(value.get("status") or "missing")
+    if raw_status != "available":
         issues.append(f"TDX归档状态为 {value.get('status') or 'missing'}")
     if not archive_date:
         issues.append("权威归档没有 trade_date")
-    if expected_date and archive_date != expected_date:
-        issues.append(f"最新本地行情为 {expected_date}，TDX完整归档为 {archive_date or '无'}")
     if not archive_path.is_file() or archive_path.stat().st_size <= 0:
         issues.append(f"归档文件不存在或为空：{archive_file or '未声明'}")
-    if not isinstance(day_manifest, dict) or day_manifest.get("schema") != "ZHANGCAI_TDX_DAILY_ARCHIVE_V1":
+    manifest_valid = isinstance(day_manifest, dict) and day_manifest.get("schema") == "ZHANGCAI_TDX_DAILY_ARCHIVE_V1"
+    if not manifest_valid:
         issues.append(f"缺少 {archive_date or '目标日'} 的正式 manifest.json")
     else:
         if str(day_manifest.get("trade_date") or "") != archive_date:
@@ -336,23 +386,70 @@ def daily_archive_freshness(daily: dict[str, Any] | None) -> dict[str, Any]:
         if int(day_manifest.get("bar_records") or 0) != int(value.get("bar_records") or 0):
             issues.append("日目录 manifest 与权威状态的 bar_records 不一致")
     current_symbols = int(value.get("current_trade_date_symbols") or value.get("latest_date_source_files") or 0)
-    if current_symbols < 3000:
-        issues.append(f"目标日 TDX 证券覆盖不足 3000：{current_symbols}")
-
-    status = "available" if not issues else ("stale" if archive_date and archive_date != expected_date else "missing")
+    archive_usable = bool(
+        archive_date
+        and archive_path.is_file()
+        and archive_path.stat().st_size > 0
+        and manifest_valid
+        and str(day_manifest.get("trade_date") or "") == archive_date
+        and str(day_manifest.get("status") or "") == "available"
+        and int(value.get("bar_records") or day_manifest.get("bar_records") or 0) > 0
+        and int(value.get("archived_symbols") or day_manifest.get("archived_symbols") or 0) > 0
+    )
+    try:
+        live_symbols = max(0, int(os.environ.get("ZHANGCAI_TDX_LATEST_DAILY_SYMBOLS", "0") or 0))
+    except (TypeError, ValueError):
+        live_symbols = 0
+    live_date = compact_trade_date(os.environ.get("ZHANGCAI_TDX_LATEST_DAILY_DATE", ""))
+    live_root = str(os.environ.get("ZHANGCAI_TDX_ROOT") or os.environ.get("TDX_ROOT") or "").strip()
+    live_usable = bool(live_date and live_symbols > 0 and live_root)
+    use_live = live_usable and (not archive_usable or live_date > archive_date)
+    selected_date = live_date if use_live else archive_date if archive_usable else ""
+    selected_source = "tdx_live_day_files" if use_live else "resource_library_archive" if archive_usable else ""
+    selected_symbols = live_symbols if use_live else current_symbols if archive_usable else 0
+    coverage_complete = selected_symbols >= 3000
+    date_mismatch = bool(expected_date and selected_date and selected_date != expected_date)
+    archive_behind = bool(use_live and archive_date and live_date > archive_date)
+    if not selected_date:
+        status = "missing"
+        reason = "；".join(issues) or "没有可用的本地日线文件或归档。"
+    else:
+        if date_mismatch:
+            issues.append(f"请求日线 {expected_date} 尚未落盘，实际使用最新可用日线 {selected_date}")
+        if archive_behind:
+            issues.append(f"resource-library 归档截至 {archive_date}；本次优先读取通达信本地日线 {live_date}")
+        if not coverage_complete:
+            issues.append(f"当前日线覆盖 {selected_symbols} 个证券；全市场范围仍需由策略自身的数据契约校验")
+        # A live TDX file set is not the same thing as a refreshed unified
+        # archive. Keep that distinction visible even when the selected date
+        # matches the requested trading date.
+        status = "degraded" if date_mismatch or archive_behind or not coverage_complete or use_live else "available"
+        reason = "；".join(issues) if status == "degraded" else ""
     return {
         "status": status,
+        "usable": bool(selected_date),
         "expected_trade_date": expected_date,
         "archive_trade_date": archive_date,
+        "requested_trade_date": expected_date,
+        "selected_trade_date": selected_date,
+        "fallback_trade_date": selected_date if date_mismatch or archive_behind else "",
+        "selected_source": selected_source,
+        "selected_source_root": live_root if use_live else str(DATA_ROOT),
+        "live_tdx_trade_date": live_date,
+        "live_tdx_symbol_count": live_symbols,
+        "archive_usable": archive_usable,
+        "archive_current_trade_date_symbols": current_symbols,
+        "coverage_complete": coverage_complete,
+        "selected_symbol_count": selected_symbols,
         "archive_file": archive_file,
         "manifest_path": f"market/daily/{archive_date}/manifest.json" if archive_date else "",
         "manifest_exists": day_manifest_path.is_file(),
         "file_exists": archive_path.is_file(),
-        "current_trade_date_symbols": current_symbols,
+        "current_trade_date_symbols": selected_symbols,
         "archived_symbols": int(value.get("archived_symbols") or 0),
         "bar_records": int(value.get("bar_records") or 0),
         "issues": issues,
-        "reason": "；".join(issues),
+        "reason": reason,
     }
 
 
@@ -367,7 +464,7 @@ def decorate_daily_asset(daily: Any) -> dict[str, Any]:
     value["freshness_status"] = freshness.get("status", "missing")
     value["freshness_reason"] = freshness.get("reason", "")
     value["freshness"] = freshness
-    if freshness["status"] != "available" and value.get("status") == "available":
+    if freshness.get("usable") and freshness["status"] == "degraded":
         value["status"] = "degraded"
         value["reason"] = freshness.get("reason") or "归档日期与当前本地行情不一致。"
     return value
@@ -421,7 +518,7 @@ def write_local_data_page(assets: dict[str, Any] | None = None) -> dict[str, Any
     daily_freshness = daily_archive_freshness(daily_manifest if isinstance(daily_manifest, dict) else {})
     trade_date = str(daily_manifest.get("trade_date") or "") if isinstance(daily_manifest, dict) else ""
     date_folder = trade_date or "<trade-date>"
-    daily_file = str(daily_manifest.get("file") or f"market/daily/{date_folder}/tdx-bars.jsonl") if isinstance(daily_manifest, dict) else f"market/daily/{date_folder}/tdx-bars.jsonl"
+    daily_file = str(daily_manifest.get("file") or "market/daily/aggregate/tdx-bars.jsonl") if isinstance(daily_manifest, dict) else "market/daily/aggregate/tdx-bars.jsonl"
     daily_manifest_file = f"market/daily/{date_folder}/manifest.json"
     aggregate_rel = "market/daily/aggregate/tdx-bars.jsonl"
     aggregate_path = DATA_ROOT / aggregate_rel
@@ -527,6 +624,10 @@ def write_local_data_page(assets: dict[str, Any] | None = None) -> dict[str, Any
             "archive_status": daily_manifest.get("status", "missing") if isinstance(daily_manifest, dict) else "missing",
             "freshness_status": daily_freshness.get("status", "missing"),
             "expected_trade_date": daily_freshness.get("expected_trade_date", ""),
+            "requested_trade_date": daily_freshness.get("requested_trade_date", ""),
+            "selected_trade_date": daily_freshness.get("selected_trade_date", ""),
+            "fallback_trade_date": daily_freshness.get("fallback_trade_date", ""),
+            "usable": daily_freshness.get("usable", False),
             "freshness_reason": daily_freshness.get("reason", ""),
             "path": paths["tdx_daily_history"],
             "manifest": paths["tdx_daily_manifest"],
@@ -677,8 +778,8 @@ def rebuild_daily_data_index_from_archive(trade_date: str) -> dict[str, Any]:
         return {"status": "error", "date": trade_date, "reason": f"{type(error).__name__}: {error}"}
 
 
-def iter_day_records_after(path: Path, after_date: str):
-    """Yield every valid TDX record newer than after_date.
+def iter_day_records_after(path: Path, after_date: str | None = None):
+    """Yield valid TDX records after ``after_date`` or the whole file.
 
     TDX .day records are fixed 32-byte rows sorted by date.  A binary search
     finds the first row after the last archived date, so a missed weekend or
@@ -687,27 +788,87 @@ def iter_day_records_after(path: Path, after_date: str):
     """
     try:
         with path.open("rb") as source:
-            record_count = source.seek(0, os.SEEK_END) // 32
-            low, high = 0, record_count
-            while low < high:
-                middle = (low + high) // 2
-                source.seek(middle * 32)
-                raw = source.read(32)
-                if len(raw) != 32:
-                    high = middle
-                    continue
-                raw_date = str(int.from_bytes(raw[:4], "little"))
-                if raw_date <= after_date:
-                    low = middle + 1
-                else:
-                    high = middle
-            source.seek(low * 32)
+            if after_date:
+                record_count = source.seek(0, os.SEEK_END) // 32
+                low, high = 0, record_count
+                while low < high:
+                    middle = (low + high) // 2
+                    source.seek(middle * 32)
+                    raw = source.read(32)
+                    if len(raw) != 32:
+                        high = middle
+                        continue
+                    raw_date = str(int.from_bytes(raw[:4], "little"))
+                    if raw_date <= after_date:
+                        low = middle + 1
+                    else:
+                        high = middle
+                source.seek(low * 32)
+            else:
+                source.seek(0)
             while raw := source.read(32):
                 bar = parse_day_record(raw)
-                if bar and bar["date"] > after_date:
+                if bar and (not after_date or bar["date"] > after_date):
                     yield bar
     except OSError:
         return
+
+
+def read_jsonl_symbol_keys(path: Path) -> set[str]:
+    """Read only symbol keys from a legacy JSONL archive.
+
+    This is a one-time compatibility fallback for archives created before the
+    canonical-symbol list was written to the manifest.  It keeps only a few
+    thousand strings in memory and never materializes historical bars.
+    """
+    symbols: set[str] = set()
+    try:
+        with path.open("r", encoding="utf-8") as stream:
+            for line in stream:
+                try:
+                    value = json.loads(line)
+                except (TypeError, ValueError):
+                    continue
+                symbol = str(value.get("symbol") or "").strip().lower() if isinstance(value, dict) else ""
+                if symbol:
+                    symbols.add(symbol)
+    except OSError:
+        return set()
+    return symbols
+
+
+def minute_data_status() -> dict[str, Any]:
+    """Describe external LC5 availability without copying minute data.
+
+    LC5 is deliberately not an application data asset.  It remains in the
+    user-selected TDX directory and is read on demand only by skills that
+    declare an optional minute-data dependency.
+    """
+    files = []
+    total_bytes = 0
+    for market in ("sh", "sz", "bj"):
+        directory = TDX_ROOT / "vipdoc" / market / "fzline"
+        if not directory.is_dir():
+            continue
+        try:
+            for path in directory.glob("*.lc5"):
+                try:
+                    total_bytes += path.stat().st_size
+                    files.append(path)
+                except OSError:
+                    continue
+        except OSError:
+            continue
+    return {
+        "asset": "tdx_lc5_external",
+        "status": "available" if files else "missing",
+        "mode": "external_on_demand",
+        "packaged": False,
+        "source_root": str(TDX_ROOT),
+        "file_count": len(files),
+        "bytes": total_bytes,
+        "reason": "不写入 EXE；仅对声明需要分钟数据的技能按股票按需读取。" if files else "未发现外部 .lc5；普通日线任务不受影响，需要分钟特征的技能标记 DEGRADED。",
+    }
 
 
 def archive_daily(history_days: int) -> dict[str, Any]:
@@ -750,21 +911,65 @@ def archive_daily(history_days: int) -> dict[str, Any]:
     # Keep the fast lookup index in lockstep with the exact source files used
     # by this archive run.  The old index could remain at an earlier date even
     # after .day files had advanced, which made the fallback layer misleading.
+    previous_symbol_index = read_json(DATA_ROOT / "market" / "daily" / "index" / "tdx-symbol-index.json", {})
     symbol_index = rebuild_tdx_symbol_index(files, latest_records)
     daily_root = DATA_ROOT / "market" / "daily" / trade_date
     daily_root.mkdir(parents=True, exist_ok=True)
-    bars_file = daily_root / "tdx-bars.jsonl"
+    aggregate_file = DATA_ROOT / "market" / "daily" / "aggregate" / "tdx-bars.jsonl"
     previous_manifest = read_json(DATA_ROOT / "status" / "tdx-daily-history.json", {})
     previous_date = str(previous_manifest.get("trade_date") or "").replace("-", "") if isinstance(previous_manifest, dict) else ""
     previous_file_rel = str(previous_manifest.get("file") or "") if isinstance(previous_manifest, dict) else ""
     previous_bars_file = DATA_ROOT / previous_file_rel if previous_file_rel else None
+    canonical_rel = str(aggregate_file.relative_to(DATA_ROOT)).replace("\\", "/")
+    previous_canonical_file = (
+        aggregate_file
+        if previous_file_rel == canonical_rel and aggregate_file.is_file()
+        else previous_bars_file
+    )
     previous_bar_records = int(previous_manifest.get("bar_records") or 0) if isinstance(previous_manifest, dict) else 0
     previous_current_count = int(previous_manifest.get("current_trade_date_symbols") or 0) if isinstance(previous_manifest, dict) else 0
     previous_source_record_count = int(previous_manifest.get("source_record_count") or 0) if isinstance(previous_manifest, dict) else 0
     full_history_requested = history_days <= 0
     previous_history_days = int(previous_manifest.get("history_days_requested") or 0) if isinstance(previous_manifest, dict) else 0
     previous_archived_symbols = int(previous_manifest.get("archived_symbols") or 0) if isinstance(previous_manifest, dict) else 0
-    needs_history_expansion = full_history_requested and (previous_history_days > 0 or previous_archived_symbols < len(latest_records))
+    previous_archived_symbol_keys = {
+        str(value).strip().lower()
+        for value in (previous_manifest.get("archived_symbol_keys") or [])
+        if str(value).strip()
+    } if isinstance(previous_manifest, dict) else set()
+    if not previous_archived_symbol_keys and isinstance(previous_symbol_index, dict):
+        previous_archived_symbol_keys = {
+            str(value).strip().lower()
+            for value in (previous_symbol_index.get("symbols") or {}).keys()
+            if str(value).strip()
+        }
+    if not previous_archived_symbol_keys and previous_canonical_file and previous_canonical_file.is_file():
+        previous_archived_symbol_keys = read_jsonl_symbol_keys(previous_canonical_file)
+    current_symbol_keys = {
+        str(value).strip().lower()
+        for value in (symbol_index.get("symbols") or {}).keys()
+        if str(value).strip()
+    }
+    new_symbol_keys = sorted(current_symbol_keys - previous_archived_symbol_keys)
+    previous_source_symbols = previous_symbol_index.get("symbols", {}) if isinstance(previous_symbol_index, dict) else {}
+    current_source_symbols = symbol_index.get("symbols", {}) if isinstance(symbol_index, dict) else {}
+    history_reconcile_reasons: list[str] = []
+    if previous_source_symbols and current_source_symbols:
+        removed_symbols = sorted(set(previous_source_symbols) - set(current_source_symbols))
+        if removed_symbols:
+            history_reconcile_reasons.append(f"source_symbols_removed:{len(removed_symbols)}")
+        for symbol in set(previous_source_symbols).intersection(current_source_symbols):
+            before = previous_source_symbols.get(symbol) or {}
+            after = current_source_symbols.get(symbol) or {}
+            if int(after.get("record_count") or 0) < int(before.get("record_count") or 0):
+                history_reconcile_reasons.append(f"source_record_count_decreased:{symbol}")
+                break
+            if str(after.get("first_date") or "") != str(before.get("first_date") or ""):
+                history_reconcile_reasons.append(f"source_first_date_changed:{symbol}")
+                break
+    if full_history_requested and previous_history_days > 0:
+        history_reconcile_reasons.append("history_window_expansion")
+    history_reconcile_required = bool(history_reconcile_reasons)
     archive_mode = "full_rebuild_all_history" if full_history_requested else "full_rebuild"
     incremental_from = ""
     incremental_records = 0
@@ -777,32 +982,32 @@ def archive_daily(history_days: int) -> dict[str, Any]:
     source_changed = bool(previous_source_record_count and previous_source_record_count != source_record_count)
 
     # 首次归档默认读取每个 .day 文件的全部可用历史（可用 --history-days
-    # 显式限制窗口）；之后只读取 .day 文件的新增尾记录。
-    # 旧归档保留在原交易日目录。新交易日使用一个稳定的 aggregate 文件保存
-    # 全量序列，同时在新交易日目录保存很小的 delta 文件，避免每天复制数 GB。
+    # 显式限制窗口）；之后只读取新增日期，新增证券只补自己的历史。
+    # canonical aggregate 是唯一的主库，交易日目录只保存 manifest 和 delta，
+    # 不再每天复制完整 tdx-bars.jsonl。
     can_increment = (
         isinstance(previous_manifest, dict)
         and previous_manifest.get("schema") == "ZHANGCAI_TDX_DAILY_ARCHIVE_V1"
-        and previous_bars_file is not None
-        and previous_bars_file.is_file()
+        and previous_canonical_file is not None
+        and previous_canonical_file.is_file()
         and previous_date
         and trade_date >= previous_date
-        and not needs_history_expansion
+        and not history_reconcile_required
     )
-    if can_increment and trade_date > previous_date:
-        aggregate_file = DATA_ROOT / "market" / "daily" / "aggregate" / "tdx-bars.jsonl"
+    if can_increment and (trade_date > previous_date or new_symbol_keys):
         aggregate_file.parent.mkdir(parents=True, exist_ok=True)
         if not aggregate_file.is_file():
-            shutil.copyfile(previous_bars_file, aggregate_file)
+            shutil.copyfile(previous_canonical_file, aggregate_file)
             incremental_base_file = previous_file_rel
         bars_file = aggregate_file
         delta_file = daily_root / "tdx-bars.jsonl"
         with bars_file.open("a", encoding="utf-8", newline="\n") as stream, delta_file.open("w", encoding="utf-8", newline="\n") as delta_stream:
             for market, path, latest in latest_records:
-                if latest["date"] <= previous_date:
-                    continue
                 symbol = path.stem.lower()
-                for bar in iter_day_records_after(path, previous_date):
+                if trade_date == previous_date and symbol not in new_symbol_keys:
+                    continue
+                after_date = None if symbol in new_symbol_keys else previous_date
+                for bar in iter_day_records_after(path, after_date):
                     line = json.dumps({"symbol": symbol, "market": market, **bar}, ensure_ascii=False) + "\n"
                     stream.write(line)
                     delta_stream.write(line)
@@ -810,16 +1015,25 @@ def archive_daily(history_days: int) -> dict[str, Any]:
                     incremental_dates.add(bar["date"])
         written = previous_bar_records + incremental_records
         covered_symbols = max(int(previous_manifest.get("archived_symbols") or 0), current_count)
-        archive_mode = "incremental_append"
+        archive_mode = "incremental_append_new_symbols" if new_symbol_keys else "incremental_append"
         incremental_from = previous_date
-    elif can_increment and trade_date == previous_date and previous_current_count == current_count and not source_changed and previous_bars_file is not None and previous_bars_file.is_file():
+    elif can_increment and trade_date == previous_date and previous_current_count == current_count and not source_changed and previous_canonical_file is not None and previous_canonical_file.is_file():
         # 同一交易日重复触发时保持原文件与哈希不变，避免无意义的全量重写。
-        bars_file = previous_bars_file
+        if not aggregate_file.is_file():
+            aggregate_file.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(previous_canonical_file, aggregate_file)
+            incremental_base_file = previous_file_rel
+        bars_file = aggregate_file
         written = previous_bar_records
         covered_symbols = int(previous_manifest.get("archived_symbols") or current_count)
-        archive_mode = "unchanged"
+        archive_mode = "migrated_to_canonical" if incremental_base_file else "unchanged"
     else:
-        with bars_file.open("w", encoding="utf-8", newline="\n") as stream:
+        # Reconcile into a sibling temporary file and atomically replace the
+        # canonical store.  A failed rebuild therefore cannot truncate the
+        # last known-good archive.
+        aggregate_file.parent.mkdir(parents=True, exist_ok=True)
+        rebuild_file = aggregate_file.with_name(f"{aggregate_file.name}.{uuid.uuid4().hex}.tmp")
+        with rebuild_file.open("w", encoding="utf-8", newline="\n") as stream:
             for market, path, latest in latest_records:
                 if not full_history_requested and latest["date"] != trade_date:
                     continue
@@ -839,6 +1053,8 @@ def archive_daily(history_days: int) -> dict[str, Any]:
                                 written += 1
                 except OSError:
                     continue
+        os.replace(rebuild_file, aggregate_file)
+        bars_file = aggregate_file
     security_root = DATA_ROOT / "market" / "security-master"
     security_root.mkdir(parents=True, exist_ok=True)
     security_file = security_root / f"{trade_date}.jsonl"
@@ -895,7 +1111,7 @@ def archive_daily(history_days: int) -> dict[str, Any]:
         "security_master_records": current_count,
         "security_master_named_records": named,
         "bar_records": written,
-        "file": str(bars_file.relative_to(DATA_ROOT)).replace("\\", "/"),
+        "file": canonical_rel,
         "sha256": str(previous_manifest.get("sha256") or "") if archive_mode == "unchanged" else sha256_file(bars_file),
         "archive_mode": archive_mode,
         "incremental_from": incremental_from,
@@ -908,12 +1124,17 @@ def archive_daily(history_days: int) -> dict[str, Any]:
         "latest_date_source_files": current_count,
         "source_record_count": source_record_count,
         "source_changed_since_previous": source_changed,
+        "source_change_mode": "history_reconcile" if history_reconcile_required else "append_only",
+        "history_reconcile_required": history_reconcile_required,
+        "history_reconcile_reasons": history_reconcile_reasons,
+        "new_symbol_keys": new_symbol_keys,
+        "archived_symbol_keys": sorted(current_symbol_keys),
         "symbol_index": "market/daily/index/tdx-symbol-index.json",
         "symbol_index_count": symbol_index.get("symbol_count", 0),
         "expected_trade_date": expected_date,
         "freshness_status": freshness_status,
         "freshness_reason": freshness_reason,
-        "storage_rule": "首次读取本地 .day 全部可用历史（或显式指定窗口）；后续交易日只向 market/daily/aggregate/tdx-bars.jsonl 追加新增记录，并在交易日目录保存 delta，历史目录和原文件保留。",
+        "storage_rule": "首次读取本地 .day 全部可用历史（或显式指定窗口）写入唯一 canonical aggregate；后续只追加新增日期，新增证券只补该证券历史，交易日目录只保存 manifest/delta；原始全量快照不再生成。",
         "reason": "" if current_count >= 3000 else "同日股票覆盖不足 3000，只能作为降级数据集。",
     }
     write_json(DATA_ROOT / "status" / "tdx-daily-history.json", manifest)
@@ -995,12 +1216,36 @@ def write_daily_archive_report(manifest: dict[str, Any], assets: dict[str, Any] 
     return str(json_path.relative_to(DATA_ROOT)).replace("\\", "/")
 
 
+def _formula_package_state() -> dict[str, Any]:
+    """Validate the portable formula mirror without touching the TDX source."""
+    archive_root = DATA_ROOT / "evidence" / "formulas" / "package"
+    manifest_path = archive_root / "manifest.json"
+    manifest = read_json(manifest_path, {})
+    required = manifest.get("required_files") if isinstance(manifest, dict) else None
+    required_files = [str(item).replace("\\", "/") for item in required] if isinstance(required, list) else list(FORMULA_SOURCE_RELATIVE_PATHS)
+    missing = [relative for relative in required_files if not (archive_root / relative).is_file()]
+    copied = [relative for relative in required_files if (archive_root / relative).is_file()]
+    return {
+        "status": "available" if required_files and not missing else ("degraded" if copied else "missing"),
+        "schema": manifest.get("schema", "") if isinstance(manifest, dict) else "",
+        "path": str(archive_root.relative_to(DATA_ROOT)).replace("\\", "/"),
+        "manifest_path": str(manifest_path.relative_to(DATA_ROOT)).replace("\\", "/"),
+        "required_files": required_files,
+        "copied_files": copied,
+        "missing_files": missing,
+        "source_root": manifest.get("source_root", "") if isinstance(manifest, dict) else "",
+        "archived_at": manifest.get("archived_at", "") if isinstance(manifest, dict) else "",
+    }
+
+
 def formula_status() -> dict[str, Any]:
     registry = TDX_ROOT / "T0002" / "PriLoc.dat"
     formula_dir = TDX_ROOT / "T0002" / "gs_bak"
     files = [path.name for path in formula_dir.glob("*.tn6")] if formula_dir.is_dir() else []
-    detected = registry.is_file() and bool(files)
+    live_tdx = tdx_root_available()
+    detected = live_tdx and registry.is_file() and bool(files)
     source_archive = archive_formula_sources()
+    package_state = _formula_package_state()
     receipt_root = DATA_ROOT / "evidence" / "formulas"
     receipt_files = sorted(receipt_root.rglob("*.json")) if receipt_root.is_dir() else []
     valid_receipts: list[tuple[Path, dict[str, Any]]] = []
@@ -1026,6 +1271,9 @@ def formula_status() -> dict[str, Any]:
     elif detected:
         status = "degraded"
         reason = "已发现公式文件与注册表，但尚无包含五公式完整成功结果的 TQ Worker 现场回执。"
+    elif source_archive.get("status") == "available":
+        status = "degraded"
+        reason = "数据包已包含完整公式镜像，但当前通达信目录未提供可核对的现场 TQ 回执；连接通达信并执行一次五公式校验后才可升级。"
     else:
         status = "missing"
         reason = "未发现可核对的 TQ 私有公式注册表或 .tn6 公式文件。"
@@ -1033,9 +1281,11 @@ def formula_status() -> dict[str, Any]:
         "status": status,
         "asset": "tdx_tq_formula",
         "checked_at": utc_now(),
-        "source_root": str(TDX_ROOT),
-        "registry": str(registry),
+        "source_root": str(TDX_ROOT) if live_tdx else "",
+        "registry": str(registry) if live_tdx else "",
         "formula_files": files,
+        "tdx_detected": detected,
+        "portable_package": package_state,
         "receipt_root": str(receipt_root),
         "receipt_count": len(receipt_files),
         "valid_receipt_count": len(valid_receipts),
@@ -1215,9 +1465,14 @@ def public_research_status() -> dict[str, Any]:
     dated_files = sum(1 for item in choices if item[4].get("claimed_date") == target_date and item[0] > 0)
     historical_fallback = False
     news_snapshot_count = len(choices)
-    if same_day_records > 0:
+    best_value = read_json(best[3], {}) if best else {}
+    fallback_kind = str(best_value.get("fallback_kind") or "") if isinstance(best_value, dict) else ""
+    if same_day_records > 0 and not fallback_kind:
         status = "available"
         reason = ""
+    elif same_day_records > 0 and fallback_kind:
+        status = "degraded"
+        reason = "仅有公开市场快照降级证据；它可供研究上下文引用，但不等同于同日新闻、公告或舆情原文。"
     elif files or choices:
         status = "degraded"
         reason = "已保存公开资讯响应，但目标交易日可用同日记录为 0 条，不能把空快照当作研究证据。"
@@ -1239,7 +1494,69 @@ def public_research_status() -> dict[str, Any]:
         "news_snapshot_count": news_snapshot_count,
         "selected_snapshot": selected_path,
         "historical_fallback": historical_fallback,
+        "fallback_kind": fallback_kind,
         "reason": reason,
+    }
+
+
+def build_public_research_fallback(public_snapshot: dict[str, Any], trade_date: str) -> dict[str, Any]:
+    """Build an explicit market-evidence fallback; never present it as news."""
+    if not isinstance(public_snapshot, dict):
+        return {}
+    sources = public_snapshot.get("sources") if isinstance(public_snapshot.get("sources"), dict) else {}
+    fetched_at = str(public_snapshot.get("fetchedAt") or public_snapshot.get("fetched_at") or utc_now())
+    records: list[dict[str, Any]] = []
+    for provider, value in sources.items():
+        if not isinstance(value, dict) or value.get("status") not in {"available", "partial"}:
+            continue
+        data = value.get("data") if isinstance(value.get("data"), dict) else {}
+        rows = data.get("records") if isinstance(data.get("records"), list) else data.get("pool")
+        if not isinstance(rows, list):
+            rows = data.get("diff") if isinstance(data.get("diff"), list) else []
+        kpi = data.get("kpi") if isinstance(data.get("kpi"), dict) else {}
+        count = len(rows)
+        if not count and not kpi:
+            continue
+        summary = {
+            "provider": provider,
+            "status": value.get("status"),
+            "record_count": count,
+            "kpi": kpi,
+            "source_url": value.get("url") or value.get("source_url") or "",
+        }
+        records.append({
+            "provider": "public_market",
+            "source": provider,
+            "title": f"Public market evidence fallback: {provider}",
+            "content": json.dumps(summary, ensure_ascii=False, separators=(",", ":")),
+            "source_timestamp": fetched_at,
+            "source_date": trade_date,
+            "kind": "market_snapshot",
+            "degraded": True,
+            "fallback_reason": "public_research source is unavailable; derived from the local public market snapshot only",
+            "record_count": count,
+            "source_url": summary["source_url"],
+        })
+    if not records:
+        return {}
+    return {
+        "schema": "ZHANGCAI_PUBLIC_RESEARCH_FALLBACK_V1",
+        "status": "degraded",
+        "fallback_kind": "public_market_snapshot",
+        "archived_at": utc_now(),
+        "source_date": trade_date,
+        "same_day_record_count": len(records),
+        "provider_counts": {"public_market": len(records)},
+        "historical_fallback": False,
+        "data_boundary": "Market-only public evidence. No news, announcement, sentiment or same-day article is inferred.",
+        "records": records,
+        "snapshot": {
+            "schema": "ZHANGCAI_PUBLIC_RESEARCH_FALLBACK_SNAPSHOT_V1",
+            "date": trade_date,
+            "source_date": trade_date,
+            "fetchedAt": fetched_at,
+            "records": records,
+        },
     }
 
 
@@ -1264,7 +1581,7 @@ def stage_public_snapshots() -> dict[str, Any]:
             staged[asset] = target
     if isinstance(news_snapshot, dict) and news_snapshot:
         target = DATA_ROOT / "evidence" / "public" / f"news-{trade_date}.json"
-        write_json(target, {
+        staged_value = {
             "schema": "ZHANGCAI_PUBLIC_NEWS_ARCHIVE_V1",
             "archived_at": utc_now(),
             "source_date": trade_date,
@@ -1273,8 +1590,25 @@ def stage_public_snapshots() -> dict[str, Any]:
             "provider_counts": news_stats.get("provider_counts", {}),
             "historical_fallback": False,
             "snapshot": news_snapshot,
-        })
+        }
+        write_json(target, staged_value)
+        # Stable alias consumed by both the web page and Harness. Keep the
+        # dated evidence file as the audit record and make the alias point to
+        # the same snapshot in the unified resource library.
+        write_json(DATA_ROOT / "evidence" / "public" / "latest.json", staged_value)
         staged["public_research"] = target
+    fallback = build_public_research_fallback(public_snapshot, trade_date)
+    if fallback:
+        fallback_target = DATA_ROOT / "evidence" / "public" / "fallback-latest.json"
+        write_json(fallback_target, fallback)
+        current_path = DATA_ROOT / "evidence" / "public" / "latest.json"
+        current = read_json(current_path, {})
+        current_stats = _news_snapshot_stats(current, trade_date)
+        current_is_real = isinstance(current, dict) and bool(current) and not current.get("fallback_kind") and current_stats.get("same_day", 0) > 0
+        if not current_is_real:
+            write_json(current_path, fallback)
+            staged["public_research"] = fallback_target
+        staged["public_research_fallback"] = fallback_target
     return staged
 
 
@@ -1314,6 +1648,38 @@ def security_master_status() -> dict[str, Any]:
 def archive_formula_sources() -> dict[str, Any]:
     """Mirror the safe TQ formula inputs into the writable app data root."""
     archive_root = DATA_ROOT / "evidence" / "formulas" / "package"
+    manifest_path = archive_root / "manifest.json"
+    existing = read_json(manifest_path, {})
+    # A packaged EXE may start before TDX is configured. Preserve a complete
+    # data-package mirror in that case; a health check must never destroy the
+    # last known-good formula inputs by copying from the resource-library cwd.
+    if not tdx_root_available():
+        package_state = _formula_package_state()
+        if package_state.get("status") in {"available", "degraded"}:
+            if isinstance(existing, dict) and existing:
+                preserved = dict(existing)
+                # Recompute status from the files, not a stale status field
+                # left by an earlier empty-root probe.
+                preserved["status"] = package_state["status"]
+                preserved["missing_files"] = package_state.get("missing_files", [])
+                # Persist the repaired view as the canonical resource-library
+                # manifest. Otherwise the Python preflight would see the
+                # files, while the Node bridge could still read an old
+                # `status=missing` value after a restart.
+                write_json(manifest_path, preserved)
+                return preserved
+            preserved = {
+                "schema": "ZHANGCAI_TDX_TQ_FORMULA_SOURCE_ARCHIVE_V1",
+                "path": str(archive_root.relative_to(DATA_ROOT)).replace("\\", "/"),
+                "required_files": package_state.get("required_files", []),
+                "copied_files": [{"path": item} for item in package_state.get("copied_files", [])],
+                "missing_files": package_state.get("missing_files", []),
+                "status": package_state.get("status", "degraded"),
+                "source_root": "",
+                "archived_at": package_state.get("archived_at", ""),
+            }
+            write_json(manifest_path, preserved)
+            return preserved
     copied: list[dict[str, Any]] = []
     missing: list[str] = []
     for relative in FORMULA_SOURCE_RELATIVE_PATHS:
@@ -1333,7 +1699,7 @@ def archive_formula_sources() -> dict[str, Any]:
     manifest = {
         "schema": "ZHANGCAI_TDX_TQ_FORMULA_SOURCE_ARCHIVE_V1",
         "archived_at": utc_now(),
-        "source_root": str(TDX_ROOT),
+        "source_root": str(TDX_ROOT) if tdx_root_available() else "",
         "path": str(archive_root.relative_to(DATA_ROOT)).replace("\\", "/"),
         "required_files": list(FORMULA_SOURCE_RELATIVE_PATHS),
         "copied_files": copied,
@@ -1357,8 +1723,10 @@ def update_status() -> dict[str, Any]:
         "path": "evidence/formulas/package/",
         "reason": "" if formula_archive.get("status") == "available" else "公式依赖镜像仍有缺项。",
     })
+    minute_data = minute_data_status()
     assets = {
         "tdx_daily_history": daily,
+        "tdx_lc5_external": minute_data,
         "tdx_tq_formula": formula,
         "tdx_formula_source_archive": formula_archive,
         "unified_source_manifest": file_asset_state("unified_source_manifest", DATA_ROOT / "evidence" / "sources" / "latest.json", "统一数据源落盘清单"),
@@ -1384,7 +1752,7 @@ def update_status() -> dict[str, Any]:
         "execution_evidence": public_asset_state("execution_evidence", DATA_ROOT / "reports" / "daily", "任务回执与报告"),
         "skill_packages": package_status(),
     }
-    value = {"schema": "ZHANGCAI_SKILL14_DATA_STATUS_V1", "checked_at": utc_now(), "data_root": str(DATA_ROOT), "assets": assets}
+    value = {"schema": "ZHANGCAI_SKILL14_DATA_STATUS_V1", "checked_at": utc_now(), "data_root": str(DATA_ROOT), "assets": assets, "minute_data": minute_data}
     data_page = write_local_data_page(assets)
     value["local_data_page"] = {
         "path": "harness/context/local-data-page.json",
@@ -1438,16 +1806,45 @@ def write_preflight(skill_id: str) -> dict[str, Any]:
     assets = current["assets"]
     required_missing = [asset for asset in spec.get("required", []) if assets.get(asset, {}).get("status") != "available"]
     optional_missing = [asset for asset in spec.get("optional", []) if assets.get(asset, {}).get("status") != "available"]
+    minute_spec = spec.get("minute_data") if isinstance(spec.get("minute_data"), dict) else {}
+    minute_mode = str(minute_spec.get("mode") or "not_required")
+    minute_data = current.get("minute_data") if isinstance(current.get("minute_data"), dict) else minute_data_status()
+    minute_degraded = []
+    resource_degraded = []
+    # A complete portable formula mirror is usable as a resource-library
+    # dependency even when a live TDX/TQ worker has not yet produced a current
+    # receipt. Keep the run explicitly DEGRADED instead of reporting the whole
+    # tdx_tq_formula asset as missing; live formula freshness remains visible.
+    formula_asset = assets.get("tdx_tq_formula", {}) if isinstance(assets.get("tdx_tq_formula"), dict) else {}
+    portable_formula = formula_asset.get("portable_package", {}) if isinstance(formula_asset.get("portable_package"), dict) else {}
+    if "tdx_tq_formula" in required_missing and portable_formula.get("status") == "available":
+        required_missing = [item for item in required_missing if item != "tdx_tq_formula"]
+        resource_degraded.append("tdx_tq_formula@live_receipt")
+    if minute_mode == "optional_degraded" and minute_data.get("status") != "available":
+        minute_degraded.append("minute_data@external_tdx_lc5")
     daily_gate = assets.get("tdx_daily_history", {}).get("freshness", {}) if isinstance(assets.get("tdx_daily_history"), dict) else {}
-    if "tdx_daily_history" in spec.get("required", []) and daily_gate.get("status") != "available":
-        # Replace the generic asset name with an actionable, date-specific
-        # missing item.  A historical archive can exist while the requested
-        # current trading day is still absent.
-        required_missing = [item for item in required_missing if item != "tdx_daily_history"]
-        target = str(daily_gate.get("expected_trade_date") or "unknown")
-        required_missing.append(f"tdx_daily_history@{target}")
-    status = "BLOCKED" if required_missing else ("DEGRADED" if optional_missing else "READY_FOR_VALIDATED_RUN")
-    date = str(daily_gate.get("expected_trade_date") or assets.get("tdx_daily_history", {}).get("trade_date") or datetime.now().strftime("%Y%m%d"))
+    daily_usable = bool(daily_gate.get("usable")) or daily_gate.get("status") == "available"
+    daily_degraded = daily_gate.get("status") == "degraded" and daily_usable
+    if "tdx_daily_history" in spec.get("required", []):
+        if daily_usable:
+            # The selected local TDX day or a prior resource-library archive
+            # is a valid degraded input. Do not turn a newer requested date
+            # into a hard gate such as tdx_daily_history@20260922.
+            required_missing = [item for item in required_missing if item != "tdx_daily_history"]
+            if daily_degraded:
+                selected = str(daily_gate.get("selected_trade_date") or daily_gate.get("archive_trade_date") or "unknown")
+                source = str(daily_gate.get("selected_source") or "local daily source")
+                resource_degraded.append(f"tdx_daily_history@{selected} ({source})")
+        else:
+            # Only a missing/incomplete archive is a hard gate.  A historical
+            # archive that passes coverage and manifest checks is handled by
+            # the degraded branch above.
+            required_missing = [item for item in required_missing if item != "tdx_daily_history"]
+            target = str(daily_gate.get("expected_trade_date") or "unknown")
+            required_missing.append(f"tdx_daily_history@{target}")
+    status = "BLOCKED" if required_missing else ("DEGRADED" if optional_missing or minute_degraded or resource_degraded else "READY_FOR_VALIDATED_RUN")
+    requested_date = str(daily_gate.get("requested_trade_date") or daily_gate.get("expected_trade_date") or "")
+    date = str(daily_gate.get("selected_trade_date") or daily_gate.get("archive_trade_date") or requested_date or assets.get("tdx_daily_history", {}).get("trade_date") or datetime.now().strftime("%Y%m%d"))
     report_id = f"{datetime.now().strftime('%Y%m%d-%H%M%S')}-{skill_id}-{uuid.uuid4().hex[:8]}"
     report_root = DATA_ROOT / "reports" / "daily" / date
     evidence = {
@@ -1459,11 +1856,22 @@ def write_preflight(skill_id: str) -> dict[str, Any]:
         "data_root": str(DATA_ROOT),
         "required_missing": required_missing,
         "optional_missing": optional_missing,
+        "degraded_missing": minute_degraded,
+        "resource_degraded": resource_degraded,
+        "minute_data": {
+            **minute_data,
+            "requirement": minute_mode,
+            "purpose": str(minute_spec.get("purpose") or "普通任务不依赖 5 分钟线。"),
+        },
         "assets": {key: assets.get(key, {}) for key in [*spec.get("required", []), *spec.get("optional", [])]},
         "target_trade_date": date,
+        "requested_trade_date": requested_date,
+        "selected_trade_date": date,
+        "daily_source": daily_gate.get("selected_source", ""),
+        "daily_data_degraded": daily_degraded,
         "daily_freshness": daily_gate,
         "degrade_policy": spec.get("degrade", ""),
-        "execution_note": "本报告是网页适配层的真实数据预检与落盘运行单；未调用原始策略入口，因此不构成策略已执行或投资结论。",
+        "execution_note": "本报告是网页适配层的真实数据预检与 resource-library 落盘运行单；未调用原始策略入口，因此不构成策略已执行或投资结论。",
     }
     write_json(report_root / f"{report_id}.json", evidence)
     markdown = [
@@ -1472,9 +1880,10 @@ def write_preflight(skill_id: str) -> dict[str, Any]:
         f"- 状态：`{status}`",
         f"- 创建时间：{evidence['created_at']}",
         f"- 数据目录：`{DATA_ROOT}`",
-        f"- 目标交易日：`{date}`",
+        f"- 请求交易日：`{requested_date or '未识别'}`",
+        f"- 实际使用日线：`{date}`",
         f"- 缺少必需数据：{'、'.join(required_missing) if required_missing else '无'}",
-        f"- 缺少可降级数据：{'、'.join(optional_missing) if optional_missing else '无'}",
+        f"- 缺少可降级数据：{'、'.join([*optional_missing, *minute_degraded, *resource_degraded]) if optional_missing or minute_degraded or resource_degraded else '无'}",
         f"- 日线新鲜度：`{daily_gate.get('status', 'unknown')}` · {daily_gate.get('reason', '') or '已核对目标日 manifest、文件和覆盖数。'}",
         "",
         "## 降级规则",
@@ -1502,6 +1911,7 @@ def list_reports() -> dict[str, Any]:
                     "skill_name": value.get("skill", {}).get("name"),
                     "status": value.get("status"),
                     "created_at": value.get("created_at"),
+                    "updated_at": value.get("updated_at") or value.get("created_at"),
                     "path": str(path.relative_to(DATA_ROOT)).replace("\\", "/"),
                 })
             elif isinstance(value, dict) and value.get("schema") == "ZHANGCAI_DAILY_DATA_ARCHIVE_REPORT_V1":
@@ -1511,9 +1921,16 @@ def list_reports() -> dict[str, Any]:
                     "skill_name": "本地数据归档日报",
                     "status": value.get("status"),
                     "created_at": value.get("created_at"),
+                    "updated_at": value.get("updated_at") or value.get("created_at"),
                     "path": str(path.relative_to(DATA_ROOT)).replace("\\", "/"),
                 })
-    reports.sort(key=lambda item: str(item.get("created_at", "")), reverse=True)
+    reports.sort(
+        key=lambda item: (
+            report_sort_timestamp(item.get("updated_at") or item.get("created_at")),
+            str(item.get("report_id") or ""),
+        ),
+        reverse=True,
+    )
     return {"status": "ok", "reports": reports[:60]}
 
 

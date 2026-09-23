@@ -43,7 +43,7 @@ def main() -> int:
         raise SystemExit("--date 必须是 YYYYMMDD")
     manifest_path = DATA_ROOT / "market" / "daily" / date / "manifest.json"
     manifest = read_json(manifest_path, {})
-    rel_file = str(manifest.get("file") or f"market/daily/{date}/tdx-bars.jsonl") if isinstance(manifest, dict) else f"market/daily/{date}/tdx-bars.jsonl"
+    rel_file = str(manifest.get("file") or "market/daily/aggregate/tdx-bars.jsonl") if isinstance(manifest, dict) else "market/daily/aggregate/tdx-bars.jsonl"
     bars_path = DATA_ROOT / rel_file
     required = ("symbol", "market", "date", "open", "high", "low", "close", "amount", "volume")
     lines = 0

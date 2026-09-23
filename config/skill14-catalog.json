@@ -1,7 +1,16 @@
 {
   "schema": "ZHANGCAI_SKILL14_CATALOG_V1",
   "version": "2026-09-12",
-  "dataRoot": "app-data",
+  "dataRoot": "resource-library",
+  "minuteDataPolicy": {
+    "schema": "ZHANGCAI_MINUTE_DATA_POLICY_V1",
+    "packaged": false,
+    "source": "external_tdx_lc5",
+    "defaultMode": "not_required",
+    "defaultPurpose": "普通日线任务不读取、不保存、不依赖 5 分钟线。",
+    "unavailableStatus": "DEGRADED",
+    "note": "需要分钟特征的技能只读取用户选择的通达信目录中的指定股票；原始 .lc5 不进入 EXE 或 resource-library。"
+  },
   "skills": [
     {
       "id": "individual-stock-analysis-v31",
@@ -45,6 +54,10 @@
       "summary": "涨停池、板块归属、封板时间与可复算龙虎榜研究。",
       "required": ["limit_up_pool", "public_research"],
       "optional": ["tdx_daily_history", "lhb_data"],
+      "minute_data": {
+        "mode": "optional_degraded",
+        "purpose": "精确首封、炸板和重封时序需要外部 LC5；缺少时仍可执行公开日线研究，但必须标记 DEGRADED。"
+      },
       "degrade": "本地通达信仅为旁证；主公开源冲突、日期不一致或龙虎榜不可复算时必须 BLOCKED。"
     },
     {
@@ -159,7 +172,7 @@
     }
   ],
   "dataAssets": [
-    {"id": "tdx_daily_history", "name": "本地日线快照", "path": "market/daily/<trade-date>/tdx-bars.jsonl", "requiredFor": "历史策略与公式类技能"},
+    {"id": "tdx_daily_history", "name": "本地日线主库", "path": "market/daily/aggregate/tdx-bars.jsonl", "requiredFor": "历史策略与公式类技能；交易日目录仅保存 manifest/delta"},
     {"id": "security_master", "name": "证券基础资料", "path": "market/security-master/", "requiredFor": "代码身份、ST/退市与市场识别"},
     {"id": "limit_up_pool", "name": "涨停池快照", "path": "public/limit-up/", "requiredFor": "涨停、连板、情绪和龙头类技能"},
     {"id": "lhb_data", "name": "龙虎榜原始快照", "path": "public/lhb/", "requiredFor": "龙虎榜与资金类技能"},

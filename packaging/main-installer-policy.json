@@ -1,0 +1,101 @@
+{
+  "schema": "ZHANGCAI_MAIN_INSTALLER_POLICY_V1",
+  "purpose": "主程序安装包独立封装；不读取、不依赖、不合并独立数据包，并把已验证的基线运行环境一起写入主安装包。",
+  "mainInstaller": {
+    "dataPackInput": "forbidden",
+    "dataPackRequiredBeforeBuild": false,
+    "dataPackMerged": false,
+    "fullDailyArchiveIncluded": false,
+    "publicSnapshotArchiveIncluded": false,
+    "reportArchiveIncluded": false,
+    "optionalPostInstallDataPack": true,
+    "formulaSeedSource": "electron-app/resource-library/evidence/formulas/package",
+    "writableRuntimeDataRoot": "<client-install-root>\\data\\resource-library"
+  },
+  "baselineRuntime": {
+    "embeddedInMainInstaller": true,
+    "reusedByProgramUpdates": true,
+    "source": [
+      "packaging/staging/desktop-runtime",
+      ".runtime/node/node.exe",
+      "packaging/runtime-node-modules"
+    ],
+    "embeddedRoots": [
+      "resources/runtime/node/node.exe",
+      "resources/runtime/python",
+      "resources/runtime/environment-manifest.json",
+      "resources/runtime/environment-version.ini",
+      "resources/deepseek-harness",
+      "resources/app/node_modules"
+    ],
+    "versions": {
+      "node": "24.19.0",
+      "python": "3.12.14",
+      "harness": "0.1.2-rc.1",
+      "vinext": "1.0.0-beta.5"
+    },
+    "rebuildOnlyWhen": [
+      "Node.js, Python, DeepSeek Harness or production dependency version changes",
+      "environment baseline manifest changes",
+      "a verified runtime repair changes the staged environment"
+    ],
+    "programUpdatePreserves": [
+      "resources/runtime",
+      "resources/deepseek-harness",
+      "resources/app/node_modules",
+      "data/resource-library"
+    ]
+  },
+  "allowedMainBuildInputs": [
+    "electron-app/main.mjs",
+    "electron-app/preload.cjs",
+    "electron-app/runtime-ports.mjs",
+    "dist",
+    "agent-server.mjs",
+    "scripts",
+    "harness-skills",
+    "config",
+    "lib",
+    "public",
+    "packaging/dependency-manifest.json",
+    "app-data/evidence/formulas/package (staged as the embedded formula seed only)",
+    "electron-app/resource-library",
+    "packaging/staging/desktop-runtime",
+    ".runtime/node/node.exe"
+  ],
+  "forbiddenMainBuildInputs": [
+    "app-data/market",
+    "app-data/public",
+    "app-data/news",
+    "app-data/evidence/public",
+    "app-data/evidence/supplemental",
+    "app-data/reports",
+    "app-data/imported-3002",
+    "dist-installer/data-pack-*",
+    "raw .lc5 or .LC5 files",
+    "an already-built independent data-pack payload"
+  ],
+  "dataPack": {
+    "role": "optional post-install historical data import",
+    "buildIsSeparate": true,
+    "installTarget": "<client-install-root>\\data\\resource-library",
+    "requiresMainInstaller": true,
+    "mustNotOverwrite": [
+      "resources/app",
+      "resources/runtime",
+      "resources/deepseek-harness",
+      "resources/resource-library"
+    ],
+    "mustNotBeReadByMainBuilder": true
+  },
+  "verification": {
+    "preflight": "scripts/package-preflight.ps1 -MainInstaller",
+    "builderConfig": "electron-app/electron-builder.yml",
+    "guardRules": [
+      "main installer extraResources contain baseline runtime and formula seed",
+      "main installer extraResources do not contain app-data or data-pack payloads",
+      "main build script does not invoke data-pack staging or packaging",
+      "program update excludes baseline runtime and user resource-library"
+    ]
+  }
+}

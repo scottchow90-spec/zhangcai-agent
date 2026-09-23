@@ -28,7 +28,11 @@ from typing import Any
 
 APP_ROOT = Path(os.environ.get("ZHANGCAI_APP_ROOT", Path(__file__).resolve().parents[1]))
 DATA_ROOT = Path(os.environ.get("ZHANGCAI_DATA_DIR", APP_ROOT / "app-data"))
-TDX_ROOT = Path(os.environ.get("ZHANGCAI_TDX_ROOT", r"C:\new_tdx_mock"))
+_tdx_root_text = os.environ.get("ZHANGCAI_TDX_ROOT", "").strip()
+_packaged_runtime = os.environ.get("ZHANGCAI_PACKAGED") == "1"
+TDX_ROOT = Path(_tdx_root_text) if _tdx_root_text else (
+    Path(r"C:\new_tdx_mock") if not _packaged_runtime else Path(r"C:\__zhangcai_tdx_root_not_configured__")
+)
 TDX_INDEX_FILE = DATA_ROOT / "market" / "daily" / "index" / "tdx-symbol-index.json"
 DAILY_INDEX_FILE = DATA_ROOT / "market" / "daily" / "index" / "daily-data-index.json"
 FALLBACK_ROOT = DATA_ROOT / "market" / "daily" / "fallback"

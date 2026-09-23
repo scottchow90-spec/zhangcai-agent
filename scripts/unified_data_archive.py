@@ -209,7 +209,7 @@ def build_source_matrix(public: Dict[str, Any], news: Dict[str, Any], date: str)
     public_path = "public/latest.json"
     news_path = "news/latest.json"
     daily_manifest = read_json(DATA_ROOT / "market" / "daily" / date / "manifest.json", {})
-    daily_path = str(daily_manifest.get("file") or f"market/daily/{date}/tdx-bars.jsonl") if isinstance(daily_manifest, dict) else f"market/daily/{date}/tdx-bars.jsonl"
+    daily_path = str(daily_manifest.get("file") or "market/daily/aggregate/tdx-bars.jsonl") if isinstance(daily_manifest, dict) else "market/daily/aggregate/tdx-bars.jsonl"
     daily_delta = str(daily_manifest.get("delta_file") or "") if isinstance(daily_manifest, dict) else ""
     source_root = f"public/{date}" if date else "public/"
     news_root = f"news/{date}" if date else "news/"
@@ -259,7 +259,7 @@ def snapshot(date_value: str) -> Dict[str, Any]:
     news = read_json(DATA_ROOT / "news" / "latest.json", {})
     package = package_inventory()
     daily_manifest = read_json(DATA_ROOT / "market" / "daily" / date / "manifest.json", {})
-    daily_bars_rel = str(daily_manifest.get("file") or f"market/daily/{date}/tdx-bars.jsonl") if isinstance(daily_manifest, dict) else f"market/daily/{date}/tdx-bars.jsonl"
+    daily_bars_rel = str(daily_manifest.get("file") or "market/daily/aggregate/tdx-bars.jsonl") if isinstance(daily_manifest, dict) else "market/daily/aggregate/tdx-bars.jsonl"
     daily_delta_rel = str(daily_manifest.get("delta_file") or "") if isinstance(daily_manifest, dict) else ""
     daily_bars_path = DATA_ROOT / daily_bars_rel
     daily_index_path = DATA_ROOT / "market" / "daily" / "index" / "daily-data-index.json"
@@ -270,6 +270,7 @@ def snapshot(date_value: str) -> Dict[str, Any]:
     security_path = DATA_ROOT / "market" / "security-master" / f"{date}.jsonl"
     formula_manifest = DATA_ROOT / "evidence" / "formulas" / "package" / "manifest.json"
     public_path = DATA_ROOT / "public" / "latest.json"
+    public_research_path = DATA_ROOT / "evidence" / "public" / "latest.json"
     news_path = DATA_ROOT / "news" / "latest.json"
     supplemental_path = DATA_ROOT / "evidence" / "supplemental" / date / "market.json"
     supplemental = read_json(supplemental_path, {})
@@ -286,9 +287,14 @@ def snapshot(date_value: str) -> Dict[str, Any]:
         file_asset(DATA_ROOT / "public" / "limit-up" / f"{display_date(date)}.json", "公开涨停池归档", "available"),
         file_asset(DATA_ROOT / "public" / "lhb" / f"{display_date(date)}.json", "公开龙虎榜归档", "available"),
         file_asset(news_path, "东方财富 7×24 快讯", "available" if news.get("status") == "available" else "missing", source_date=news.get("date", "")),
-        file_asset(DATA_ROOT / "evidence" / "public" / f"news-{display_date(date)}.json", "公开新闻证据", "available"),
+        file_asset(public_research_path, "公开研究统一快照", "available" if public_research_path.is_file() else "missing", source_date=date),
         file_asset(supplemental_path, "财务/股本/指数日线/龙虎榜/融资融券统一补充快照", "available" if supplemental else "missing", trade_date=date, coverage=supplemental.get("coverage", {}) if isinstance(supplemental, dict) else {}),
-        file_asset(formula_manifest, "本地 TDX/TQ 公式依赖镜像", "available" if formula_manifest.is_file() else "missing"),
+        file_asset(
+            formula_manifest,
+            "本地 TDX/TQ 公式依赖镜像",
+            str(read_json(formula_manifest, {}).get("status") or "missing") if formula_manifest.is_file() else "missing",
+            missing_files=read_json(formula_manifest, {}).get("missing_files", []) if formula_manifest.is_file() else [],
+        ),
         file_asset(DATA_ROOT / "harness" / "context" / "local-data-page.json", "Harness 本地数据页", "available"),
         file_asset(DATA_ROOT / "harness" / "context" / "package-source-inventory.json", "行情能力压缩包来源目录", package.get("status", "missing")),
         file_asset(DATA_ROOT / "harness" / "context" / "package-source-gap-report.json", "行情能力压缩包缺口清单", "available" if (DATA_ROOT / "harness" / "context" / "package-source-gap-report.json").is_file() else "missing"),

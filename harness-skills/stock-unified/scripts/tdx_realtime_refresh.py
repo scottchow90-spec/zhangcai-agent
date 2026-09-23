@@ -14,9 +14,14 @@ import subprocess
 import sys
 from pathlib import Path
 
-USER_DIR = Path(r'C:\new_tdx_mock\PYPlugins\user')
+_tdx_root_text = (
+    os.environ.get("ZHANGCAI_TDX_ROOT")
+    or os.environ.get("TDX_ROOT")
+    or ""
+).strip()
+TDX_ROOT = Path(_tdx_root_text or os.environ.get("ZHANGCAI_DEV_TDX_ROOT", r"C:\new_tdx_mock")).expanduser().resolve()
+USER_DIR = TDX_ROOT / 'PYPlugins' / 'user'
 FALLBACK_INIT = USER_DIR / 'tdxdata_test.py'
-TDX_ROOT = USER_DIR.parents[1]
 NODE_TOOL = TDX_ROOT / 'NodeTool.exe'
 
 if hasattr(sys.stdout, 'reconfigure'):

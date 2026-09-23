@@ -1,108 +1,108 @@
 {
   "schema": "ZHANGCAI_UNIFIED_DATA_ARCHIVE_REPORT_V1",
-  "generatedAt": "2026-09-15T10:04:26.977Z",
-  "status": "partial",
-  "message": "统一数据落盘完成，但存在降级来源或未通过步骤，请查看缺失项和步骤明细。",
-  "date": "2026-09-15",
-  "startedAt": "2026-09-15T09:54:35.614Z",
-  "finishedAt": "2026-09-15T09:57:32.439Z",
+  "generatedAt": "2026-09-16T09:13:56.224Z",
+  "status": "completed",
+  "message": "统一数据落盘完成，全部步骤已结束。",
+  "date": "2026-09-16",
+  "startedAt": "2026-09-16T09:05:04.734Z",
+  "finishedAt": "2026-09-16T09:13:53.239Z",
   "progress": {
-    "completed": 9,
+    "completed": 0,
     "total": 9,
-    "percent": 100,
-    "currentStep": "",
-    "failed": 1
+    "percent": 0,
+    "currentStep": "通达信日线完整性检查与补齐",
+    "failed": 0
   },
   "steps": [
     {
       "name": "通达信日线完整性检查与补齐",
-      "status": "completed",
-      "code": 0,
-      "startedAt": "2026-09-15T09:54:35.633Z",
-      "finishedAt": "2026-09-15T09:54:48.809Z",
+      "status": "running",
+      "code": null,
+      "startedAt": "2026-09-16T09:05:04.790Z",
+      "finishedAt": null,
       "error": "",
       "resultPath": null
     },
     {
       "name": "通达信日线与证券资料归档",
-      "status": "completed",
-      "code": 0,
-      "startedAt": "2026-09-15T09:54:49.144Z",
-      "finishedAt": "2026-09-15T09:55:03.464Z",
+      "status": "running",
+      "code": null,
+      "startedAt": "2026-09-16T09:05:18.539Z",
+      "finishedAt": null,
       "error": "",
       "resultPath": null
     },
     {
       "name": "公开日线缺口降级补齐",
-      "status": "partial",
-      "code": 2,
-      "startedAt": "2026-09-15T09:55:03.473Z",
-      "finishedAt": "2026-09-15T09:55:14.808Z",
+      "status": "running",
+      "code": null,
+      "startedAt": "2026-09-16T09:10:18.605Z",
+      "finishedAt": null,
       "error": "",
       "resultPath": null
     },
     {
       "name": "财务、股本、指数、龙虎榜、融资融券统一落盘",
-      "status": "completed",
-      "code": 0,
-      "startedAt": "2026-09-15T09:55:14.818Z",
-      "finishedAt": "2026-09-15T09:55:17.485Z",
+      "status": "running",
+      "code": null,
+      "startedAt": "2026-09-16T09:10:35.221Z",
+      "finishedAt": null,
       "error": "",
       "resultPath": null
     },
     {
       "name": "行情资讯能力包来源补充",
-      "status": "completed",
-      "code": 0,
-      "startedAt": "2026-09-15T09:55:17.494Z",
-      "finishedAt": "2026-09-15T09:55:23.815Z",
+      "status": "running",
+      "code": null,
+      "startedAt": "2026-09-16T09:10:37.954Z",
+      "finishedAt": null,
       "error": "",
       "resultPath": null
     },
     {
       "name": "公开行情、涨停池与龙虎榜归档",
-      "status": "completed",
-      "code": 0,
-      "startedAt": "2026-09-15T09:55:23.827Z",
-      "finishedAt": "2026-09-15T09:55:30.412Z",
+      "status": "running",
+      "code": null,
+      "startedAt": "2026-09-16T09:10:45.532Z",
+      "finishedAt": null,
       "error": "",
       "resultPath": null
     },
     {
       "name": "东方财富 7×24 新闻归档",
-      "status": "completed",
-      "code": 0,
-      "startedAt": "2026-09-15T09:55:23.829Z",
-      "finishedAt": "2026-09-15T09:55:25.225Z",
+      "status": "running",
+      "code": null,
+      "startedAt": "2026-09-16T09:10:45.535Z",
+      "finishedAt": null,
       "error": "",
       "resultPath": null
     },
     {
       "name": "统一数据状态刷新",
-      "status": "completed",
-      "code": 0,
-      "startedAt": "2026-09-15T09:55:30.421Z",
-      "finishedAt": "2026-09-15T09:55:32.102Z",
+      "status": "running",
+      "code": null,
+      "startedAt": "2026-09-16T09:10:52.933Z",
+      "finishedAt": null,
       "error": "",
       "resultPath": null
     },
     {
       "name": "统一数据源清单生成",
-      "status": "completed",
-      "code": 0,
-      "startedAt": "2026-09-15T09:55:32.113Z",
-      "finishedAt": "2026-09-15T09:55:36.877Z",
+      "status": "running",
+      "code": null,
+      "startedAt": "2026-09-16T09:10:55.751Z",
+      "finishedAt": null,
       "error": "",
       "resultPath": null
     }
   ],
   "harness": {
     "status": "completed",
-    "finishedAt": "2026-09-15T09:57:32.402Z",
-    "summary": "2026-09-15统一归档:通达信日线主数据可用完整(15741210条/9490只),涨停32家、跌停27家、连板7家,龙虎榜与新闻已落盘;但统一校验BLOCKED(8项哈希失败),财务股本与两融缺失。",
-    "dataDate": "2026-09-15",
+    "finishedAt": "2026-09-16T09:13:53.218Z",
+    "summary": "2026-09-16 统一归档完成：TDX 日线 1575.07 万条/9497 只可用，全市场 5084 只，涨停 89、连板 12、跌停 4；公开行情、涨停池、龙虎榜、资讯与补充快照已落盘，校验与降级层存在缺口。",
+    "dataDate": "2026-09-16",
     "cautions": [],
-    "cautionCount": 8,
+    "cautionCount": 10,
     "findingCount": 5,
     "tableCount": 3
   },
@@ -126,8 +126,8 @@
   },
   "artifacts": {
     "dataRoot": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data",
-    "reportJson": "reports/unified-archive/20260915/report.json",
-    "reportHtml": "reports/unified-archive/20260915/index.html",
+    "reportJson": "reports/unified-archive/20260916/report.json",
+    "reportHtml": "reports/unified-archive/20260916/index.html",
     "state": "runtime/unified-data-archive-state.json",
     "harnessContext": "harness/context/latest-archive.json"
   },
@@ -135,14 +135,14 @@
     "paths": {
       "localDataPage": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\harness\\context\\local-data-page.json",
       "tdxDailyHistory": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\status\\tdx-daily-history.json",
-      "dailyManifest": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\20260915\\manifest.json",
-      "dailyAggregate": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\20260915\\tdx-bars.jsonl",
+      "dailyManifest": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\20260916\\manifest.json",
+      "dailyAggregate": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\20260916\\tdx-bars.jsonl",
       "tdxDailyIndex": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\index\\tdx-symbol-index.json",
       "dailyDataIndex": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\market\\daily\\index\\daily-data-index.json",
-      "dailyJsonlIntegrity": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\runtime\\daily-jsonl-integrity-20260915.json",
+      "dailyJsonlIntegrity": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\runtime\\daily-jsonl-integrity-20260916.json",
       "publicLatest": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\public\\latest.json",
       "newsLatest": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\news\\latest.json",
-      "supplemental": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\evidence\\supplemental\\20260915\\market.json",
+      "supplemental": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\evidence\\supplemental\\20260916\\market.json",
       "unifiedManifest": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\evidence\\sources\\latest.json",
       "unifiedVerification": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\evidence\\sources\\latest-verification.json",
       "packageSourceInventory": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\harness\\context\\package-source-inventory.json",
@@ -151,7 +151,7 @@
     }
   },
   "urls": {
-    "html": "/data/archive/report?date=20260915",
-    "json": "/data/archive/report?date=20260915&format=json"
+    "html": "/data/archive/report?date=20260916",
+    "json": "/data/archive/report?date=20260916&format=json"
   }
 }

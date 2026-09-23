@@ -15,7 +15,13 @@ import urllib.request
 WORKSPACE = Path(__file__).resolve().parent.parent.parent.parent
 RUN_ID = os.environ.get("SKILL_FULLFLOW_RUN_ID", "2026-06-12_skill_fullflow_all")
 OUTPUT_DIR = WORKSPACE / "reports" / RUN_ID / "stock-analysis"
-TDX_PATH = Path(r"C:\new_tdx_mock\vipdoc\sh\lday\sh600519.day")
+_tdx_root_text = (
+    os.environ.get("ZHANGCAI_TDX_ROOT")
+    or os.environ.get("TDX_ROOT")
+    or ""
+).strip()
+TDX_ROOT = Path(_tdx_root_text or os.environ.get("ZHANGCAI_DEV_TDX_ROOT", r"C:\new_tdx_mock")).expanduser().resolve()
+TDX_PATH = TDX_ROOT / "vipdoc" / "sh" / "lday" / "sh600519.day"
 
 
 def from_eastmoney():

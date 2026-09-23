@@ -15,11 +15,16 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-USER_DIR = Path(r'C:\new_tdx_mock\PYPlugins\user')
+_tdx_root_text = (
+    os.environ.get("ZHANGCAI_TDX_ROOT")
+    or os.environ.get("TDX_ROOT")
+    or ""
+).strip()
+TDX_ROOT = Path(_tdx_root_text or os.environ.get("ZHANGCAI_DEV_TDX_ROOT", r"C:\new_tdx_mock")).expanduser().resolve()
+USER_DIR = TDX_ROOT / 'PYPlugins' / 'user'
 TQCENTER = USER_DIR / 'tqcenter.py'
 DEFAULT_INIT = USER_DIR / 'openclaw_tq_test.py'
 FALLBACK_INIT = USER_DIR / 'tdxdata_test.py'
-TDX_ROOT = USER_DIR.parents[1]
 NODE_TOOL = TDX_ROOT / 'NodeTool.exe'
 PY_STRATEGY_CFG = USER_DIR.parent / 'py_strategy.cfg'
 BRIDGE_SCRIPT = USER_DIR / 'openclaw_bridge_simple.py'

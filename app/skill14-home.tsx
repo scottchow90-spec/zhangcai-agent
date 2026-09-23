@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import catalog from '@/config/skill14-catalog.json';
-import { bridgeUrl } from '@/lib/bridge-url';
+import { bridgeHostLabel, bridgeUrl } from '@/lib/bridge-url';
 import styles from './skill14.module.css';
 
 type Asset = { status?: string; reason?: string; file?: string; file_count?: number; current_trade_date_symbols?: number };
@@ -24,7 +24,7 @@ export default function Skill14Home() {
   const [status, setStatus] = useState<StatusResponse>({});
   const [reports, setReports] = useState<Report[]>([]);
   const [busy, setBusy] = useState('');
-  const [message, setMessage] = useState('正在连接 4319 本地桥接服务…');
+  const [message, setMessage] = useState('正在连接本地桥接服务…');
   const [selected, setSelected] = useState<Preflight | null>(null);
 
   const refresh = useCallback(async () => {
@@ -72,7 +72,7 @@ export default function Skill14Home() {
   return <div className={styles.shell}>
     <header className={styles.header}>
       <div><div className={styles.eyebrow}>ZHANGCAI · 14 SKILL RUNTIME</div><h1>14 个电脑版技能的网页运行台</h1><p>网页只负责任务、数据门禁和报告展示；原始规则仍由 Python、数据服务或 Windows 通达信/TQ Worker 执行。缺数据会落盘并明确标识，不用模型补写结论。</p></div>
-      <div className={styles.ports}><span>网页 3003</span><span>本地桥接 4319</span><span>数据目录 {status.data_root || 'app-data'}</span></div>
+      <div className={styles.ports}><span>本地运行</span><span>本地桥接 {bridgeHostLabel()}</span><span>数据目录 {status.data_root || 'resource-library'}</span></div>
     </header>
     <div className={styles.grid}>
       <main className={styles.main}>

@@ -35,7 +35,7 @@ user-invocable: true
 
 - `market/daily/index/tdx-symbol-index.json`：按 `sh/sz/bj+六位代码` 索引 TDX `.day` 文件，包含文件相对路径、记录数、首尾日期；它用于快速定位，不替代文件内容校验。
 - `market/daily/index/daily-data-index.json`：统一可用性索引，声明每只股票的 TDX 主源、应用内降级记录、日期范围、记录数和缺失字段；交易日目录还保存 `market/daily/<trade-date>/daily-data-index.json` 便于归档检索。
-- `market/daily/<trade-date>/tdx-bars.jsonl` 或 `market/daily/aggregate/tdx-bars.jsonl`：应用内 TDX 全历史/聚合层；`manifest.json` 的 `file` 是唯一主路径，不得硬编码文件名。
+- `market/daily/aggregate/tdx-bars.jsonl`：应用内唯一 TDX 全历史 canonical 主库；`market/daily/<trade-date>/` 只保存交易日 manifest 和小型 delta。`manifest.json` 的 `file` 是唯一主路径，不得硬编码文件名。
 - `runtime/daily-jsonl-integrity-<trade-date>.json`：对主日线 JSONL 的逐行结构、必需字段、记录数和日期覆盖校验；需要全文件结构证据时优先读取它。
 - `market/daily/fallback/<trade-date>/<symbol>.jsonl`：只存明确返回目标交易日的公开日线，统一字段为 `date/open/high/low/close/volume/amount`，同时保留 `source/source_url/source_date/retrieved_at/source_sha256/status/missing_fields`。
 

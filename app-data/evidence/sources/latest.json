@@ -1,132 +1,132 @@
 {
   "schema": "ZHANGCAI_UNIFIED_DATA_ARCHIVE_V1",
   "status": "available",
-  "generated_at": "2026-09-15T17:55:36+08:00",
-  "trade_date": "20260915",
-  "source_date": "2026-09-15",
+  "generated_at": "2026-09-16T17:11:00+08:00",
+  "trade_date": "20260916",
+  "source_date": "2026-09-16",
   "data_root": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data",
   "package_inventory": "harness/context/package-source-inventory.json",
   "assets": [
     {
-      "path": "market/daily/aggregate/tdx-bars.jsonl",
+      "path": "market/daily/20260916/tdx-bars.jsonl",
       "source": "本地通达信 .day 全量/聚合归档",
       "status": "available",
       "exists": true,
-      "bytes": 2507795108,
-      "sha256": "08a0f42900ebbc11237302167816a2191849d56b91cf44326af81a905a0c8d51",
-      "record_count": 15741210,
-      "trade_date": "20260915"
+      "bytes": 2509313640,
+      "sha256": "fb5abb91db6a61845a90c5b53f95723f89973ebf6986dca522e660f1dd4bb977",
+      "record_count": 15750690,
+      "trade_date": "20260916"
     },
     {
-      "path": "market/daily/20260915/manifest.json",
+      "path": "market/daily/20260916/manifest.json",
       "source": "本地通达信归档清单",
       "status": "available",
       "exists": true,
-      "bytes": 2098,
-      "sha256": "f753ccb42b0d09838ae84e5a9d14220d2692a19eb4e78ce2f6aafb0a0fb7dd3c",
-      "trade_date": "20260915"
+      "bytes": 1675,
+      "sha256": "c214ff8d6724b776a0854c62eee983dd8ca318273b315fb30433ab5d89319695",
+      "trade_date": "20260916"
     },
     {
       "path": "market/daily/index/daily-data-index.json",
       "source": "统一日线可用性索引",
       "status": "available",
       "exists": true,
-      "bytes": 4037709,
-      "sha256": "9cc5f908acb49364b767bacee39c4033fdca548901fe943b19186f14ad5c003d",
-      "trade_date": "20260915",
+      "bytes": 4031773,
+      "sha256": "0fb1745419197f663fda2d82a51b6a566d4120b23ccadc002267a3cd07d369ba",
+      "trade_date": "20260916",
       "summary": {
-        "symbol_count": 9833,
-        "tdx_symbol_count": 9490,
-        "tdx_record_count": 15741210,
+        "symbol_count": 9840,
+        "tdx_symbol_count": 9497,
+        "tdx_record_count": 15750690,
         "fallback_symbol_count": 228,
         "fallback_record_count": 228,
-        "date_count": 3
+        "date_count": 4
       }
     },
     {
-      "path": "market/daily/20260915/daily-data-index.json",
+      "path": "market/daily/20260916/daily-data-index.json",
       "source": "交易日级日线索引",
       "status": "available",
       "exists": true,
-      "bytes": 1124,
-      "sha256": "42345a7791f2c3db8e2c8ead7014e5365d4e7e29efd487a7ec75f3204f66a1ed",
-      "trade_date": "20260915"
+      "bytes": 1123,
+      "sha256": "5a6c448e17c75905fcc07b00266283042e42a1d2ba113124623de6c28892fcf8",
+      "trade_date": "20260916"
     },
     {
       "path": "market/daily/index/tdx-symbol-index.json",
       "source": "通达信证券日线索引",
       "status": "available",
       "exists": true,
-      "bytes": 2312913,
-      "sha256": "0c433c2affb3b4ec5ee6a690bb679f4edec6386e6b6ea48f8768096177cff2de",
-      "trade_date": "20260915"
+      "bytes": 2314614,
+      "sha256": "6eb28f125fe17b37fa1b9ebc0c78e7bbace2e6f53b002ec7260529d9f476a686",
+      "trade_date": "20260916"
     },
     {
-      "path": "runtime/daily-jsonl-integrity-20260915.json",
+      "path": "runtime/daily-jsonl-integrity-20260916.json",
       "source": "日线 JSONL 逐行结构校验报告",
       "status": "missing",
       "exists": false,
-      "trade_date": "20260915"
+      "trade_date": "20260916"
     },
     {
-      "path": "market/security-master/20260915.jsonl",
+      "path": "market/security-master/20260916.jsonl",
       "source": "通达信 TNF + 应用证券基线",
       "status": "available",
       "exists": true,
-      "bytes": 3577067,
-      "sha256": "1aec8e23c38102b540db846918eb8748f8d3240d3282d2216ee0680215aaeade",
-      "trade_date": "20260915"
+      "bytes": 3579252,
+      "sha256": "fbcd75f9f40444c179e4fabc2f51b0d89c427ef2ee14ee43950debb8645a6e4e",
+      "trade_date": "20260916"
     },
     {
       "path": "public/latest.json",
       "source": "东方财富/连板网/AKShare 公开行情快照",
       "status": "available",
       "exists": true,
-      "bytes": 767328,
-      "sha256": "08923d8ac4b233008fd4d3c054811f22db7a0a581ad9d225e144510cb2b14c0d",
-      "source_date": "2026-09-15"
+      "bytes": 834351,
+      "sha256": "7324d8ae04007b93a913b28c8c00b64e1ffb8c3e1a5ff87649a92d2004d895aa",
+      "source_date": "2026-09-16"
     },
     {
-      "path": "public/limit-up/2026-09-15.json",
+      "path": "public/limit-up/2026-09-16.json",
       "source": "公开涨停池归档",
       "status": "available",
       "exists": true,
-      "bytes": 42947,
-      "sha256": "2c2bb9fd3457f99836655c402f72c6cdcf16746de90e5ff9033223d68ea26fd2"
+      "bytes": 114857,
+      "sha256": "81f28f747efd5dd962e1dfb623ba29b96d1fcde96e52180c92429acd5ce5a947"
     },
     {
-      "path": "public/lhb/2026-09-15.json",
+      "path": "public/lhb/2026-09-16.json",
       "source": "公开龙虎榜归档",
       "status": "available",
       "exists": true,
-      "bytes": 626878,
-      "sha256": "5cf9b609fcd9542ae4f533673eb1ef369927573b316c81eb986e2e371d165835"
+      "bytes": 644285,
+      "sha256": "2cb4d7cd69e5cb2a1301904cb132f5baf36a9a75329dc86083366f34f480b58d"
     },
     {
       "path": "news/latest.json",
       "source": "东方财富 7×24 快讯",
       "status": "available",
       "exists": true,
-      "bytes": 298297,
-      "sha256": "2d874ae323c5776a931a72df9bb4ca7239024cb5a34527cacedf07b9a3a8c9c2",
-      "source_date": "2026-09-15"
+      "bytes": 305883,
+      "sha256": "224c4d8a90623b5d36e5d1d6cc85e5045bff03d694a8733423894f2fb20f796a",
+      "source_date": "2026-09-16"
     },
     {
-      "path": "evidence/public/news-2026-09-15.json",
+      "path": "evidence/public/news-2026-09-16.json",
       "source": "公开新闻证据",
       "status": "available",
       "exists": true,
-      "bytes": 308259,
-      "sha256": "e6369ad6092aa0c3884a5de59fd1cb79ef600eae3c044c91508e35489384b0da"
+      "bytes": 321771,
+      "sha256": "0f3548c61f27457f5dddd11429627137ddaaab82c0c9d0a1a806a2a8c6330985"
     },
     {
-      "path": "evidence/supplemental/20260915/market.json",
+      "path": "evidence/supplemental/20260916/market.json",
       "source": "财务/股本/指数日线/龙虎榜/融资融券统一补充快照",
       "status": "available",
       "exists": true,
-      "bytes": 13217979,
-      "sha256": "bba4b51744bef6af24eaec47bbf3290913a67d09ab28de67c88772bc2afbbec9",
-      "trade_date": "20260915",
+      "bytes": 13191604,
+      "sha256": "cebc67b3a32b3aaee6be34cf727ab3bb72e4ca2613a6a5964ee39d56222949e5",
+      "trade_date": "20260916",
       "coverage": {
         "financial": null,
         "share_capital": null,
@@ -141,15 +141,15 @@
       "status": "available",
       "exists": true,
       "bytes": 3557,
-      "sha256": "01635e0e37a66cc6464535e876c6b60fc53f4cb2bf0d0b1fdc8241d3d13913de"
+      "sha256": "d043443ea9e3965f66c02a83b218451c05bcb56d70c5e0c5ad76160a9bcb591e"
     },
     {
       "path": "harness/context/local-data-page.json",
       "source": "Harness 本地数据页",
       "status": "available",
       "exists": true,
-      "bytes": 12679,
-      "sha256": "293baf824ee70ab27bd92a03c2df00aadfe9fd42ec87d63213919fc12067a586"
+      "bytes": 12691,
+      "sha256": "169095d9299c7a3a4f7531afd040b3c08cd7104b7f8c40665d6ff692622a6154"
     },
     {
       "path": "harness/context/package-source-inventory.json",
@@ -157,7 +157,7 @@
       "status": "available",
       "exists": true,
       "bytes": 42646,
-      "sha256": "bf88d3643bb68244aeeada02f8cfc9e1a3b4dc944946986566cf60a869cdb9b0"
+      "sha256": "dfa124725979372158023b53b99f8df1fef941bcd917f2cb24ac6bea69ac2c64"
     },
     {
       "path": "harness/context/package-source-gap-report.json",
@@ -165,7 +165,7 @@
       "status": "available",
       "exists": true,
       "bytes": 20135,
-      "sha256": "3ba553dcf7377d42e7643c00630285b56489c43bd5ee680c054b66bb101e4cf3"
+      "sha256": "c08ce6c5a08563a303a7db4c4c0b844d95727ce69b649e321b75dc63df83865b"
     },
     {
       "path": "harness/context/package-data-routing.json",
@@ -173,7 +173,7 @@
       "status": "available",
       "exists": true,
       "bytes": 11710,
-      "sha256": "a1f6abba7777c63b3d24618cc558e390bc6e22304a3e300de2506a0d62122523"
+      "sha256": "48abb7ce6c2842bd3443ea5747600eb5eb4258567541e10b197d9b8f74887f00"
     }
   ],
   "sources": [
@@ -184,8 +184,8 @@
       "status": "available",
       "reason": "以本地 TDX 日线归档和 TQ 现场回执为准；mootdx 文档接口不等于本运行时已全部暴露。",
       "paths": [
-        "market/daily/aggregate/tdx-bars.jsonl",
-        "market/security-master/20260915.jsonl",
+        "market/daily/20260916/tdx-bars.jsonl",
+        "market/security-master/20260916.jsonl",
         "evidence/formulas/"
       ]
     },
@@ -197,8 +197,8 @@
       "reason": "只接受明确返回目标交易日的未复权 OHLCV；按 daily-data-index 合并使用并保持 quality=degraded，成交额缺失时留空，绝不估算。",
       "paths": [
         "market/daily/index/daily-data-index.json",
-        "market/daily/20260915/daily-data-index.json",
-        "market/daily/fallback/20260915/"
+        "market/daily/20260916/daily-data-index.json",
+        "market/daily/fallback/20260916/"
       ]
     },
     {
@@ -209,8 +209,8 @@
       "reason": "当前统一快照已落盘涨停池、龙虎榜和 7×24 快讯；研报、资金流、解禁、财务等其他端点仍未集中快照。",
       "paths": [
         "public/latest.json",
-        "public/limit-up/2026-09-15.json",
-        "public/lhb/2026-09-15.json",
+        "public/limit-up/2026-09-16.json",
+        "public/lhb/2026-09-16.json",
         "news/latest.json"
       ]
     },
@@ -222,7 +222,7 @@
       "reason": "同日开放数据快照。",
       "paths": [
         "public/latest.json",
-        "public/limit-up/2026-09-15.json"
+        "public/limit-up/2026-09-16.json"
       ]
     },
     {
@@ -233,7 +233,7 @@
       "reason": "可选依赖；每个适配器状态保存在公开行情快照。",
       "paths": [
         "public/latest.json",
-        "public/20260915"
+        "public/20260916"
       ]
     },
     {
@@ -243,7 +243,7 @@
       "status": "partial",
       "reason": "已有部分股票/字段快照，未覆盖全部目标范围。",
       "paths": [
-        "evidence/supplemental/20260911/"
+        "evidence/supplemental/20260915/"
       ]
     },
     {
@@ -253,7 +253,7 @@
       "status": "partial",
       "reason": "已有部分股票/字段快照，未覆盖全部目标范围。",
       "paths": [
-        "evidence/supplemental/20260911/"
+        "evidence/supplemental/20260915/"
       ]
     },
     {
@@ -263,7 +263,7 @@
       "status": "missing",
       "reason": "需要先检查实际快照、source_date、retrieved_at 和 sha256。",
       "paths": [
-        "evidence/package-sources/20260915/baidu/snapshot.json"
+        "evidence/package-sources/20260916/baidu/snapshot.json"
       ]
     },
     {
@@ -273,7 +273,7 @@
       "status": "missing",
       "reason": "需要先检查实际快照、source_date、retrieved_at 和 sha256。",
       "paths": [
-        "evidence/package-sources/20260915/ths/snapshot.json"
+        "evidence/package-sources/20260916/ths/snapshot.json"
       ]
     },
     {
@@ -291,7 +291,7 @@
       "status": "available",
       "reason": "",
       "paths": [
-        "news/20260915/multi-source-news-*.json"
+        "news/20260916/multi-source-news-*.json"
       ]
     },
     {
@@ -309,7 +309,7 @@
       "status": "available",
       "reason": "",
       "paths": [
-        "evidence/package-sources/20260915/sw/snapshot.json"
+        "evidence/package-sources/20260916/sw/snapshot.json"
       ]
     },
     {
@@ -319,7 +319,7 @@
       "status": "missing",
       "reason": "需要先检查实际快照、source_date、retrieved_at 和 sha256。",
       "paths": [
-        "evidence/package-sources/20260915/cninfo/snapshot.json"
+        "evidence/package-sources/20260916/cninfo/snapshot.json"
       ]
     },
     {
@@ -337,7 +337,7 @@
       "status": "partial",
       "reason": "已有部分股票/字段快照，未覆盖全部目标范围。",
       "paths": [
-        "evidence/package-sources/20260915/macro/snapshot.json"
+        "evidence/package-sources/20260916/macro/snapshot.json"
       ]
     },
     {
@@ -356,8 +356,8 @@
       "reason": "当前统一新闻快照。",
       "paths": [
         "news/latest.json",
-        "evidence/public/news-2026-09-15.json",
-        "news/20260915"
+        "evidence/public/news-2026-09-16.json",
+        "news/20260916"
       ]
     },
     {
@@ -367,8 +367,8 @@
       "status": "on_demand",
       "reason": "财务三表按目标股票按需落盘；Harness 读取 evidence/supplemental/<date>/<code>.<market>.json，不能把未请求的全市场财务误报为缺失。",
       "paths": [
-        "evidence/supplemental/20260915/market.json",
-        "evidence/supplemental/20260915/<code>.<market>.json"
+        "evidence/supplemental/20260916/market.json",
+        "evidence/supplemental/20260916/<code>.<market>.json"
       ]
     },
     {
@@ -378,8 +378,8 @@
       "status": "on_demand",
       "reason": "流通股本和总股本按目标股票按需落盘，保留原始报价哈希和字段映射。",
       "paths": [
-        "evidence/supplemental/20260915/market.json",
-        "evidence/supplemental/20260915/<code>.<market>.json"
+        "evidence/supplemental/20260916/market.json",
+        "evidence/supplemental/20260916/<code>.<market>.json"
       ]
     },
     {
@@ -389,7 +389,7 @@
       "status": "available",
       "reason": "主要指数日线来自本地 TDX .day，统一写入补充快照供 Harness 索引复用。",
       "paths": [
-        "evidence/supplemental/20260915/market.json"
+        "evidence/supplemental/20260916/market.json"
       ]
     },
     {
@@ -399,8 +399,8 @@
       "status": "available",
       "reason": "同日全市场快照已落盘；目标股票没有记录时表示无上榜记录，不表示快照缺失。",
       "paths": [
-        "evidence/supplemental/20260915/market.json",
-        "public/lhb/2026-09-15.json"
+        "evidence/supplemental/20260916/market.json",
+        "public/lhb/2026-09-16.json"
       ]
     },
     {
@@ -410,7 +410,7 @@
       "status": "missing",
       "reason": "融资融券按同日或最近可得日期落盘；exact_date=false 时 Harness 必须显示实际最近日期。",
       "paths": [
-        "evidence/supplemental/20260915/market.json"
+        "evidence/supplemental/20260916/market.json"
       ]
     }
   ],

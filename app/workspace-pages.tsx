@@ -23,7 +23,7 @@ import {
   X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { bridgeUrl } from '@/lib/bridge-url';
+import { bridgeHostLabel, bridgeUrl, isDesktopRuntime } from '@/lib/bridge-url';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import {
@@ -60,8 +60,9 @@ import {
   saveReportArchive,
   type ReportArchiveRecord,
 } from '@/lib/report-archive';
-import { getDailyDataRefreshStatus, getHarnessTasks, getSupplementalDataRefreshStatus, getUnifiedDataArchiveStatus, getUnifiedDataVerificationStatus, resumeHarnessTask, runHarnessInBackground, startDailyDataRefresh, startSupplementalDataRefresh, startUnifiedDataArchive, startUnifiedDataVerification, type HarnessTask } from '@/lib/harness-tasks';
+import { getDailyDataRefreshStatus, getDailyIndexInitializationStatus, getHarnessTasks, getSupplementalDataRefreshStatus, getUnifiedDataArchiveStatus, getUnifiedDataVerificationStatus, resumeHarnessTask, runHarnessInBackground, startDailyDataRefresh, startDailyIndexInitialization, startSupplementalDataRefresh, startUnifiedDataArchive, startUnifiedDataVerification, type HarnessTask } from '@/lib/harness-tasks';
 import { HARNESS_JSON_SCHEMA, normalizeHarnessOutput, type HarnessTable } from '@/lib/harness-output';
+import { closeDateLabel, dateLabel as marketDateLabel } from './market-display';
 
 type Skill = {
   id: string;
@@ -77,6 +78,8 @@ type SkillPreflightResult = {
   status?: string;
   required_missing?: string[];
   optional_missing?: string[];
+  degraded_missing?: string[];
+  minute_data?: { status?: string; requirement?: string; purpose?: string; packaged?: boolean; file_count?: number; reason?: string };
   degrade_policy?: string;
   execution_note?: string;
   [key: string]: unknown;
@@ -524,6 +527,9 @@ type Market = {
   intradayProxy?: IntradayProxy;
   dataSources?: Record<string, unknown>;
   supplemental?: SupplementalSummary;
+  quality?: string;
+  dataQuality?: string;
+  degraded?: boolean;
   publicLhbRecords?: { SECURITY_CODE?: string; SECURITY_NAME_ABBR?: string; TRADE_DATE?: string; BILLBOARD_NET_AMT?: number; BILLBOARD_BUY_AMT?: number; BILLBOARD_SELL_AMT?: number; EXPLAIN?: string }[];
 };
 type Theme = {
@@ -603,6 +609,7 @@ type StrategyCatalogItem = {
   businessEntry: string;
   businessHash: string;
   legacyEntryHash: string;
+  minuteData?: { mode?: string; purpose?: string };
 };
 
 const groupNames: Record<string, string> = {
@@ -655,7 +662,7 @@ const skills: Skill[] = skill14Catalog.skills.map((skill) => ({
   state: '已适配本地预检',
   note: `${skill.summary} ${skill.degrade}`,
 }));
-const d = (s: string) => { const value = String(s || ''); const compact = value.replace(/\D/g, ''); return compact.length >= 8 ? `${compact.slice(0, 4)}-${compact.slice(4, 6)}-${compact.slice(6, 8)}` : value || '—'; };
+const d = (s: string) => marketDateLabel(s);
 const p = (n: number) => `${n > 0 ? '+' : ''}${n.toFixed(2)}%`;
 const money = (n: number) => `${(n / 1e8).toFixed(2)} 亿`;
 type CapitalRawSource = { status?: string; data?: { records?: Record<string, unknown>[]; result?: { data?: Record<string, unknown>[] } } };
@@ -738,7 +745,7 @@ function loadStrategyRuns(): Record<string, StrategyRun> {
     return value && typeof value === 'object' ? value as Record<string, StrategyRun> : {};
   } catch { return {}; }
 }
-const strategyPreflightDisplayNote = '说明：3003 已调用对应原始策略评分引擎完成本地数值回执；Harness 负责基于同一份回执解释结果、列出缺失项与风险边界，不生成买卖建议。';
+const strategyPreflightDisplayNote = '说明：已调用对应原始策略评分引擎完成本地数值回执；Harness 负责基于同一份回执解释结果、列出缺失项与风险边界，不生成买卖建议。';
 function strategyPreflightDisplayText(output: unknown): string {
   return String(output || '').replace(
     '说明：本报告是网页适配层的真实数据预检与落盘运行单；未调用原始策略入口，因此不构成策略已执行或投资结论。',
@@ -793,6 +800,9 @@ const BASIC_SKILLS = new Set([
   'stock-hard-gate',
   'stock-watchlist',
   'kaipanla',
+  // 基础能力只作为架构、来源与质量规则说明，不启动预检或 Harness。
+  'market-data-capabilities',
+  'workbuddy-evolution-v22',
 ]);
 const skillMode = (skillId: string) =>
   DATA_INSUFFICIENT_SKILLS.has(skillId)
@@ -813,6 +823,8 @@ const skillIntroductions: Record<string, string> = {
   'technical-analysis': '基于本地 K 线计算趋势、支撑压力和常用技术指标。',
   'risk-mine-clearance': '检查个股公告、经营和行情风险线索，给出可核验的排雷清单。',
   'tdx-local-hub': '连接通达信本地日线、板块、公式和缓存，为其他技能提供数据底座。',
+  'market-data-capabilities': '统一说明公开行情、资讯、通达信、本地落盘和降级来源的接入范围、实际状态与适用边界。',
+  'workbuddy-evolution-v22': '说明用户纠错、硬规则、回归校验和交付闸门如何形成质量闭环，并区分规则说明与真实执行证据。',
 };
 function skillIntroduction(skill: Skill) {
   return skillIntroductions[skill.id] || `${groupNames[skill.group] || '股票研究'}能力：围绕${skill.name}整理当日数据、执行边界与可核验结果。`;
@@ -1232,9 +1244,9 @@ function makeBaseReport(
   const availability = buildAvailability(market, ladder);
   return {
     title: `掌财智能体 · ${d(market.date)} 行情复盘`,
-    generatedBy: '3003 网页脚本 + 本地规则',
+    generatedBy: '网页脚本 + 本地规则',
     date: market.date,
-    source: '3003 app-data/market/daily 本地日线归档',
+    source: '本地日线归档',
     scope: `同日样本 ${market.currentCount} 只，覆盖沪深北；排除旧日期 ${market.staleCount} 只`,
     summary: `市场上涨 ${market.up} 只、下跌 ${market.down} 只、平盘 ${market.flat} 只，上涨占比 ${ratio.toFixed(1)}%。已接入 TDX 榜单、指数日线、龙虎榜和融资融券补充快照；财务与股本在个股研究时按代码按需补齐。`,
     metrics: [
@@ -1525,8 +1537,8 @@ function StructuredStrategyOutput({ structured }: { structured?: StructuredStrat
   const latest = (analysis.latest_outputs && typeof analysis.latest_outputs === 'object' ? analysis.latest_outputs : {}) as Record<string, unknown>;
   const derived = (structured.derived || analysis.derived || {}) as Record<string, unknown>;
   const realtimeFields: [string, string][] = [
-    ['现价', 'now'], ['昨收', 'last_close'], ['涨跌幅', 'change_pct'], ['今开', 'open'],
-    ['最高', 'high'], ['最低', 'low'], ['均价', 'avg'], ['成交量（手）', 'volume_lot'], ['成交额（万元）', 'amount_wan'],
+    ['收盘价', 'last_close'], ['涨跌幅', 'change_pct'], ['日线开盘', 'open'],
+    ['日线最高', 'high'], ['日线最低', 'low'], ['成交量（手）', 'volume_lot'], ['成交额（万元）', 'amount_wan'],
   ];
   const dateFields: [string, string][] = [
     ['分析基准日', 'analysis_as_of_date'], ['公式最新日期', 'formula_latest_date'], ['日线最新日期', 'kline_latest_date'], ['数据模式', 'mode'],
@@ -1540,7 +1552,7 @@ function StructuredStrategyOutput({ structured }: { structured?: StructuredStrat
       <TableRow><TableCell>标的</TableCell><TableCell>{strategyValue(analysis.name)} · {strategyValue(analysis.symbol)}</TableCell></TableRow>
       {dateFields.filter(([, key]) => dateContext[key] != null).map(([label, key]) => <TableRow key={key}><TableCell>{label}</TableCell><TableCell>{strategyValue(dateContext[key])}</TableCell></TableRow>)}
     </TableBody></Table>
-    {realtimeRows.length > 0 && <HarnessDataTable table={{ title: '实时行情快照', columns: ['项目', '数值'], rows: realtimeRows }} />}
+    {realtimeRows.length > 0 && <HarnessDataTable table={{ title: '收盘行情快照', columns: ['项目', '数值'], rows: realtimeRows }} />}
     {formulaRows.length > 0 && <HarnessDataTable table={{ title: '飞龙在天公式输出', columns: ['输出字段', '当日值'], rows: formulaRows }} />}
     {derivedRows.length > 0 && <HarnessDataTable table={{ title: '子系统计算结果', columns: ['计算项', '结果'], rows: derivedRows }} />}
     {structured.reportMarkdown && <details className="strategy-markdown"><summary>查看完整排版报告</summary><pre>{structured.reportMarkdown}</pre></details>}
@@ -1657,7 +1669,7 @@ function ArchivedStockReport({ item }: { item: ReportArchiveRecord }) {
   const visibleFindings = parsed.findings.slice(0, 5);
   const visibleTables = parsed.tables;
   const textValue = (value: unknown, fallback = '—') => typeof value === 'string' || typeof value === 'number' ? String(value) : fallback;
-  return <section className="stock-research-report"><div className="ai-report-reading-head"><Sparkles size={16} /><b>个股研究报告</b><span>已归档 · {parsed.jsonValid ? 'JSON 已校验' : '已兼容规范化'}</span></div><p>{parsed.summary || item.summary}</p><Table><TableHeader><TableRow><TableHead>标的</TableHead><TableHead>价格</TableHead><TableHead>涨跌幅</TableHead><TableHead>数据日期</TableHead><TableHead>数据范围</TableHead></TableRow></TableHeader><TableBody><TableRow><TableCell>{textValue(stock.name)} · {textValue(stock.code)}</TableCell><TableCell>{stock.close == null ? '—' : Number(stock.close).toFixed(2)}</TableCell><TableCell className={Number(stock.pct || 0) >= 0 ? 'up' : 'down'}>{stock.pct == null ? '—' : `${Number(stock.pct) >= 0 ? '+' : ''}${Number(stock.pct).toFixed(2)}%`}</TableCell><TableCell>{d(item.date)}</TableCell><TableCell>{item.dataScope}</TableCell></TableRow></TableBody></Table>{visibleFindings.length > 0 && <div className="ai-finding-grid">{visibleFindings.map((finding, index) => <article key={`${finding.title}-${index}`}><h5>{finding.title}</h5><p>{finding.text}</p></article>)}</div>}{visibleTables.map((table, index) => <HarnessDataTable key={`${table.title}-${index}`} table={table} />)}{parsed.findings.length > 5 && <details className="harness-more"><summary>查看其余结论</summary>{parsed.findings.slice(5).map((finding, index) => <article key={`more-${index}`}><h5>{finding.title}</h5><p>{finding.text}</p></article>)}</details>}{parsed.cautions.length > 0 && <><h4>数据边界</h4><ul className="report-list">{parsed.cautions.slice(0, 6).map((caution, index) => <li key={`${caution}-${index}`}>{caution}</li>)}</ul></>}{!parsed.jsonValid && <p className="form-error">{harnessParseNotice(parsed.parseError, '输出')}</p>}<details className="report-raw"><summary>查看原始 JSON</summary><pre>{item.raw || ''}</pre></details></section>;
+  return <section className="stock-research-report"><div className="ai-report-reading-head"><Sparkles size={16} /><b>个股研究报告</b><span>已归档 · {parsed.jsonValid ? 'JSON 已校验' : '已兼容规范化'}</span></div><p>{parsed.summary || item.summary}</p><Table><TableHeader><TableRow><TableHead>标的</TableHead><TableHead>{closeDateLabel(item.date)}</TableHead><TableHead>涨跌幅</TableHead><TableHead>数据日期</TableHead><TableHead>数据范围</TableHead></TableRow></TableHeader><TableBody><TableRow><TableCell>{textValue(stock.name)} · {textValue(stock.code)}</TableCell><TableCell title={closeDateLabel(item.date)}>{stock.close == null ? '—' : Number(stock.close).toFixed(2)}</TableCell><TableCell className={Number(stock.pct || 0) >= 0 ? 'up' : 'down'}>{stock.pct == null ? '—' : `${Number(stock.pct) >= 0 ? '+' : ''}${Number(stock.pct).toFixed(2)}%`}</TableCell><TableCell>{d(item.date)}</TableCell><TableCell>{item.dataScope}</TableCell></TableRow></TableBody></Table>{visibleFindings.length > 0 && <div className="ai-finding-grid">{visibleFindings.map((finding, index) => <article key={`${finding.title}-${index}`}><h5>{finding.title}</h5><p>{finding.text}</p></article>)}</div>}{visibleTables.map((table, index) => <HarnessDataTable key={`${table.title}-${index}`} table={table} />)}{parsed.findings.length > 5 && <details className="harness-more"><summary>查看其余结论</summary>{parsed.findings.slice(5).map((finding, index) => <article key={`more-${index}`}><h5>{finding.title}</h5><p>{finding.text}</p></article>)}</details>}{parsed.cautions.length > 0 && <><h4>数据边界</h4><ul className="report-list">{parsed.cautions.slice(0, 6).map((caution, index) => <li key={`${caution}-${index}`}>{caution}</li>)}</ul></>}{!parsed.jsonValid && <p className="form-error">{harnessParseNotice(parsed.parseError, '输出')}</p>}<details className="report-raw"><summary>查看原始 JSON</summary><pre>{item.raw || ''}</pre></details></section>;
 }
 
 function ReportView({ report }: { report: Report }) {
@@ -2105,9 +2117,21 @@ export default function WorkspacePages({
   const [environmentLoading, setEnvironmentLoading] = useState(false);
   const [environmentMessage, setEnvironmentMessage] = useState('');
   const [dailyRefreshRunning, setDailyRefreshRunning] = useState(false);
+  const [indexRebuildRunning, setIndexRebuildRunning] = useState(false);
   const [supplementalRefreshRunning, setSupplementalRefreshRunning] = useState(false);
   const [unifiedArchiveRunning, setUnifiedArchiveRunning] = useState(false);
   const [unifiedVerificationRunning, setUnifiedVerificationRunning] = useState(false);
+  const [resourceLibraryContext, setResourceLibraryContext] = useState<Record<string, unknown> | null>(null);
+  useEffect(() => {
+    let active = true;
+    void fetch(bridgeUrl('/runtime/resource-context'), { cache: 'no-store' })
+      .then((response) => response.ok ? response.json() : null)
+      .then((value) => {
+        if (active && value && typeof value === 'object') setResourceLibraryContext(value as Record<string, unknown>);
+      })
+      .catch(() => undefined);
+    return () => { active = false; };
+  }, []);
   useEffect(() => {
     if (page !== 'capital') return;
     let active = true;
@@ -2183,11 +2207,13 @@ export default function WorkspacePages({
   const selectedStrategyHasFailure = strategyRunHasFailure(selectedStrategyRun);
   const selectedStrategyMeta = strategyCatalogItem(selectedStrategy);
   const selectedStrategyStatus = strategyDataStatus(selectedStrategy);
-  // 个股研究只展示与当前行情日期一致的日线，避免刷新后把旧交易日混入研究列表。
+  // 个股研究使用 resource-library 的完整日线档案。若请求日未落盘，
+  // 桥接层会把 rows 统一降级到最近完整交易日；这里不能再按“当日”
+  // 过滤，否则会把合法的最近交易日档案全部过滤掉。
   const searchableStocks = useMemo(() => {
     const source = market.allStocks?.length ? market.allStocks : market.stocks;
-    return source.filter((row) => String(row.date || '') === String(market.date || ''));
-  }, [market.allStocks, market.stocks, market.date]);
+    return source.filter((row) => Boolean(row.code && row.date));
+  }, [market.allStocks, market.stocks]);
   const filteredStocks = useMemo(() => {
     let rows = searchableStocks.filter((x) =>
       `${x.name} ${x.code}`.includes(search.trim()),
@@ -2221,6 +2247,8 @@ export default function WorkspacePages({
       setEnvironmentSnapshot(body as Record<string, unknown>);
       const dailyState = body.dailyRefresh as Record<string, unknown> | undefined;
       setDailyRefreshRunning(dailyState?.status === 'running');
+      const indexState = body.dailyIndexInitialization as Record<string, unknown> | undefined;
+      setIndexRebuildRunning(indexState?.status === 'running');
       const archiveState = body.unifiedArchive as Record<string, unknown> | undefined;
       const verificationState = body.unifiedVerification as Record<string, unknown> | undefined;
       setUnifiedArchiveRunning(archiveState?.status === 'running');
@@ -2284,6 +2312,45 @@ export default function WorkspacePages({
       setDailyRefreshRunning(false);
     }
   }
+  async function rebuildAllIndices() {
+    if (indexRebuildRunning || dailyRefreshRunning) return;
+    setIndexRebuildRunning(true);
+    setEnvironmentMessage('已提交初始化任务：正在扫描所选通达信目录全部 .day，并重建全量个股索引；完成后复核本地 canonical 日线库…');
+    try {
+      const started = await startDailyIndexInitialization({ force: true });
+      let status = String(started.state?.status || started.job?.status || 'running');
+      for (let attempt = 0; attempt < 900 && status === 'running'; attempt += 1) {
+        await new Promise((resolve) => window.setTimeout(resolve, 2000));
+        const current = await getDailyIndexInitializationStatus();
+        const state = current.state || {};
+        const steps = Array.isArray(state.steps) ? state.steps as Record<string, unknown>[] : [];
+        const activeStep = steps.find((step) => step.status === 'running');
+        if (activeStep) {
+          const startedAt = Date.parse(String(activeStep.startedAt || ''));
+          const elapsed = Number.isFinite(startedAt) ? Math.max(0, Math.floor((Date.now() - startedAt) / 1000)) : 0;
+          const mm = String(Math.floor(elapsed / 60)).padStart(2, '0');
+          const ss = String(elapsed % 60).padStart(2, '0');
+          setEnvironmentMessage(`${String(activeStep.name || '全量索引初始化')}进行中 · 已运行 ${mm}:${ss} · 页面可继续使用`);
+        }
+        const latestJob = Array.isArray(current.jobs)
+          ? current.jobs.at(-1) as Record<string, unknown> | undefined
+          : undefined;
+        status = String(state.status || latestJob?.status || '') || status;
+      }
+      setEnvironmentMessage(status === 'completed'
+        ? '初始化完成：已重建通达信股票索引和本地全历史日线定位索引。'
+        : status === 'partial'
+          ? '初始化已完成本地全历史索引，但通达信目录存在缺口；详见下方步骤状态。'
+          : status === 'failed'
+            ? '初始化失败：请检查通达信安装目录、磁盘空间和数据包是否完整。'
+            : '初始化仍在后台运行，可稍后重新检测。');
+      await refreshEnvironment();
+    } catch (error) {
+      setEnvironmentMessage(error instanceof Error ? error.message : '全量个股索引初始化启动失败');
+    } finally {
+      setIndexRebuildRunning(false);
+    }
+  }
   async function replenishSupplementalData() {
     if (supplementalRefreshRunning) return;
     setSupplementalRefreshRunning(true);
@@ -2320,7 +2387,7 @@ export default function WorkspacePages({
         const currentState = current.state as Record<string, unknown> | undefined;
         const steps = Array.isArray(currentState?.steps) ? currentState.steps as Record<string, unknown>[] : [];
         const activeStep = steps.find((step) => step.status === 'running');
-        if (activeStep) setEnvironmentMessage(`统一数据落盘：${String(activeStep.name || '正在执行')} · 所有可用数据将写入 app-data`);
+        if (activeStep) setEnvironmentMessage(`统一数据落盘：${String(activeStep.name || '正在执行')} · 所有可用数据将写入 resource-library`);
         const latestJob = Array.isArray(current.jobs)
           ? current.jobs.at(-1) as Record<string, unknown> | undefined
           : undefined;
@@ -2390,8 +2457,9 @@ export default function WorkspacePages({
     const legacy = loadReport(market.date);
     if (legacy && !localStorage.getItem(migratedKey)) {
       const now = new Date().toISOString();
-      saveReportArchive({
+      void saveReportArchive({
         id: createReportId('legacy-market'),
+        archiveKey: 'market-review',
         createdAt: now,
         updatedAt: now,
         date: legacy.date,
@@ -2466,10 +2534,11 @@ export default function WorkspacePages({
     setHarnessStartedAt(null);
     setHarnessElapsed(0);
   }
-  function archiveMarketReport(value: Report, reportType: string) {
+  async function archiveMarketReport(value: Report, reportType: string) {
     const now = new Date().toISOString();
-    saveReportArchive({
+    await saveReportArchive({
       id: createReportId('market'),
+      archiveKey: 'market-review',
       createdAt: now,
       updatedAt: now,
       date: value.date,
@@ -2592,12 +2661,15 @@ export default function WorkspacePages({
     _context?: unknown,
     label = skillId,
   ) {
+    const resourceContext = _context && typeof _context === 'object'
+      ? { ...(_context as Record<string, unknown>), resourceLibrary: resourceLibraryContext || {} }
+      : { resourceLibrary: resourceLibraryContext || {} };
     const result = await runHarnessInBackground({
       task,
       skillId,
       label,
       market: marketPayload,
-      context: _context,
+      context: resourceContext,
       originPage: page,
       expectedSeconds: estimateSeconds(skillId),
     });
@@ -2639,16 +2711,17 @@ export default function WorkspacePages({
       }
       setStrategyRuns((previous) => ({ ...previous, [target.id]: { ...previous[target.id], busy: false, output: strategyOutput, harnessOutput, status: 'CLEAN_PASS', phase: 'completed', structured: strategyStructured, receipt, startedAt: null, elapsed: Math.floor((Date.now() - startedAt) / 1000) } }));
       const now = new Date().toISOString();
-      saveReportArchive({
+      await saveReportArchive({
         id: `strategy-${target.id}-${Date.now()}`,
+        archiveKey: `strategy:${target.id}:${market.date}`,
         createdAt: now,
         updatedAt: now,
         date: market.date,
         title: `掌财智能体 · ${target.name} · 策略运行报告`,
         reportType: '策略运行',
-        generatedBy: '3003 网页脚本 + DeepSeek Harness',
+        generatedBy: '网页脚本 + DeepSeek Harness',
         summary: '刷新后已恢复原始策略与 Harness 解读，结构化报告已生成',
-        dataScope: `3003 app-data 本地日线归档 · ${d(market.date)} · 已恢复后台交付物`,
+        dataScope: `本地日线归档 · ${d(market.date)} · 已恢复后台交付物`,
         content: { kind: 'strategy-run', strategyId: target.id, status: 'CLEAN_PASS', receipt, structured: strategyStructured, harnessOutput },
         raw: harnessOutput,
       });
@@ -2740,7 +2813,7 @@ export default function WorkspacePages({
         aiPresentation: rendered.presentation,
       };
       setReport(nextReport);
-      archiveMarketReport(nextReport, 'Harness 复盘');
+      await archiveMarketReport(nextReport, 'Harness 复盘');
     } catch (error) {
       setAiError(
         error instanceof Error ? error.message : 'DeepSeek Harness 调用失败',
@@ -2762,12 +2835,19 @@ export default function WorkspacePages({
   }
   function formatSkillPreflight(target: Skill, result: SkillPreflightResult) {
     const missingRequired = Array.isArray(result.required_missing) && result.required_missing.length ? result.required_missing.join('、') : '无';
-    const missingOptional = Array.isArray(result.optional_missing) && result.optional_missing.length ? result.optional_missing.join('、') : '无';
+    const degraded = Array.isArray(result.degraded_missing) ? result.degraded_missing : [];
+    const missingOptionalValues = [
+      ...(Array.isArray(result.optional_missing) ? result.optional_missing : []),
+      ...degraded,
+    ];
+    const missingOptional = missingOptionalValues.length ? missingOptionalValues.join('、') : '无';
+    const minute = result.minute_data;
     return [
       `${target.name} · 本地数据预检`,
       `状态：${result.status || '未知'}`,
       `缺少必需数据：${missingRequired}`,
       `缺少可降级数据：${missingOptional}`,
+      `5 分钟线：${minute?.requirement === 'not_required' || !minute ? '普通任务不依赖，未写入 EXE' : `${minute.status === 'available' ? '外部可按需读取' : '未发现，已降级'} · ${minute.purpose || '仅用于分钟级特征'}`}`,
       `规则：${result.degrade_policy || target.note}`,
       `说明：${result.execution_note || '预检回执已写入应用数据目录。'}`,
     ].join('\n');
@@ -2816,8 +2896,9 @@ export default function WorkspacePages({
       setSkillHarnessOutput(raw);
       const parsed = normalizeHarnessOutput(raw);
       const now = new Date().toISOString();
-      saveReportArchive({
+      await saveReportArchive({
         id: createReportId('skill14-harness'),
+        archiveKey: `skill14:${target.id}:${market.date}`,
         createdAt: now,
         updatedAt: now,
         date: market.date,
@@ -2841,7 +2922,7 @@ export default function WorkspacePages({
     window.setTimeout(() => {
       const nextReport = makeBaseReport(market, themes, ladder);
       setReport(nextReport);
-      archiveMarketReport(nextReport, '结构化复盘');
+      void archiveMarketReport(nextReport, '结构化复盘');
       setReportBusy(false);
     }, 180);
   }
@@ -2886,8 +2967,9 @@ export default function WorkspacePages({
       setSingleSignalResult(body);
       const resultDate = String(body.latest_trading_date || market.date || '').replace(/\D/g, '').slice(0, 8);
       const now = new Date().toISOString();
-      saveReportArchive({
+      await saveReportArchive({
         id: `golden-ignition-single-${digits}-${Date.now()}`,
+        archiveKey: `golden:${digits}:${resultDate || market.date}`,
         createdAt: now,
         updatedAt: now,
         date: resultDate || market.date,
@@ -2930,7 +3012,7 @@ export default function WorkspacePages({
         `缺少必需数据：${missingRequired}`,
         `缺少可降级数据：${missingOptional}`,
         `规则：${result.degrade_policy || target.note}`,
-        '说明：3003 已调用对应原始策略评分引擎完成本地数值回执；Harness 负责基于同一份回执解释结果、列出缺失项与风险边界，不生成买卖建议。',
+        '说明：已调用对应原始策略评分引擎完成本地数值回执；Harness 负责基于同一份回执解释结果、列出缺失项与风险边界，不生成买卖建议。',
       ].join('\n');
       const filterPct = Number(minPct);
       const filterAmount = Number(minAmount);
@@ -3031,8 +3113,9 @@ export default function WorkspacePages({
           receipt: { ...result, scoring: scoreReceipt },
         },
       }));
-      saveReportArchive({
+      await saveReportArchive({
         id: `strategy-harness-${target.id}-${Date.now()}`,
+        archiveKey: `strategy:${target.id}:${market.date}`,
         createdAt: now,
         updatedAt: now,
         date: market.date,
@@ -3121,7 +3204,7 @@ export default function WorkspacePages({
       <Table>
         <TableHeader>
           <TableRow>
-            {['股票', '价格', '涨跌幅', '成交额', '自选'].map((x) => (
+            {['股票', closeDateLabel(market.date), '涨跌幅', '成交额', '自选'].map((x) => (
               <TableHead key={x}>{x}</TableHead>
             ))}
           </TableRow>
@@ -3135,7 +3218,7 @@ export default function WorkspacePages({
                   <small>{s.code}</small>
                 </button>
               </TableCell>
-              <TableCell className="numeric">{s.close.toFixed(2)}</TableCell>
+              <TableCell className="numeric" title={closeDateLabel(s.date)}>{s.close.toFixed(2)}</TableCell>
               <TableCell className={`numeric ${s.pct >= 0 ? 'up' : 'down'}`}>
                 {p(s.pct)}
               </TableCell>
@@ -3203,6 +3286,7 @@ export default function WorkspacePages({
         {list.map((s, i) => {
           const catalogStatus = s.group === 'selection' ? strategyDataStatus(s.id) : null;
           const mode = catalogStatus === 'missing' ? 'data' : catalogStatus === 'partial' ? 'partial' : skillMode(s.id);
+          const detailOnly = mode === 'basic';
           const run = s.group === 'selection' ? strategyRuns[s.id] : undefined;
           const hasReport = strategyRunHasReport(run);
           const hasFailure = strategyRunHasFailure(run);
@@ -3217,16 +3301,16 @@ export default function WorkspacePages({
                   <Workflow size={19} />
                 )}
               </span>
-              <small className="skill-ready">本地数据预检</small>
+              <small className="skill-ready">{detailOnly ? '基础能力 · 仅详情' : '本地数据预检'}</small>
             </div>
             <h3>{s.name}</h3>
-            <p>{skillIntroduction(s)} 先校验已落盘数据与降级规则；进入详情后可生成预检，也可直接调用 Harness。</p>
+            <p>{skillIntroduction(s)} {detailOnly ? '本页仅展示技能详情，不启动预检或 Harness。' : '先校验已落盘数据与降级规则；进入详情后可生成预检，也可直接调用 Harness。'}</p>
             <small className="skill-original-id">原始技能：{s.id}</small>
             <Tags list={s.dependencies.slice(0, 3)} />
             <div className="skill-card-bottom">
               <span>{groupNames[s.group]}</span>
               <span>
-                {run?.busy ? '正在预检…' : hasReport ? '查看最新回执' : hasFailure ? '查看失败详情' : '查看并预检'}
+                {detailOnly ? '查看技能详情' : run?.busy ? '正在预检…' : hasReport ? '查看最新回执' : hasFailure ? '查看失败详情' : '查看并预检'}
                 <ArrowUpRight size={14} />
               </span>
             </div>
@@ -3270,6 +3354,9 @@ export default function WorkspacePages({
   const environmentTdx = (environment.tdx && typeof environment.tdx === 'object' ? environment.tdx : {}) as Record<string, unknown>;
   const environmentDaily = (environment.daily && typeof environment.daily === 'object' ? environment.daily : {}) as Record<string, unknown>;
   const environmentHarness = (environment.harness && typeof environment.harness === 'object' ? environment.harness : {}) as Record<string, unknown>;
+  const environmentIndexInitialization = (environment.dailyIndexInitialization && typeof environment.dailyIndexInitialization === 'object' ? environment.dailyIndexInitialization : {}) as Record<string, unknown>;
+  const environmentCanonicalIndex = (environment.canonicalDailyIndex && typeof environment.canonicalDailyIndex === 'object' ? environment.canonicalDailyIndex : {}) as Record<string, unknown>;
+  const runtimeStorageLabel = isDesktopRuntime() ? 'EXE 资源库' : '本地运行目录';
   const environmentDailyState = (environment.dailyRefresh && typeof environment.dailyRefresh === 'object' ? environment.dailyRefresh : {}) as Record<string, unknown>;
   const environmentSupplementalState = (environment.supplementalRefresh && typeof environment.supplementalRefresh === 'object' ? environment.supplementalRefresh : {}) as Record<string, unknown>;
   const environmentSupplemental = (environment.supplemental && typeof environment.supplemental === 'object' ? environment.supplemental : {}) as Record<string, unknown>;
@@ -3808,7 +3895,12 @@ export default function WorkspacePages({
           <div className="research-code-entry">
             <div className="research-code-copy">
               <b>按代码打开个股</b>
-              <span>仅匹配 {d(market.date)} 当日日线 · 输入后可查看十项个股技能</span>
+              <span>
+                {market.degraded === true || market.dataQuality === 'degraded' || market.quality === 'degraded'
+                  ? `目标日未落盘，已降级使用 ${d(market.date)} 日线收盘数据`
+                  : `使用 ${d(market.date)} 日线收盘数据`}
+                {' · 输入后可查看十项个股技能'}
+              </span>
             </div>
             <div className="research-code-controls">
               <Input
@@ -3872,14 +3964,18 @@ export default function WorkspacePages({
           </div>
           <Box
             title="全量个股档案"
-            extra={<span className="subtle">{searchableStocks.length} 只 {d(market.date)} 日线股票 · 点击查看行情详情</span>}
+            extra={<span className="subtle">
+              {searchableStocks.length} 只 {d(market.date)} 日线股票
+              {(market.degraded === true || market.dataQuality === 'degraded' || market.quality === 'degraded') ? '（最近完整交易日降级）' : ''}
+              {' · 点击查看行情详情'}
+            </span>}
             >
             {filteredStocks.length ? (
               stockTable(filteredStocks.slice(pageNo * 15, pageNo * 15 + 15))
             ) : (
                 <Empty
-                title="暂无当日日线股票"
-                body="请先刷新行情；随后可按六位代码或中文名称检索。"
+                title="暂无可用日线股票"
+                body="请先刷新行情或完成本地日线归档；随后可按六位代码或中文名称检索。"
               />
             )}
             {filteredStocks.length > 0 && (
@@ -3952,7 +4048,7 @@ export default function WorkspacePages({
             </TabsContent>
             <TabsContent value="journal">
               <Box title="研究日志" extra={<span className="subtle">与“我的报告”实时同步</span>}>
-                {archiveRows.length ? <div className="research-journal-list">{archiveRows.slice(0, 20).map((item) => <button className="research-journal-item" key={item.id} onClick={() => setOpenedArchive(item)}><span className="journal-type">{item.reportType}</span><div><b>{item.title}</b><small>{new Date(item.createdAt).toLocaleString('zh-CN', { hour12: false })} · {item.generatedBy}</small><p>{item.summary.slice(0, 120)}{item.summary.length > 120 ? '…' : ''}</p></div><ArrowUpRight size={15} /></button>)}</div> : <Empty title="还没有研究记录" body="从复盘、个股研究或技能中心生成报告后，研究日志会自动出现。" />}
+                {archiveRows.length ? <div className="research-journal-list">{archiveRows.slice(0, 20).map((item) => <button className="research-journal-item" key={item.id} onClick={() => setOpenedArchive(item)}><span className="journal-type">{item.reportType}</span><div><b>{item.title}</b><small>{new Date(item.updatedAt || item.createdAt).toLocaleString('zh-CN', { hour12: false })} · {item.generatedBy}</small><p>{item.summary.slice(0, 120)}{item.summary.length > 120 ? '…' : ''}</p></div><ArrowUpRight size={15} /></button>)}</div> : <Empty title="还没有研究记录" body="从复盘、个股研究或技能中心生成报告后，研究日志会自动出现。" />}
               </Box>
             </TabsContent>
           </Tabs>
@@ -4075,7 +4171,7 @@ export default function WorkspacePages({
                       <TableCell><b>{item.title}</b><small className="table-sub">{item.generatedBy} · {item.summary.slice(0, 62)}{item.summary.length > 62 ? '…' : ''}</small></TableCell>
                       <TableCell><span className={item.content.kind === 'harness-task' && String(item.content.status || '') !== 'completed' ? 'status-warning' : 'status-good'}>{item.content.kind === 'harness-task' && String(item.content.status || '') !== 'completed' ? `未完成 · ${item.reportType}` : item.reportType}</span></TableCell>
                       <TableCell>{d(item.date)}</TableCell>
-                      <TableCell>{new Date(item.createdAt).toLocaleString('zh-CN', { hour12: false })}</TableCell>
+                      <TableCell>{new Date(item.updatedAt || item.createdAt).toLocaleString('zh-CN', { hour12: false })}</TableCell>
                       <TableCell className="archive-actions"><Button variant="outline" size="sm" onClick={() => setOpenedArchive(item)}><FileText size={14} />查看</Button><button className="archive-delete" aria-label={`删除 ${item.title}`} onClick={() => deleteArchivedReport(item.id)}><Trash2 size={15} /></button></TableCell>
                     </TableRow>
                   ))}
@@ -4147,7 +4243,7 @@ export default function WorkspacePages({
                 </div>
                 <div className={`environment-card ${environmentHarness.status === 'ready' ? 'ready' : 'warn'}`}>
                   <Workflow size={20} />
-                  <div><b>本地 14 技能桥接</b><small>{environmentHarness.base ? String(environmentHarness.base) : '本地数据预检服务'} · 端口 4319</small></div>
+                   <div><b>本地 14 技能桥接</b><small>{environmentHarness.base ? String(environmentHarness.base) : '本地数据预检服务'} · {bridgeHostLabel()}</small></div>
                   <strong>{environmentHarness.status === 'ready' ? '已就绪' : '需配置'}</strong>
                 </div>
                 <div className={`environment-card ${['completed', 'running'].includes(unifiedArchiveStatus) ? 'ready' : 'warn'}`}>
@@ -4156,11 +4252,11 @@ export default function WorkspacePages({
                   <strong>{unifiedArchiveBadge}</strong>
                 </div>
               </div>
-              {environmentSnapshot && <div className="environment-details"><span>沪 {String((environmentDaily.directories as Record<string, unknown> | undefined)?.SH ? ((environmentDaily.directories as Record<string, Record<string, unknown>>).SH.fileCount || 0) : 0)} 文件</span><span>深 {String((environmentDaily.directories as Record<string, Record<string, unknown>> | undefined)?.SZ?.fileCount || 0)} 文件</span><span>北 {String((environmentDaily.directories as Record<string, Record<string, unknown>> | undefined)?.BJ?.fileCount || 0)} 文件</span><span>数据目录 {String(environmentTdx.root || 'C:\\new_tdx_mock')}</span><span>日线状态 {String(environmentDailyState.status || '未执行')}</span><span>日线时效 {environmentDaily.updateDue === true ? '收盘后待更新' : '已与最新交易日核对'}</span><span>日线索引 {String(environmentDailyIndex.status || '未生成')} · 降级 {String(environmentDailyIndexSummary.fallback_symbol_count || 0)} 股/{String(environmentDailyIndexSummary.fallback_record_count || 0)} 条</span><span>其他数据任务 {String(environmentSupplementalState.status || '未执行')}</span><span>补充覆盖：财务 {environmentSupplemental.coverage && (environmentSupplemental.coverage as Record<string, boolean>).financial ? '按需可用' : '按需'} · 股本 {environmentSupplemental.coverage && (environmentSupplemental.coverage as Record<string, boolean>).share_capital ? '已取' : '按需'} · 指数 {String(environmentSupplemental.indexSymbolCount || 0)} 组 · 龙虎榜 {String(environmentSupplemental.lhbMarketRecordCount || environmentSupplemental.lhbRecordCount || 0)} 条 · 融资融券 {String(environmentSupplemental.marginRecordCount || 0)} 条</span></div>}
+              {environmentSnapshot && <div className="environment-details"><span>沪 {String((environmentDaily.directories as Record<string, unknown> | undefined)?.SH ? ((environmentDaily.directories as Record<string, Record<string, unknown>>).SH.fileCount || 0) : 0)} 文件</span><span>深 {String((environmentDaily.directories as Record<string, Record<string, unknown>> | undefined)?.SZ?.fileCount || 0)} 文件</span><span>北 {String((environmentDaily.directories as Record<string, Record<string, unknown>> | undefined)?.BJ?.fileCount || 0)} 文件</span><span>数据目录 {environmentTdx.root ? String(environmentTdx.root) : '未配置'}</span><span>日线状态 {String(environmentDailyState.status || '未执行')}</span><span>日线时效 {environmentDaily.updateDue === true ? '收盘后待更新' : '已与最新交易日核对'}</span><span>日线索引 {String(environmentDailyIndex.status || '未生成')} · 降级 {String(environmentDailyIndexSummary.fallback_symbol_count || 0)} 股/{String(environmentDailyIndexSummary.fallback_record_count || 0)} 条</span><span>全历史索引 {String(environmentCanonicalIndex.status || '未生成')} · {String(environmentCanonicalIndex.symbolCount || 0)} 股/{String(environmentCanonicalIndex.recordCount || 0)} 条</span><span>索引初始化 {String(environmentIndexInitialization.status || '未执行')}</span><span>其他数据任务 {String(environmentSupplementalState.status || '未执行')}</span><span>补充覆盖：财务 {environmentSupplemental.coverage && (environmentSupplemental.coverage as Record<string, boolean>).financial ? '按需可用' : '按需'} · 股本 {environmentSupplemental.coverage && (environmentSupplemental.coverage as Record<string, boolean>).share_capital ? '已取' : '按需'} · 指数 {String(environmentSupplemental.indexSymbolCount || 0)} 组 · 龙虎榜 {String(environmentSupplemental.lhbMarketRecordCount || environmentSupplemental.lhbRecordCount || 0)} 条 · 融资融券 {String(environmentSupplemental.marginRecordCount || 0)} 条</span></div>}
               <div className="environment-validation"><b>统一落盘计划</b>：每个交易日收盘后 16:30（Asia/Shanghai）自动执行日线、行情、资讯、公式证据和本地来源清单归档；周末及交易所闭市日跳过，并以本地交易日历和实际数据日期为准。当前清单 {d(String(environmentSourceManifest.tradeDate || ''))}，已落盘来源 {String(environmentSourceManifest.availableSourceCount || 0)}/{String(environmentSourceManifest.sourceCount || 0)}。日线归档：{String(environmentDailyArchive.archive_mode || 'unknown')}，本次新增 {String(environmentDailyArchive.incremental_records || 0)} 条；统一落盘：{unifiedArchiveBadge}；校验：{String(environmentUnifiedVerification.status || '未执行')}。</div>
               {environmentRunningStep && <div className="environment-validation">当前数据刷新步骤：{String(environmentRunningStep.name || '日线补全')} · 已在后台运行，页面可继续使用</div>}
               <div className="environment-source-list unified-archive-run-card">
-                <div className="environment-source-title"><b>统一落盘运行状态</b><small>状态 JSON、Harness 上下文和 HTML 报告全部保存在 3003/app-data 内</small></div>
+                 <div className="environment-source-title"><b>统一落盘运行状态</b><small>状态 JSON、Harness 上下文和 HTML 报告全部保存在 {runtimeStorageLabel} 内</small></div>
                 <div className="environment-details">
                   <span>状态 <strong>{unifiedArchiveBadge}</strong></span>
                   <span>步骤 {unifiedArchiveProgress}/{unifiedArchiveTotal}</span>
@@ -4180,7 +4276,7 @@ export default function WorkspacePages({
               {environmentIntegrityAfter.stockCount !== undefined && <div className="environment-source-list"><div className="environment-source-title"><b>个股日线完整性报告</b><small>按 TQ 股票清单逐代码核验 .day 文件最后一条记录，并用公开历史 K 线作缺口兜底</small></div><div className="environment-details"><span>目标交易日 {d(String(environmentIntegrity.targetDate || environmentIntegrityAfter.targetDate || ''))}</span><span>应有 {String(environmentIntegrityAfter.stockCount || 0)} 只</span><span>文件已齐 {String(environmentIntegrityAfter.completeCount || 0)} 只</span><span className="up">未上市/停牌计入 {environmentIntegrityNonTrading.length} 只</span><span className={environmentIntegrityUnresolvedCount ? 'down' : 'up'}>仍需补齐 {environmentIntegrityUnresolvedCount} 只</span><span className="up">本次补写 {environmentIntegrityRepairedCount} 条</span></div>{environmentIntegrityUnresolved.length > 0 && <><div className="subtle">以下仅展示前 10 条，完整清单保存在本地完整性报告中。</div><Table><TableHeader><TableRow><TableHead>代码</TableHead><TableHead>市场</TableHead><TableHead>状态</TableHead><TableHead>说明</TableHead></TableRow></TableHeader><TableBody>{environmentIntegrityUnresolved.map((item, index) => <TableRow key={`${String(item.code || 'unknown')}-${index}`}><TableCell>{String(item.code || '—')}</TableCell><TableCell>{String(item.market || '—')}</TableCell><TableCell className="down">未补齐</TableCell><TableCell>TQ 与公开历史 K 线均未返回 {d(String(environmentIntegrity.targetDate || environmentIntegrityAfter.targetDate || ''))} 数据</TableCell></TableRow>)}</TableBody></Table></>}{environmentIntegrityNonTrading.length > 0 && <Table><TableHeader><TableRow><TableHead>代码</TableHead><TableHead>处理</TableHead><TableHead>依据</TableHead></TableRow></TableHeader><TableBody>{environmentIntegrityNonTrading.map((item, index) => <TableRow key={`${String(item.code || 'non-trading')}-${index}`}><TableCell>{String(item.code || '—')}</TableCell><TableCell className="up">{String(item.type || 'non_trading') === 'unlisted' ? '未上市，计入完整' : '停牌/无交易，计入完整'}</TableCell><TableCell>{String(item.reason || '目标交易日无成交记录')}</TableCell></TableRow>)}</TableBody></Table>}</div>}
               <div className="environment-validation environment-manual-guide"><b>日线补齐操作顺序</b><br /><span>① 优先进入通达信客户端并登录，执行“盘后数据下载/日线数据下载”。</span><br /><span>② 点击“通过 Harness 补全通达信日线”，先核验 TDX 并增量写入；若 TDX 断开，系统自动将公开源精确交易日 OHLCV 写入日线降级层和索引。</span><br /><strong>公开降级层只补明确缺失日期，保持 degraded 标记；不能替代 TDX 全历史或 TQ 公式现场回执。</strong></div>
               {environmentIntegrityManualAction && <div className="environment-validation">{environmentIntegrityManualAction}</div>}
-              <div className="environment-actions"><Button className="primary-button" onClick={archiveAllData} disabled={unifiedArchiveRunning}>{unifiedArchiveRunning ? <LoaderCircle className="spin" size={15} /> : <Download size={15} />}立即统一落盘（全源）</Button><Button variant="outline" onClick={verifyAllData} disabled={unifiedVerificationRunning}>{unifiedVerificationRunning ? <LoaderCircle className="spin" size={15} /> : <Check size={15} />}校验落盘并调用 Harness</Button><Button variant="outline" onClick={replenishDailyData} disabled={dailyRefreshRunning}>{dailyRefreshRunning ? <LoaderCircle className="spin" size={15} /> : <RefreshCw size={15} />}刷新交易日行情（日线+市场信息）</Button><Button variant="outline" onClick={replenishSupplementalData} disabled={supplementalRefreshRunning}>{supplementalRefreshRunning ? <LoaderCircle className="spin" size={15} /> : <Database size={15} />}仅补齐其他数据</Button><span>{environmentMessage || '页面打开时检测一次；自动计划在每个交易日收盘后 16:30 落盘。以上任务均可手动触发，并写入 Harness 归档上下文。'}</span></div>
+              <div className="environment-actions"><Button className="primary-button" onClick={archiveAllData} disabled={unifiedArchiveRunning}>{unifiedArchiveRunning ? <LoaderCircle className="spin" size={15} /> : <Download size={15} />}立即统一落盘（全源）</Button><Button variant="outline" onClick={verifyAllData} disabled={unifiedVerificationRunning}>{unifiedVerificationRunning ? <LoaderCircle className="spin" size={15} /> : <Check size={15} />}校验落盘并调用 Harness</Button><Button variant="outline" onClick={rebuildAllIndices} disabled={indexRebuildRunning || dailyRefreshRunning}>{indexRebuildRunning ? <LoaderCircle className="spin" size={15} /> : <RefreshCw size={15} />}初始化并重建全量索引</Button><Button variant="outline" onClick={replenishDailyData} disabled={dailyRefreshRunning || indexRebuildRunning}>{dailyRefreshRunning ? <LoaderCircle className="spin" size={15} /> : <RefreshCw size={15} />}刷新交易日行情（日线+市场信息）</Button><Button variant="outline" onClick={replenishSupplementalData} disabled={supplementalRefreshRunning}>{supplementalRefreshRunning ? <LoaderCircle className="spin" size={15} /> : <Database size={15} />}仅补齐其他数据</Button><span>{environmentMessage || '页面打开时检测一次；自动计划在每个交易日收盘后 16:30 落盘。初始化会读取所选通达信目录全部 .day，建立全量个股索引；普通任务不依赖 5 分钟线。'}</span></div>
             </div>
           </Box>
           <div className="section-spacer" />
@@ -4198,7 +4294,11 @@ export default function WorkspacePages({
                 <dl className="settings-list">
                   <div>
                     <dt>行情位置</dt>
-                    <dd>C:\\new_tdx_mock</dd>
+                    <dd>{environmentTdx.root ? String(environmentTdx.root) : '未配置'}</dd>
+                  </div>
+                  <div>
+                    <dt>全历史资源库</dt>
+                    <dd>{environmentCanonicalIndex.sourceFile ? `${String(environmentCanonicalIndex.sourceFile)} · ${String(environmentCanonicalIndex.symbolCount || 0)} 股` : '未建立，请点击“初始化并重建全量索引”'}</dd>
                   </div>
                   <div>
                     <dt>最新文件日期</dt>
@@ -4249,7 +4349,7 @@ export default function WorkspacePages({
                   </div>
                   <div>
                     <dt>网页桥接</dt>
-                    <dd>127.0.0.1:4319</dd>
+                     <dd>{bridgeHostLabel()}</dd>
                   </div>
                   <div>
                     <dt>密钥保存</dt>
@@ -4283,36 +4383,50 @@ export default function WorkspacePages({
               <div className="skill-original-meta"><b>原始技能 ID：</b>{skill.id}<br /><b>原始别名：</b>{skill.alias}<br /><b>迁移说明：</b>{skill.note}</div>
               {skill.group === 'selection' && strategyCatalogItem(skill.id) && (() => {
                 const catalog = strategyCatalogItem(skill.id)!;
-                return <div className="skill-original-meta"><b>数据状态：</b>{catalog.dataStatus === 'available' ? '可用' : catalog.dataStatus === 'partial' ? '部分缺口' : '缺失，已置灰'}<br /><b>业务入口：</b>{catalog.businessEntry}<br /><b>业务代码指纹：</b>{catalog.businessHash.slice(0, 16)}…<br /><b>执行方式：</b>3003 网页脚本 + DeepSeek Harness{catalog.missingData.length > 0 && <><br /><b>缺少数据：</b>{catalog.missingData.join('、')}</>}</div>;
+                return <div className="skill-original-meta"><b>数据状态：</b>{catalog.dataStatus === 'available' ? '可用' : catalog.dataStatus === 'partial' ? '部分缺口' : '缺失，已置灰'}<br /><b>业务入口：</b>{catalog.businessEntry}<br /><b>业务代码指纹：</b>{catalog.businessHash.slice(0, 16)}…<br /><b>执行方式：</b>网页脚本 + DeepSeek Harness{catalog.minuteData?.mode === 'optional_degraded' && <><br /><b>5 分钟线：</b>外部按需读取；缺少时标记 DEGRADED，不进入 EXE</>}{catalog.missingData.length > 0 && <><br /><b>缺少数据：</b>{catalog.missingData.join('、')}</>}</div>;
               })()}
               <div className="skill-detail-id">
                 <b>依赖：</b>
                 {skill.dependencies.join(' · ')}
               </div>
-              <div className="detail-title">执行说明</div>
-              <p className="muted-copy">网页适配层先生成本地数据预检与落盘运行单；随后可把同一份预检和当日行情交给对应技能的 Harness。缺数据时仍允许调用，但只返回阻塞诊断或降级报告。</p>
-              <p className="harness-eta">预检不调用模型、不补造数据，也不把预检结果写成策略结论。预检回执写入应用数据目录；Harness 任务与结果也会由桥接服务落盘。</p>
-              <div className="action-row">
-                <Button
-                  className="primary-button"
-                  disabled={skillBusy || skillHarnessBusy}
-                  onClick={() => runSkill(skill)}
-                >
-                  {skillBusy ? <LoaderCircle className="spin" size={15} /> : <Database size={15} />}
-                  {skillBusy ? '生成预检中…' : '生成本地数据预检'}
-                </Button>
-                <Button
-                  variant="outline"
-                  disabled={skillBusy || skillHarnessBusy || aiBusy}
-                  onClick={() => runSkillHarness(skill)}
-                >
-                  {skillHarnessBusy ? <LoaderCircle className="spin" size={15} /> : <Sparkles size={15} />}
-                  {skillHarnessBusy ? 'Harness 运行中…' : '调用 Harness'}
-                </Button>
-              </div>
-              {skillOutput && <div className="strategy-run-output ready"><pre>{skillOutput}</pre></div>}
-              {skillHarnessError && <p className="form-error" role="alert">{skillHarnessError}</p>}
-              {skillHarnessOutput && <div className="strategy-run-output ready"><HarnessOutput raw={skillHarnessOutput} /></div>}
+              {skillMode(skill.id) === 'basic' ? (
+                <>
+                  <div className="skill-detail-status skill-detail-status-basic">
+                    <b>基础技能 · 仅展示详情</b><br />
+                    该能力用于说明系统的数据接入、质量规则和内部支撑边界，不是一次性分析任务。本页不会生成本地预检，不会启动 Harness，也不会写入运行报告。
+                  </div>
+                  <div className="detail-title">技能详情</div>
+                  <p className="muted-copy">{skill.note}</p>
+                  <p className="harness-eta">如需运行具体分析，请进入对应的行情、策略或个股研究技能；基础能力本身只作为网页端可核验的能力说明。</p>
+                </>
+              ) : (
+                <>
+                  <div className="detail-title">执行说明</div>
+                  <p className="muted-copy">网页适配层先生成本地数据预检与落盘运行单；随后可把同一份预检和当日行情交给对应技能的 Harness。缺数据时仍允许调用，但只返回阻塞诊断或降级报告。</p>
+                  <p className="harness-eta">预检不调用模型、不补造数据，也不把预检结果写成策略结论。预检回执写入应用数据目录；Harness 任务与结果也会由桥接服务落盘。</p>
+                  <div className="action-row">
+                    <Button
+                      className="primary-button"
+                      disabled={skillBusy || skillHarnessBusy}
+                      onClick={() => runSkill(skill)}
+                    >
+                      {skillBusy ? <LoaderCircle className="spin" size={15} /> : <Database size={15} />}
+                      {skillBusy ? '生成预检中…' : '生成本地数据预检'}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      disabled={skillBusy || skillHarnessBusy || aiBusy}
+                      onClick={() => runSkillHarness(skill)}
+                    >
+                      {skillHarnessBusy ? <LoaderCircle className="spin" size={15} /> : <Sparkles size={15} />}
+                      {skillHarnessBusy ? 'Harness 运行中…' : '调用 Harness'}
+                    </Button>
+                  </div>
+                  {skillOutput && <div className="strategy-run-output ready"><pre>{skillOutput}</pre></div>}
+                  {skillHarnessError && <p className="form-error" role="alert">{skillHarnessError}</p>}
+                  {skillHarnessOutput && <div className="strategy-run-output ready"><HarnessOutput raw={skillHarnessOutput} /></div>}
+                </>
+              )}
               <Button variant="outline" onClick={() => setSkill(null)}>
                 <X size={15} />
                 关闭

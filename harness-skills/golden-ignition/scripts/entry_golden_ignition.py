@@ -29,7 +29,22 @@ from typing import Any
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
 APP_ROOT = Path(os.environ.get("ZHANGCAI_APP_ROOT", str(SKILL_ROOT.parent.parent))).resolve()
-TDX_ROOT = Path(os.environ.get("ZHANGCAI_TDX_ROOT", r"C:\new_tdx_mock")).resolve()
+_tdx_root_text = (
+    os.environ.get("ZHANGCAI_TDX_ROOT")
+    or os.environ.get("TDX_ROOT")
+    or ""
+).strip()
+TDX_ROOT = (
+    Path(_tdx_root_text)
+    if _tdx_root_text
+    else (
+        Path(os.environ.get("ZHANGCAI_DATA_DIR", str(APP_ROOT / "app-data")))
+        / "runtime"
+        / "__tdx_root_not_configured__"
+        if os.environ.get("ZHANGCAI_PACKAGED") == "1"
+        else Path(os.environ.get("ZHANGCAI_DEV_TDX_ROOT", r"C:\new_tdx_mock"))
+    )
+).expanduser().resolve()
 TDX_HUB_PATH = Path(os.environ.get(
     "TDX_HUB_PATH",
     str(APP_ROOT / "harness-skills" / "tdx-local-hub" / "scripts" / "tdx_hub.py"),
@@ -817,7 +832,7 @@ def run_ai_backtest(
             "source_code_exported": False,
         },
         "data": {
-            "source": "C:/new_tdx_mock local daily bars + local TQ formula engine",
+            "source": f"{TDX_ROOT} local daily bars + local TQ formula engine",
             "start_date": start_date,
             "end_date": end_date,
             "universe_size": len(universe),
@@ -1210,6 +1225,17 @@ def analyze(symbol_input: str, lookback: int, target_name: str | None) -> dict[s
     formula_values = {field: number(node.get(field)) for field in IGNITION_FIELDS}
     formula_triggered = any(value is not None and value > 0 for value in formula_values.values())
     triggered = formula_triggered or bool(recent_crosses)
+    selected_trade_date = str(rows[-1]["date"])
+    requested_trade_date = "".join(
+        ch for ch in str(os.environ.get("ZHANGCAI_DAILY_REQUESTED_TRADE_DATE") or os.environ.get("ZHANGCAI_REQUESTED_TRADE_DATE") or "")
+        if ch.isdigit()
+    )[:8]
+    selected_compact_date = "".join(ch for ch in selected_trade_date if ch.isdigit())[:8]
+    daily_degraded = bool(requested_trade_date and selected_compact_date and selected_compact_date < requested_trade_date)
+    daily_data_notice = (
+        f"请求日线 {requested_trade_date} 尚未落盘，已使用通达信最新可用收盘日线 {selected_compact_date}。"
+        if daily_degraded else ""
+    )
 
     return {
         "status": "PASS",
@@ -1222,7 +1248,10 @@ def analyze(symbol_input: str, lookback: int, target_name: str | None) -> dict[s
         "target_type": target_type,
         "analysis_symbol": analysis_symbol,
         "underlying_symbol": analysis_symbol if underlying else None,
-        "latest_trading_date": datetime.strptime(rows[-1]["date"], "%Y%m%d").date().isoformat(),
+        "latest_trading_date": datetime.strptime(selected_trade_date, "%Y%m%d").date().isoformat(),
+        "requested_trade_date": requested_trade_date,
+        "daily_data_quality": "DEGRADED" if daily_degraded else "AVAILABLE",
+        "daily_data_notice": daily_data_notice,
         "lookback_trading_days": lookback,
         "signal_definition": "CROSS(EMA(CLOSE,3),EMA(CLOSE,21))",
         "signal_status": "HIT" if triggered else "NO_SIGNAL",

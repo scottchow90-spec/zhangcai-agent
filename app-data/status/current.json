@@ -1,62 +1,78 @@
 {
   "schema": "ZHANGCAI_SKILL14_DATA_STATUS_V1",
-  "checked_at": "2026-09-15T19:59:58+08:00",
+  "checked_at": "2026-09-22T13:38:47+08:00",
   "data_root": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data",
   "assets": {
     "tdx_daily_history": {
       "schema": "ZHANGCAI_TDX_DAILY_ARCHIVE_V1",
-      "status": "available",
+      "status": "degraded",
       "asset": "tdx_daily_history",
-      "trade_date": "20260915",
-      "archived_at": "2026-09-15T17:54:55+08:00",
+      "trade_date": "20260916",
+      "archived_at": "2026-09-16T17:10:12+08:00",
       "source_root": "C:\\new_tdx_mock",
       "history_days_requested": 0,
       "history_scope": "all_available_source_history",
-      "current_trade_date_symbols": 9474,
-      "archived_symbols": 9490,
-      "security_master_records": 9474,
-      "security_master_named_records": 9474,
-      "bar_records": 15741210,
-      "file": "market/daily/aggregate/tdx-bars.jsonl",
-      "sha256": "08a0f42900ebbc11237302167816a2191849d56b91cf44326af81a905a0c8d51",
-      "archive_mode": "unchanged",
+      "current_trade_date_symbols": 9480,
+      "archived_symbols": 9497,
+      "security_master_records": 9480,
+      "security_master_named_records": 9480,
+      "bar_records": 15750690,
+      "file": "market/daily/20260916/tdx-bars.jsonl",
+      "sha256": "fb5abb91db6a61845a90c5b53f95723f89973ebf6986dca522e660f1dd4bb977",
+      "archive_mode": "full_rebuild_all_history",
       "incremental_from": "",
       "incremental_records": 0,
       "incremental_trade_dates": [],
       "incremental_base_file": "",
       "delta_file": "",
       "delta_records": 0,
-      "source_file_count": 9490,
-      "latest_date_source_files": 9474,
-      "source_record_count": 15741210,
-      "source_changed_since_previous": false,
+      "source_file_count": 9497,
+      "latest_date_source_files": 9480,
+      "source_record_count": 15750690,
+      "source_changed_since_previous": true,
       "symbol_index": "market/daily/index/tdx-symbol-index.json",
-      "symbol_index_count": 9490,
-      "expected_trade_date": "20260915",
-      "freshness_status": "available",
-      "freshness_reason": "",
+      "symbol_index_count": 9497,
+      "expected_trade_date": "20260922",
+      "freshness_status": "degraded",
+      "freshness_reason": "请求日线 20260922 尚未落盘，已使用最近完整交易日 20260916 的日线收盘数据",
       "storage_rule": "首次读取本地 .day 全部可用历史（或显式指定窗口）；后续交易日只向 market/daily/aggregate/tdx-bars.jsonl 追加新增记录，并在交易日目录保存 delta，历史目录和原文件保留。",
-      "reason": "",
+      "reason": "请求日线 20260922 尚未落盘，已使用最近完整交易日 20260916 的日线收盘数据",
       "archive_status": "available",
       "freshness": {
-        "status": "available",
-        "expected_trade_date": "20260915",
-        "archive_trade_date": "20260915",
-        "archive_file": "market/daily/aggregate/tdx-bars.jsonl",
-        "manifest_path": "market/daily/20260915/manifest.json",
+        "status": "degraded",
+        "usable": true,
+        "expected_trade_date": "20260922",
+        "archive_trade_date": "20260916",
+        "requested_trade_date": "20260922",
+        "selected_trade_date": "20260916",
+        "fallback_trade_date": "20260916",
+        "archive_file": "market/daily/20260916/tdx-bars.jsonl",
+        "manifest_path": "market/daily/20260916/manifest.json",
         "manifest_exists": true,
         "file_exists": true,
-        "current_trade_date_symbols": 9474,
-        "archived_symbols": 9490,
-        "bar_records": 15741210,
-        "issues": [],
-        "reason": ""
+        "current_trade_date_symbols": 9480,
+        "archived_symbols": 9497,
+        "bar_records": 15750690,
+        "issues": [
+          "最新本地行情为 20260922，TDX完整归档为 20260916"
+        ],
+        "reason": "请求日线 20260922 尚未落盘，已使用最近完整交易日 20260916 的日线收盘数据"
       }
+    },
+    "tdx_lc5_external": {
+      "asset": "tdx_lc5_external",
+      "status": "available",
+      "mode": "external_on_demand",
+      "packaged": false,
+      "source_root": "C:\\new_tdx_mock",
+      "file_count": 9494,
+      "bytes": 6123555840,
+      "reason": "不写入 EXE；仅对声明需要分钟数据的技能按股票按需读取。"
     },
     "tdx_tq_formula": {
       "status": "available",
       "asset": "tdx_tq_formula",
-      "checked_at": "2026-09-15T19:59:58+08:00",
+      "checked_at": "2026-09-22T13:38:46+08:00",
       "source_root": "C:\\new_tdx_mock",
       "registry": "C:\\new_tdx_mock\\T0002\\PriLoc.dat",
       "formula_files": [
@@ -67,14 +83,50 @@
         "飞龙在天.tn6",
         "黄金点火选股.tn6"
       ],
+      "tdx_detected": true,
+      "portable_package": {
+        "status": "available",
+        "schema": "ZHANGCAI_TDX_TQ_FORMULA_SOURCE_ARCHIVE_V1",
+        "path": "evidence/formulas/package",
+        "manifest_path": "evidence/formulas/package/manifest.json",
+        "required_files": [
+          "T0002/PriLoc.dat",
+          "T0002/PriGS.dat",
+          "T0002/PriCS.dat",
+          "T0002/PriPack.dat",
+          "T0002/gs_bak/大牛线撑压版.tn6",
+          "T0002/gs_bak/飞龙在天.tn6",
+          "T0002/gs_bak/游资资金监控.tn6",
+          "T0002/gs_bak/机构资金监控.tn6",
+          "T0002/gs_bak/庄家资金监控.tn6",
+          "T0002/gs_bak/黄金点火选股.tn6",
+          "PYPlugins/user/tdxdata_test.py"
+        ],
+        "copied_files": [
+          "T0002/PriLoc.dat",
+          "T0002/PriGS.dat",
+          "T0002/PriCS.dat",
+          "T0002/PriPack.dat",
+          "T0002/gs_bak/大牛线撑压版.tn6",
+          "T0002/gs_bak/飞龙在天.tn6",
+          "T0002/gs_bak/游资资金监控.tn6",
+          "T0002/gs_bak/机构资金监控.tn6",
+          "T0002/gs_bak/庄家资金监控.tn6",
+          "T0002/gs_bak/黄金点火选股.tn6",
+          "PYPlugins/user/tdxdata_test.py"
+        ],
+        "missing_files": [],
+        "source_root": "C:\\new_tdx_mock",
+        "archived_at": "2026-09-22T13:38:46+08:00"
+      },
       "receipt_root": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\evidence\\formulas",
-      "receipt_count": 41,
-      "valid_receipt_count": 40,
-      "latest_receipt": "evidence/formulas/20260911/tdx-tq-300502.SZ-1789363886241.json",
-      "latest_receipt_executed_at": "2026-09-14T05:31:19.501Z",
+      "receipt_count": 55,
+      "valid_receipt_count": 52,
+      "latest_receipt": "evidence/formulas/20260916/tdx-tq-300959.SZ-1789559199491.json",
+      "latest_receipt_executed_at": "2026-09-16T11:46:39.228Z",
       "source_archive": {
         "schema": "ZHANGCAI_TDX_TQ_FORMULA_SOURCE_ARCHIVE_V1",
-        "archived_at": "2026-09-15T19:59:58+08:00",
+        "archived_at": "2026-09-22T13:38:46+08:00",
         "source_root": "C:\\new_tdx_mock",
         "path": "evidence/formulas/package",
         "required_files": [
@@ -101,7 +153,7 @@
             "path": "evidence/formulas/package/T0002/PriGS.dat",
             "source": "C:\\new_tdx_mock\\T0002\\PriGS.dat",
             "bytes": 53121,
-            "sha256": "70c6a0e7a5299ee9fbbc7463e6b4ba2859e7eece9380cc17eb8a925b10764358"
+            "sha256": "7572ef4a76fda7b16df055ecd69499c820262e492a1a8d76e58164077621e5c4"
           },
           {
             "path": "evidence/formulas/package/T0002/PriCS.dat",
@@ -172,7 +224,7 @@
     },
     "tdx_formula_source_archive": {
       "schema": "ZHANGCAI_TDX_TQ_FORMULA_SOURCE_ARCHIVE_V1",
-      "archived_at": "2026-09-15T19:59:58+08:00",
+      "archived_at": "2026-09-22T13:38:46+08:00",
       "source_root": "C:\\new_tdx_mock",
       "path": "evidence/formulas/package/",
       "required_files": [
@@ -199,7 +251,7 @@
           "path": "evidence/formulas/package/T0002/PriGS.dat",
           "source": "C:\\new_tdx_mock\\T0002\\PriGS.dat",
           "bytes": 53121,
-          "sha256": "70c6a0e7a5299ee9fbbc7463e6b4ba2859e7eece9380cc17eb8a925b10764358"
+          "sha256": "7572ef4a76fda7b16df055ecd69499c820262e492a1a8d76e58164077621e5c4"
         },
         {
           "path": "evidence/formulas/package/T0002/PriCS.dat",
@@ -259,13 +311,13 @@
       "missing_files": [],
       "status": "available",
       "asset": "tdx_formula_source_archive",
-      "checked_at": "2026-09-15T19:59:58+08:00",
+      "checked_at": "2026-09-22T13:38:46+08:00",
       "reason": ""
     },
     "unified_source_manifest": {
       "status": "available",
       "asset": "unified_source_manifest",
-      "checked_at": "2026-09-15T19:59:58+08:00",
+      "checked_at": "2026-09-22T13:38:46+08:00",
       "path": "evidence/sources/latest.json",
       "file_count": 1,
       "reason": ""
@@ -273,7 +325,7 @@
     "unified_source_verification": {
       "status": "available",
       "asset": "unified_source_verification",
-      "checked_at": "2026-09-15T19:59:58+08:00",
+      "checked_at": "2026-09-22T13:38:46+08:00",
       "path": "evidence/sources/latest-verification.json",
       "file_count": 1,
       "reason": ""
@@ -281,7 +333,7 @@
     "package_source_inventory": {
       "status": "available",
       "asset": "package_source_inventory",
-      "checked_at": "2026-09-15T19:59:58+08:00",
+      "checked_at": "2026-09-22T13:38:46+08:00",
       "path": "harness/context/package-source-inventory.json",
       "file_count": 1,
       "reason": ""
@@ -289,15 +341,15 @@
     "package_source_gaps": {
       "status": "degraded",
       "asset": "package_source_gaps",
-      "checked_at": "2026-09-15T19:59:58+08:00",
+      "checked_at": "2026-09-22T13:38:45+08:00",
       "path": "harness/context/package-source-gap-report.json",
-      "missing_count": 12,
-      "reason": "已固化压缩包来源与数据缺口，共 12 项未完全闭合。"
+      "missing_count": 10,
+      "reason": "已固化压缩包来源与数据缺口，共 10 项未完全闭合。"
     },
     "package_data_routing": {
       "status": "available",
       "asset": "package_data_routing",
-      "checked_at": "2026-09-15T19:59:58+08:00",
+      "checked_at": "2026-09-22T13:38:46+08:00",
       "path": "harness/context/package-data-routing.json",
       "file_count": 1,
       "reason": ""
@@ -305,15 +357,15 @@
     "package_source_snapshots": {
       "status": "available",
       "asset": "package_source_snapshots",
-      "checked_at": "2026-09-15T19:59:58+08:00",
+      "checked_at": "2026-09-22T13:38:46+08:00",
       "path": "evidence/package-sources",
-      "file_count": 18,
+      "file_count": 24,
       "reason": ""
     },
     "runtime_policy": {
       "status": "available",
       "asset": "runtime_policy",
-      "checked_at": "2026-09-15T19:59:58+08:00",
+      "checked_at": "2026-09-22T13:38:46+08:00",
       "path": "harness/context/runtime-policy.json",
       "file_count": 1,
       "reason": ""
@@ -321,49 +373,49 @@
     "report_archive": {
       "status": "available",
       "asset": "report_archive",
-      "checked_at": "2026-09-15T19:59:58+08:00",
+      "checked_at": "2026-09-22T13:38:46+08:00",
       "path": "reports/archive",
-      "file_count": 19,
+      "file_count": 30,
       "reason": ""
     },
     "security_master": {
       "status": "available",
       "asset": "security_master",
-      "checked_at": "2026-09-15T19:59:58+08:00",
+      "checked_at": "2026-09-22T13:38:47+08:00",
       "path": "market/security-master/",
-      "file_count": 3,
-      "record_count": 28418,
-      "named_record_count": 28418,
+      "file_count": 4,
+      "record_count": 37898,
+      "named_record_count": 37898,
       "reason": ""
     },
     "limit_up_pool": {
       "status": "available",
       "asset": "limit_up_pool",
-      "checked_at": "2026-09-15T19:59:58+08:00",
+      "checked_at": "2026-09-22T13:38:47+08:00",
       "path": "public/limit-up",
-      "file_count": 3,
+      "file_count": 4,
       "reason": ""
     },
     "lhb_data": {
       "status": "available",
       "asset": "lhb_data",
-      "checked_at": "2026-09-15T19:59:58+08:00",
+      "checked_at": "2026-09-22T13:38:47+08:00",
       "path": "public/lhb",
-      "file_count": 3,
+      "file_count": 4,
       "reason": ""
     },
     "public_research": {
       "status": "available",
       "asset": "public_research",
-      "checked_at": "2026-09-15T19:59:58+08:00",
+      "checked_at": "2026-09-22T13:38:47+08:00",
       "path": "evidence/public/",
-      "target_date": "2026-09-15",
-      "file_count": 3,
-      "candidate_count": 7,
-      "same_date_file_count": 5,
-      "same_day_record_count": 212,
+      "target_date": "2026-09-16",
+      "file_count": 6,
+      "candidate_count": 9,
+      "same_date_file_count": 6,
+      "same_day_record_count": 209,
       "multi_source_records": {
-        "cls": 42,
+        "cls": 39,
         "eastmoney": 100,
         "sina": 50,
         "ths": 20
@@ -374,47 +426,62 @@
         "sina",
         "ths"
       ],
-      "news_snapshot_count": 7,
-      "selected_snapshot": "news/20260915/multi-source-news-170826.json",
+      "news_snapshot_count": 9,
+      "selected_snapshot": "news/20260916/multi-source-news-164026.json",
       "historical_fallback": false,
+      "fallback_kind": "",
       "reason": ""
     },
     "supplemental_stock": {
-      "status": "missing",
-      "trade_date": "20260915",
-      "path": "evidence/supplemental/20260915/",
-      "file_count": 0,
+      "status": "partial",
+      "trade_date": "20260916",
+      "path": "evidence/supplemental/20260916/",
+      "file_count": 1,
       "financial": {
-        "status": "missing",
-        "covered_codes": [],
-        "covered_count": 0
+        "status": "available",
+        "covered_codes": [
+          "688432"
+        ],
+        "covered_count": 1
       },
       "share_capital": {
-        "status": "missing",
-        "covered_codes": [],
-        "covered_count": 0
+        "status": "available",
+        "covered_codes": [
+          "688432"
+        ],
+        "covered_count": 1
       },
-      "reason": "尚未生成目标交易日的个股财务/股本快照。"
+      "reason": "已按股票落盘；未请求的股票仍按需补采。"
     },
     "execution_evidence": {
       "status": "available",
       "asset": "execution_evidence",
-      "checked_at": "2026-09-15T19:59:58+08:00",
+      "checked_at": "2026-09-22T13:38:47+08:00",
       "path": "reports/daily",
-      "file_count": 320,
+      "file_count": 494,
       "reason": ""
     },
     "skill_packages": {
       "status": "available",
       "asset": "skill_packages",
-      "checked_at": "2026-09-15T19:59:58+08:00",
+      "checked_at": "2026-09-22T13:38:47+08:00",
       "installed_count": 14,
       "reason": ""
     }
   },
+  "minute_data": {
+    "asset": "tdx_lc5_external",
+    "status": "available",
+    "mode": "external_on_demand",
+    "packaged": false,
+    "source_root": "C:\\new_tdx_mock",
+    "file_count": 9494,
+    "bytes": 6123555840,
+    "reason": "不写入 EXE；仅对声明需要分钟数据的技能按股票按需读取。"
+  },
   "local_data_page": {
     "path": "harness/context/local-data-page.json",
     "schema": "ZHANGCAI_LOCAL_DATA_PAGE_V1",
-    "latest_tdx_trade_date": "20260915"
+    "latest_tdx_trade_date": "20260916"
   }
 }

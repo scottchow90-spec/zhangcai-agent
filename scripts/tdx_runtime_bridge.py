@@ -11,7 +11,17 @@ import time
 from datetime import datetime
 from pathlib import Path
 
-ROOT = Path(os.environ.get("ZHANGCAI_TDX_ROOT", r"C:\new_tdx_mock"))
+_tdx_root_text = (
+    os.environ.get("ZHANGCAI_TDX_ROOT")
+    or os.environ.get("TDX_ROOT")
+    or ""
+).strip()
+_packaged_runtime = os.environ.get("ZHANGCAI_PACKAGED") == "1"
+ROOT = Path(_tdx_root_text) if _tdx_root_text else (
+    Path(os.environ.get("ZHANGCAI_DEV_TDX_ROOT", r"C:\new_tdx_mock"))
+    if not _packaged_runtime
+    else Path(os.environ.get("ZHANGCAI_DATA_DIR", Path.cwd())) / "runtime" / "__tdx_root_not_configured__"
+)
 USER = ROOT / "PYPlugins" / "user"
 OUT = Path(os.environ.get("ZHANGCAI_DATA_DIR", Path(__file__).resolve().parents[1] / "data")) / "runtime"
 FORMULAS = ["大牛线4.0", "飞龙在天", "游资资金监控", "机构资金监控", "庄家资金监控"]
@@ -109,7 +119,13 @@ def latest(paths):
 def status():
     cache = ROOT / "T0002" / "hq_cache"
     day = ROOT / "vipdoc" / "sh" / "lday" / "sh000001.day"
-    return {"generatedAt": datetime.now().astimezone().isoformat(timespec="seconds"), "tdxRoot": str(ROOT), "processes": process_rows(), "formulaRegistry": {"directory": str(ROOT / "T0002" / "gs_bak"), "formulaFiles": [p.name for p in (ROOT / "T0002" / "gs_bak").glob("*.txt")]}, "freshness": {"indexDay": latest([day]), "marketCache": latest([cache / "sh.tnf", cache / "sz.tnf", cache / "bj.tnf", cache / "tdxhy.cfg", cache / "infoharbor_block.dat"]), "blockPools": latest([ROOT / "T0002" / "blocknew" / "ZTC.blk", ROOT / "T0002" / "blocknew" / "FLZT.blk"]), "intradayAvailable": any((ROOT / "vipdoc" / market / "fzline").glob("*.lc5") for market in ("sh", "sz", "bj"))}, "tq": {"tqcenter": str(USER / "tqcenter.py"), "strategyConfig": (ROOT / "PYPlugins" / "py_strategy.cfg").read_text(encoding="utf-8", errors="replace") if (ROOT / "PYPlugins" / "py_strategy.cfg").exists() else "", "formulas": FORMULAS}}
+    formula_dir = ROOT / "T0002" / "gs_bak"
+    formula_files = sorted({
+        path.name
+        for pattern in ("*.txt", "*.tn6", "*.tn5", "*.tnf")
+        for path in formula_dir.glob(pattern)
+    }) if formula_dir.is_dir() else []
+    return {"generatedAt": datetime.now().astimezone().isoformat(timespec="seconds"), "tdxRoot": str(ROOT), "processes": process_rows(), "formulaRegistry": {"directory": str(formula_dir), "formulaFiles": formula_files}, "freshness": {"indexDay": latest([day]), "marketCache": latest([cache / "sh.tnf", cache / "sz.tnf", cache / "bj.tnf", cache / "tdxhy.cfg", cache / "infoharbor_block.dat"]), "blockPools": latest([ROOT / "T0002" / "blocknew" / "ZTC.blk", ROOT / "T0002" / "blocknew" / "FLZT.blk"]), "intradayAvailable": any((ROOT / "vipdoc" / market / "fzline").glob("*.lc5") for market in ("sh", "sz", "bj"))}, "tq": {"tqcenter": str(USER / "tqcenter.py"), "strategyConfig": (ROOT / "PYPlugins" / "py_strategy.cfg").read_text(encoding="utf-8", errors="replace") if (ROOT / "PYPlugins" / "py_strategy.cfg").exists() else "", "formulas": FORMULAS}}
 
 def quote(symbol):
     sys.path.insert(0, str(USER)); os.chdir(ROOT)

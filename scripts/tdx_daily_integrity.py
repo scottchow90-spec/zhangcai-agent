@@ -25,7 +25,11 @@ except ImportError:  # pragma: no cover - Python 3.8 fallback
 from pathlib import Path
 from typing import Any
 
-TDX_ROOT = Path(os.environ.get("ZHANGCAI_TDX_ROOT", r"C:\new_tdx_mock"))
+_tdx_root_text = os.environ.get("ZHANGCAI_TDX_ROOT", "").strip()
+_packaged_runtime = os.environ.get("ZHANGCAI_PACKAGED") == "1"
+TDX_ROOT = Path(_tdx_root_text) if _tdx_root_text else (
+    Path(r"C:\new_tdx_mock") if not _packaged_runtime else Path(r"C:\__zhangcai_tdx_root_not_configured__")
+)
 DATA_ROOT = Path(os.environ.get("ZHANGCAI_DATA_DIR", Path(__file__).resolve().parents[1] / "data"))
 DAY = struct.Struct("<IIIIIfII")
 MARKETS = ("SH", "SZ", "BJ")

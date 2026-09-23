@@ -13,7 +13,11 @@ from collections import Counter
 from datetime import datetime
 from pathlib import Path
 
-TDX_ROOT = Path(os.environ.get("ZHANGCAI_TDX_ROOT", r"C:\new_tdx_mock"))
+_tdx_root_text = os.environ.get("ZHANGCAI_TDX_ROOT", "").strip()
+_packaged_runtime = os.environ.get("ZHANGCAI_PACKAGED") == "1"
+TDX_ROOT = Path(_tdx_root_text) if _tdx_root_text else (
+    Path(r"C:\new_tdx_mock") if not _packaged_runtime else Path(r"C:\__zhangcai_tdx_root_not_configured__")
+)
 USER_DIR = TDX_ROOT / "PYPlugins" / "user"
 INIT_FILE = USER_DIR / "tdxdata_test.py"
 DAY_RECORD = struct.Struct("<IIIIIfII")

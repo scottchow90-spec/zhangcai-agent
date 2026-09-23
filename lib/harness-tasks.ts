@@ -1,6 +1,6 @@
 'use client';
 
-import { bridgeUrl } from '@/lib/bridge-url';
+import { bridgeHostLabel, bridgeUrl, isDesktopRuntime } from '@/lib/bridge-url';
 
 export type HarnessTaskStatus = 'starting' | 'running' | 'completed' | 'failed';
 export type HarnessTask = {
@@ -125,6 +125,15 @@ async function fetchBridge(path: string, init?: RequestInit) {
   let lastError: unknown;
   let lastGatewayResponse: Response | undefined;
   const endpoints = [...BRIDGE_ENDPOINTS, bridgeUrl()];
+  if (isDesktopRuntime()) {
+    try {
+      if (new URL(endpoints[endpoints.length - 1]).port === '4319') {
+        throw new Error('桌面版桥接配置缺失，已拒绝回退到网页 4319。');
+      }
+    } catch (error) {
+      if (error instanceof Error && error.message.includes('拒绝回退')) throw error;
+    }
+  }
   const suffix = path.startsWith('/') ? path : `/${path}`;
   for (let endpointIndex = 0; endpointIndex < endpoints.length; endpointIndex += 1) {
     for (let attempt = 0; attempt < 3; attempt += 1) {
@@ -159,7 +168,7 @@ async function fetchBridge(path: string, init?: RequestInit) {
     : lastGatewayResponse
       ? `桥接代理返回 ${lastGatewayResponse.status}`
       : String(lastError || '未知网络错误');
-  throw new Error(`无法连接 DeepSeek Harness 桥接服务（4319）：${reason}`);
+  throw new Error(`无法连接 DeepSeek Harness 桥接服务（${bridgeHostLabel()}）：${reason}`);
 }
 
 export async function startDailyDataRefresh(options: { force?: boolean } = {}) {
@@ -177,7 +186,25 @@ export async function getDailyDataRefreshStatus() {
   const response = await fetchBridge('/data/daily/status', { cache: 'no-store' });
   const value = await response.json().catch(() => ({}));
   if (!response.ok || !value || typeof value !== 'object') throw new Error(value?.error || `每日数据状态读取失败（${response.status}）`);
-  return value as { status: string; state?: { status?: string; date?: string }; jobs?: unknown[] };
+  return value as { status: string; state?: { status?: string; date?: string }; jobs?: unknown[]; initialization?: { status?: string } };
+}
+
+export async function startDailyIndexInitialization(options: { force?: boolean } = {}) {
+  const response = await fetchBridge('/data/daily/initialize', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ force: options.force === true }),
+  });
+  const value = await response.json().catch(() => ({}));
+  if (!response.ok || !value || typeof value !== 'object') throw new Error(value?.error || `全量个股索引初始化启动失败（${response.status}）`);
+  return value as { status: string; error?: string; state?: { status?: string }; job?: { status?: string } };
+}
+
+export async function getDailyIndexInitializationStatus() {
+  const response = await fetchBridge('/data/daily/initialize/status', { cache: 'no-store' });
+  const value = await response.json().catch(() => ({}));
+  if (!response.ok || !value || typeof value !== 'object') throw new Error(value?.error || `全量个股索引初始化状态读取失败（${response.status}）`);
+  return value as { status: string; state?: Record<string, unknown>; jobs?: unknown[] };
 }
 
 export async function startSupplementalDataRefresh(options: { force?: boolean } = {}) {

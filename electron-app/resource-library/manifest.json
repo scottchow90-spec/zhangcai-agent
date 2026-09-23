@@ -1,0 +1,28 @@
+{
+  "schema": "ZHANGCAI_DESKTOP_RESOURCE_LIBRARY_V1",
+  "product": "掌财桌面端",
+  "purpose": "EXE 可读的本地资源库；运行时数据、Harness 回执、报告和桌面会话写入此目录。",
+  "codePolicy": "embedded-with-exe",
+  "embeddedCodeRoot": "resources/app",
+  "embeddedHarnessRoot": "resources/deepseek-harness",
+  "embeddedRuntimeRoot": "resources/runtime",
+  "writableContents": [
+    "app-data",
+    "harness",
+    "reports",
+    "runtime",
+    "desktop",
+    "logs",
+    ".env.local"
+  ],
+  "credentialPolicy": "user-provided-only; never bundled in installer",
+  "dataSeedPolicy": "the main EXE carries the portable TQ formula source seed and merges it into the writable resource library; historical daily archives and public snapshots remain in the separate data-pack installer; do not copy duplicate historical full snapshots into the main EXE",
+  "formulaSeed": {
+    "path": "evidence/formulas/package/",
+    "includedInMainInstaller": true,
+    "mergePolicy": "copy-missing-only-on-first-launch-or-upgrade",
+    "liveTdxReceiptRequired": true
+  },
+  "dailyStoragePolicy": "one canonical aggregate plus per-trade-date delta; daily full snapshots are not generated",
+  "minuteDataPolicy": "external TDX .lc5 on demand; never bundled into EXE or resource-library; skills that declare minute features degrade when unavailable"
+}
