@@ -17,11 +17,12 @@ import re
 import shutil
 import struct
 import sys
+import tempfile
 import uuid
 import zipfile
 from collections import Counter
 from datetime import datetime, timezone
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 
@@ -62,6 +63,7 @@ FORMULA_SOURCE_RELATIVE_PATHS = (
     "T0002/gs_bak/黄金点火选股.tn6",
     "PYPlugins/user/tdxdata_test.py",
 )
+SKILL_ARCHIVE_DECODER_VERSION = 2
 
 # This is the source package's 12-source gap list, kept as data rather than
 # inferred from a successful HTTP response.  The package explicitly requires
@@ -1362,7 +1364,7 @@ def _news_record_time(record: Any) -> str:
 def _news_snapshot_stats(value: Any, target_date: str) -> dict[str, Any]:
     """Read only 3003-local news snapshots without date spoofing."""
     if not isinstance(value, dict):
-        return {"claimed_date": "", "same_day": 0, "provider_counts": {}, "record_count": 0}
+        return {"claimed_date": "", "same_day": 0, "provider_counts": {}, "context_provider_counts": {}, "record_count": 0, "latest_record_date": ""}
     wrapper = value
     snapshot = value.get("snapshot") if isinstance(value.get("snapshot"), dict) else value
     claimed_raw = (
@@ -1392,13 +1394,35 @@ def _news_snapshot_stats(value: Any, target_date: str) -> dict[str, Any]:
     same_day = [row for row in rows if _news_record_time(row) == target_date]
     provider_counts: Counter[str] = Counter()
     for row in same_day:
-        provider = str(row.get("_provider") or row.get("provider") or provider_default or "unknown")
-        provider_counts[provider] += 1
+        providers = row.get("providers") if isinstance(row.get("providers"), list) else []
+        provider = str(row.get("_provider") or row.get("provider") or "")
+        if provider:
+            provider_counts[provider] += 1
+        elif providers:
+            provider_counts.update(str(item) for item in providers if str(item))
+        else:
+            provider_counts[str(provider_default or "unknown")] += 1
+    context_provider_counts: Counter[str] = Counter()
+    record_dates = []
+    for row in rows:
+        providers = row.get("providers") if isinstance(row.get("providers"), list) else []
+        provider = str(row.get("_provider") or row.get("provider") or "")
+        if provider:
+            context_provider_counts[provider] += 1
+        elif providers:
+            context_provider_counts.update(str(item) for item in providers if str(item))
+        else:
+            context_provider_counts[str(provider_default or "unknown")] += 1
+        record_date = _news_record_time(row)
+        if record_date:
+            record_dates.append(record_date)
     return {
         "claimed_date": claimed,
         "same_day": len(same_day),
         "provider_counts": dict(sorted(provider_counts.items())),
+        "context_provider_counts": dict(sorted(context_provider_counts.items())),
         "record_count": len(rows),
+        "latest_record_date": max(record_dates) if record_dates else "",
     }
 
 
@@ -1431,17 +1455,19 @@ def _relative_data_path(path: Path) -> str:
 def select_public_research_snapshot(trade_date: str, current_snapshot: dict[str, Any]) -> tuple[dict[str, Any], str, dict[str, Any]]:
     """Choose the best same-day snapshot, preferring real dated evidence over rolling news."""
     target = str(trade_date or "").replace("/", "-")[:10]
-    choices: list[tuple[int, int, str, Path, dict[str, Any], dict[str, Any]]] = []
+    choices: list[tuple[int, int, int, int, str, Path, dict[str, Any], dict[str, Any]]] = []
     for path in _public_research_candidates(target):
         value = read_json(path, {})
         stats = _news_snapshot_stats(value, target)
-        choices.append((int(stats["same_day"]), len(stats["provider_counts"]), str(path), path, value, stats))
+        is_real_news = not bool(value.get("fallback_kind")) and int(stats["record_count"]) > 0
+        choices.append((int(is_real_news), int(stats["same_day"]), int(stats["record_count"]), len(stats["provider_counts"]), str(path), path, value, stats))
     if current_snapshot:
         stats = _news_snapshot_stats(current_snapshot, target)
-        choices.append((int(stats["same_day"]), len(stats["provider_counts"]), "", DATA_ROOT / "news" / "latest.json", current_snapshot, stats))
-    valid = [item for item in choices if item[0] > 0]
+        is_real_news = not bool(current_snapshot.get("fallback_kind")) and int(stats["record_count"]) > 0
+        choices.append((int(is_real_news), int(stats["same_day"]), int(stats["record_count"]), len(stats["provider_counts"]), "", DATA_ROOT / "news" / "latest.json", current_snapshot, stats))
+    valid = [item for item in choices if item[0] > 0 or item[2] > 0]
     if valid:
-        _, _, _, path, value, stats = max(valid, key=lambda item: (item[0], item[1], item[2]))
+        _, _, _, _, _, path, value, stats = max(valid, key=lambda item: (item[0], item[1], item[3], item[2], item[4]))
         return value, _relative_data_path(path), stats
     stats = _news_snapshot_stats(current_snapshot, target)
     return current_snapshot, _relative_data_path(DATA_ROOT / "news" / "latest.json"), stats
@@ -1452,20 +1478,24 @@ def public_research_status() -> dict[str, Any]:
     root = DATA_ROOT / "evidence" / "public"
     files = [file for file in root.glob("*.json")] if root.is_dir() else []
     target_date = _target_public_research_date()
-    choices: list[tuple[int, int, str, Path, dict[str, Any]]] = []
+    choices: list[tuple[int, int, int, int, str, Path, dict[str, Any], dict[str, Any]]] = []
     for path in _public_research_candidates(target_date):
         value = read_json(path, {})
         stats = _news_snapshot_stats(value, target_date)
-        choices.append((int(stats["same_day"]), len(stats["provider_counts"]), str(path), path, stats))
-    best = max(choices, key=lambda item: (item[0], item[1], item[2])) if choices else None
-    same_day_records = int(best[0]) if best else 0
-    selected_path = _relative_data_path(best[3]) if best else ""
-    multi_source_records = best[4]["provider_counts"] if best else {}
+        is_real_news = not bool(value.get("fallback_kind")) and int(stats["record_count"]) > 0
+        choices.append((int(is_real_news), int(stats["same_day"]), int(stats["record_count"]), len(stats["provider_counts"]), str(path), path, value, stats))
+    best = max(choices, key=lambda item: (item[0], item[1], item[3], item[2], item[4])) if choices else None
+    same_day_records = int(best[1]) if best else 0
+    selected_path = _relative_data_path(best[5]) if best else ""
+    multi_source_records = best[7]["provider_counts"] if best else {}
+    context_provider_counts = best[7]["context_provider_counts"] if best else {}
+    context_record_count = int(best[2]) if best else 0
+    latest_record_date = str(best[7].get("latest_record_date") or "") if best else ""
     providers_succeeded = sorted(multi_source_records)
-    dated_files = sum(1 for item in choices if item[4].get("claimed_date") == target_date and item[0] > 0)
+    dated_files = sum(1 for item in choices if item[0] and item[7].get("claimed_date") == target_date and item[1] > 0)
     historical_fallback = False
     news_snapshot_count = len(choices)
-    best_value = read_json(best[3], {}) if best else {}
+    best_value = best[6] if best else {}
     fallback_kind = str(best_value.get("fallback_kind") or "") if isinstance(best_value, dict) else ""
     if same_day_records > 0 and not fallback_kind:
         status = "available"
@@ -1473,6 +1503,12 @@ def public_research_status() -> dict[str, Any]:
     elif same_day_records > 0 and fallback_kind:
         status = "degraded"
         reason = "仅有公开市场快照降级证据；它可供研究上下文引用，但不等同于同日新闻、公告或舆情原文。"
+    elif fallback_kind:
+        status = "degraded"
+        reason = "当前只有公开市场快照降级证据；它不等同于新闻、公告或舆情原文。"
+    elif context_record_count > 0:
+        status = "degraded"
+        reason = f"已归档 {context_record_count} 条真实公开资讯（最新来源日 {latest_record_date or '未知'}），但目标交易日 {target_date or '未知'} 的同日记录为 0；可作为带来源日期的背景，不得冒充目标日事件证据。"
     elif files or choices:
         status = "degraded"
         reason = "已保存公开资讯响应，但目标交易日可用同日记录为 0 条，不能把空快照当作研究证据。"
@@ -1490,6 +1526,9 @@ def public_research_status() -> dict[str, Any]:
         "same_date_file_count": dated_files,
         "same_day_record_count": same_day_records,
         "multi_source_records": dict(sorted(multi_source_records.items())),
+        "context_record_count": context_record_count,
+        "context_provider_counts": dict(sorted(context_provider_counts.items())),
+        "latest_record_date": latest_record_date,
         "providers_succeeded": providers_succeeded,
         "news_snapshot_count": news_snapshot_count,
         "selected_snapshot": selected_path,
@@ -1581,12 +1620,17 @@ def stage_public_snapshots() -> dict[str, Any]:
             staged[asset] = target
     if isinstance(news_snapshot, dict) and news_snapshot:
         target = DATA_ROOT / "evidence" / "public" / f"news-{trade_date}.json"
+        latest_record_date = news_stats.get("latest_record_date") or news_snapshot.get("source_date") or news_snapshot.get("date") or ""
         staged_value = {
             "schema": "ZHANGCAI_PUBLIC_NEWS_ARCHIVE_V1",
             "archived_at": utc_now(),
-            "source_date": trade_date,
+            "source_date": latest_record_date,
+            "requested_trade_date": trade_date,
             "source_path": news_source_path,
             "same_day_record_count": news_stats.get("same_day", 0),
+            "context_record_count": news_stats.get("record_count", 0),
+            "context_provider_counts": news_stats.get("context_provider_counts", {}),
+            "latest_record_date": latest_record_date,
             "provider_counts": news_stats.get("provider_counts", {}),
             "historical_fallback": False,
             "snapshot": news_snapshot,
@@ -1604,7 +1648,10 @@ def stage_public_snapshots() -> dict[str, Any]:
         current_path = DATA_ROOT / "evidence" / "public" / "latest.json"
         current = read_json(current_path, {})
         current_stats = _news_snapshot_stats(current, trade_date)
-        current_is_real = isinstance(current, dict) and bool(current) and not current.get("fallback_kind") and current_stats.get("same_day", 0) > 0
+        # Keep actual provider records even when their publication date is not
+        # the selected TDX trade date. They are useful dated context, but the
+        # preflight remains DEGRADED and never treats them as same-day proof.
+        current_is_real = isinstance(current, dict) and bool(current) and not current.get("fallback_kind") and current_stats.get("record_count", 0) > 0
         if not current_is_real:
             write_json(current_path, fallback)
             staged["public_research"] = fallback_target
@@ -1763,9 +1810,241 @@ def update_status() -> dict[str, Any]:
     return value
 
 
+def open_skill_zip(source: Any) -> zipfile.ZipFile:
+    """Decode legacy Chinese ZIP names per entry while retaining UTF-8 names.
+
+    ``metadata_encoding="gbk"`` is archive-wide. Some WorkBuddy packages mix
+    UTF-8-flagged names, GBK names, and a small number of CP437 symbols, so a
+    single strict GBK decoder can make an otherwise valid bundle unreadable.
+    ZipInfo's default CP437 decode is reversible for unflagged filename bytes;
+    decode each such entry as GBK when possible and keep CP437 otherwise.
+    """
+    bundle = zipfile.ZipFile(source)
+    for entry in bundle.infolist():
+        if entry.flag_bits & 0x800:  # ZIP's UTF-8 filename flag
+            continue
+        try:
+            raw_name = entry.orig_filename.encode("cp437")
+            decoded_name = raw_name.decode("gbk")
+        except (UnicodeEncodeError, UnicodeDecodeError):
+            continue
+        entry.filename = decoded_name
+    # ZipFile.open(name) uses this index; extraction paths use ZipInfo directly.
+    bundle.NameToInfo = {entry.filename: entry for entry in bundle.infolist()}
+    return bundle
+
+
+def extract_skill_zip(bundle: zipfile.ZipFile, destination: Path) -> None:
+    """Extract a skill archive without allowing paths to escape its staging root."""
+    destination.mkdir(parents=True, exist_ok=True)
+    base = destination.resolve()
+    for entry in bundle.infolist():
+        normalized = entry.filename.replace("\\", "/")
+        parts = PurePosixPath(normalized).parts
+        if (
+            not parts
+            or PurePosixPath(normalized).is_absolute()
+            or any(part in {"", ".", ".."} for part in parts)
+            or ":" in parts[0]
+        ):
+            raise RuntimeError(f"技能包包含不安全路径：{entry.filename}")
+        target = base.joinpath(*parts).resolve()
+        try:
+            target.relative_to(base)
+        except ValueError as error:
+            raise RuntimeError(f"技能包路径越界：{entry.filename}") from error
+        unix_mode = (entry.external_attr >> 16) & 0o170000
+        if unix_mode == 0o120000:
+            raise RuntimeError(f"技能包包含不支持的符号链接：{entry.filename}")
+        if entry.is_dir():
+            target.mkdir(parents=True, exist_ok=True)
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        with bundle.open(entry) as source, target.open("wb") as output:
+            shutil.copyfileobj(source, output)
+
+
+def primary_skill_root(package_root: Path) -> Path:
+    """Resolve the package's intended skill, excluding embedded vendor skills."""
+    direct = package_root / "SKILL.md"
+    if direct.is_file():
+        return package_root
+    candidates = [
+        item for item in package_root.rglob("SKILL.md")
+        if item.is_file()
+        and "vendor" not in {part.casefold() for part in item.relative_to(package_root).parts}
+        and item.name.casefold() == "skill.md"
+    ]
+    if not candidates:
+        raise RuntimeError(f"技能包中没有找到主 SKILL.md：{package_root}")
+    minimum_depth = min(len(item.relative_to(package_root).parts) for item in candidates)
+    nearest = [item for item in candidates if len(item.relative_to(package_root).parts) == minimum_depth]
+    if len(nearest) != 1:
+        raise RuntimeError(f"技能包主 SKILL.md 不唯一：{package_root}")
+    return nearest[0].parent
+
+
+def skill_frontmatter_name(skill_root: Path) -> str:
+    text = (skill_root / "SKILL.md").read_text(encoding="utf-8", errors="replace")
+    frontmatter = re.match(r"^---\s*\n(.*?)\n---", text, re.DOTALL)
+    if not frontmatter:
+        raise RuntimeError(f"技能 SKILL.md 缺少 YAML frontmatter：{skill_root}")
+    match = re.search(r"(?m)^name:\s*[\"']?([^\"'\r\n]+?)[\"']?\s*$", frontmatter.group(1))
+    if not match:
+        raise RuntimeError(f"技能 SKILL.md 缺少 name：{skill_root}")
+    return match.group(1).strip()
+
+
+def extract_nested_skill_archives(bundle: zipfile.ZipFile, destination: Path) -> None:
+    for entry in bundle.infolist():
+        if entry.is_dir() or not entry.filename.casefold().endswith(".zip"):
+            continue
+        nested_name = PurePosixPath(entry.filename.replace("\\", "/")).stem
+        nested_destination = destination / "nested" / nested_name
+        with bundle.open(entry) as source:
+            nested_bytes = source.read()
+        with open_skill_zip(io.BytesIO(nested_bytes)) as nested_bundle:
+            extract_skill_zip(nested_bundle, nested_destination)
+
+
+def package_archive_sha(skill_id: str, archive: Path) -> str:
+    manifest = read_json(DATA_ROOT / "skills" / "manifest.json", {})
+    rows = manifest.get("skills", []) if isinstance(manifest, dict) else []
+    row = next((item for item in rows if isinstance(item, dict) and item.get("id") == skill_id), {})
+    recorded = str(row.get("sha256") or "").lower()
+    try:
+        stat_result = archive.stat()
+    except OSError:
+        stat_result = None
+    if (
+        recorded
+        and stat_result is not None
+        and row.get("archive") == archive.name
+        and row.get("archive_size") == stat_result.st_size
+        and row.get("archive_mtime_ns") == stat_result.st_mtime_ns
+    ):
+        return recorded
+    if stat_result is not None:
+        cache_root = DATA_ROOT / "harness" / f"skill14-packages-v{SKILL_ARCHIVE_DECODER_VERSION}" / skill_id
+        for marker in cache_root.glob("*/.zhangcai-skill14-package.json"):
+            marker_value = read_json(marker, {})
+            cached_sha = str(marker_value.get("archive_sha256") or "").lower()
+            if (
+                marker_value.get("archive") == archive.name
+                and marker_value.get("archive_size") == stat_result.st_size
+                and marker_value.get("archive_mtime_ns") == stat_result.st_mtime_ns
+                and marker_value.get("archive_decoder_version") == SKILL_ARCHIVE_DECODER_VERSION
+                and re.fullmatch(r"[0-9a-f]{64}", cached_sha)
+            ):
+                return cached_sha
+    return sha256_file(archive)
+
+
+def prepare_harness_skill(skill_id: str) -> dict[str, Any]:
+    spec = next((item for item in catalog()["skills"] if item.get("id") == skill_id), None)
+    if not spec:
+        raise RuntimeError(f"未知的 14 技能 ID：{skill_id}")
+    archive = ARCHIVE_ROOT / str(spec["archive"])
+    if not archive.is_file():
+        raise RuntimeError(f"缺少随主程序提供的技能包：{archive}")
+    archive_sha = package_archive_sha(skill_id, archive)
+
+    # Reuse the user's separately prepared library only when its source archive
+    # hash matches this program version. Never replace a user's existing package.
+    installed_root = DATA_ROOT / "skills" / "packages" / skill_id
+    package_manifest = read_json(DATA_ROOT / "skills" / "manifest.json", {})
+    installed_rows = package_manifest.get("skills", []) if isinstance(package_manifest, dict) else []
+    installed = next((item for item in installed_rows if isinstance(item, dict) and item.get("id") == skill_id), {})
+    declared_skill_root = str(installed.get("skill_root") or "")
+    if (
+        installed_root.is_dir()
+        and str(installed.get("sha256") or "").lower() == archive_sha
+        and installed.get("archive_decoder_version") == SKILL_ARCHIVE_DECODER_VERSION
+        and declared_skill_root
+    ):
+        skill_root = (DATA_ROOT / declared_skill_root).resolve()
+        if not skill_root.is_relative_to(installed_root.resolve()) or not (skill_root / "SKILL.md").is_file():
+            raise RuntimeError(f"技能包清单路径无效，未覆盖旧文件：{skill_root}")
+        return {
+            "status": "available",
+            "skill_id": skill_id,
+            "skill_name": skill_frontmatter_name(skill_root),
+            "harness_skill_root": str(skill_root.resolve()),
+            "archive_sha256": archive_sha,
+            "source": "resource_library_package",
+        }
+
+    cache_root = DATA_ROOT / "harness" / f"skill14-packages-v{SKILL_ARCHIVE_DECODER_VERSION}" / skill_id
+    cache_root.mkdir(parents=True, exist_ok=True)
+    destination = cache_root / archive_sha
+    marker = destination / ".zhangcai-skill14-package.json"
+    if destination.is_dir() and marker.is_file():
+        marker_value = read_json(marker, {})
+        relative_root = str(marker_value.get("skill_root") or "")
+        skill_root = (destination / relative_root).resolve() if relative_root else destination
+        if (
+            marker_value.get("archive_sha256") == archive_sha
+            and marker_value.get("archive_decoder_version") == SKILL_ARCHIVE_DECODER_VERSION
+            and skill_root.is_relative_to(destination.resolve())
+            and (skill_root / "SKILL.md").is_file()
+        ):
+            return {
+                "status": "available",
+                "skill_id": skill_id,
+                "skill_name": skill_frontmatter_name(skill_root),
+                "harness_skill_root": str(skill_root),
+                "archive_sha256": archive_sha,
+                "source": "on_demand_cache",
+            }
+        raise RuntimeError(f"已存在的技能缓存不完整，未覆盖旧文件：{destination}")
+    if destination.exists():
+        raise RuntimeError(f"技能缓存目录存在但缺少可信清单，未覆盖旧文件：{destination}")
+
+    staging = Path(tempfile.mkdtemp(prefix=f".{archive_sha[:12]}-", dir=cache_root))
+    try:
+        with open_skill_zip(archive) as bundle:
+            extract_skill_zip(bundle, staging)
+            try:
+                skill_root = primary_skill_root(staging)
+            except RuntimeError as error:
+                if "没有找到主 SKILL.md" not in str(error):
+                    raise
+                extract_nested_skill_archives(bundle, staging)
+                skill_root = primary_skill_root(staging)
+        relative_root = skill_root.relative_to(staging).as_posix()
+        metadata = {
+            "schema": "ZHANGCAI_SKILL14_HARNESS_PACKAGE_V1",
+            "skill_id": skill_id,
+            "archive": archive.name,
+            "archive_sha256": archive_sha,
+            "archive_size": archive.stat().st_size,
+            "archive_mtime_ns": archive.stat().st_mtime_ns,
+            "archive_decoder_version": SKILL_ARCHIVE_DECODER_VERSION,
+            "skill_root": relative_root,
+            "prepared_at": utc_now(),
+        }
+        write_json(staging / ".zhangcai-skill14-package.json", metadata)
+        staging.replace(destination)
+    except Exception:
+        shutil.rmtree(staging, ignore_errors=True)
+        raise
+    final_skill_root = (destination / relative_root).resolve() if relative_root else destination
+    return {
+        "status": "available",
+        "skill_id": skill_id,
+        "skill_name": skill_frontmatter_name(final_skill_root),
+        "harness_skill_root": str(final_skill_root),
+        "archive_sha256": archive_sha,
+        "source": "on_demand_archive",
+    }
+
+
 def prepare_packages() -> dict[str, Any]:
     skills_root = DATA_ROOT / "skills" / "packages"
     skills_root.mkdir(parents=True, exist_ok=True)
+    previous_manifest = read_json(DATA_ROOT / "skills" / "manifest.json", {})
+    previous_rows = previous_manifest.get("skills", []) if isinstance(previous_manifest, dict) else []
+    previous_by_id = {str(item.get("id")): item for item in previous_rows if isinstance(item, dict)}
     installed = []
     for skill in catalog()["skills"]:
         archive = ARCHIVE_ROOT / str(skill["archive"])
@@ -1773,24 +2052,63 @@ def prepare_packages() -> dict[str, Any]:
             installed.append({"id": skill["id"], "status": "missing_archive", "archive": str(archive)})
             continue
         destination = skills_root / skill["id"]
-        if destination.exists():
-            shutil.rmtree(destination)
-        destination.mkdir(parents=True)
-        with zipfile.ZipFile(archive) as bundle:
-            bundle.extractall(destination)
-            nested = [entry for entry in bundle.namelist() if entry.lower().endswith(".zip")]
-            for nested_name in nested:
-                nested_destination = destination / "nested" / Path(nested_name).stem
-                nested_destination.mkdir(parents=True, exist_ok=True)
-                with bundle.open(nested_name) as source, zipfile.ZipFile(io.BytesIO(source.read())) as nested_bundle:
-                    nested_bundle.extractall(nested_destination)
+        archive_sha = sha256_file(archive)
+        prior = previous_by_id.get(skill["id"], {})
+        prior_skill_root = str(prior.get("skill_root") or "")
+        if (
+            destination.is_dir()
+            and str(prior.get("sha256") or "").lower() == archive_sha
+            and prior.get("archive_decoder_version") == SKILL_ARCHIVE_DECODER_VERSION
+            and prior_skill_root
+        ):
+            skill_root = (DATA_ROOT / prior_skill_root).resolve()
+            if not skill_root.is_relative_to(destination.resolve()) or not (skill_root / "SKILL.md").is_file():
+                raise RuntimeError(f"技能包清单路径无效，未覆盖旧文件：{skill_root}")
+            archive_stat = archive.stat()
+            installed.append({
+                "id": skill["id"],
+                "name": skill["name"],
+                "status": "available",
+                "archive": archive.name,
+                "sha256": archive_sha,
+                "archive_size": archive_stat.st_size,
+                "archive_mtime_ns": archive_stat.st_mtime_ns,
+                "archive_decoder_version": SKILL_ARCHIVE_DECODER_VERSION,
+                "path": str(destination.relative_to(DATA_ROOT)).replace("\\", "/"),
+                "skill_root": str(skill_root.relative_to(DATA_ROOT)).replace("\\", "/"),
+            })
+            continue
+
+        staging = Path(tempfile.mkdtemp(prefix=f".{skill['id']}-", dir=skills_root))
+        backup: Path | None = None
+        try:
+            with open_skill_zip(archive) as bundle:
+                extract_skill_zip(bundle, staging)
+                extract_nested_skill_archives(bundle, staging)
+            skill_root = primary_skill_root(staging)
+            relative_skill_root = skill_root.relative_to(staging)
+            if destination.exists():
+                prior_sha = str(prior.get("sha256") or "untracked")[:12]
+                backup = skills_root / f"{skill['id']}.previous-{prior_sha}-{uuid.uuid4().hex[:8]}"
+                destination.replace(backup)
+            staging.replace(destination)
+            skill_root = destination / relative_skill_root
+        except Exception:
+            if backup is not None and backup.exists() and not destination.exists():
+                backup.replace(destination)
+            shutil.rmtree(staging, ignore_errors=True)
+            raise
         installed.append({
             "id": skill["id"],
             "name": skill["name"],
             "status": "available",
             "archive": archive.name,
-            "sha256": sha256_file(archive),
+            "sha256": archive_sha,
+            "archive_size": archive.stat().st_size,
+            "archive_mtime_ns": archive.stat().st_mtime_ns,
+            "archive_decoder_version": SKILL_ARCHIVE_DECODER_VERSION,
             "path": str(destination.relative_to(DATA_ROOT)).replace("\\", "/"),
+            "skill_root": str(skill_root.relative_to(DATA_ROOT)).replace("\\", "/"),
         })
     manifest = {"schema": "ZHANGCAI_SKILL14_PACKAGE_MANIFEST_V1", "prepared_at": utc_now(), "skills": installed}
     write_json(DATA_ROOT / "skills" / "manifest.json", manifest)
@@ -1804,13 +2122,37 @@ def write_preflight(skill_id: str) -> dict[str, Any]:
         raise RuntimeError(f"未知技能：{skill_id}")
     current = update_status()
     assets = current["assets"]
-    required_missing = [asset for asset in spec.get("required", []) if assets.get(asset, {}).get("status") != "available"]
-    optional_missing = [asset for asset in spec.get("optional", []) if assets.get(asset, {}).get("status") != "available"]
+    required_missing: list[str] = []
+    optional_missing: list[str] = []
     minute_spec = spec.get("minute_data") if isinstance(spec.get("minute_data"), dict) else {}
     minute_mode = str(minute_spec.get("mode") or "not_required")
     minute_data = current.get("minute_data") if isinstance(current.get("minute_data"), dict) else minute_data_status()
     minute_degraded = []
     resource_degraded = []
+    degradable_required = set(spec.get("degradable_required", []))
+    public_state = assets.get("public_research", {}) if isinstance(assets.get("public_research"), dict) else {}
+    public_target = str(public_state.get("target_date") or "unknown")
+    public_latest = str(public_state.get("latest_record_date") or "unknown")
+    # Present-but-stale public research remains available as dated context,
+    # never as same-day proof. Only catalog entries may permit degraded use.
+    for asset in spec.get("required", []):
+        asset_state = assets.get(asset, {}) if isinstance(assets.get(asset), dict) else {}
+        state = asset_state.get("status", "missing")
+        if state == "available":
+            continue
+        if state == "degraded" and asset in degradable_required:
+            resource_degraded.append(f"{asset}@{public_latest if asset == 'public_research' else 'degraded'}")
+        elif asset == "public_research" and state == "degraded":
+            required_missing.append(f"public_research@{public_target}:same-day-evidence (已保存来源日 {public_latest})")
+        else:
+            required_missing.append(asset)
+    for asset in spec.get("optional", []):
+        asset_state = assets.get(asset, {}) if isinstance(assets.get(asset), dict) else {}
+        state = asset_state.get("status", "missing")
+        if state == "degraded":
+            resource_degraded.append(f"{asset}@{public_latest if asset == 'public_research' else 'degraded'}")
+        elif state != "available":
+            optional_missing.append(asset)
     # A complete portable formula mirror is usable as a resource-library
     # dependency even when a live TDX/TQ worker has not yet produced a current
     # receipt. Keep the run explicitly DEGRADED instead of reporting the whole
@@ -1941,6 +2283,8 @@ def main() -> int:
     archive_parser.add_argument("--history-days", type=int, default=0, help="每个证券保留的历史条数；0 表示读取本地 .day 全部可用历史")
     subparsers.add_parser("status")
     subparsers.add_parser("prepare-packages")
+    harness_skill_parser = subparsers.add_parser("prepare-harness-skill")
+    harness_skill_parser.add_argument("--skill-id", required=True)
     subparsers.add_parser("write-daily-report")
     preflight_parser = subparsers.add_parser("preflight")
     preflight_parser.add_argument("--skill-id", required=True)
@@ -1951,6 +2295,8 @@ def main() -> int:
             result = archive_daily(0 if args.history_days <= 0 else min(args.history_days, 20000))
         elif args.command == "prepare-packages":
             result = prepare_packages()
+        elif args.command == "prepare-harness-skill":
+            result = prepare_harness_skill(args.skill_id)
         elif args.command == "preflight":
             result = write_preflight(args.skill_id)
         elif args.command == "write-daily-report":

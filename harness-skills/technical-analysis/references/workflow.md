@@ -1,8 +1,8 @@
 # 技术分析唯一工作流
 
 1. 通过权威股票路由绑定 `technical-analysis`。
-2. 规范股票代码，并验证 `C:\new_tdx_mock`、TQ 初始化脚本和三个公式源码存在。
-3. 初始化 `C:\new_tdx_mock\PYPlugins\user\tdxdata_test.py`。
+2. 规范股票代码，并验证 `$env:ZHANGCAI_TDX_ROOT`、TQ 初始化脚本和三个公式源码存在。
+3. 初始化 `$env:ZHANGCAI_TDX_ROOT\PYPlugins\user\tdxdata_test.py`。
 4. 执行 `大牛线撑压版`：`count=600`、`dividend_type=1`。
 5. 执行 `飞龙在天`：`count=0`、`dividend_type=0`。
 6. 执行 `庄家资金监控`：`count=5`、`dividend_type=0`。

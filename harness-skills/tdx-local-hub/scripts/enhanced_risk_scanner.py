@@ -26,7 +26,12 @@ from pathlib import Path
 from collections import defaultdict
 
 # ── Constants ──────────────────────────────────────────────────────────────
-TDX_ROOT = Path(r"C:\new_tdx_mock")
+APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
+
+TDX_ROOT = resolve_tdx_root()
 VIPDOC = TDX_ROOT / "vipdoc"
 HUB_SCRIPT = Path(__file__).resolve().parent / "tdx_hub.py"
 ST_CACHE = Path(__file__).resolve().parent / "st_blacklist.json"

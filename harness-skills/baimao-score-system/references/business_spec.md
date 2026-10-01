@@ -45,7 +45,7 @@ LOCKED_ACCEPTANCE: scripts/baimao_score_acceptance.py
 
 通过标准：
 
-如另一台电脑的通达信不在 `C:\new_tdx_mock`，先设置：
+如另一台电脑的通达信不在 `$env:ZHANGCAI_TDX_ROOT`，先设置：
 
 两者必须返回 `CLEAN_PASS`。
 
@@ -54,7 +54,7 @@ LOCKED_ACCEPTANCE: scripts/baimao_score_acceptance.py
 ## 执行顺序
 
 1. 通过 `baimao_score_system.py` 入口执行。
-2. 读取本地通达信日K，默认目录为 `C:\new_tdx_mock`，可用环境变量 `BAIMAO_TDX_ROOT` 指向另一台电脑的通达信目录。
+2. 读取本地通达信日K，默认目录为 `$env:ZHANGCAI_TDX_ROOT`，可用环境变量 `BAIMAO_TDX_ROOT` 指向另一台电脑的通达信目录。
 3. 检查数据日期必须等于当天要求日期，否则 `DATA_STALE` 阻断。
 4. 运行六公式评分：平均成本线、白猫RSI、白猫渡劫、白猫队长、躲猫猫、黑猫白猫、六公式共振。
 5. 补充财务质量、现金流、年度经营质量、行业业务、公告事件、流动性、风险和复评条件。
@@ -65,7 +65,7 @@ LOCKED_ACCEPTANCE: scripts/baimao_score_acceptance.py
 
 | 数据 | 主来源 | 失败处理 |
 |---|---|---|
-| K线/量价 | `%BAIMAO_TDX_ROOT%\vipdoc` 或默认 `C:\new_tdx_mock\vipdoc` | 缺失为 `DATA_BLOCKED`，过期为 `DATA_STALE` |
+| K线/量价 | `%BAIMAO_TDX_ROOT%\vipdoc` 或默认 `$env:ZHANGCAI_TDX_ROOT\vipdoc` | 缺失为 `DATA_BLOCKED`，过期为 `DATA_STALE` |
 | 六公式技术 | 内置 `baimao_stock_score.py` | 失败则不输出综合结论 |
 | 财务/现金流 | 本地结构化画像；后续可接iFinD/公告接口 | 缺失时降级并明示 |
 | 公告事件 | 本地结构化画像；后续可接交易所公告 | 缺失时不做催化加分 |

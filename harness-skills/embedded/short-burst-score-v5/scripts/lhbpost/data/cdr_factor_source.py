@@ -6,11 +6,16 @@ This component never treats an empty upstream factor response as factor one.
 """
 from pathlib import Path
 from datetime import datetime,timezone,timedelta
-import hashlib,importlib.util,json,math,struct
+import hashlib,importlib.util,json,math,struct,sys
 
-CACHE=Path(r'D:\TDX\T0002\hq_cache\gbbq')
-DAY=Path(r'D:\TDX\vipdoc\sh\lday\sh689009.day')
-READER=Path(r'F:\Codex\Home\skills\a-share-oss-research\runtimes\fasiondog-hikyuu\Lib\site-packages\pytdx\reader\gbbq_reader.py')
+_app_scripts_dir = str(Path(__file__).resolve().parents[6] / 'scripts')
+if _app_scripts_dir not in sys.path: sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_app_root, resolve_tdx_root
+
+APP_ROOT=resolve_app_root();TDX_ROOT=resolve_tdx_root()
+CACHE=TDX_ROOT/'T0002'/'hq_cache'/'gbbq'
+DAY=TDX_ROOT/'vipdoc'/'sh'/'lday'/'sh689009.day'
+READER=APP_ROOT/'harness-skills'/'feilong-strategy'/'vendor'/'pytdx-1.72'/'pytdx'/'reader'/'gbbq_reader.py'
 
 def _day(value):
     text=str(value).replace('-','')

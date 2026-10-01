@@ -4,9 +4,15 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_tdx_root
 
 import numpy as np
 import pandas as pd
@@ -41,6 +47,7 @@ SCHEMA = "FEILONG_FACTOR_CORRELATION_RESEARCH_V3"
 MANIFEST_SCHEMA = "FEILONG_FACTOR_CORRELATION_RESEARCH_MANIFEST_V3"
 FORMULA_NAME = "飞龙在天"
 FORMULA_SHA256 = "aabcec3d83b2b37d01d53ba4d9c281a745e29f53d941f3704da95dcea114e1e0"
+TDX_ROOT = resolve_tdx_root()
 BOOTSTRAP_REPETITIONS = 500
 MINIMUM_FACTOR_N = 300
 
@@ -1095,8 +1102,8 @@ def run_factor_correlation_research(
     precomputed_evidence: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     generated_at = datetime.now().astimezone().isoformat()
-    if tdx_root.resolve() != Path(r"C:\new_tdx_mock").resolve() or not tdx_root.is_dir():
-        raise RuntimeError("tdx_root_not_authorized_default")
+    if tdx_root.resolve() != TDX_ROOT.resolve() or not tdx_root.is_dir():
+        raise RuntimeError(f"tdx_root_not_authorized_selected_installation:{TDX_ROOT}")
     if len(FACTOR_SPECS) != 1280:
         raise RuntimeError(f"registered_factor_count_not_1280:{len(FACTOR_SPECS)}")
     if len(DIMENSION_CATALOG) < 96:

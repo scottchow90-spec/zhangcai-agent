@@ -25,6 +25,10 @@ from urllib.parse import urlparse, urlunparse
 LOCAL_SCRIPT_DIR = Path(__file__).resolve().parent
 if str(LOCAL_SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(LOCAL_SCRIPT_DIR))
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_data_root
 
 from sentiment_quality_contracts import validate_sentiment_record
 
@@ -657,7 +661,7 @@ def integrate(event_pool: list[dict], market_pool: list[dict], capture_dir: str 
 
 def selftest() -> int:
     now = datetime(2026, 9, 1, 15, 0, tzinfo=CHINA_TZ)
-    cache_root = Path(os.environ.get("CODEX_TASK_CACHE_ROOT", r"F:\Codex\cache")) / "a-share-sentiment-integrator-selftest"
+    cache_root = Path(os.environ.get("CODEX_TASK_CACHE_ROOT") or (resolve_data_root() / "runtime" / "cache")) / "a-share-sentiment-integrator-selftest"
     cache_root.mkdir(parents=True, exist_ok=True)
     capture = cache_root / BUSINESS_CAPTURE_FILE
     payload = {

@@ -9,6 +9,7 @@ if _onestock_embedded_dir not in _onestock_embedded_sys.path:
 import argparse
 import hashlib
 import json
+import os
 import re
 import time
 from datetime import datetime, timedelta, timezone
@@ -16,9 +17,14 @@ from pathlib import Path
 from urllib.parse import quote as url_quote
 from urllib.request import Request, urlopen
 
+_app_scripts_dir = str(_OneStockEmbeddedPath(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in _onestock_embedded_sys.path:
+    _onestock_embedded_sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_tdx_root
+
 
 CHINA_TZ = timezone(timedelta(hours=8))
-TDX_ROOT = Path(r"C:\new_tdx_mock\vipdoc")
+TDX_ROOT = resolve_tdx_root() / "vipdoc"
 
 
 def canonical_sha256(payload: object) -> str:

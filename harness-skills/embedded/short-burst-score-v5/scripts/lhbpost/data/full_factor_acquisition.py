@@ -2,10 +2,14 @@
 from pathlib import Path
 from datetime import datetime,timezone,timedelta
 from concurrent.futures import ThreadPoolExecutor,wait,FIRST_COMPLETED
-import hashlib,json,re,time,uuid
+import hashlib,json,re,time,uuid,sys
 import pandas as pd
 
-CACHE_ROOT=Path(r'F:\Codex\Home\business_data\a-share-short-burst-score\data-cache\hfq')
+_app_scripts_dir = str(Path(__file__).resolve().parents[6] / 'scripts')
+if _app_scripts_dir not in sys.path: sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_data_root
+
+CACHE_ROOT=resolve_data_root()/'business_data'/'a-share-short-burst-score'/'data-cache'/'hfq'
 SCHEMA='SINA_HFQ_RAW_RESPONSE_V1'
 TZ=timezone(timedelta(hours=8))
 

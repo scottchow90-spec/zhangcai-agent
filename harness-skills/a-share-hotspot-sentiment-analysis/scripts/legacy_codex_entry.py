@@ -110,7 +110,7 @@ def selftest() -> int:
             encoding="utf-8",
             errors="replace",
             timeout=30,
-            env={**__import__("os").environ, "CODEX_TASK_CACHE_ROOT": r"F:\Codex\cache"},
+            env={**__import__("os").environ, "CODEX_TASK_CACHE_ROOT": str(Path(__import__("os").environ.get("ONESTOCK_STOCK_DATA_ROOT") or (ROOT.parents[1] / "app-data")) / "runtime" / "cache")},
         )
         if integration_test.returncode != 0:
             errors.append(f"integration_selftest:{integration_test.stdout.strip()}:{integration_test.stderr.strip()}")

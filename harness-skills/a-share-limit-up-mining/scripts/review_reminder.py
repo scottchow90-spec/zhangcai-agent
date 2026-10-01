@@ -11,8 +11,14 @@ import argparse
 import json
 from datetime import date, datetime
 from pathlib import Path
+import sys
 
-ARCHIVE_ROOT = Path.home() / ".codex" / "reports" / "_archive" / "lianban_mining"
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_data_root
+
+ARCHIVE_ROOT = resolve_data_root() / "reports" / "archive" / "skills" / "a-share-limit-up-mining"
 
 
 def main() -> int:

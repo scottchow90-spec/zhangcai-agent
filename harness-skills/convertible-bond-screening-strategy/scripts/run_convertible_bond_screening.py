@@ -30,10 +30,14 @@ from runtime_utils import (
     canonical_business_sum,
     canonicalize_business_payload,
 )
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_tdx_root
 
 
 SKILL_ROOT = Path(__file__).resolve().parent.parent
-TDX_ROOT = Path(r"C:\new_tdx_mock")
+TDX_ROOT = resolve_tdx_root()
 SKILLS_ROOT = SKILL_ROOT.parent
 HQ_CACHE = TDX_ROOT / "T0002" / "hq_cache"
 BOND_SOURCE = HQ_CACHE / "speckzzdata.txt"

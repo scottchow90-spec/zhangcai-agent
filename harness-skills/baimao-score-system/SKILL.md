@@ -23,8 +23,8 @@ description: "白猫老师评分体系综合个股分析技能。用于“白猫
 
 ## 固定入口
 
-- 技能信息与静态自检：`python D:\C盘转移\日志\codex\skills\baimao-score-system\scripts\codex_entry.py info` / `selftest`。
-- 本地业务脚本：`scripts/baimao_score_system.py`；执行：`python D:\C盘转移\日志\codex\skills\baimao-score-system\scripts\codex_entry.py run  # 默认参数：analyze 301372`。
+- 技能信息与静态自检：`python "$($env:STOCK_SKILLS_ROOT)\baimao-score-system"\scripts\codex_entry.py info` / `selftest`。
+- 本地业务脚本：`scripts/baimao_score_system.py`；执行：`python "$($env:STOCK_SKILLS_ROOT)\baimao-score-system"\scripts\codex_entry.py run  # 默认参数：analyze 301372`。
 - 用户提供参数时，在 `run --` 后显式传入；不得临场改调用别的技能脚本。
 
 ## 参考资料
@@ -35,7 +35,6 @@ description: "白猫老师评分体系综合个股分析技能。用于“白猫
 
 ## 验证
 
-- 结构：`python D:\C盘转移\日志\codex\skills\.system\skill-creator\scripts\quick_validate.py D:\C盘转移\日志\codex\skills\baimao-score-system`。
 - 入口：运行 `codex_entry.py selftest`，必须确认本技能路径、脚本编译和 OpenClaw 运行依赖扫描均通过。
 - 业务：只有本回合数据、结果文件和相应验收证据均通过后，才可声称完成。
 

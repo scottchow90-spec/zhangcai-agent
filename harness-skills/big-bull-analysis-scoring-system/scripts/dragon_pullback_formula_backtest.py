@@ -22,7 +22,12 @@ from pathlib import Path
 from typing import Any
 
 
-TDX_ROOT = Path(r"C:\new_tdx_mock")
+APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
+
+TDX_ROOT = resolve_tdx_root()
 TQ_USER_DIR = TDX_ROOT / "PYPlugins" / "user"
 TQ_INIT_PATH = TQ_USER_DIR / "tdxdata_test.py"
 FORMULA_SOURCE = TDX_ROOT / "T0002" / "gs_bak" / "大牛线.txt"

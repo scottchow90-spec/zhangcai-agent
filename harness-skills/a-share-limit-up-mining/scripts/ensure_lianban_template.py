@@ -13,13 +13,18 @@ import sys
 from pathlib import Path
 from typing import Iterable
 
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_data_root
+
 try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 except Exception:
     pass
 
-TEMPLATE = Path(r"F:\小龙虾6月交付\6月1日连板挖掘5标的.docx")
+TEMPLATE = Path(__file__).resolve().parents[1] / "assets" / "连板挖掘模板.docx"
 
 
 def set_cell(cell, text: str) -> None:
@@ -114,12 +119,14 @@ def validate_template(path: Path = TEMPLATE) -> dict:
 
 
 def main() -> int:
-    status = validate_template(TEMPLATE)
+    template = TEMPLATE
+    status = validate_template(template)
     created = False
     if not status.get("ok"):
-        build_template(TEMPLATE)
+        template = resolve_data_root() / "templates" / "a-share-limit-up-mining" / "连板挖掘模板.docx"
+        build_template(template)
         created = True
-        status = validate_template(TEMPLATE)
+        status = validate_template(template)
     result = {"status": "CLEAN_PASS" if status.get("ok") else "BLOCKED", "created": created, **status}
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0 if status.get("ok") else 1

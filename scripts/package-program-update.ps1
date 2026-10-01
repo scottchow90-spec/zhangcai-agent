@@ -1,4 +1,5 @@
 param(
+  [string]$ProgramSourceRoot = '',
   [string]$EnvironmentClientRoot = '',
   [string]$OutputFile = ''
 )
@@ -8,9 +9,9 @@ $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
 . (Join-Path $PSScriptRoot 'release-paths.ps1')
 
-$unpackedRoot = Join-Path $releaseRoot 'win-unpacked'
+$unpackedRoot = if ($ProgramSourceRoot) { $ProgramSourceRoot } else { Join-Path $releaseRoot 'win-unpacked' }
 if (-not (Test-Path -LiteralPath $unpackedRoot -PathType Container)) {
-  throw "Missing current program build: $unpackedRoot. Run package:build:win:dir first."
+  throw "Missing program payload source: $unpackedRoot. Supply -ProgramSourceRoot or build the current version first."
 }
 $unpackedRoot = (Resolve-Path -LiteralPath $unpackedRoot).Path.TrimEnd('\')
 $resourcesRoot = Join-Path $unpackedRoot 'resources'
@@ -89,7 +90,12 @@ $payload = Join-Path $releaseRoot "zhangcai-program-$releaseVersion.7z"
 $payloadTemp = Join-Path $releaseRoot "zhangcai-program-$releaseVersion.tmp.7z"
 $compileOutput = Join-Path $releaseRoot "program-update-installer-$releaseVersion-x64.exe"
 $payloadParts = @()
-if (Test-Path -LiteralPath $compileOutput -PathType Leaf) { Remove-Item -LiteralPath $compileOutput -Force }
+Assert-NewArtifact $payload
+Assert-NewArtifact $payloadTemp
+Assert-NewArtifact $compileOutput
+for ($index = 1; $index -le 4; $index++) {
+  Assert-NewArtifact (Join-Path $releaseRoot ("pupd{0}.bin" -f $index))
+}
 
 try {
   New-Item -ItemType Directory -Path (Join-Path $staging 'resources') -Force | Out-Null
@@ -150,6 +156,7 @@ try {
     sha256 = Get-Sha256 $output
     embeddedPayloadBytes = $payloadBytes
     embeddedPayloadSha256 = Get-Sha256 $payload
+    programSourceRoot = $unpackedRoot
     environmentFilesIncluded = $false
     updateRoots = @('resources/app.asar', 'resources/app without node_modules', 'resources/resource-library')
     preservedRoots = @('resources/runtime', 'resources/deepseek-harness', 'resources/app/node_modules', 'data/resource-library')

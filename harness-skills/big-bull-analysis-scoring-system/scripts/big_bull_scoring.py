@@ -17,13 +17,19 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_DIR = ROOT / "scripts"
-CORE_DIR = Path(r"D:\C盘转移\日志\codex\skills\stock-unified\scripts")
-TQ_USER_DIR = Path(r"C:\new_tdx_mock\PYPlugins\user")
+SKILLS_ROOT = Path(os.environ.get("STOCK_SKILLS_ROOT", str(ROOT.parent))).expanduser().resolve()
+CORE_DIR = SKILLS_ROOT / "stock-unified" / "scripts"
+TDX_ROOT = resolve_tdx_root()
+TQ_USER_DIR = TDX_ROOT / "PYPlugins" / "user"
 TQ_INIT = TQ_USER_DIR / "tdxdata_test.py"
-DEFAULT_BLOCK_DIR = Path(r"C:\new_tdx_mock\T0002\blocknew")
+DEFAULT_BLOCK_DIR = TDX_ROOT / "T0002" / "blocknew"
 sys.path.insert(0, str(SCRIPT_DIR))
 sys.path.insert(0, str(CORE_DIR))
 

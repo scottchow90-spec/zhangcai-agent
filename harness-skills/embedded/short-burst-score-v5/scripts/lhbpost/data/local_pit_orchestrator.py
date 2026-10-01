@@ -8,6 +8,9 @@ import sys
 import time
 import shutil
 import pandas as pd
+_app_scripts_dir = str(Path(__file__).resolve().parents[6] / 'scripts')
+if _app_scripts_dir not in sys.path: sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_data_root
 try:
     from . import local_pit_inputs as pit
 except ImportError:
@@ -82,7 +85,7 @@ def acquire_pit_supplementary(adapter,start,end):
     today=datetime.now(timezone(timedelta(hours=8))).strftime('%Y%m%d')
     if end>today:raise ValueError('future_data_request')
     out=Path(adapter.out).resolve()
-    cache_root=Path(getattr(adapter,'pit_cache_root',r'F:\Codex\Home\business_data\a-share-short-burst-score\data-cache\pit'))
+    cache_root=Path(getattr(adapter,'pit_cache_root',resolve_data_root()/'business_data'/'a-share-short-burst-score'/'data-cache'/'pit'))
     cache=cache_root/f'{start}-{end}';cache.mkdir(parents=True,exist_ok=True)
     run_evidence=out/'source_evidence'/'pit';run_evidence.mkdir(parents=True,exist_ok=True)
     ledger_path=cache/'cache_manifest.json'

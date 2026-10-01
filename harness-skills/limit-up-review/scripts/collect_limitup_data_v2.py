@@ -5,17 +5,28 @@ from pathlib import Path as _OneStockEmbeddedPath
 _onestock_embedded_dir = str(_OneStockEmbeddedPath(__file__).resolve().parent)
 if _onestock_embedded_dir not in _onestock_embedded_sys.path:
     _onestock_embedded_sys.path.insert(0, _onestock_embedded_dir)
-import json, re, time, math, os
+import json, re, time, math, os, sys
 from pathlib import Path
 from datetime import datetime
 import requests
 import pandas as pd
 import akshare as ak
 
-TASK_DIR = Path(os.environ.get("LIMITUP_TASK_DIR", r"D:\C盘转移\日志\codex\reports\2026-06-02_limit_up_review_word"))
-TASK_DIR.mkdir(parents=True, exist_ok=True)
 DATE = os.environ.get("LIMITUP_DATE", datetime.now().strftime("%Y%m%d"))
 DATE_H = os.environ.get("LIMITUP_DATE_H", datetime.now().strftime("%Y-%m-%d"))
+APP_ROOT = Path(__file__).resolve().parents[3]
+APP_SCRIPTS = APP_ROOT / "scripts"
+if str(APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(APP_SCRIPTS))
+from tdx_path_config import resolve_data_root, resolve_path_from, resolve_tdx_root
+
+DATA_ROOT = resolve_data_root()
+TASK_DIR = resolve_path_from(
+    os.environ.get("LIMITUP_TASK_DIR", str(DATA_ROOT / "reports" / f"{DATE_H}_limit_up_review_word")),
+    DATA_ROOT,
+)
+TDX_ROOT = resolve_tdx_root()
+TASK_DIR.mkdir(parents=True, exist_ok=True)
 UA = {"User-Agent":"Mozilla/5.0", "Referer":"https://quote.eastmoney.com/"}
 DATE_TAG = DATE
 
@@ -134,7 +145,7 @@ def threshold_by_code_name(code, name):
 
 
 def load_tdx_stock_name_index():
-    p = Path(r'C:\new_tdx_mock\T0002\hq_cache\infoharbor_ex.code')
+    p = TDX_ROOT / 'T0002' / 'hq_cache' / 'infoharbor_ex.code'
     if not p.exists():
         return {}
     try:
@@ -153,7 +164,7 @@ def load_tdx_stock_name_index():
 
 
 def read_local_blk_codes(filename):
-    p = Path(r'C:\new_tdx_mock\T0002\blocknew') / filename
+    p = TDX_ROOT / 'T0002' / 'blocknew' / filename
     if not p.exists():
         return []
     text = p.read_text(encoding='gbk', errors='ignore')
@@ -168,7 +179,7 @@ def read_local_blk_codes(filename):
     return out
 
 def read_tdx_block_items(filename):
-    p = Path(r'C:\new_tdx_mock\T0002\blocknew') / filename
+    p = TDX_ROOT / 'T0002' / 'blocknew' / filename
     if not p.exists():
         return []
     items = []

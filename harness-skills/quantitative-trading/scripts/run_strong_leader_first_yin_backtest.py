@@ -14,15 +14,22 @@ import importlib.util
 import json
 import math
 import statistics
+import sys
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
 
+APP_ROOT = Path(__file__).resolve().parents[3]
+APP_SCRIPTS = APP_ROOT / "scripts"
+if str(APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(APP_SCRIPTS))
+from tdx_path_config import resolve_data_root
+
 SKILL_ROOT = Path(__file__).resolve().parents[1]
-REPORTS = SKILL_ROOT / "reports"
-DRAGON_SCRIPT = Path(r"D:\C盘转移\日志\codex\skills\dragon-pullback\scripts\run_strong_leader_first_yin.py")
-TDX_HUB_PATH = Path(r"D:\C盘转移\日志\codex\skills\tdx-local-hub\scripts\tdx_hub.py")
+REPORTS = resolve_data_root() / "reports" / "quantitative-trading"
+DRAGON_SCRIPT = APP_ROOT / "harness-skills" / "dragon-pullback" / "scripts" / "run_strong_leader_first_yin.py"
+TDX_HUB_PATH = APP_ROOT / "harness-skills" / "tdx-local-hub" / "scripts" / "tdx_hub.py"
 SCHEMA_VERSION = 1
 
 
@@ -598,7 +605,7 @@ def main(argv: list[str] | None = None) -> int:
     else:
         verdict = "FAIL"
 
-    current_selector_path = Path(r"D:\C盘转移\日志\codex\skills\dragon-pullback\reports\strong-leader-first-yin-latest.json")
+    current_selector_path = resolve_data_root() / "reports" / "skills" / "dragon-pullback" / "strong-leader-first-yin-latest.json"
     current_selector = json.loads(current_selector_path.read_text(encoding="utf-8-sig")) if current_selector_path.exists() else {}
     source_snapshot = hashlib.sha256("\n".join(sorted(source_rows)).encode("utf-8")).hexdigest()
     samples = sorted(signals, key=lambda item: (item["signal_date"], item["symbol"]), reverse=True)[:100]

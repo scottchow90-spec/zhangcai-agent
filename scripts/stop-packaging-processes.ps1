@@ -6,10 +6,10 @@ $ErrorActionPreference = 'Stop'
 if (-not $WorkspaceRoot) { $WorkspaceRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path }
 $workspace = [System.IO.Path]::GetFullPath($WorkspaceRoot).TrimEnd('\').ToLowerInvariant()
 
-# Never stop the web-test stack. Protect the listeners and their descendants,
-# because the bridge may have spawned a Python worker that does not own a port.
+# Never stop active web-test or desktop stacks. Protect their listeners and
+# descendants, because a bridge may have spawned a Python worker without a port.
 $protected = New-Object 'System.Collections.Generic.HashSet[int]'
-foreach ($port in @(3003, 3004, 4319)) {
+foreach ($port in @(3003, 3004, 4319, 34303, 44319)) {
   Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue |
     ForEach-Object { [void]$protected.Add([int]$_.OwningProcess) }
 }
@@ -63,7 +63,7 @@ foreach ($target in $targets) {
 [pscustomobject]@{
   status = 'PASS'
   workspace = $WorkspaceRoot
-  protectedWebPorts = @(3003, 3004, 4319)
+  protectedServicePorts = @(3003, 3004, 4319, 34303, 44319)
   protectedProcessCount = $protected.Count
   stoppedProcessCount = $targets.Count
   stopped = @($targets | ForEach-Object { @{ pid = $_.ProcessId; name = $_.Name } })

@@ -41,9 +41,9 @@ LOCKED_ACCEPTANCE: run_summary.json + target scientific report readback
 ## 唯一命令
 
 ```powershell
-python D:\C盘转移\日志\codex\skills\support-pressure-analysis-system\scripts\codex_entry.py run -- --mode pressure --symbols 600519.SH --out-dir <目录> --run-id <本轮ID>
+python "$($env:STOCK_SKILLS_ROOT)\support-pressure-analysis-system"\scripts\codex_entry.py run -- --mode pressure --symbols 600519.SH --out-dir <目录> --run-id <本轮ID>
 
-python D:\C盘转移\日志\codex\skills\support-pressure-analysis-system\scripts\codex_entry.py run -- --validate-five-theories --validation-symbols-per-stratum 4 --validation-limit 0 --bootstrap-iterations 2000
+python "$($env:STOCK_SKILLS_ROOT)\support-pressure-analysis-system"\scripts\codex_entry.py run -- --validate-five-theories --validation-symbols-per-stratum 4 --validation-limit 0 --bootstrap-iterations 2000
 ```
 
 下游技能必须从 `run_summary.json` 读取 artifact，再读取目标科学报告；禁止猜测旧产物名、直接调用内部脚本或临场切换执行器。

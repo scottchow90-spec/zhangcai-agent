@@ -36,7 +36,7 @@ try:
 except Exception:
     pass
 
-DEFAULT_SKILL_DIR = Path(r"D:\C盘转移\日志\codex\skills\limit-up-review")
+DEFAULT_SKILL_DIR = Path(__file__).resolve().parents[1]
 DELISTING_HARD_EXCLUSION = "delisting_hard_exclusion"
 VISIBLE_LATIN_GATE = "visible_latin_gate"
 VISIBLE_FORBIDDEN = [

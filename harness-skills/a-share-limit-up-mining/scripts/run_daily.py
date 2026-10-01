@@ -31,6 +31,10 @@ import warnings
 from datetime import datetime
 from pathlib import Path
 
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_data_root, resolve_tdx_root
 from _date_utils import resolve_latest_trade_date
 
 warnings.filterwarnings('ignore')
@@ -41,9 +45,9 @@ try:
 except Exception:
     pass
 
-WORKSPACE = Path(r'D:\C盘转移\日志\codex')
-REPORTS = WORKSPACE / 'reports'
-ZTC = Path(r'C:\new_tdx_mock\T0002\blocknew\ZTC.blk')
+WORKSPACE = resolve_data_root()
+REPORTS = WORKSPACE / 'reports' / 'skills' / 'a-share-limit-up-mining'
+ZTC = resolve_tdx_root() / 'T0002' / 'blocknew' / 'ZTC.blk'
 
 AUDIT = {
     'generated_at': datetime.now().astimezone().isoformat(timespec='seconds'),

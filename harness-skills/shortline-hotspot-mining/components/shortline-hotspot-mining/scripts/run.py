@@ -17,9 +17,14 @@ import sys
 from datetime import date, datetime
 from pathlib import Path
 
+_app_scripts_dir = str(Path(__file__).resolve().parents[5] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_data_root, resolve_tdx_root
+
 from tdx_sector_pct import sector_pct_from_tdx
 
-GLOBAL_SCRIPTS = Path.home() / ".codex" / "scripts"
+GLOBAL_SCRIPTS = Path(__file__).resolve().parents[5] / "scripts"
 if str(GLOBAL_SCRIPTS) not in sys.path:
     sys.path.insert(0, str(GLOBAL_SCRIPTS))
 
@@ -32,12 +37,8 @@ except Exception:
     pass
 
 ROOT = Path(__file__).resolve().parents[1]
-REPORTS = Path.home() / ".codex" / "reports"
-BLOCKNEW_CANDIDATES = (
-    Path(r"C:\new_tdx_mock\T0002\blocknew"),
-    Path(r"C:\new_tdx\T0002\blocknew"),
-    Path(r"C:\zd_tdx\T0002\blocknew"),
-)
+REPORTS = resolve_data_root() / "reports" / "skills" / "shortline-hotspot-mining"
+BLOCKNEW_CANDIDATES = (resolve_tdx_root() / "T0002" / "blocknew",)
 SOURCE_LABELS = {
     "tdx_local": "本地通达信",
     "akshare.stock_sector_spot:新浪行业": "新浪行业行情",

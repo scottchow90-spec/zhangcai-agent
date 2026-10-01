@@ -24,45 +24,21 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from collections import defaultdict
 
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_data_root, resolve_tdx_root
+
 # === Config ===
-WORKSPACE = Path(__file__).resolve().parent.parent.parent.parent
+WORKSPACE = resolve_data_root()
 
 
 def _resolve_tdx_root():
-    """自动探测通达信本地数据根目录 (跨机部署: 支持多种 TDX 路径)
-    优先顺序: 环境变量 > 常见固定路径 > 任意盘符根目录的 vipdoc
-    返回: Path 对象 (可能不存在, 调用方需 exists() 检查)
-    """
-    # 1) 环境变量覆盖
-    env = os.environ.get("TDX_VIPDOC_ROOT")
-    if env:
-        return Path(env)
-    # 2) 常见固定路径 (本机/常见装机位置)
-    common = [
-        r"C:\new_tdx_mock\vipdoc",
-        r"D:\zd_tdx\vipdoc",
-        r"D:\zd_sw\vipdoc",
-        r"D:\new_tdx\vipdoc",
-        r"D:\swzq\vipdoc",
-        r"C:\zd_tdx\vipdoc",
-        r"C:\new_tdx\vipdoc",
-        r"C:\zd_sw\vipdoc",
-        r"C:\Program Files\tdx\vipdoc",
-        r"C:\Program Files (x86)\tdx\vipdoc",
-    ]
-    for c in common:
-        p = Path(c)
-        if p.exists():
-            return p
-    # 3) 扫所有可用盘符找 vipdoc 目录
-    import string
-    for letter in string.ascii_uppercase:
-        for sub in ("tdxmoni", "zd_tdx", "zd_sw", "new_tdx", "swzq"):
-            p = Path(f"{letter}:/{sub}/vipdoc")
-            if p.exists():
-                return p
-    # 4) 兜底: 返回最常见位置 (不存在, 调用方处理)
-    return Path(r"C:\new_tdx_mock\vipdoc")
+    """Return the selected installation's vipdoc, never a guessed sibling install."""
+    env_vipdoc = os.environ.get("TDX_VIPDOC_ROOT")
+    if env_vipdoc:
+        return Path(env_vipdoc).expanduser().resolve()
+    return resolve_tdx_root() / "vipdoc"
 
 
 # 模块级常量: TDX 根目录 (可被环境变量 TDX_VIPDOC_ROOT 覆盖)
@@ -70,7 +46,7 @@ TDX_ROOT = _resolve_tdx_root()
 TDX_PATH = TDX_ROOT / "sh" / "lday" / "sh000001.day"  # 默认路径, fetch 时再按标的动态拼
 
 RUN_ID = os.environ.get("SKILL_FULLFLOW_RUN_ID", "manual_run")
-OUTPUT_DIR = WORKSPACE / "reports" / RUN_ID / "support-resistance-analysis"
+OUTPUT_DIR = resolve_data_root() / "reports" / RUN_ID / "support-resistance-analysis"
 CST = timezone(timedelta(hours=8))
 NAME_CN = "支撑压力分析系统"
 SKILL = "support-pressure-analysis-system"

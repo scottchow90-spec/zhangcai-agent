@@ -2,9 +2,15 @@
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal, InvalidOperation
-import hashlib, json, re, urllib.request
+import hashlib, json, re, urllib.request, importlib.util
 
-SOURCE_CODE = Path(r'C:\Users\25296\AppData\Local\Programs\Python\Python313\Lib\site-packages\akshare\stock\stock_zh_a_sina.py')
+_app_scripts_dir = str(Path(__file__).resolve().parents[6] / 'scripts')
+if _app_scripts_dir not in __import__('sys').path:
+    __import__('sys').path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_data_root
+
+_source_spec = importlib.util.find_spec('akshare.stock.stock_zh_a_sina')
+SOURCE_CODE = Path(_source_spec.origin) if _source_spec and _source_spec.origin else resolve_data_root() / 'runtime' / 'missing-akshare-stock-zh-a-sina.py'
 URL = 'https://stock.finance.sina.com.cn/stock/api/jsonp.php/var%20KKE_ShareAmount_{0}=/StockService.getAmountBySymbol?_=20&symbol={0}'
 
 def _symbol(symbol):

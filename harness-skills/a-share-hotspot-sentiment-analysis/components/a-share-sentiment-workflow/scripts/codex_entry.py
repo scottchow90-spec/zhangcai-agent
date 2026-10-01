@@ -8,7 +8,8 @@ if _onestock_embedded_dir not in _onestock_embedded_sys.path:
 from pathlib import Path
 import sys
 
-RUNTIME = Path(r"D:\C盘转移\日志\codex\scripts\stock_canonical_runtime.py")
+APP_ROOT = Path(__file__).resolve().parents[5]
+RUNTIME = APP_ROOT / "scripts" / "stock_canonical_runtime.py"
 sys.path.insert(0, str(RUNTIME.parent))
 
 from stock_canonical_runtime import facade_main

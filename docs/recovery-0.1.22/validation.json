@@ -1,0 +1,79 @@
+{
+  "platform": "macOS",
+  "productVersion": "0.1.22",
+  "runtimeBaselineVersion": "0.1.9",
+  "checks": [
+    {
+      "command": "node --check agent-server.mjs",
+      "status": "PASS"
+    },
+    {
+      "command": "node --check electron-app/main.mjs",
+      "status": "PASS"
+    },
+    {
+      "command": "node --check electron-app/tdx-root.mjs",
+      "status": "PASS"
+    },
+    {
+      "command": "python -m py_compile scripts/tdx_path_config.py",
+      "status": "PASS",
+      "note": "Bytecode cache redirected outside repository."
+    },
+    {
+      "command": "python -m py_compile scripts/tdx_process.py",
+      "status": "PASS",
+      "note": "Bytecode cache redirected outside repository."
+    },
+    {
+      "command": "python -m py_compile scripts/tdx_runtime_bridge.py",
+      "status": "PASS",
+      "note": "Bytecode cache redirected outside repository."
+    },
+    {
+      "command": "python -m py_compile scripts/skill14_data_runtime.py",
+      "status": "PASS",
+      "note": "Bytecode cache redirected outside repository."
+    },
+    {
+      "command": "python -m py_compile scripts/stock_canonical_runtime.py",
+      "status": "PASS",
+      "note": "Bytecode cache redirected outside repository."
+    },
+    {
+      "command": "pnpm install --frozen-lockfile",
+      "status": "PASS",
+      "note": "pnpm 11.19.0; unchanged pnpm-lock.yaml."
+    },
+    {
+      "command": "pnpm run build",
+      "status": "PASS",
+      "note": "Build uses preserved baseline frontend plus recovered program layer; generated dist discarded, exact supplied release dist restored."
+    },
+    {
+      "command": "pnpm run package:preflight",
+      "status": "NOT_RUN",
+      "reason": "No Windows or powershell.exe; no bundled Windows Node/Python/Harness/TDX environment."
+    },
+    {
+      "command": "python scripts/verify-recovery-0.1.22.py",
+      "status": "PASS"
+    }
+  ],
+  "knownPackagingGaps": [
+    "scripts/verify_skill14_archives.py",
+    "scripts/verify_stock_detail_skills.py",
+    "scripts/tests/verify_stock_detail_skill_discovery.mjs",
+    "scripts/tests/verify_skill14_packaged_runtime.mjs",
+    "skill-archives/A股行情资讯全接口与数据能力大全_WorkBuddy电脑版_20260908-014459.zip",
+    "packaging/staging/site-build-0.1.22/dist",
+    "Windows private runtime and Harness staging"
+  ],
+  "credentialPatternScan": "No actual keys found; three sk- pattern matches were substrings of the risk-mine-clearance skill name.",
+  "stagedChangeCounts": {
+    "A": 57,
+    "M": 994,
+    "D": 59
+  },
+  "stagedTotalFiles": 1110
+}

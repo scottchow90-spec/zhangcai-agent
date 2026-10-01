@@ -14,11 +14,12 @@ from datetime import date
 from pathlib import Path
 from typing import Optional
 
-VIPDOC_CANDIDATES = (
-    Path(r"C:\new_tdx_mock\vipdoc"),
-    Path(r"C:\new_tdx\vipdoc"),
-    Path(r"C:\zd_tdx\vipdoc"),
-)
+_app_scripts_dir = str(Path(__file__).resolve().parents[5] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_tdx_root
+
+VIPDOC_CANDIDATES = (resolve_tdx_root() / "vipdoc",)
 DAY_RECORD = struct.Struct("<IIIIIIfI")
 
 

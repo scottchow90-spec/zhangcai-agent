@@ -34,15 +34,20 @@ except Exception:
 # paths from the packaged app (or explicit bridge environment variables) so
 # the skill also works from the migrated executable bundle.
 APP_ROOT = Path(os.environ.get("ZHANGCAI_APP_ROOT", str(Path(__file__).resolve().parents[3])))
-WORKSPACE = APP_ROOT
+APP_SCRIPTS = APP_ROOT / "scripts"
+if str(APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(APP_SCRIPTS))
+from tdx_path_config import resolve_data_root, resolve_tdx_root
+
+WORKSPACE = resolve_data_root()
 SKILL_DIR = Path(__file__).resolve().parents[1]
 SCRIPTS_DIR = SKILL_DIR / "scripts"
-DATA_ROOT = Path(os.environ.get("ONESTOCK_STOCK_DATA_ROOT", str(WORKSPACE / "data" / "strategy-results")))
+DATA_ROOT = resolve_data_root() / "business_data" / "a-share-bottom-fishing"
 REPORTS_DIR = DATA_ROOT / "reports"
 LOCK = WORKSPACE / "hooks" / "skill_workflow_lock.py"
 SUBSTANTIVE_GATE = WORKSPACE / "hooks" / "stock_workflow_substantive_gate.py"
 TDX_HUB = SCRIPTS_DIR / "tdx_hub.py"
-TDX_ROOT = Path(os.environ.get("ZHANGCAI_TDX_ROOT", r"C:\new_tdx_mock"))
+TDX_ROOT = resolve_tdx_root()
 BLOCKNEW = TDX_ROOT / "T0002" / "blocknew"
 TNF_FILES = {
     "SZ": TDX_ROOT / "T0002" / "hq_cache" / "szs.tnf",

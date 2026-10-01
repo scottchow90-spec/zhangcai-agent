@@ -29,6 +29,11 @@ import os
 import sys
 from pathlib import Path
 
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_data_root, resolve_tdx_root
+
 try:
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
     sys.stderr.reconfigure(encoding='utf-8', errors='replace')
@@ -37,14 +42,13 @@ except Exception:
 
 SKILL_DIR = Path(__file__).resolve().parents[1]
 WORKFLOW_MD_MIN_SIZE = 600
+_TDX_ROOT = resolve_tdx_root()
 TDX_CANDIDATES = [
-    Path(r'C:\new_tdx_mock\T0002\blocknew\ZTC.blk'),
-    Path(r'C:\new_tdx_mock\vipdoc\sh\lday'),
-    Path(r'C:\new_tdx\vipdoc\sh\lday'),
-    Path(r'C:\zd_tdx\vipdoc\sh\lday'),
+    _TDX_ROOT / 'T0002' / 'blocknew' / 'ZTC.blk',
+    _TDX_ROOT / 'vipdoc' / 'sh' / 'lday',
 ]
 INFRA_SCRIPTS = SKILL_DIR / 'scripts'
-REPORTS_DIR = Path(r'D:\C盘转移\日志\codex\reports')
+REPORTS_DIR = resolve_data_root() / 'reports' / 'skills' / 'a-share-limit-up-mining'
 
 
 def check(label: str, ok: bool, detail: str = '', level: str = 'INFO') -> tuple[bool, str]:

@@ -30,7 +30,12 @@ ROOT = Path(__file__).resolve().parent.parent
 SCRIPTS = ROOT / "scripts"
 RUN = (Path(__import__("os").environ["ONESTOCK_STOCK_DATA_ROOT"]) / "convertible-bond-screening-strategy" if __import__("os").environ.get("ONESTOCK_STOCK_DATA_ROOT") else ROOT / "run")
 SKILLS_ROOT = ROOT.parent
-TDX_ROOT = Path(r"C:\new_tdx_mock")
+APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
+
+TDX_ROOT = resolve_tdx_root()
 TDX_HUB_PATH = SKILLS_ROOT / "tdx-local-hub" / "scripts" / "tdx_hub.py"
 DEPENDENCIES = (
     "stock-hard-gate",

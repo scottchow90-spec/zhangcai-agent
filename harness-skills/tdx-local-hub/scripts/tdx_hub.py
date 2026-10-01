@@ -3,9 +3,24 @@ from __future__ import annotations
 # ONESTOCK_EMBEDDED_LOCAL_IMPORT_BOOTSTRAP
 import sys as _onestock_embedded_sys
 from pathlib import Path as _OneStockEmbeddedPath
+import os as _onestock_embedded_os
 _onestock_embedded_dir = str(_OneStockEmbeddedPath(__file__).resolve().parent)
 if _onestock_embedded_dir not in _onestock_embedded_sys.path:
     _onestock_embedded_sys.path.insert(0, _onestock_embedded_dir)
+_shared_scripts_candidates = [
+    _OneStockEmbeddedPath(_onestock_embedded_os.environ.get("ZHANGCAI_APP_ROOT", "")) / "scripts" if _onestock_embedded_os.environ.get("ZHANGCAI_APP_ROOT") else None,
+    _OneStockEmbeddedPath(__file__).resolve().parents[3] / "scripts",
+]
+for _shared_scripts in _shared_scripts_candidates:
+    if _shared_scripts and (_shared_scripts / "tdx_process.py").is_file():
+        _shared_scripts_text = str(_shared_scripts)
+        if _shared_scripts_text not in _onestock_embedded_sys.path:
+            _onestock_embedded_sys.path.insert(0, _shared_scripts_text)
+        break
+try:
+    from tdx_process import detect_tdx_process as _detect_shared_tdx_process
+except ImportError:  # A missing helper is uncertainty, never proof the client is closed.
+    _detect_shared_tdx_process = None
 
 import argparse
 import contextlib
@@ -28,7 +43,7 @@ except ImportError:  # pragma: no cover - this skill is deployed on Windows.
     msvcrt = None
 
 _PACKAGED_RUNTIME = os.environ.get("ZHANGCAI_PACKAGED") == "1"
-_CONFIGURED_TDX_ROOT = (os.environ.get("TDX_ROOT") or os.environ.get("ZHANGCAI_TDX_ROOT") or "").strip()
+_CONFIGURED_TDX_ROOT = (os.environ.get("ZHANGCAI_TDX_ROOT") or os.environ.get("TDX_ROOT") or "").strip()
 if _CONFIGURED_TDX_ROOT:
     TDX_ROOT = Path(_CONFIGURED_TDX_ROOT).expanduser().resolve()
 elif _PACKAGED_RUNTIME:
@@ -277,8 +292,15 @@ def load_tq():
     # client.  The vendor module collapses this condition into the misleading
     # “连接路径为空” message, so check the process before importing it and
     # expose the action the web page can show to the user.
-    if not detect_tdx_process().get("running"):
+    tdx_process = detect_tdx_process()
+    if tdx_process.get("running") is False:
         raise TdxClientUnavailableError(tdx_open_hint())
+    if tdx_process.get("root_matches") is False:
+        raise TdxClientUnavailableError(
+            "检测到通达信正在运行，但运行目录与当前设置不一致："
+            f"当前设置 {TDX_ROOT}；运行目录 {tdx_process.get('process_root') or '无法读取'}。"
+            "请在数据与设置中选择正在运行的通达信目录，或先退出其他通达信实例后重试。"
+        )
     os.chdir(str(TDX_ROOT))
     sys.path.insert(0, str(TQ_USER_DIR))
     from tqcenter import tq  # type: ignore
@@ -288,7 +310,7 @@ def load_tq():
     try:
         tq.initialize(str(init_path))
     except Exception as exc:
-        if not detect_tdx_process().get("running"):
+        if detect_tdx_process().get("running") is False:
             raise TdxClientUnavailableError(tdx_open_hint()) from exc
         raise RuntimeError(
             "通达信客户端已打开，但 TQ 数据接口初始化失败；请确认客户端已登录，关闭占用 TQ 的其他公式任务后重试。"
@@ -366,30 +388,38 @@ def formula_registry() -> dict[str, Any]:
     }
 
 
+def _tdx_process_root(executable: str) -> str:
+    candidate = Path(executable).parent
+    for _depth in range(8):
+        if (candidate / "vipdoc").is_dir() or (candidate / "T0002").is_dir():
+            return str(candidate)
+        parent = candidate.parent
+        if parent == candidate:
+            break
+        candidate = parent
+    return str(Path(executable).parent) if executable else ""
+
+
+def _same_tdx_root(left: str, right: str) -> bool:
+    if not left or not right:
+        return False
+    return os.path.normcase(os.path.abspath(left)).rstrip("\\/") == os.path.normcase(os.path.abspath(right)).rstrip("\\/")
+
+
 def detect_tdx_process() -> dict[str, Any]:
-    try:
-        result = subprocess.run(
-            [
-                "powershell",
-                "-NoProfile",
-                "-Command",
-                "Get-Process TdxW -ErrorAction SilentlyContinue | Select-Object Id,ProcessName,StartTime | ConvertTo-Json -Compress",
-            ],
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-            timeout=5,
-        )
-        text = (result.stdout or "").strip()
-        if not text:
-            return {"running": False}
-        data = json.loads(text)
-        if isinstance(data, list):
-            data = data[0] if data else {}
-        return {"running": bool(data), "id": data.get("Id"), "name": data.get("ProcessName"), "start_time": data.get("StartTime")}
-    except Exception as exc:
-        return {"running": False, "error": str(exc)}
+    if _detect_shared_tdx_process is None:
+        return {"running": None, "root_matches": None, "processes": [], "error": "portable_tdx_process_detector_missing"}
+    state = _detect_shared_tdx_process(TDX_ROOT)
+    processes = state.get("processes", [])
+    selected = next((row for row in processes if row.get("rootMatches") is True), processes[0] if processes else {})
+    return {
+        **state,
+        "root_matches": state.get("rootMatches"),
+        "process_root": selected.get("tdxRoot") or "",
+        "id": selected.get("ProcessId"),
+        "name": selected.get("Name"),
+        "start_time": selected.get("CreationDate"),
+    }
 
 
 def cmd_status(_args: argparse.Namespace) -> None:
@@ -655,7 +685,7 @@ def tq_formula(formula: str, symbol: str, count: int, kind: str | None = None, d
     if error:
         tdx_process = detect_tdx_process()
         payload["tdx_process"] = tdx_process
-        payload["client_open_required"] = not bool(tdx_process.get("running"))
+        payload["client_open_required"] = tdx_process.get("running") is False
         payload["error"] = error if not payload["client_open_required"] else (
             error if str(error).startswith(tdx_open_hint()) else f"{tdx_open_hint()} 原始原因：{error}"
         )
@@ -727,7 +757,7 @@ def tq_formula_on_session(
     if error:
         tdx_process = detect_tdx_process()
         payload["tdx_process"] = tdx_process
-        payload["client_open_required"] = not bool(tdx_process.get("running"))
+        payload["client_open_required"] = tdx_process.get("running") is False
         payload["error"] = error if not payload["client_open_required"] else (
             error if str(error).startswith(tdx_open_hint()) else f"{tdx_open_hint()} 原始原因：{error}"
         )
@@ -793,7 +823,7 @@ def cmd_five(args: argparse.Namespace) -> None:
                 pass
     if shared_error:
         tdx_process = detect_tdx_process()
-        client_open_required = not bool(tdx_process.get("running"))
+        client_open_required = tdx_process.get("running") is False
         action = tdx_open_hint() if client_open_required else "请确认通达信已登录且没有其他 TQ 任务占用连接，然后重试。"
         error_text = shared_error if not client_open_required else (
             shared_error if shared_error.startswith(tdx_open_hint()) else f"{tdx_open_hint()} 原始原因：{shared_error}"
@@ -913,7 +943,7 @@ def _batch_formula(formula: str, symbols: list[str], count: int, dividend_type: 
     if error:
         tdx_process = detect_tdx_process()
         payload["tdx_process"] = tdx_process
-        payload["client_open_required"] = not bool(tdx_process.get("running"))
+        payload["client_open_required"] = tdx_process.get("running") is False
         payload["error"] = error if not payload["client_open_required"] else (
             error if str(error).startswith(tdx_open_hint()) else f"{tdx_open_hint()} 原始原因：{error}"
         )

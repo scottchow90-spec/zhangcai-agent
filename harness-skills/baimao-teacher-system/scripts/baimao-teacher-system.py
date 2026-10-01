@@ -26,7 +26,7 @@ try:
 except Exception:
     pass
 
-WORKSPACE = Path(r"D:\C盘转移\日志\codex")
+WORKSPACE = Path(__file__).resolve().parents[3]
 SKILL_DIR = Path(__file__).resolve().parents[1]
 SCRIPTS_DIR = SKILL_DIR / "scripts"
 REFERENCES_DIR = SKILL_DIR / "references"

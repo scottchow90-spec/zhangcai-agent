@@ -21,13 +21,19 @@ from typing import Any
 
 import requests
 
+APP_ROOT = Path(__file__).resolve().parents[3]
+APP_SCRIPTS = APP_ROOT / "scripts"
+if str(APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
+
 SEARCH_URL = "https://searchapi.eastmoney.com/api/suggest/get"
 SEARCH_TOKEN = "D43BF722C8E33BDC906FB84D85E326E8"
 QUOTE_URLS = (
     "https://push2delay.eastmoney.com/api/qt/stock/get",
     "https://push2.eastmoney.com/api/qt/stock/get",
 )
-TDX_ROOT = Path(os.environ.get("TDX_ROOT", r"C:\new_tdx_mock"))
+TDX_ROOT = resolve_tdx_root()
 REQUEST_HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "

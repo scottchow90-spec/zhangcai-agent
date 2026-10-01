@@ -14,6 +14,11 @@ import argparse, json, sys, zipfile, xml.etree.ElementTree as ET, re
 from pathlib import Path
 from datetime import datetime
 
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
+
 try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
@@ -341,7 +346,7 @@ def validate(docx_path: Path, audit_path: Path | None = None) -> dict:
 
     # G14: ZTC is a passive cross-check, not the current-day stock universe.
     try:
-        ztc_content = Path(r"C:\new_tdx_mock\T0002\blocknew\ZTC.blk").read_text(encoding="gbk", errors="ignore")
+        ztc_content = (resolve_tdx_root() / "T0002" / "blocknew" / "ZTC.blk").read_text(encoding="gbk", errors="ignore")
         ztc_codes = []
         for line in ztc_content.splitlines():
             if line.strip():

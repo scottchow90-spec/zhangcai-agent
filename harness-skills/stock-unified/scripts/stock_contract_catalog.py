@@ -12,8 +12,9 @@ import ast
 import copy
 import hashlib
 import json
+import re
 import unicodedata
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import os
 from typing import Any
 
@@ -166,20 +167,58 @@ def sha256_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def canonical_contract_path(value: object) -> str:
-    """Return the physical path used by the active runtime, not a junction alias."""
-    raw = str(value)
+def canonical_contract_path(value: object, *, app_root: Path | None = None) -> str:
+    """Store app-owned contract files as portable paths relative to the app root."""
+    raw = str(value or "").strip()
+    if not raw:
+        raise ValueError("empty_contract_path")
     normalized = raw.replace("/", "\\")
-    for marker, base in (("\\payload\\skills\\", APP_ROOT / "harness-skills"), ("\\payload\\scripts\\", APP_ROOT / "scripts")):
-        index = normalized.lower().find(marker)
-        if index >= 0:
-            raw = str(base / normalized[index + len(marker):])
-            break
-    candidate = Path(raw)
+    folded = normalized.casefold()
+    portable_input = normalized.replace("\\", "/")
+    portable_folded = portable_input.casefold()
+    markers = (
+        ("\\harness-skills\\", "harness-skills"),
+        ("\\payload\\skills\\", "harness-skills"),
+        ("\\payload\\scripts\\", "scripts"),
+        ("\\scripts\\", "scripts"),
+    )
+    if portable_folded.startswith(("harness-skills/", "scripts/")):
+        relative = PurePosixPath(portable_input).as_posix()
+    else:
+        for marker, prefix in markers:
+            index = folded.rfind(marker)
+            if index >= 0:
+                tail = normalized[index + len(marker):].replace("\\", "/")
+                relative = PurePosixPath(prefix, tail).as_posix()
+                break
+        else:
+            is_windows_absolute = bool(re.match(r"^[A-Za-z]:/", portable_input)) or portable_input.startswith("//")
+            if is_windows_absolute or portable_input.startswith("/"):
+                base = (app_root or APP_ROOT).resolve(strict=False)
+                candidate = Path(raw).resolve(strict=False)
+                try:
+                    relative = candidate.relative_to(base).as_posix()
+                except ValueError as exc:
+                    raise ValueError(f"contract_path_outside_app:{raw}") from exc
+            else:
+                relative = PurePosixPath(portable_input).as_posix()
+
+    path = PurePosixPath(relative)
+    if path.is_absolute() or ".." in path.parts or not path.parts or path.parts[0].casefold() not in {"harness-skills", "scripts"}:
+        raise ValueError(f"contract_path_not_portable:{raw}")
+    return path.as_posix()
+
+
+def resolve_contract_path(value: object, *, app_root: Path | None = None) -> Path:
+    """Resolve a portable app-relative contract path at this installation root."""
+    base = (app_root or APP_ROOT).resolve(strict=False)
+    relative = PurePosixPath(canonical_contract_path(value, app_root=base))
+    candidate = base.joinpath(*relative.parts).resolve(strict=False)
     try:
-        return str(candidate.resolve(strict=True))
-    except (FileNotFoundError, OSError):
-        return str(candidate.resolve(strict=False))
+        candidate.relative_to(base)
+    except ValueError as exc:
+        raise ValueError(f"contract_path_escapes_app:{value}") from exc
+    return candidate
 
 
 def contract_sha256(contract: dict[str, Any]) -> str:
@@ -372,8 +411,10 @@ def synchronize_contract_payload(
             "actual": json.dumps(skills, ensure_ascii=False),
         })
 
+    app_root = skills_root.resolve(strict=False).parent
     expected_catalog = canonical_contract_path(
-        skills_root / "stock-unified" / "references" / "stock_skill_ids.json"
+        skills_root / "stock-unified" / "references" / "stock_skill_ids.json",
+        app_root=app_root,
     )
     previous_catalog = str(payload.get("catalog", ""))
     if previous_catalog != expected_catalog:
@@ -579,7 +620,7 @@ def synchronize_contract_payload(
             if not isinstance(binding, dict):
                 raise ValueError(f"{skill_id}:invalid_business_binding:{index}")
             previous_path = str(binding.get("path", ""))
-            canonical_path = canonical_contract_path(previous_path)
+            canonical_path = canonical_contract_path(previous_path, app_root=app_root)
             if previous_path != canonical_path:
                 binding["path"] = canonical_path
                 changes.append({
@@ -592,7 +633,7 @@ def synchronize_contract_payload(
         unique_bindings: list[dict[str, Any]] = []
         seen_binding_paths: set[str] = set()
         for binding in bindings:
-            path_key = os.path.normcase(str(Path(str(binding["path"])).resolve()))
+            path_key = canonical_contract_path(binding["path"], app_root=app_root).casefold()
             if path_key in seen_binding_paths:
                 changes.append({
                     "skill_id": skill_id,
@@ -720,29 +761,30 @@ def synchronize_contract_payload(
             required_paths.append(candidate)
 
         binding_by_path = {
-            str(Path(str(binding.get("path", ""))).resolve()): binding
+            canonical_contract_path(binding.get("path", ""), app_root=app_root).casefold(): binding
             for binding in bindings
             if isinstance(binding, dict)
         }
         for path in required_paths:
             if not path.is_file():
                 raise FileNotFoundError(f"missing_business_binding:{path}")
-            resolved = str(path.resolve())
-            if resolved not in binding_by_path:
-                binding = {"path": resolved, "sha256": sha256_file(path)}
+            portable_path = canonical_contract_path(path, app_root=app_root)
+            path_key = portable_path.casefold()
+            if path_key not in binding_by_path:
+                binding = {"path": portable_path, "sha256": sha256_file(path)}
                 bindings.append(binding)
-                binding_by_path[resolved] = binding
+                binding_by_path[path_key] = binding
                 changes.append({
                     "skill_id": skill_id,
                     "field": f"business_bindings[{len(bindings) - 1}]",
                     "previous": "",
-                    "actual": resolved,
+                    "actual": portable_path,
                 })
 
         for index, binding in enumerate(bindings):
             if not isinstance(binding, dict):
                 raise ValueError(f"{skill_id}:invalid_business_binding:{index}")
-            path = Path(str(binding.get("path", "")))
+            path = resolve_contract_path(binding.get("path", ""), app_root=app_root)
             if not path.is_file():
                 raise FileNotFoundError(f"missing_business_binding:{path}")
             previous = str(binding.get("sha256", ""))
@@ -764,7 +806,7 @@ def synchronize_contract_payload(
                 if not isinstance(source_policy, dict) or not source_policy.get("client"):
                     continue
                 previous_client = str(source_policy["client"])
-                canonical_client = canonical_contract_path(previous_client)
+                canonical_client = canonical_contract_path(previous_client, app_root=app_root)
                 if previous_client != canonical_client:
                     source_policy["client"] = canonical_client
                     changes.append({

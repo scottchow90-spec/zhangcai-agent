@@ -10,6 +10,7 @@ if _onestock_embedded_dir not in _onestock_embedded_sys.path:
 import hashlib
 import importlib.util
 import json
+import os
 import re
 import statistics
 import struct
@@ -17,7 +18,12 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
-TDX_ROOT = Path(r"C:\new_tdx_mock")
+_app_scripts_dir = str(_OneStockEmbeddedPath(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in _onestock_embedded_sys.path:
+    _onestock_embedded_sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_tdx_root
+
+TDX_ROOT = resolve_tdx_root()
 INFOHARBOR_BLOCK = TDX_ROOT / "T0002" / "hq_cache" / "infoharbor_block.dat"
 BLOCKNEW = TDX_ROOT / "T0002" / "blocknew"
 TQCENTER = TDX_ROOT / "PYPlugins" / "user" / "tqcenter.py"

@@ -16,10 +16,10 @@ description: "统一的支撑压力与买点区间分析技能（压力与阻力
 
 - 唯一外部入口：`scripts/codex_entry.py`。
 - 唯一业务执行器：`scripts/scientific_engine.py`，仅可由根入口转发。
-- 信息：`python D:\C盘转移\日志\codex\skills\support-pressure-analysis-system\scripts\codex_entry.py info`
-- 自检：`python D:\C盘转移\日志\codex\skills\support-pressure-analysis-system\scripts\codex_entry.py selftest`
-- 执行：`python D:\C盘转移\日志\codex\skills\support-pressure-analysis-system\scripts\codex_entry.py run -- --mode pressure --symbols 600519.SH --out-dir <目录> --run-id <本轮ID>`
-- 五法真实K线验收：`python D:\C盘转移\日志\codex\skills\support-pressure-analysis-system\scripts\codex_entry.py run -- --validate-five-theories --validation-symbols-per-stratum 4 --validation-limit 0 --bootstrap-iterations 2000`
+- 信息：`python "$($env:STOCK_SKILLS_ROOT)\support-pressure-analysis-system"\scripts\codex_entry.py info`
+- 自检：`python "$($env:STOCK_SKILLS_ROOT)\support-pressure-analysis-system"\scripts\codex_entry.py selftest`
+- 执行：`python "$($env:STOCK_SKILLS_ROOT)\support-pressure-analysis-system"\scripts\codex_entry.py run -- --mode pressure --symbols 600519.SH --out-dir <目录> --run-id <本轮ID>`
+- 五法真实K线验收：`python "$($env:STOCK_SKILLS_ROOT)\support-pressure-analysis-system"\scripts\codex_entry.py run -- --validate-five-theories --validation-symbols-per-stratum 4 --validation-limit 0 --bootstrap-iterations 2000`
 
 `entry_support_resistance.py`、`support-pressure-analysis-system.py` 等历史脚本不是入口，不得由模型或下游技能直接调用。
 

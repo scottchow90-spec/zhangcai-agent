@@ -4,7 +4,7 @@
 
 - 默认板块名称：黄金点火
 - 默认板块简称：`HJDH`
-- 默认板块文件：`C:\new_tdx_mock\T0002\blocknew\HJDH.blk`
+- 默认板块文件：`$env:ZHANGCAI_TDX_ROOT\T0002\blocknew\HJDH.blk`
 - 默认读取数量：每只股票最近三百个交易日
 
 ## 数据来源

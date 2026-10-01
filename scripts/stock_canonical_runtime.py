@@ -45,6 +45,7 @@ from stock_contract_catalog import (
     contract_catalog_preflight,
     load_stock_catalog,
     normalize_workflow_name,
+    resolve_contract_path,
 )
 from stock_evidence_set import (
     EvidenceSetError,
@@ -1839,7 +1840,10 @@ def prepare_lianban_daily_source(
         return cached
 
     snapshot_path = (run_dir / "lianban-daily.json").resolve()
-    client_path = Path(str(source.get("client") or LIANBAN_CLIENT_PATH)).resolve()
+    try:
+        client_path = resolve_contract_path(source.get("client") or LIANBAN_CLIENT_PATH)
+    except (TypeError, ValueError):
+        client_path = LIANBAN_CLIENT_PATH.resolve()
     # Contracts migrated from the original workstation may point at a stale
     # D: drive. Fall back to the packaged client whenever that binding is gone.
     if not client_path.is_file() and LIANBAN_CLIENT_PATH.is_file():
@@ -2341,7 +2345,11 @@ def validate_contract_bindings(
     if contract.get("executor_sha256") != sha256_file(runtime):
         errors.append("executor_hash_mismatch")
     for binding in contract.get("business_bindings", []):
-        path = Path(str(binding["path"]))
+        try:
+            path = resolve_contract_path(binding["path"])
+        except (KeyError, TypeError, ValueError) as exc:
+            errors.append(f"business_file_path_invalid:{binding.get('path')}:{exc}")
+            continue
         if not path.is_file():
             errors.append(f"business_file_missing:{path}")
         elif binding.get("sha256") != sha256_file(path):
@@ -2378,8 +2386,8 @@ def contract_surface_signature() -> str:
                 )
             for binding in contract.get("business_bindings", []):
                 if isinstance(binding, dict) and binding.get("path"):
-                    paths.add(Path(str(binding["path"])).resolve())
-    except (OSError, UnicodeError, json.JSONDecodeError):
+                    paths.add(resolve_contract_path(binding["path"]))
+    except (OSError, UnicodeError, ValueError, json.JSONDecodeError):
         pass
     surface: list[dict[str, Any]] = []
     for path in sorted(paths, key=lambda item: str(item).casefold()):
@@ -2555,7 +2563,7 @@ def _run_with_business_lease(
         return 2
     control_scan_started = time.monotonic()
     control_findings = scan_tdx_process_control_paths([
-        Path(str(binding["path"]))
+        resolve_contract_path(binding["path"])
         for binding in contract.get("business_bindings", [])
         if isinstance(binding, dict) and binding.get("path")
     ])

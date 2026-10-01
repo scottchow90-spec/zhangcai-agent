@@ -18,6 +18,7 @@ import datetime as dt
 import hashlib
 import json
 import math
+import os
 import re
 import statistics
 import struct
@@ -29,9 +30,14 @@ from typing import Any, Callable, Sequence
 
 from runtime_utils import canonicalize_business_payload
 
+_app_scripts_dir = str(_OneStockEmbeddedPath(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in _onestock_embedded_sys.path:
+    _onestock_embedded_sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_tdx_root
+
 
 DAY_RECORD = struct.Struct("<IIIIIfII")
-TRUSTED_TDX_ROOT = Path(r"C:\new_tdx_mock")
+TRUSTED_TDX_ROOT = resolve_tdx_root()
 TRUSTED_VIPDOC_ROOT = TRUSTED_TDX_ROOT / "vipdoc"
 TRUSTED_HQ_CACHE = TRUSTED_TDX_ROOT / "T0002" / "hq_cache"
 TRUSTED_HEAT_SOURCES = {
@@ -1342,7 +1348,7 @@ def _production_contract_checks(
 def compare_latest_result(
     latest_result: str | Path,
     *,
-    tdx_root: str | Path = r"C:\new_tdx_mock",
+    tdx_root: str | Path | None = None,
     tdxhy_cfg: str | Path | None = None,
     tdxzs3_cfg: str | Path | None = None,
     infoharbor_block_dat: str | Path | None = None,
@@ -1359,7 +1365,7 @@ def compare_latest_result(
         "mtime_ns": result_stat[1],
         "sha256": hashlib.sha256(result_raw).hexdigest(),
     }
-    root = Path(tdx_root).resolve()
+    root = Path(tdx_root or TRUSTED_TDX_ROOT).expanduser().resolve()
     tdxhy_path = Path(tdxhy_cfg or TRUSTED_HEAT_SOURCES["industry_membership"]).resolve()
     tdxzs_path = Path(tdxzs3_cfg or TRUSTED_HEAT_SOURCES["industry_names"]).resolve()
     concept_path = Path(infoharbor_block_dat or TRUSTED_HEAT_SOURCES["concept_membership"]).resolve()
@@ -1419,10 +1425,10 @@ def compare_latest_result(
     checks["day_input_snapshot_frozen"] = True
     try:
         recomputed = recompute_heat(
-            TRUSTED_TDX_ROOT,
-            TRUSTED_HEAT_SOURCES["industry_membership"],
-            TRUSTED_HEAT_SOURCES["industry_names"],
-            TRUSTED_HEAT_SOURCES["concept_membership"],
+            root,
+            tdxhy_path,
+            tdxzs_path,
+            concept_path,
             str(production.get("cutoff_trade_date") or ""),
             production.get("benchmark_calendar") or [],
             day_reader=day_snapshot.read_rows,
@@ -1564,7 +1570,7 @@ def compare_latest_result(
 def main() -> int:
     parser = argparse.ArgumentParser(description="Independent TDX industry/concept heat verifier")
     parser.add_argument("--compare-result", type=Path, required=True, help="Production latest_result.json to verify read-only")
-    parser.add_argument("--tdx-root", type=Path, default=Path(r"C:\new_tdx_mock"))
+    parser.add_argument("--tdx-root", type=Path, default=TRUSTED_TDX_ROOT)
     parser.add_argument("--tdxhy", type=Path)
     parser.add_argument("--tdxzs3", type=Path)
     parser.add_argument("--infoharbor", type=Path)

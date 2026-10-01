@@ -1,9 +1,13 @@
 """Adaptive date partitions, complete server pagination, verified reusable windows."""
 from pathlib import Path
 from datetime import datetime,timedelta,timezone
-import hashlib,json,time,urllib.parse,uuid
+import hashlib,json,time,urllib.parse,uuid,sys
 
-CACHE_ROOT=Path(r'F:\Codex\Home\business_data\a-share-short-burst-score\data-cache\public-windows')
+_app_scripts_dir = str(Path(__file__).resolve().parents[6] / 'scripts')
+if _app_scripts_dir not in sys.path: sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_data_root
+
+CACHE_ROOT=resolve_data_root()/'business_data'/'a-share-short-burst-score'/'data-cache'/'public-windows'
 SCHEMA='PUBLIC_LHB_COMPLETE_WINDOW_V1'
 
 

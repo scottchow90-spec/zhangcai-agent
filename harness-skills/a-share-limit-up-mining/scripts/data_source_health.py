@@ -12,10 +12,18 @@ import importlib.util
 import json
 from datetime import datetime
 from pathlib import Path
+import sys
 
-ZTC = Path(r"C:\new_tdx_mock\T0002\blocknew\ZTC.blk")
-TDX_DAY_DIRS = (Path(r"C:\new_tdx_mock\vipdoc\sh\lday"), Path(r"C:\new_tdx_mock\vipdoc\sz\lday"))
-DEFAULT_TEMPLATE = Path(r"F:\小龙虾6月交付\6月1日连板挖掘5标的.docx")
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
+
+_TDX_ROOT = resolve_tdx_root()
+_SKILL_ROOT = Path(__file__).resolve().parents[1]
+ZTC = _TDX_ROOT / "T0002" / "blocknew" / "ZTC.blk"
+TDX_DAY_DIRS = tuple(_TDX_ROOT / "vipdoc" / market / "lday" for market in ("sh", "sz", "bj"))
+DEFAULT_TEMPLATE = _SKILL_ROOT / "assets" / "连板挖掘模板.docx"
 
 
 def file_fact(path: Path) -> dict:

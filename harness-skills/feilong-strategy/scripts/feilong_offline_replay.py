@@ -5,9 +5,15 @@ import hashlib
 import importlib.util
 import math
 import struct
+import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_tdx_root
 
 import numpy as np
 import pandas as pd
@@ -425,7 +431,7 @@ def replay_installed_formula_signals(
     start_date: str,
     end_date: str,
     *,
-    tdx_root: Path = Path(r"C:\new_tdx_mock"),
+    tdx_root: Path = resolve_tdx_root(),
     vendor_reader: Path | None = None,
     names: dict[str, str] | None = None,
     candidate_dates: dict[str, list[str]] | None = None,

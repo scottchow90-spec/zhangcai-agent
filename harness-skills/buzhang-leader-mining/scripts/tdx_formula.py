@@ -12,6 +12,7 @@ import hashlib
 import importlib.util
 import json
 import math
+import os
 import re
 import shutil
 import subprocess
@@ -22,9 +23,14 @@ from pathlib import Path
 from dynamic_hotspot_rank import run as run_dynamic_hotspot_rank
 from sync_roles_from_rank import run as run_sync_roles_from_rank
 
+_app_scripts_dir = str(_OneStockEmbeddedPath(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in _onestock_embedded_sys.path:
+    _onestock_embedded_sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_tdx_root
+
 SKILL_DIR = Path(__file__).resolve().parents[1]
 SORT_SOURCE = SKILL_DIR / "references" / "tdx_sort_formula.txt"
-TDX_ROOT = Path(r"C:\new_tdx_mock")
+TDX_ROOT = resolve_tdx_root()
 GS_BAK = TDX_ROOT / "T0002" / "gs_bak"
 BLOCKNEW = TDX_ROOT / "T0002" / "blocknew"
 INFOHARBOR_BLOCK = TDX_ROOT / "T0002" / "hq_cache" / "infoharbor_block.dat"

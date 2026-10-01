@@ -29,7 +29,12 @@ import pandas as pd
 
 SHANGHAI = ZoneInfo("Asia/Shanghai")
 LEVEL_ORDER = {"红色": 4, "橙色": 3, "黄色": 2, "观察": 1}
-TDX_ROOT = Path(r"C:\new_tdx_mock")
+APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
+
+TDX_ROOT = resolve_tdx_root()
 TDX_DAY_RECORD = struct.Struct("<IIIIIfII")
 TDX_TNF_HEADER_SIZE = 50
 TDX_TNF_RECORD_SIZES = {"sh": 360, "sz": 360, "bj": 360}

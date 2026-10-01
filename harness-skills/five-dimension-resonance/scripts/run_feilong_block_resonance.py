@@ -19,6 +19,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_data_root, resolve_path_from, resolve_tdx_root
+
 SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
@@ -31,7 +36,9 @@ from mainline_scoring import (
 
 ROOT = Path(__file__).resolve().parents[3]
 SKILLS_ROOT = ROOT / "harness-skills"
-REPORT = ROOT / "reports" / "2026-06-03_five_dimension_feilong_block_hardening"
+DATA_ROOT = resolve_data_root()
+TDX_ROOT = resolve_tdx_root()
+REPORT = DATA_ROOT / "reports" / "2026-06-03_five_dimension_feilong_block_hardening"
 REPORT.mkdir(parents=True, exist_ok=True)
 AUTHORITATIVE_SCORE_ENGINE = SKILLS_ROOT / "a-share-15d-selection" / "scripts" / "run_a_share_15d.py"
 GLOBAL_SCORE_CONTRACT = SKILLS_ROOT / "stock-unified" / "references" / "short_term_strong_stock_scoring_contract.json"
@@ -43,13 +50,16 @@ if SCORE_CONTRACT_VERSION != "A-SHARE-STRONG-26F-100-V6.1":
 if GLOBAL_SCORE_CONTRACT_PAYLOAD.get("fundamental_policy", {}).get("positive_weight") != 0:
     raise RuntimeError("global_short_term_score_contract_fundamental_weight_not_zero")
 TDX_HUB = SKILLS_ROOT / "tdx-local-hub" / "scripts" / "tdx_hub.py"
-CACHE = Path(os.environ.get("OPENCLAW_STOCK_DATA_CACHE", ROOT / "data_sources" / "stock_skill_data_cache.json"))
-NAME_CACHE = Path(r"E:\Codex\15_validation\stock_names_cache.json")
-BLOCK_FILE = Path(r"C:\new_tdx_mock\T0002\blocknew\FLZT.blk")
+CACHE = resolve_path_from(
+    os.environ.get("OPENCLAW_STOCK_DATA_CACHE", "data_sources/stock_skill_data_cache.json"),
+    DATA_ROOT,
+)
+NAME_CACHE = DATA_ROOT / "market" / "stock_names_cache.json"
+BLOCK_FILE = TDX_ROOT / "T0002" / "blocknew" / "FLZT.blk"
 TDX_TNF_FILES = [
-    Path(r"C:\new_tdx_mock\T0002\hq_cache\szs.tnf"),
-    Path(r"C:\new_tdx_mock\T0002\hq_cache\shs.tnf"),
-    Path(r"C:\new_tdx_mock\T0002\hq_cache\bjs.tnf"),
+    TDX_ROOT / "T0002" / "hq_cache" / "szs.tnf",
+    TDX_ROOT / "T0002" / "hq_cache" / "shs.tnf",
+    TDX_ROOT / "T0002" / "hq_cache" / "bjs.tnf",
 ]
 TNF_HEADER_SIZE = 50
 TNF_RECORD_SIZE = 360
@@ -173,7 +183,7 @@ def latest_day_trade_date(path: Path) -> str:
 def local_day_path(symbol: str) -> Path:
     code, market = symbol.split(".", 1)
     prefix = market.lower()
-    return Path(r"C:\new_tdx_mock\vipdoc") / prefix / "lday" / f"{prefix}{code}.day"
+    return TDX_ROOT / "vipdoc" / prefix / "lday" / f"{prefix}{code}.day"
 
 
 def resolve_current_trade_date(rows: list[dict[str, str]]) -> str:

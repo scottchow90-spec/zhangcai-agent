@@ -4,6 +4,7 @@ import { appendFileSync, copyFileSync, existsSync, mkdirSync, readFileSync, read
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { findFreePort } from './runtime-ports.mjs';
+import { selectTdxRoot } from './tdx-root.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(here, '..');
@@ -98,8 +99,15 @@ if (!hasSingleInstanceLock) {
 }
 
 function configuredTdxRoot() {
-  if (process.env.ZHANGCAI_TDX_ROOT) return process.env.ZHANGCAI_TDX_ROOT;
   if (process.platform !== 'win32') return '';
+  const configuredRoots = [];
+  const addRoot = (value) => {
+    const root = String(value || '').trim();
+    if (root && !configuredRoots.some((existing) => existing.toLocaleLowerCase('en-US') === root.toLocaleLowerCase('en-US'))) {
+      configuredRoots.push(root);
+    }
+  };
+  addRoot(process.env.ZHANGCAI_TDX_ROOT);
   let registryRoot = '';
   try {
     const output = execFileSync('reg.exe', [
@@ -115,33 +123,41 @@ function configuredTdxRoot() {
     // The installer may not have written the value yet; the bridge will expose
     // an unavailable TDX source instead of making the desktop process fail.
   }
-  let fileRoot = '';
   const savedConfig = path.join(desktopStateRoot, 'tdx-config.json');
   const installerConfig = path.join(desktopStateRoot, 'installer.ini');
+  let savedRoot = '';
+  let installerRoot = '';
   try {
-    if (existsSync(installerConfig) && (!existsSync(savedConfig) || statSync(installerConfig).mtimeMs > statSync(savedConfig).mtimeMs)) {
+    if (existsSync(installerConfig)) {
       const bytes = readFileSync(installerConfig);
       const text = bytes.toString(bytes[0] === 0xff && bytes[1] === 0xfe ? 'utf16le' : 'utf8');
-      const root = /^Root=(.*)$/m.exec(text)?.[1]?.trim();
-      if (isValidTdxRoot(root)) return root;
+      installerRoot = /^Root=(.*)$/m.exec(text)?.[1]?.trim() || '';
     }
-  } catch { /* Continue with existing desktop/registry configuration. */ }
+  } catch { /* Continue with saved config and registry values. */ }
   try {
-    const config = JSON.parse(readFileSync(path.join(desktopStateRoot, 'tdx-config.json'), 'utf8'));
-    if (typeof config?.root === 'string' && config.root.trim()) fileRoot = config.root.trim();
-  } catch {
-    // A first launch has no desktop-side config yet.
+    const config = JSON.parse(readFileSync(savedConfig, 'utf8'));
+    savedRoot = typeof config?.root === 'string' ? config.root.trim() : '';
+  } catch { /* A config file is optional. */ }
+  let installerIsNewer = Boolean(installerRoot && !savedRoot);
+  try {
+    if (installerRoot && savedRoot && existsSync(installerConfig) && existsSync(savedConfig)) {
+      installerIsNewer = statSync(installerConfig).mtimeMs > statSync(savedConfig).mtimeMs;
+    }
+  } catch { /* Keep the saved configuration order if timestamps are unreadable. */ }
+  if (installerIsNewer) {
+    addRoot(installerRoot);
+    addRoot(savedRoot);
+  } else {
+    addRoot(savedRoot);
+    addRoot(installerRoot);
   }
-  // The desktop-side selection is authoritative when it exists.  This avoids
-  // resurrecting a stale C: registry value after the user selected a D: TDX
-  // installation or after the data installer recorded the client directory.
-  if (isValidTdxRoot(fileRoot)) return fileRoot;
-  if (isValidTdxRoot(registryRoot)) return registryRoot;
-  // A data-package install can leave the desktop config empty even though the
-  // Mock client is already running. Recover that path from the actual process
-  // instead of passing an empty value to the Python data runtime.
-  const runningRoot = detectRunningTdxRoot();
-  return runningRoot || registryRoot;
+  addRoot(registryRoot);
+
+  return selectTdxRoot({
+    configuredRoots,
+    runningRoots: detectRunningTdxRoots(),
+    isValidRoot: isValidTdxRoot,
+  });
 }
 
 let tdxRoot = configuredTdxRoot();
@@ -152,8 +168,8 @@ function isValidTdxRoot(root) {
   return existsSync(path.join(resolved, 'vipdoc')) || existsSync(path.join(resolved, 'T0002'));
 }
 
-function detectRunningTdxRoot() {
-  if (process.platform !== 'win32') return '';
+function detectRunningTdxRoots() {
+  if (process.platform !== 'win32') return [];
   try {
     const output = execFileSync('powershell.exe', [
       '-NoProfile',
@@ -161,14 +177,28 @@ function detectRunningTdxRoot() {
       '-ExecutionPolicy',
       'Bypass',
       '-Command',
-      "$process = Get-Process -Name 'TdxW' -ErrorAction SilentlyContinue | Where-Object { $_.Path } | Select-Object -First 1; if ($process) { $process.Path }",
-    ], { encoding: 'utf8', windowsHide: true, stdio: ['ignore', 'pipe', 'ignore'] });
-    const executable = String(output || '').trim();
-    if (!executable) return '';
-    const candidate = path.dirname(executable);
-    return isValidTdxRoot(candidate) ? candidate : '';
+      "$rows = @(Get-CimInstance Win32_Process | Where-Object { $_.Name -match '^(TdxW|tdx|new_tdx_mock)\.exe$' -and $_.ExecutablePath } | Select-Object Name,ExecutablePath,CreationDate | Sort-Object CreationDate -Descending); ConvertTo-Json -InputObject $rows -Compress",
+    ], { encoding: 'utf8', windowsHide: true, stdio: ['ignore', 'pipe', 'ignore'], timeout: 10000 });
+    const text = String(output || '').trim();
+    if (!text) return [];
+    const parsed = JSON.parse(text);
+    const rows = Array.isArray(parsed) ? parsed : [parsed];
+    const roots = [];
+    for (const row of rows) {
+      let candidate = path.dirname(String(row?.ExecutablePath || ''));
+      for (let depth = 0; candidate && depth < 8; depth += 1) {
+        if (isValidTdxRoot(candidate)) {
+          roots.push(candidate);
+          break;
+        }
+        const parent = path.dirname(candidate);
+        if (parent === candidate) break;
+        candidate = parent;
+      }
+    }
+    return roots;
   } catch {
-    return '';
+    return [];
   }
 }
 

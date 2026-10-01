@@ -23,6 +23,10 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta
 from pathlib import Path
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
 
 try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -30,8 +34,9 @@ try:
 except Exception:
     pass
 
-ZTC = Path(r"C:\new_tdx_mock\T0002\blocknew\ZTC.blk")
-APPROVED_TEMPLATE = Path("F:/\u5c0f\u9f99\u867e6\u6708\u4ea4\u4ed8/6\u67081\u65e5\u8fde\u677f\u6316\u63985\u6807\u7684.docx")
+SKILL_ROOT = Path(__file__).resolve().parents[1]
+ZTC = resolve_tdx_root() / "T0002" / "blocknew" / "ZTC.blk"
+APPROVED_TEMPLATE = SKILL_ROOT / "assets" / "连板挖掘模板.docx"
 TODAY_YYYYMMDD = datetime.now().strftime("%Y%m%d")
 TODAY_ISO = datetime.now().strftime("%Y-%m-%d")
 MIN_ZTC_CODES = 1

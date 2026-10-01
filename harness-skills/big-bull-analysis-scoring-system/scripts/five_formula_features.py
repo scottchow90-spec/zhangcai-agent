@@ -9,6 +9,7 @@ if _onestock_embedded_dir not in _onestock_embedded_sys.path:
 import hashlib
 import math
 import numbers
+import os
 import re
 from collections.abc import Sequence as SequenceABC
 from datetime import date, datetime
@@ -19,6 +20,11 @@ from zoneinfo import ZoneInfo
 
 import numpy as np
 import pandas as pd
+
+APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(APP_SCRIPTS) not in _onestock_embedded_sys.path:
+    _onestock_embedded_sys.path.insert(0, str(APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
 
 from five_formula_catalog import (
     nested_variable_catalog,
@@ -34,25 +40,26 @@ BIG_BULL_FORMULA = "大牛线撑压版"
 FEILONG_FORMULA = "飞龙在天"
 DEALER_FORMULA = "庄家资金监控"
 
+_formula_root = resolve_tdx_root() / "T0002" / "gs_bak"
 _FORMULA_SOURCES: tuple[tuple[Path, str], ...] = (
     (
-        Path(r"C:\new_tdx_mock\T0002\gs_bak\大牛线.txt"),
+        _formula_root / "大牛线.txt",
         "0FD94557892AAC0FF1BA2D99229F094900D73F11F48DC510B3EFDA326EE0AB00",
     ),
     (
-        Path(r"C:\new_tdx_mock\T0002\gs_bak\飞龙在天.txt"),
+        _formula_root / "飞龙在天.txt",
         "AABCEC3D83B2B37D01D53BA4D9C281A745E29F53D941F3704DA95DCEA114E1E0",
     ),
     (
-        Path(r"C:\new_tdx_mock\T0002\gs_bak\游资资金.txt"),
+        _formula_root / "游资资金.txt",
         "95576CF5BEFD882A64056640A343A69CB64B278AE10203A5CA2AD375936DD896",
     ),
     (
-        Path(r"C:\new_tdx_mock\T0002\gs_bak\庄家资金监控.txt"),
+        _formula_root / "庄家资金监控.txt",
         "7A14C0B6C667169231B119FA0A89F60CDF6D009C45AF74AFFAD7F34B3F8AB668",
     ),
     (
-        Path(r"C:\new_tdx_mock\T0002\gs_bak\机构资金.txt"),
+        _formula_root / "机构资金.txt",
         "D631B1B32333108E7C92A5A6D2AA6C235CF5B68B6741A21D6B8FA45A5B5423C4",
     ),
 )

@@ -23,7 +23,12 @@ def load_tdx_live_candidates(workspace: Path):
         raise RuntimeError(f'cannot load TDX hub: {hub_path}')
     hub = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(hub)
-    block_root = Path(r'C:\new_tdx_mock\T0002\blocknew')
+    app_scripts = Path(__file__).resolve().parents[3] / "scripts"
+    if str(app_scripts) not in sys.path:
+        sys.path.insert(0, str(app_scripts))
+    from tdx_path_config import resolve_tdx_root
+
+    block_root = resolve_tdx_root() / "T0002" / "blocknew"
     raw_symbols = []
     block_paths = []
     for name in ('ZTC.blk', 'FLZT.blk'):

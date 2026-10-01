@@ -8,6 +8,12 @@ import struct
 import subprocess
 import sys
 from pathlib import Path
+import sys
+
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -17,9 +23,9 @@ TARGET = ROOT / "scripts" / "audit_entry.py"
 def latest_trade_date() -> str:
     dates: list[str] = []
     for path in (
-        Path(r"C:\new_tdx_mock\vipdoc\sh\lday\sh000001.day"),
-        Path(r"C:\new_tdx_mock\vipdoc\sz\lday\sz399001.day"),
-        Path(r"C:\new_tdx_mock\vipdoc\sz\lday\sz000001.day"),
+        resolve_tdx_root() / "vipdoc" / "sh" / "lday" / "sh000001.day",
+        resolve_tdx_root() / "vipdoc" / "sz" / "lday" / "sz399001.day",
+        resolve_tdx_root() / "vipdoc" / "sz" / "lday" / "sz000001.day",
     ):
         if not path.is_file():
             continue

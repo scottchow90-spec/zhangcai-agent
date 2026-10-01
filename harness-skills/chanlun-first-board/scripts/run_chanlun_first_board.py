@@ -30,6 +30,11 @@ try:
 except Exception:
     pass
 
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_data_root, resolve_tdx_root
+
 def resolve_trade_date() -> str:
     parser = argparse.ArgumentParser(description="chanlun first-board fixed business workflow")
     parser.add_argument("--date", default=os.environ.get("TRADING_DATE") or os.environ.get("TRADE_DATE") or datetime.now().strftime("%Y%m%d"))
@@ -43,15 +48,15 @@ TRADE_DATE = resolve_trade_date()
 TRADE_DATE_INT = int(TRADE_DATE)
 TRADE_DATE_H = f"{TRADE_DATE[:4]}-{TRADE_DATE[4:6]}-{TRADE_DATE[6:]}"
 
-ROOT = Path(r'D:\C盘转移\日志\codex')
+ROOT = resolve_data_root()
 TASK = ROOT / 'reports' / f'{TRADE_DATE}_limitup_firstboard_chan_standard'
 OUT = TASK / 'output'; AUDIT = TASK / 'audit'; VALID = TASK / 'validation'; SCRIPTS = TASK / 'scripts'
 for p in (OUT, AUDIT, VALID, SCRIPTS):
     p.mkdir(parents=True, exist_ok=True)
-TDX = Path(r'C:\new_tdx_mock')
+TDX = resolve_tdx_root()
 BLOCK = TDX / 'T0002' / 'blocknew'
 VIPDOC = TDX / 'vipdoc'
-DELIVERY = Path(r'F:\小龙虾6月交付')
+DELIVERY = Path(os.environ.get("ZHANGCAI_DELIVERY_DIR") or (ROOT / "deliveries")).expanduser().resolve()
 DELIVERY.mkdir(parents=True, exist_ok=True)
 DAY = struct.Struct('<IIIIIfII')
 BUY_TYPES = ['标准一买', '标准二买', '标准三买']

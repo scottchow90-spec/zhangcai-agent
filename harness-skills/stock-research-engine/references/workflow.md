@@ -24,7 +24,7 @@ LOCKED_EXECUTION: scripts/codex_entry.py selftest
 ## 唯一命令
 
 ```powershell
-python D:\C盘转移\日志\codex\skills\stock-research-engine\scripts\codex_entry.py run
+python "$($env:STOCK_SKILLS_ROOT)\stock-research-engine"\scripts\codex_entry.py run
 ```
 
 其他脚本只作为注册表明确锁定的内部业务实现，不是入口，也不得由模型直接调用。

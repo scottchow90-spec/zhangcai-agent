@@ -18,6 +18,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_tdx_root
+
 FORMULA = "庄家资金监控"
 REQUIRED_FIELDS = ("OUTPUT3", "OUTPUT4", "控盘程度", "控盘度")
 
@@ -175,7 +180,7 @@ def execute(code: str, tdx_root: str, count: int, dividend_type: int) -> tuple[d
 def main() -> int:
     parser = argparse.ArgumentParser(description="本机庄家资金监控 TQ 调用器")
     parser.add_argument("--code", default="600000.SH")
-    parser.add_argument("--tdx", default=r"C:\new_tdx_mock")
+    parser.add_argument("--tdx", default=str(resolve_tdx_root()))
     parser.add_argument("--count", type=int, default=5)
     parser.add_argument("--div", type=int, default=0)
     parser.add_argument("--json", action="store_true")

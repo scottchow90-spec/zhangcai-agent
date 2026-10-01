@@ -12,11 +12,16 @@ import time
 from datetime import datetime, timedelta
 from pathlib import Path
 
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
+
 import requests
 
 
 DAY_RECORD = struct.Struct("<5If2I")
-DEFAULT_ROOT = Path(r"C:\new_tdx_mock")
+DEFAULT_ROOT = resolve_tdx_root()
 EASTMONEY_URL = "https://push2his.eastmoney.com/api/qt/stock/kline/get"
 
 

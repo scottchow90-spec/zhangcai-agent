@@ -1,10 +1,15 @@
 """SZSE short-name change export; current 证券简称 is never a history baseline."""
 from pathlib import Path
 from datetime import datetime,timedelta,timezone
-import hashlib,io,json,re,urllib.request,urllib.parse
+import hashlib,io,json,re,urllib.request,urllib.parse,importlib.util,sys
 import pandas as pd
 
-SOURCE_CODE=Path(r'C:\Users\25296\AppData\Local\Programs\Python\Python313\Lib\site-packages\akshare\stock\stock_info.py')
+_app_scripts_dir = str(Path(__file__).resolve().parents[6] / 'scripts')
+if _app_scripts_dir not in sys.path: sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_data_root
+
+_source_spec=importlib.util.find_spec('akshare.stock.stock_info')
+SOURCE_CODE=Path(_source_spec.origin) if _source_spec and _source_spec.origin else resolve_data_root()/'runtime'/'missing-akshare-stock-info.py'
 URL='https://www.szse.cn/api/report/ShowReport?'+urllib.parse.urlencode({'SHOWTYPE':'xlsx','CATALOGID':'SSGSGMXX','TABKEY':'tab2'})
 
 

@@ -29,17 +29,23 @@ try:
 except Exception:
     pass
 
-WORKSPACE = Path(r"D:\C盘转移\日志\codex")
+APP_ROOT = Path(__file__).resolve().parents[3]
+APP_SCRIPTS = APP_ROOT / "scripts"
+if str(APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(APP_SCRIPTS))
+from tdx_path_config import resolve_data_root
+
+WORKSPACE = resolve_data_root()
 SKILL_DIR = Path(__file__).resolve().parents[1]
 SCRIPTS_DIR = SKILL_DIR / "scripts"
 TEMPLATES_DIR = SKILL_DIR / "templates"
-REPORTS_DIR = SKILL_DIR / "reports"
+REPORTS_DIR = WORKSPACE / "reports" / SKILL_DIR.name
 GENERATED_DIR = REPORTS_DIR / "generated"
 EVIDENCE_DIR = REPORTS_DIR / "evidence"
 QUALITY_DIR = REPORTS_DIR / "quality"
-LOCK = WORKSPACE / "hooks" / "skill_workflow_lock.py"
-SUBSTANTIVE_GATE = WORKSPACE / "hooks" / "stock_workflow_substantive_gate.py"
-TDX_HUB = WORKSPACE / "skills" / "tdx-local-hub" / "scripts" / "tdx_hub.py"
+LOCK = APP_ROOT / "hooks" / "skill_workflow_lock.py"
+SUBSTANTIVE_GATE = APP_ROOT / "hooks" / "stock_workflow_substantive_gate.py"
+TDX_HUB = APP_ROOT / "harness-skills" / "tdx-local-hub" / "scripts" / "tdx_hub.py"
 PYTHON_EXE = sys.executable
 SKILL_NAME_DISPLAY = "白猫老师每日资讯及复盘报告"
 LOCKED_PRODUCTION_SCRIPT = "baimao-daily-intel-review_closure_gate.py"

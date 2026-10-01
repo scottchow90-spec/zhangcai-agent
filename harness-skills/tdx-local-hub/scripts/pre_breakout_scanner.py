@@ -11,12 +11,17 @@ from pathlib import Path as _OneStockEmbeddedPath
 _onestock_embedded_dir = str(_OneStockEmbeddedPath(__file__).resolve().parent)
 if _onestock_embedded_dir not in _onestock_embedded_sys.path:
     _onestock_embedded_sys.path.insert(0, _onestock_embedded_dir)
-import argparse, json, math, subprocess, sys, time
+import argparse, json, math, os, subprocess, sys, time
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional
 
-TDX_ROOT = Path(r"C:\new_tdx_mock")
+APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
+
+TDX_ROOT = resolve_tdx_root()
 HUB_SCRIPT = Path(__file__).resolve().parent / "tdx_hub.py"
 SH_LDAY = TDX_ROOT / "vipdoc" / "sh" / "lday"
 SZ_LDAY = TDX_ROOT / "vipdoc" / "sz" / "lday"

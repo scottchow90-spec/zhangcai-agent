@@ -17,12 +17,17 @@ import os, sys, json, time, datetime
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-WORKSPACE = Path(r"D:\C盘转移\日志\codex")
-TDX_ROOT  = Path(r"C:\new_tdx_mock")
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_data_root, resolve_tdx_root
+
+WORKSPACE = resolve_data_root()
+TDX_ROOT  = resolve_tdx_root()
 TQCENTER  = TDX_ROOT / "PYPlugins" / "user" / "tqcenter.py"
 TQ_INIT   = TDX_ROOT / "PYPlugins" / "user" / "tdxdata_test.py"
 GS_BAK    = TDX_ROOT / "T0002" / "gs_bak"
-TQ_LOCK   = WORKSPACE / "skills" / "tdx-local-hub" / ".runtime" / "tq.lock"
+TQ_LOCK   = WORKSPACE / "runtime" / "tdx" / "tq.lock"
 
 TODAY = datetime.datetime.now().strftime("%Y%m%d")
 OUT_DIR = WORKSPACE / "reports" / f"{TODAY}_feilong_zhusheng_lowband_scan"

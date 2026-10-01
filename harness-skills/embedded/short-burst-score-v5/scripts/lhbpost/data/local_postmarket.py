@@ -4,6 +4,7 @@ Missing point-in-time data stays missing. Acquisition success is not scoring rea
 """
 from __future__ import annotations
 from pathlib import Path
+import sys
 from datetime import datetime, timedelta, timezone
 import hashlib
 import importlib.util
@@ -14,9 +15,14 @@ import time
 import urllib.parse
 import pandas as pd
 
-HOME = Path(r'F:\Codex\Home')
-TDX_MODULE = HOME / 'skills/tdx-local-hub/scripts/tdx_hub.py'
-LHB_MODULE = HOME / 'skills/a-share-longhubang-analysis/scripts/longhubang_workflow.py'
+_app_scripts_dir = str(Path(__file__).resolve().parents[6] / 'scripts')
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_app_root
+
+HOME = resolve_app_root()
+TDX_MODULE = HOME / 'harness-skills/tdx-local-hub/scripts/tdx_hub.py'
+LHB_MODULE = HOME / 'harness-skills/a-share-longhubang-analysis/scripts/longhubang_workflow.py'
 
 
 def _load(path, name):

@@ -9,20 +9,28 @@ if _onestock_embedded_dir not in _onestock_embedded_sys.path:
 
 import argparse
 import json
+import os
 import struct
 import urllib.request
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
+import sys
 
 
 SHANGHAI = ZoneInfo("Asia/Shanghai")
-ZTC = Path(r"C:\new_tdx_mock\T0002\blocknew\ZTC.blk")
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
+
+TDX_ROOT = resolve_tdx_root()
+ZTC = TDX_ROOT / "T0002" / "blocknew" / "ZTC.blk"
 TDX_INDEXES = {
-    "上证指数": ("000001", Path(r"C:\new_tdx_mock\vipdoc\sh\lday\sh000001.day")),
-    "深证成指": ("399001", Path(r"C:\new_tdx_mock\vipdoc\sz\lday\sz399001.day")),
-    "创业板指": ("399006", Path(r"C:\new_tdx_mock\vipdoc\sz\lday\sz399006.day")),
+    "上证指数": ("000001", TDX_ROOT / "vipdoc" / "sh" / "lday" / "sh000001.day"),
+    "深证成指": ("399001", TDX_ROOT / "vipdoc" / "sz" / "lday" / "sz399001.day"),
+    "创业板指": ("399006", TDX_ROOT / "vipdoc" / "sz" / "lday" / "sz399006.day"),
 }
 INDEX_API = (
     "https://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&"

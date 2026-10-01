@@ -1,9 +1,14 @@
 """Reuse completed locally acquired historical observations through their hashes."""
 from pathlib import Path
 import json
+import sys
 from datetime import datetime
 
-SOURCE_RUNS=Path(r'F:\Codex\Home\business_data\a-share-market-environment\executions\runs')
+_app_scripts_dir = str(Path(__file__).resolve().parents[6] / 'scripts')
+if _app_scripts_dir not in sys.path: sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_data_root
+
+SOURCE_RUNS=resolve_data_root()/'business_data'/'a-share-market-environment'/'executions'/'runs'
 
 def select_source(start,end,root=SOURCE_RUNS):
     lo=datetime.strptime(start,'%Y%m%d').strftime('%Y-%m-%d')

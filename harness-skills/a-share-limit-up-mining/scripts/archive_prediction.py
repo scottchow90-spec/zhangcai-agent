@@ -13,8 +13,14 @@ import json
 import shutil
 from datetime import datetime
 from pathlib import Path
+import sys
 
-ARCHIVE_ROOT = Path.home() / ".codex" / "reports" / "_archive" / "lianban_mining"
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_data_root
+
+ARCHIVE_ROOT = resolve_data_root() / "reports" / "archive" / "skills" / "a-share-limit-up-mining"
 ALLOWED_FILES = (
     "candidate_pool.csv", "dragon_score.csv", "report.md", "audit_log.md",
     "run_manifest.json", "source_failure.json",

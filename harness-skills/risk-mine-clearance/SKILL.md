@@ -5,6 +5,8 @@ description: Use when the user asks for 风险排雷技能、风险排雷、个�
 
 # 风险排雷技能
 
+桌面端执行路径必须从 `STOCK_SKILLS_ROOT` 定位本技能，从 `ZHANGCAI_TDX_ROOT` 定位通达信；旧示例中的开发机 D 盘路径不适用于安装包。
+
 ## 核心边界
 
 - 本技能是“风险排雷”和“风险预警”的唯一整合入口；“风险预警”只保留为兼容名称，不再对应独立技能。
@@ -17,7 +19,7 @@ description: Use when the user asks for 风险排雷技能、风险排雷、个�
 所有业务运行只允许进入：
 
 ```powershell
-python "D:\C盘转移\日志\codex\skills\risk-mine-clearance\scripts\codex_entry.py" run
+python "%STOCK_SKILLS_ROOT%\risk-mine-clearance\scripts\codex_entry.py" run
 ```
 
 需要指定日期、深挖数量或人工传闻文件时，在 `run --` 后传入 `--date`、`--deep-limit` 或 `--rumors`。结论与文件同时交付时，使用同一入口的 `complete --artifact-relative ... -- <业务参数>` 完成运行、收据绑定和交付授权。

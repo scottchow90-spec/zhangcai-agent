@@ -23,6 +23,14 @@ if ($UseExeDataSeed) {
   }
 } else {
   New-Item -ItemType Directory -Path $tempRoot -Force | Out-Null
+  $statusRoot = Join-Path $tempRoot 'status'
+  New-Item -ItemType Directory -Path $statusRoot -Force | Out-Null
+  $summaryFixture = [ordered]@{
+    checked_at = [DateTime]::UtcNow.ToString('o')
+    assets = @{}
+    minute_data = @{ status = 'missing'; mode = 'external_on_demand'; packaged = $false; file_count = 0 }
+  } | ConvertTo-Json -Depth 5
+  [System.IO.File]::WriteAllText((Join-Path $statusRoot 'current.json'), $summaryFixture, [System.Text.UTF8Encoding]::new($false))
 }
 
 $lastPageSeedFile = Join-Path $runRoot 'desktop\last-page.json'
@@ -35,7 +43,10 @@ $old = @{}
 foreach ($name in $names) { $old[$name] = [Environment]::GetEnvironmentVariable($name) }
 $env:ZHANGCAI_DATA_DIR = $runRoot
 $env:ZHANGCAI_RESOURCE_LIBRARY = $runRoot
-$env:ZHANGCAI_TDX_ROOT = ''
+# A whitespace sentinel is intentionally truthy to Electron's config resolver,
+# but trims to an empty path in the bridge. This makes smoke runs independent
+# of the developer machine's saved TDX directory/registry selection.
+$env:ZHANGCAI_TDX_ROOT = ' '
 $env:ZHANGCAI_BRIDGE_PORT = ''
 $env:ZHANGCAI_PACKAGED = ''
 $env:ZHANGCAI_APP_ROOT = ''
@@ -53,7 +64,10 @@ $descendants = @()
 try {
   $process = Start-Process -FilePath $exe -WorkingDirectory (Split-Path -Parent $exe) -WindowStyle Hidden -PassThru
   $runtime = $null
-  for ($i = 0; $i -lt 80; $i++) {
+  # Electron + private Node + Vinext can take longer than 40 seconds on a
+  # 4 GB whiteboard machine. Match the app's bridge/UI startup budgets instead
+  # of killing a valid but slow cold start during smoke validation.
+  for ($i = 0; $i -lt 540; $i++) {
     Start-Sleep -Milliseconds 500
     if (Test-Path -LiteralPath $runtimeFile) {
       try {
@@ -73,7 +87,14 @@ try {
   $corsOrigin = $corsResponse.Headers['Access-Control-Allow-Origin']
   $ui = (Invoke-WebRequest -Uri ("http://127.0.0.1:{0}/" -f $runtime.uiPort) -UseBasicParsing -TimeoutSec 8).StatusCode
   $chat = (Invoke-WebRequest -Uri ("http://127.0.0.1:{0}/chat" -f $runtime.uiPort) -UseBasicParsing -TimeoutSec 8).StatusCode
-  $environment = Invoke-RestMethod -Uri ("http://127.0.0.1:{0}/runtime/environment" -f $runtime.bridgePort) -TimeoutSec 30
+  # The runtime panel opens from a cache-only summary route. The full diagnostic
+  # route deliberately scans every TDX .day file and may take minutes on a
+  # low-memory machine; that is an explicit follow-up action, not panel startup.
+  $environmentTimer = [System.Diagnostics.Stopwatch]::StartNew()
+  $environment = Invoke-RestMethod -Uri ("http://127.0.0.1:{0}/runtime/environment?summary=1" -f $runtime.bridgePort) -TimeoutSec 15
+  $environmentTimer.Stop()
+  $environmentSummaryMs = $environmentTimer.ElapsedMilliseconds
+  if ($environmentSummaryMs -gt 10000) { throw "Runtime environment summary was too slow: ${environmentSummaryMs}ms" }
   $credentials = Invoke-RestMethod -Uri ("http://127.0.0.1:{0}/runtime/credentials" -f $runtime.bridgePort) -TimeoutSec 8
   $scheduleFile = Join-Path $runRoot 'harness\schedules\after-close-daily-refresh.json'
   $schedule = $null
@@ -166,6 +187,7 @@ try {
     resourceLibrary = $bridge.resourceLibrary
     codePolicy = $bridge.codePolicy
     harnessStatus = $environment.harness.status
+    environmentSummaryMs = $environmentSummaryMs
     credentialsConfigured = $credentials.configured
     minuteData = $environment.minuteData
     legacyWebPortsStillListening = $legacyListening

@@ -4,9 +4,15 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_tdx_root
 
 import numpy as np
 import pandas as pd
@@ -37,6 +43,7 @@ from feilong_offline_replay import (
 
 SCHEMA = "FEILONG_CONTINUATION_RESEARCH_V2"
 FORMULA_NAME = "飞龙在天"
+TDX_ROOT = resolve_tdx_root()
 WARMUP_START = "20180101"
 
 
@@ -699,14 +706,14 @@ def run_factor_research(
     matches_csv: str,
     migration_manifest: str,
     out_dir: str,
-    tdx_root: str = r"C:\new_tdx_mock",
+    tdx_root: str | Path = TDX_ROOT,
 ) -> dict[str, Any]:
     generated_at = datetime.now().astimezone().isoformat()
     skill_root = Path(__file__).resolve().parents[1]
     formula_evidence = validate_formula_source(skill_root)
     root = Path(tdx_root).resolve()
-    if str(root).casefold() != str(Path(r"C:\new_tdx_mock").resolve()).casefold():
-        raise RuntimeError("tdx_root_must_be_C:\\new_tdx_mock")
+    if root != TDX_ROOT.resolve() or not root.is_dir():
+        raise RuntimeError(f"tdx_root_must_match_selected_installation:{TDX_ROOT}")
     cycles_path = Path(cycles_csv).resolve()
     matches_path = Path(matches_csv).resolve()
     package_manifest_path = Path(migration_manifest).resolve()

@@ -1,6 +1,7 @@
 param(
   [Parameter(Mandatory = $true)]
   [string]$ElectronBuilder,
+  [string]$NodeExecutable = '',
   [Parameter(Mandatory = $true)]
   [string]$ConfigPath,
   [Parameter(Mandatory = $true)]
@@ -85,7 +86,15 @@ try {
   Write-Utf8WithBom $extractPath $extract
 
   Write-Output "NSIS installer detail mode enabled: $templateRoot"
-  & $ElectronBuilder '--config' $ConfigPath "--config.directories.output=$OutputDirectory"
+  $builderArgs = @('--config', $ConfigPath, "--config.directories.output=$OutputDirectory")
+  if ([System.IO.Path]::GetExtension($ElectronBuilder) -ieq '.js') {
+    if (-not $NodeExecutable -or -not (Test-Path -LiteralPath $NodeExecutable -PathType Leaf)) {
+      throw 'Electron Builder is a JavaScript CLI; its bundled Node executable was not supplied.'
+    }
+    & $NodeExecutable $ElectronBuilder @builderArgs
+  } else {
+    & $ElectronBuilder @builderArgs
+  }
   $buildExitCode = $LASTEXITCODE
 }
 finally {

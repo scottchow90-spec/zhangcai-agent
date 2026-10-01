@@ -21,6 +21,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_data_root
+
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
@@ -38,7 +43,7 @@ CONTRACTS = ROOT / "references" / "stock_execution_contracts.json"
 BUSINESS_SPEC = ROOT / "references" / "business_spec.md"
 CANONICAL_RUNTIME = ROOT.parent.parent / "scripts" / "stock_canonical_runtime.py"
 SPECIAL_FACADE_SKILLS = {"convertible-bond-screening-strategy"}
-RESULT_DIR = Path(__import__("os").environ.get("ONESTOCK_STOCK_DATA_ROOT", str(ROOT / "reports"))) / "selftests"
+RESULT_DIR = resolve_data_root() / "reports" / "selftests"
 READINESS_REPORT_NAME = "股票技能生产就绪报告.json"
 CONTROL_MATRIX_NAME = "股票技能生产控制矩阵.json"
 VALIDATION_RESULTS_NAME = "股票技能生产验证结果.json"
@@ -308,7 +313,7 @@ def configured_selftest_workers(skill_count: int) -> int:
 
 
 def run_regression_suite(timeout: int = REGRESSION_TIMEOUT_SECONDS) -> dict[str, Any]:
-    cache_root = Path(r"F:\Codex\cache")
+    cache_root = resolve_data_root() / "runtime" / "cache" / "stock-unified"
     pytest_cache = cache_root / "pytest" / "stock-unified"
     pytest_temp = pytest_cache / f"run-{os.getpid()}-{time.time_ns()}"
     pytest_temp.mkdir(parents=True, exist_ok=False)

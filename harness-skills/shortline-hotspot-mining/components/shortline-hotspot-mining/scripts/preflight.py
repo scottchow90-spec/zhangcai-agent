@@ -10,16 +10,18 @@ if _onestock_embedded_dir not in _onestock_embedded_sys.path:
 import argparse
 import json
 import tempfile
+import sys
 from datetime import datetime
 from pathlib import Path
 
+_app_scripts_dir = str(Path(__file__).resolve().parents[5] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_data_root, resolve_tdx_root
+
 ROOT = Path(__file__).resolve().parents[1]
-REPORTS = Path.home() / ".codex" / "reports"
-TDX_BLOCK_CANDIDATES = (
-    Path(r"C:\new_tdx_mock\T0002\blocknew"),
-    Path(r"C:\new_tdx\T0002\blocknew"),
-    Path(r"C:\zd_tdx\T0002\blocknew"),
-)
+REPORTS = resolve_data_root() / "reports" / "skills" / "shortline-hotspot-mining"
+TDX_BLOCK_CANDIDATES = (resolve_tdx_root() / "T0002" / "blocknew",)
 REQUIRED = (
     ROOT / "SKILL.md",
     ROOT / "references" / "business_spec.md",

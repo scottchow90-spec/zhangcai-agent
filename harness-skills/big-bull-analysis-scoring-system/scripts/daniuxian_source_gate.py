@@ -23,8 +23,16 @@ if _onestock_embedded_dir not in _onestock_embedded_sys.path:
     _onestock_embedded_sys.path.insert(0, _onestock_embedded_dir)
 
 import sys, os, json, subprocess
+from pathlib import Path
 
-FORMULA_SOURCE = r'C:\new_tdx_mock\T0002\gs_bak\大牛线.txt'
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
+
+TDX_ROOT = str(resolve_tdx_root())
+TQ_USER_DIR = os.path.join(TDX_ROOT, 'PYPlugins', 'user')
+FORMULA_SOURCE = os.path.join(TDX_ROOT, 'T0002', 'gs_bak', '大牛线.txt')
 DISPLAY_FORMULA_NAME = '大牛线撑压版'
 # 本机通达信显示/源码名与 TQ 动态注册名不同；运行态必须使用此可调用别名。
 TQ_FORMULA_NAME = '大牛线撑压版'
@@ -97,10 +105,10 @@ def gate_tq_connectivity():
         if 'tqcenter.tq' in sys.modules:
             del sys.modules['tqcenter.tq']
 
-        sys.path.insert(0, r'C:\new_tdx_mock\PYPlugins\user')
+        sys.path.insert(0, TQ_USER_DIR)
         from tqcenter import tq
 
-        tq.initialize(r'C:\new_tdx_mock\PYPlugins\user\tdxdata_test.py')
+        tq.initialize(os.path.join(TQ_USER_DIR, 'tdxdata_test.py'))
         if tq.run_id < 0:
             fail(f"TQ初始化失败: run_id={tq.run_id}")
 
@@ -129,10 +137,10 @@ def gate_formula_exists(stock_code):
         if 'tqcenter.tq' in sys.modules:
             del sys.modules['tqcenter.tq']
 
-        sys.path.insert(0, r'C:\new_tdx_mock\PYPlugins\user')
+        sys.path.insert(0, TQ_USER_DIR)
         from tqcenter import tq
 
-        tq.initialize(r'C:\new_tdx_mock\PYPlugins\user\tdxdata_test.py')
+        tq.initialize(os.path.join(TQ_USER_DIR, 'tdxdata_test.py'))
 
         # 加载数据
         sz_code = f'{stock_code}.SZ' if stock_code.startswith(('0','2','3')) else f'{stock_code}.SH'

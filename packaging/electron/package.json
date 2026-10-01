@@ -1,6 +1,6 @@
 {
   "name": "zhangcai-agent-desktop",
-  "version": "0.1.12",
+  "version": "0.1.22",
   "private": true,
   "type": "module",
   "main": "packaging/electron/main.mjs"

@@ -23,6 +23,7 @@ _stock_adapter_shared_scripts = str(_OneStockEmbeddedPath(__file__).resolve().pa
 if _stock_adapter_shared_scripts not in _onestock_embedded_sys.path:
     _onestock_embedded_sys.path.insert(0, _stock_adapter_shared_scripts)
 from stock_adapter_io import atomic_write_json, atomic_write_text, enable_atomic_path_writes
+from tdx_path_config import resolve_tdx_root
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -2780,7 +2781,7 @@ def build_daily_data_gate(stdout: str) -> dict:
             and len(str(tdx_snapshot.get("sha256") or "")) == 64
         )
         finance_clean = _file_evidence_is_current(
-            inputs.get("finance"), Path(r"C:\new_tdx_mock")
+            inputs.get("finance"), resolve_tdx_root()
         )
         checks["fundamentals"] = (
             finance_clean

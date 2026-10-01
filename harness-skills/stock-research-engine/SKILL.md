@@ -5,6 +5,8 @@ description: 个股基本面深度研究引擎。仅在用户明确调用 stock-
 
 # 个股研究引擎
 
+桌面端必须从 `STOCK_SKILLS_ROOT` 定位技能文件，不得使用旧开发机 D 盘绝对路径；通达信目录统一读取 `ZHANGCAI_TDX_ROOT`。
+
 ## 执行边界
 
 - 目标系统固定为本机 Codex，不调用 OpenClaw 网关、注册表或旧总执行器。
@@ -16,7 +18,7 @@ description: 个股基本面深度研究引擎。仅在用户明确调用 stock-
 
 唯一公开入口：
 
-`python D:\C盘转移\日志\codex\skills\stock-research-engine\scripts\codex_entry.py run -- --symbol 600519`
+`python "%STOCK_SKILLS_ROOT%\stock-research-engine\scripts\codex_entry.py" run -- --symbol 600519`
 
 执行链固定为：
 

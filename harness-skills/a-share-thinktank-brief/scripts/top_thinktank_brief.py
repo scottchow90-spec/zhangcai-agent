@@ -57,13 +57,10 @@ else:
     DOCX_IMPORT_ERROR = ""
 
 
-WORKSPACE = Path(r"D:\C盘转移\日志\codex")
 SKILL_DIR = Path(__file__).resolve().parents[1]
 ENTRY = SKILL_DIR / "scripts" / "top_thinktank_brief.py"
 CANARY_BRIEF = SKILL_DIR / "references" / "canary_brief.md"
 LAYOUT_SPEC = SKILL_DIR / "references" / "docx-layout-template.md"
-WORKFLOW_LOCK = WORKSPACE / "hooks" / "skill_workflow_lock.py"
-STOCK_SUBSTANTIVE_GATE = WORKSPACE / "hooks" / "stock_workflow_substantive_gate.py"
 
 FONT_LATIN = "Calibri"
 FONT_CN = "Microsoft YaHei"

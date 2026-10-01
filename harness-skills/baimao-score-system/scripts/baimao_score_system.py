@@ -17,6 +17,11 @@ import time
 from pathlib import Path
 from typing import Any
 
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_app_root, resolve_data_root
+
 os.environ.setdefault("PYTHONIOENCODING", "utf-8")
 os.environ.setdefault("PYTHONUTF8", "1")
 try:
@@ -27,8 +32,8 @@ except Exception:
 
 SKILL_DIR = Path(__file__).resolve().parents[1]
 SCRIPTS = SKILL_DIR / "scripts"
-REPORTS = SKILL_DIR / "reports"
-WORKSPACE = Path(r"D:\C盘转移\日志\codex")
+REPORTS = resolve_data_root() / "reports" / "skills" / "baimao-score-system"
+WORKSPACE = resolve_app_root()
 WORKFLOW_LOCK = WORKSPACE / "hooks" / "skill_workflow_lock.py"
 SUBSTANTIVE_GATE = WORKSPACE / "hooks" / "stock_workflow_substantive_gate.py"
 LOCKED_EXECUTION_SCRIPT = SCRIPTS / "baimao-score-system_closure_gate.py"

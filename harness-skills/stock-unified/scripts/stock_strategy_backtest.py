@@ -15,10 +15,16 @@ import math
 import os
 import statistics
 import struct
+import sys
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable, Iterable
+
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
 
 
 _tdx_root_text = (
@@ -27,7 +33,7 @@ _tdx_root_text = (
     or os.environ.get("TDX_ROOTS")
     or ""
 ).strip()
-TDX_ROOT = Path(_tdx_root_text or os.environ.get("ZHANGCAI_DEV_TDX_ROOT", r"C:\new_tdx_mock")).expanduser().resolve()
+TDX_ROOT = resolve_tdx_root()
 DAY_RECORD = struct.Struct("<IIIIIfII")
 DAY_DIRS = {
     "SH": TDX_ROOT / "vipdoc" / "sh" / "lday",

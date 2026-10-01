@@ -16,7 +16,14 @@ try:
 except Exception:
     pass
 
-ZTC = Path(r"C:\new_tdx_mock\T0002\blocknew\ZTC.blk")
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_data_root, resolve_tdx_root
+
+DATA_DIR = resolve_data_root() / 'strategy-data' / 'a-share-limit-up-mining'
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+ZTC = resolve_tdx_root() / "T0002" / "blocknew" / "ZTC.blk"
 try:
     from _date_utils import resolve_latest_trade_date
     _RESOLVED = resolve_latest_trade_date()
@@ -205,7 +212,7 @@ def main():
         print(f'ERROR: no exact-date LHB rows for {DATE}; historical context cannot be scored', file=sys.stderr)
         return 2
 
-    p = Path(fr"D:\C盘转移\日志\codex\tmp_lb\data\raw_{DATE}.json")
+    p = DATA_DIR / f"raw_{DATE}.json"
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(json.dumps(out, ensure_ascii=False, indent=2, default=str), encoding='utf-8')
     print(f'zt={len(zt_rows)} lhb={len(lhb_rows)} saved={p}')

@@ -3,8 +3,13 @@ from pathlib import Path
 from datetime import datetime
 import hashlib,json,os,subprocess,sys,time
 
-PROVIDER=Path(r'F:\Codex\Home\skills\a-share-market-environment\scripts\market_history_source.py')
-CACHE=Path(r'F:\Codex\Home\business_data\a-share-short-burst-score\data-cache\history-provider')
+_app_scripts_dir = str(Path(__file__).resolve().parents[6] / 'scripts')
+if _app_scripts_dir not in sys.path: sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_app_root, resolve_data_root
+
+APP_ROOT=resolve_app_root()
+PROVIDER=APP_ROOT/'harness-skills'/'a-share-market-environment'/'scripts'/'market_history_source.py'
+CACHE=resolve_data_root()/'business_data'/'a-share-short-burst-score'/'data-cache'/'history-provider'
 
 def sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 

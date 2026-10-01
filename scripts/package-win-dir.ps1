@@ -9,11 +9,24 @@ if ($LASTEXITCODE -ne 0) { throw 'Desktop environment layer staging failed; elec
 if ($LASTEXITCODE -ne 0) { throw 'Package preflight failed; electron-builder was not started.' }
 
 $electronBuilder = Join-Path $projectRoot 'node_modules\.bin\electron-builder.cmd'
-if (-not (Test-Path -LiteralPath $electronBuilder)) { throw 'electron-builder is missing.' }
+$electronBuilderCli = Join-Path $projectRoot 'node_modules\electron-builder\cli.js'
+$nodeExecutable = Join-Path $projectRoot '.runtime\node\node.exe'
+if (Test-Path -LiteralPath $electronBuilder -PathType Leaf) {
+  $builderPrefix = @($electronBuilder)
+} elseif ((Test-Path -LiteralPath $electronBuilderCli -PathType Leaf) -and (Test-Path -LiteralPath $nodeExecutable -PathType Leaf)) {
+  $builderPrefix = @($nodeExecutable, $electronBuilderCli)
+} else {
+  throw 'electron-builder is missing. Expected its pinned .cmd shim or node_modules/electron-builder/cli.js with the bundled Node runtime.'
+}
 Push-Location $projectRoot
 try {
   $env:CSC_IDENTITY_AUTO_DISCOVERY = 'false'
-  & $electronBuilder '--dir' '--config' 'electron-app/electron-builder.yml' "--config.directories.output=$releaseRoot"
+  $builderArgs = @('--dir', '--config', 'electron-app/electron-builder.yml', "--config.directories.output=$releaseRoot")
+  if ($builderPrefix.Count -gt 1) {
+    & $builderPrefix[0] $builderPrefix[1] @builderArgs
+  } else {
+    & $builderPrefix[0] @builderArgs
+  }
   if ($LASTEXITCODE -ne 0) { throw "electron-builder exit code: $LASTEXITCODE" }
 } finally {
   Pop-Location

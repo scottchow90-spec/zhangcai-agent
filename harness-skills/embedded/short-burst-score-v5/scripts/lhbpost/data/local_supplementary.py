@@ -6,10 +6,17 @@ import importlib.util
 import io,json,math,re,subprocess,sys,time,urllib.request
 import pandas as pd
 
+_app_scripts_dir = str(Path(__file__).resolve().parents[6] / 'scripts')
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_app_root, resolve_tdx_root
+
 SW_URL='https://www.swsresearch.com/swindex/pdf/SwClass2021/StockClassifyUse_stock.xls'
-TDX_HUB=Path(r'F:\Codex\Home\skills\tdx-local-hub\scripts\tdx_hub.py')
-DBF=Path(r'D:\TDX\T0002\hq_cache\base.dbf')
-LISTING_READER=Path(r'F:\Codex\Home\skills\stock-unified\scripts\installed_formula_market_scan.py')
+APP_ROOT=resolve_app_root()
+TDX_ROOT=resolve_tdx_root()
+TDX_HUB=APP_ROOT/'harness-skills'/'tdx-local-hub'/'scripts'/'tdx_hub.py'
+DBF=TDX_ROOT/'T0002'/'hq_cache'/'base.dbf'
+LISTING_READER=APP_ROOT/'harness-skills'/'stock-unified'/'scripts'/'installed_formula_market_scan.py'
 
 
 def _date(value):

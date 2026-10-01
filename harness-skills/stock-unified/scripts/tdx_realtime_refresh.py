@@ -14,12 +14,17 @@ import subprocess
 import sys
 from pathlib import Path
 
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
+
 _tdx_root_text = (
     os.environ.get("ZHANGCAI_TDX_ROOT")
     or os.environ.get("TDX_ROOT")
     or ""
 ).strip()
-TDX_ROOT = Path(_tdx_root_text or os.environ.get("ZHANGCAI_DEV_TDX_ROOT", r"C:\new_tdx_mock")).expanduser().resolve()
+TDX_ROOT = resolve_tdx_root()
 USER_DIR = TDX_ROOT / 'PYPlugins' / 'user'
 FALLBACK_INIT = USER_DIR / 'tdxdata_test.py'
 NODE_TOOL = TDX_ROOT / 'NodeTool.exe'

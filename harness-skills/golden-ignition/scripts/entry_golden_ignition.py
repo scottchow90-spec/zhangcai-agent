@@ -29,22 +29,12 @@ from typing import Any
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
 APP_ROOT = Path(os.environ.get("ZHANGCAI_APP_ROOT", str(SKILL_ROOT.parent.parent))).resolve()
-_tdx_root_text = (
-    os.environ.get("ZHANGCAI_TDX_ROOT")
-    or os.environ.get("TDX_ROOT")
-    or ""
-).strip()
-TDX_ROOT = (
-    Path(_tdx_root_text)
-    if _tdx_root_text
-    else (
-        Path(os.environ.get("ZHANGCAI_DATA_DIR", str(APP_ROOT / "app-data")))
-        / "runtime"
-        / "__tdx_root_not_configured__"
-        if os.environ.get("ZHANGCAI_PACKAGED") == "1"
-        else Path(os.environ.get("ZHANGCAI_DEV_TDX_ROOT", r"C:\new_tdx_mock"))
-    )
-).expanduser().resolve()
+APP_SCRIPTS = APP_ROOT / "scripts"
+if str(APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
+
+TDX_ROOT = resolve_tdx_root()
 TDX_HUB_PATH = Path(os.environ.get(
     "TDX_HUB_PATH",
     str(APP_ROOT / "harness-skills" / "tdx-local-hub" / "scripts" / "tdx_hub.py"),

@@ -14,7 +14,7 @@ description: "本机通达信大牛线分析与评分统一技能。用于“大
 - `评分`模式处理通达信自定义板块，固定使用大牛线16项、飞龙在天10项、庄家资金监控4项的30项综合评分。
 - 默认运行研究型30项综合评分，默认板块为“黄金点火”，简称 `HJDH`。
 - 历史五维板块评分已退出生产默认入口；只有明确提出历史兼容验证并显式提供`--legacy-five-dimension-compat`时才允许运行，禁止与30项综合评分混用或互相替代。
-- 只使用本机 `C:\new_tdx_mock` 数据与运行态，不使用网页数据替代本机公式或日线。
+- 只使用本机 `ZHANGCAI_TDX_ROOT` 指向的数据与运行态，不使用网页数据替代本机公式或日线。掌财桌面端会注入实际安装路径，禁止固定写入 C 盘或开发机技能目录。
 - 分析结论与评分只用于研究和候选整理，不代表未来结果。
 
 ## 固定入口
@@ -22,20 +22,20 @@ description: "本机通达信大牛线分析与评分统一技能。用于“大
 信息与自检：
 
 ```powershell
-python D:\C盘转移\日志\codex\skills\big-bull-analysis-scoring-system\scripts\codex_entry.py info
-python D:\C盘转移\日志\codex\skills\big-bull-analysis-scoring-system\scripts\codex_entry.py selftest
+python "$($env:STOCK_SKILLS_ROOT)\big-bull-analysis-scoring-system"\scripts\codex_entry.py info
+python "$($env:STOCK_SKILLS_ROOT)\big-bull-analysis-scoring-system"\scripts\codex_entry.py selftest
 ```
 
 单只股票分析：
 
 ```powershell
-python D:\C盘转移\日志\codex\skills\big-bull-analysis-scoring-system\scripts\codex_entry.py run -- analyze 600519.SH
+python "$($env:STOCK_SKILLS_ROOT)\big-bull-analysis-scoring-system"\scripts\codex_entry.py run -- analyze 600519.SH
 ```
 
 默认板块评分：
 
 ```powershell
-python D:\C盘转移\日志\codex\skills\big-bull-analysis-scoring-system\scripts\codex_entry.py run
+python "$($env:STOCK_SKILLS_ROOT)\big-bull-analysis-scoring-system"\scripts\codex_entry.py run
 ```
 
 默认入口等价于`score-research-composite`，不是历史`score-board`五维模式。
@@ -43,13 +43,13 @@ python D:\C盘转移\日志\codex\skills\big-bull-analysis-scoring-system\script
 三公式综合评分历史回测与正式模型优化：
 
 ```powershell
-python D:\C盘转移\日志\codex\skills\big-bull-analysis-scoring-system\scripts\codex_entry.py run -- backtest-composite --count 1300 --max-stocks 300 --rebalance-days 5 --cost-bps 30
+python "$($env:STOCK_SKILLS_ROOT)\big-bull-analysis-scoring-system"\scripts\codex_entry.py run -- backtest-composite --count 1300 --max-stocks 300 --rebalance-days 5 --cost-bps 30
 ```
 
 不回测的研究型综合评分：
 
 ```powershell
-python D:\C盘转移\日志\codex\skills\big-bull-analysis-scoring-system\scripts\codex_entry.py run -- score-research-composite --board-name 黄金点火 --board-code HJDH
+python "$($env:STOCK_SKILLS_ROOT)\big-bull-analysis-scoring-system"\scripts\codex_entry.py run -- score-research-composite --board-name 黄金点火 --board-code HJDH
 ```
 
 三公式综合评分固定且仅包含大牛线16项、飞龙在天10项、庄家资金监控4项，共30项。禁止增加任何其他数值或非数值评分项目，禁止在报告、排名、贡献明细、海报或执行依赖中追加额外项目。
@@ -69,13 +69,13 @@ python D:\C盘转移\日志\codex\skills\big-bull-analysis-scoring-system\script
 使用已通过回测验收的正式模型，对本机通达信最新统一交易日执行三体系综合评分：
 
 ```powershell
-python D:\C盘转移\日志\codex\skills\big-bull-analysis-scoring-system\scripts\codex_entry.py run -- score-composite --board-name 黄金点火 --board-code HJDH
+python "$($env:STOCK_SKILLS_ROOT)\big-bull-analysis-scoring-system"\scripts\codex_entry.py run -- score-composite --board-name 黄金点火 --board-code HJDH
 ```
 
 生成固定30项的评分结构海报；该模式展示三体系、权重和0至100分值，但不会把未通过预测验收的当前模型伪装成已启用：
 
 ```powershell
-python D:\C盘转移\日志\codex\skills\big-bull-analysis-scoring-system\scripts\codex_entry.py run -- structure-poster --weight-source <最后一次已执行模型结果JSON>
+python "$($env:STOCK_SKILLS_ROOT)\big-bull-analysis-scoring-system"\scripts\codex_entry.py run -- structure-poster --weight-source <最后一次已执行模型结果JSON>
 ```
 
 
@@ -92,13 +92,13 @@ python D:\C盘转移\日志\codex\skills\big-bull-analysis-scoring-system\script
 多板块任务完成各板评分后，必须通过固定入口执行跨板一致性门禁；评分日期、固定母体、模型、公式目录或任一共有股票的总分、三体系子分、总分拆解、30项贡献存在差异时必须阻断：
 
 ```powershell
-python D:\C盘转移\日志\codex\skills\big-bull-analysis-scoring-system\scripts\codex_entry.py run -- verify-cross-board-consistency --ranking-json <板块一排名JSON> --ranking-json <板块二排名JSON>
+python "$($env:STOCK_SKILLS_ROOT)\big-bull-analysis-scoring-system"\scripts\codex_entry.py run -- verify-cross-board-consistency --ranking-json <板块一排名JSON> --ranking-json <板块二排名JSON>
 ```
 
 指定其他自定义板块：
 
 ```powershell
-python D:\C盘转移\日志\codex\skills\big-bull-analysis-scoring-system\scripts\codex_entry.py run -- score-research-composite --board-name <板块名称> --board-code <板块简称>
+python "$($env:STOCK_SKILLS_ROOT)\big-bull-analysis-scoring-system"\scripts\codex_entry.py run -- score-research-composite --board-name <板块名称> --board-code <板块简称>
 ```
 
 ## 分析模式

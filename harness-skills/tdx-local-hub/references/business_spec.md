@@ -2,11 +2,11 @@
 
 ## 数据边界
 
-- 主数据源：`C:\new_tdx_mock`。
+- 主数据源：`$env:ZHANGCAI_TDX_ROOT`。
 - 实时行情和动态板块：本机 TQ `tqcenter.py` 公开接口。
-- 历史K线：`C:\new_tdx_mock\vipdoc`。
-- 自定义板块：`C:\new_tdx_mock\T0002\blocknew`。
-- 版面：`C:\new_tdx_mock\T0002\pad`。
+- 历史K线：`$env:ZHANGCAI_TDX_ROOT\vipdoc`。
+- 自定义板块：`$env:ZHANGCAI_TDX_ROOT\T0002\blocknew`。
+- 版面：`$env:ZHANGCAI_TDX_ROOT\T0002\pad`。
 
 ## 数据要求
 

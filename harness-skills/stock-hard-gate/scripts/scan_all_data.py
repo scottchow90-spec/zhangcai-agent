@@ -5,8 +5,14 @@
 输出: 完整的文件清单JSON，禁止跳过任何目录
 """
 import os, json, sys
+from pathlib import Path
 
-ROOT = r'C:\new_tdx_mock'
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_tdx_root
+
+ROOT = str(resolve_tdx_root())
 DATA_EXTENSIONS = {'.day', '.lc5', '.lc1', '.lc', '.~~~day', '.tcu', '.tfz', '.th2', '.tnf'}
 
 def scan_all():

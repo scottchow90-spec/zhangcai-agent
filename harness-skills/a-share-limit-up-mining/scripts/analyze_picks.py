@@ -17,6 +17,13 @@ import sys, os, json
 from pathlib import Path
 import warnings
 warnings.filterwarnings('ignore')
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_data_root, resolve_tdx_root
+
+DATA_DIR = resolve_data_root() / 'strategy-data' / 'a-share-limit-up-mining'
+ZTC = resolve_tdx_root() / "T0002" / "blocknew" / "ZTC.blk"
 try:
     from run_research import k_line_verify, risk_scan, find_tdx_day_path, read_tdx_day
 except ModuleNotFoundError:
@@ -27,7 +34,6 @@ try:
 except Exception:
     pass
 
-ZTC = Path(r"C:\new_tdx_mock\T0002\blocknew\ZTC.blk")
 try:
     from _date_utils import resolve_latest_trade_date
     _RESOLVED = resolve_latest_trade_date()
@@ -250,13 +256,11 @@ def main():
     if len(sys.argv) >= 2:
         raw_path = Path(sys.argv[1])
     else:
-        raw_path = Path(r"D:\C盘转移\日志\codex\tmp_lb\data\raw4_") \
-            .with_name(f"raw4_{DATE}.json")
+        raw_path = DATA_DIR / f"raw4_{DATE}.json"
     if len(sys.argv) >= 3:
         out_path = Path(sys.argv[2])
     else:
-        out_path = Path(r"D:\C盘转移\日志\codex\tmp_lb\data\analyzed2_") \
-            .with_name(f"analyzed2_{DATE}.json")
+        out_path = DATA_DIR / f"analyzed2_{DATE}.json"
 
     if not raw_path.exists():
         print(f"ERROR: {raw_path} not found", file=sys.stderr)

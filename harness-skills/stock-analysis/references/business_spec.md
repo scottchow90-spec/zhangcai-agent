@@ -87,7 +87,7 @@ stock-analysis = 个股分析
 
 每次执行本技能必须完成以下闭环，不得只停留在文件存在检查：
 
-1. 触发绑定：通过唯一 `D:\C盘转移\日志\codex\skills\stock-unified\references\stock_skill_ids.json` 目录册和公共 `D:\C盘转移\日志\codex\scripts\stock_canonical_runtime.py` 锁定本技能，禁止自行换技能或临时脚本绕行。
+1. 触发绑定：通过唯一 `STOCK_SKILLS_ROOT\stock-unified\references\stock_skill_ids.json` 目录册和公共 `ZHANGCAI_APP_ROOT\scripts\stock_canonical_runtime.py` 锁定本技能，禁止自行换技能或临时脚本绕行。
 2. 读取确认：先读本技能 SKILL.md 与 references/workflow.md，再进入执行。
 4. 执行入口：只调用本技能 scripts/ 内入口脚本或 workflow 明确声明的依赖脚本；缺入口则 BLOCKED。
 5. 输入与产物：按 workflow 指定数据源读取，产物写入 workflow 指定目录；无正式产物的任务必须写 audit/status JSON。

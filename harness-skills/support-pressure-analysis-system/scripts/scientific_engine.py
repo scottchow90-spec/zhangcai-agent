@@ -29,6 +29,11 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any, Iterable
 
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_data_root, resolve_tdx_root
+
 
 SKILL = "support-pressure-analysis-system"
 ENGINE_VERSION = "5.1.0"
@@ -39,7 +44,8 @@ FIVE_THEORY_VALIDATION_SCHEMA = "FIVE_THEORY_REAL_KLINE_VALIDATION_V1"
 FIVE_THEORY_RECEIPT_SCHEMA = "FIVE_THEORY_REAL_KLINE_VALIDATION_RECEIPT_V1"
 THEORY_METHODS = ("elliott_wave", "chan_structure", "fibonacci", "gann", "wyckoff")
 PREDECESSOR_VALIDATION_RECEIPT = {
-    "path": r"D:\C盘转移\日志\codex\skills\support-pressure-analysis-system\reports\20260817-172519-815439\five-theory-real-kline-validation\five_theory_real_kline_validation.json",
+    "path": None,
+    "availability": "historical_reference_not_bundled",
     "sha256": "b767773a788d968138efb6140fdbf74d3f8f820b50376c020c01f5ceedbc04ef",
 }
 PREDECESSOR_VALIDATION_SYMBOLS = {
@@ -50,18 +56,11 @@ PREDECESSOR_VALIDATION_SYMBOLS = {
     "300003.SZ", "300472.SZ", "300982.SZ", "300763.SZ", "920016.BJ", "920080.BJ", "920011.BJ", "920627.BJ",
 }
 ROOT = Path(__file__).resolve().parents[1]
-_DATA_ROOT = os.environ.get("ONESTOCK_STOCK_DATA_ROOT", "").strip()
-REPORTS_ROOT = (
-    Path(_DATA_ROOT).expanduser().resolve()
-    / "runtime"
-    / "skills"
-    / "support-pressure-analysis-system"
-    / "reports"
-    if _DATA_ROOT
-    else ROOT / "reports"
-)
-TDX_HUB = Path.home() / ".codex" / "skills" / "tdx-local-hub" / "scripts" / "tdx_hub.py"
-TDX_VIPDOC = Path(r"C:\new_tdx_mock\vipdoc")
+REPORTS_ROOT = resolve_data_root() / "runtime" / "skills" / "support-pressure-analysis-system" / "reports"
+TDX_ROOT = resolve_tdx_root()
+_skills_root_text = os.environ.get("STOCK_SKILLS_ROOT", str(ROOT.parent))
+TDX_HUB = Path(os.environ.get("TDX_HUB_PATH") or Path(_skills_root_text) / "tdx-local-hub" / "scripts" / "tdx_hub.py").expanduser().resolve()
+TDX_VIPDOC = Path(os.environ.get("TDX_VIPDOC_ROOT") or TDX_ROOT / "vipdoc").expanduser().resolve()
 CALIBRATION_PATH = ROOT / "references" / "cross_sectional_calibration.json"
 HARD_MIN_BARS = 80
 RECOMMENDED_MIN_BARS = 250

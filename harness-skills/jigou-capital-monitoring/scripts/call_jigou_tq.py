@@ -11,6 +11,12 @@ _onestock_embedded_dir = str(_OneStockEmbeddedPath(__file__).resolve().parent)
 if _onestock_embedded_dir not in _onestock_embedded_sys.path:
     _onestock_embedded_sys.path.insert(0, _onestock_embedded_dir)
 import sys, json, argparse, os
+from pathlib import Path
+
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_tdx_root
 
 # ---- 正确的 TQ 调用 ----
 def _auto_suffix(code):
@@ -21,13 +27,13 @@ def _auto_suffix(code):
         return code + '.SH'
     return code + '.SZ'
 
-def call_jigou_formula(code, tdx_root=r'C:\new_tdx_mock', count=60, dividend_type=0):
+def call_jigou_formula(code, tdx_root=None, count=60, dividend_type=0):
     """
     正确调用机构资金监控公式。
     返回：最新一条记录的 dict，字段与通达信公式界面一致。
     """
     code = _auto_suffix(code)
-    root = os.path.abspath(tdx_root)
+    root = os.path.abspath(tdx_root or resolve_tdx_root())
     user_dir = os.path.join(root, 'PYPlugins', 'user')
     if user_dir not in sys.path:
         sys.path.insert(0, user_dir)
@@ -108,7 +114,7 @@ def verify_against_baseline(latest, tolerance=0.01):
 def main():
     parser = argparse.ArgumentParser(description='机构资金监控 TQ 正确调用器')
     parser.add_argument('--code', default='301372.SZ', help='股票代码')
-    parser.add_argument('--tdx', default=r'C:\new_tdx_mock', help='通达信安装目录')
+    parser.add_argument('--tdx', default=str(resolve_tdx_root()), help='通达信安装目录')
     parser.add_argument('--count', type=int, default=60, help='K线加载数量(>=40)')
     parser.add_argument('--div', type=int, default=0, help='复权类型 0=不复权 1=前复权 2=后复权')
     parser.add_argument('--verify', action='store_true', default=False, help='可选：校验与固定基准值的一致性；默认关闭，避免盘后数据变化导致实跑误判')

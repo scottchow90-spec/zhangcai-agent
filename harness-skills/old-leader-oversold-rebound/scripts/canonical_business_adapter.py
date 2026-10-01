@@ -20,6 +20,7 @@ _stock_adapter_shared_scripts = str(_OneStockEmbeddedPath(__file__).resolve().pa
 if _stock_adapter_shared_scripts not in _onestock_embedded_sys.path:
     _onestock_embedded_sys.path.insert(0, _stock_adapter_shared_scripts)
 from stock_adapter_io import atomic_write_json, atomic_write_text, enable_atomic_path_writes
+from tdx_path_config import resolve_tdx_root
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -116,7 +117,7 @@ def business_command(run_dir: Path) -> list[str]:
             "--as-of",
             datetime.now().strftime("%Y-%m-%d"),
             "--tdx",
-            r"C:\\new_tdx_mock",
+            str(resolve_tdx_root()),
             "--json",
             str(run_dir / "old-leader-result.json"),
             "--csv",

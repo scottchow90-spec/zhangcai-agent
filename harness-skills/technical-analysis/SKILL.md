@@ -1,9 +1,11 @@
 ---
 name: technical-analysis
-description: "本机股票技术分析强制工作流。凡请求涉及技术分析、技术面、技术指标、趋势、撑压或买卖节奏，默认必须同时真实执行大牛线撑压版、飞龙在天、庄家资金监控三个 C:\\new_tdx_mock TQ 公式，缺一不可。"
+description: "本机股票技术分析强制工作流。凡请求涉及技术分析、技术面、技术指标、趋势、撑压或买卖节奏，默认必须同时真实执行大牛线撑压版、飞龙在天、庄家资金监控三个本机 TQ 公式，缺一不可。"
 ---
 
 # 技术分析
+
+掌财桌面端从 `ZHANGCAI_TDX_ROOT` 读取当前通达信目录，并从 `STOCK_SKILLS_ROOT` 定位技能；不得执行旧文档中的固定 C/D 盘路径。
 
 ## 三公式强制合同
 
@@ -34,7 +36,7 @@ description: "本机股票技术分析强制工作流。凡请求涉及技术分
 
 ## 数据边界
 
-- 唯一运行系统：本机 `C:\new_tdx_mock` 与其 TQ 运行时。
+- 唯一运行系统：本机 `$env:ZHANGCAI_TDX_ROOT` 与其 TQ 运行时。
 - 禁止网页、东方财富、云端行情、OpenClaw 或其他系统。
 - 禁止以 MA、MACD、RSI、自算 OHLCV 或其他公式替代任一必需公式。
 - “庄家资金监控”只允许 `formula_set_data_info + formula_zb`，禁止批量公式接口和本地模拟回退。
@@ -42,8 +44,8 @@ description: "本机股票技术分析强制工作流。凡请求涉及技术分
 ## 固定入口
 
 ```powershell
-python D:\C盘转移\日志\codex\skills\technical-analysis\scripts\codex_entry.py selftest
-python D:\C盘转移\日志\codex\skills\technical-analysis\scripts\codex_entry.py run -- --code 600000.SH --json
+python "$($env:STOCK_SKILLS_ROOT)\technical-analysis"\scripts\codex_entry.py selftest
+python "$($env:STOCK_SKILLS_ROOT)\technical-analysis"\scripts\codex_entry.py run -- --code 600000.SH --json
 ```
 
 业务执行器固定为 `scripts/entry_technical_analysis.py`。支持

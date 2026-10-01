@@ -26,9 +26,15 @@ except Exception:
     pass
 
 SKILL_DIR = Path(__file__).resolve().parents[1]
-TDX_ROOT = Path(os.environ.get("BAIMAO_TDX_ROOT", r"C:\new_tdx_mock"))
+APP_ROOT = Path(__file__).resolve().parents[3]
+APP_SCRIPTS = APP_ROOT / "scripts"
+if str(APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(APP_SCRIPTS))
+from tdx_path_config import resolve_data_root, resolve_tdx_root
+
+TDX_ROOT = resolve_tdx_root()
 VIPDOC = TDX_ROOT / "vipdoc"
-REPORT_DIR = SKILL_DIR / "reports" / "stock_score"
+REPORT_DIR = resolve_data_root() / "reports" / "baimao-teacher-system" / "stock_score"
 DAY_RECORD = struct.Struct("<IIIIIfII")
 REQUIRE_CURRENT_DATE = True
 

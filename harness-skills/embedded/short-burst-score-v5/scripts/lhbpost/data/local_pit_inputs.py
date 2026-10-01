@@ -10,7 +10,12 @@ import sys
 import math
 from datetime import datetime, timezone
 
-HUB = Path(r'F:\Codex\Home\skills\tdx-local-hub\scripts\tdx_hub.py')
+_app_scripts_dir = str(Path(__file__).resolve().parents[6] / 'scripts')
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_app_root
+
+HUB = resolve_app_root() / 'harness-skills' / 'tdx-local-hub' / 'scripts' / 'tdx_hub.py'
 METHODS = ('get_stock_info', 'get_gb_info_by_date', 'get_market_snapshot', 'get_more_info',
            'get_gpjy_value_by_date', 'get_divid_factors')
 

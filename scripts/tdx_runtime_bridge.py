@@ -10,6 +10,7 @@ import sys
 import time
 from datetime import datetime
 from pathlib import Path
+from tdx_process import detect_tdx_process, summarize_tdx_processes
 
 _tdx_root_text = (
     os.environ.get("ZHANGCAI_TDX_ROOT")
@@ -27,12 +28,12 @@ OUT = Path(os.environ.get("ZHANGCAI_DATA_DIR", Path(__file__).resolve().parents[
 FORMULAS = ["大牛线4.0", "飞龙在天", "游资资金监控", "机构资金监控", "庄家资金监控"]
 
 def process_rows():
-    completed = subprocess.run(["powershell", "-NoProfile", "-Command", "Get-Process TdxW,tdxcef -ErrorAction SilentlyContinue | Select Name,Id,StartTime,Path | ConvertTo-Json -Compress"], capture_output=True, text=True, encoding="utf-8", errors="replace", check=False)
-    try:
-        rows = json.loads(completed.stdout or "[]")
-        return rows if isinstance(rows, list) else [rows]
-    except json.JSONDecodeError:
-        return []
+    return detect_tdx_process(ROOT).get("processes", [])
+
+def process_state(rows=None):
+    if rows is None:
+        return detect_tdx_process(ROOT)
+    return summarize_tdx_processes(rows, ROOT)
 
 def executable_candidates():
     configured = os.environ.get("ZHANGCAI_TDX_EXE") or os.environ.get("TDX_EXE")
@@ -55,9 +56,25 @@ def executable_candidates():
     return result
 
 def open_tongdaxin():
-    running = process_rows()
-    if running:
-        return {"status": "already_open", "processes": running, "tdxRoot": str(ROOT)}
+    state = detect_tdx_process(ROOT)
+    running = state.get("processes", [])
+    if state.get("running") is True and state.get("rootMatches") is not False:
+        return {"status": "already_open", "processes": state.get("matching") or running, "tdxRoot": str(ROOT), "rootMatches": state.get("rootMatches")}
+    if state.get("running") is True:
+        return {
+            "status": "path_mismatch",
+            "processes": running,
+            "tdxRoot": str(ROOT),
+            "runningRoots": state.get("runningRoots", []),
+            "error": "检测到其他目录中的通达信正在运行。请在数据与设置中选择该通达信目录，或退出其他实例后重试。",
+        }
+    if state.get("running") is None:
+        return {
+            "status": "detection_unavailable",
+            "tdxRoot": str(ROOT),
+            "error": "当前系统无法确认通达信进程状态。为避免重复启动，请手动确认通达信后刷新运行环境。",
+            "diagnostic": state.get("error", ""),
+        }
 
     candidates = executable_candidates()
     executable = next((candidate for candidate in candidates if candidate.is_file()), None)
@@ -92,13 +109,13 @@ def open_tongdaxin():
     # “已请求启动”和“进程根本没有拉起”，避免页面显示假成功。
     for _ in range(12):
         time.sleep(0.25)
-        running = process_rows()
-        if running:
+        state = detect_tdx_process(ROOT)
+        if state.get("rootMatches") is True:
             return {
                 "status": "accepted",
                 "pid": child.pid,
                 "executable": str(executable),
-                "processes": running,
+                "processes": state.get("matching", []),
                 "tdxRoot": str(ROOT),
             }
     return {
@@ -125,9 +142,15 @@ def status():
         for pattern in ("*.txt", "*.tn6", "*.tn5", "*.tnf")
         for path in formula_dir.glob(pattern)
     }) if formula_dir.is_dir() else []
-    return {"generatedAt": datetime.now().astimezone().isoformat(timespec="seconds"), "tdxRoot": str(ROOT), "processes": process_rows(), "formulaRegistry": {"directory": str(formula_dir), "formulaFiles": formula_files}, "freshness": {"indexDay": latest([day]), "marketCache": latest([cache / "sh.tnf", cache / "sz.tnf", cache / "bj.tnf", cache / "tdxhy.cfg", cache / "infoharbor_block.dat"]), "blockPools": latest([ROOT / "T0002" / "blocknew" / "ZTC.blk", ROOT / "T0002" / "blocknew" / "FLZT.blk"]), "intradayAvailable": any((ROOT / "vipdoc" / market / "fzline").glob("*.lc5") for market in ("sh", "sz", "bj"))}, "tq": {"tqcenter": str(USER / "tqcenter.py"), "strategyConfig": (ROOT / "PYPlugins" / "py_strategy.cfg").read_text(encoding="utf-8", errors="replace") if (ROOT / "PYPlugins" / "py_strategy.cfg").exists() else "", "formulas": FORMULAS}}
+    process_info = detect_tdx_process(ROOT)
+    return {"generatedAt": datetime.now().astimezone().isoformat(timespec="seconds"), "tdxRoot": str(ROOT), "processes": process_info.get("processes", []), "processState": process_info, "formulaRegistry": {"directory": str(formula_dir), "formulaFiles": formula_files}, "freshness": {"indexDay": latest([day]), "marketCache": latest([cache / "sh.tnf", cache / "sz.tnf", cache / "bj.tnf", cache / "tdxhy.cfg", cache / "infoharbor_block.dat"]), "blockPools": latest([ROOT / "T0002" / "blocknew" / "ZTC.blk", ROOT / "T0002" / "blocknew" / "FLZT.blk"]), "intradayAvailable": any((ROOT / "vipdoc" / market / "fzline").glob("*.lc5") for market in ("sh", "sz", "bj"))}, "tq": {"tqcenter": str(USER / "tqcenter.py"), "strategyConfig": (ROOT / "PYPlugins" / "py_strategy.cfg").read_text(encoding="utf-8", errors="replace") if (ROOT / "PYPlugins" / "py_strategy.cfg").exists() else "", "formulas": FORMULAS}}
 
 def quote(symbol):
+    state = detect_tdx_process(ROOT)
+    if state.get("running") is False:
+        raise RuntimeError(f"当前配置的通达信目录没有可用运行进程：{ROOT}")
+    if state.get("rootMatches") is False:
+        raise RuntimeError(f"检测到通达信运行目录与当前配置不一致：配置 {ROOT}；运行中 {state.get('runningRoots', [])}")
     sys.path.insert(0, str(USER)); os.chdir(ROOT)
     from tqcenter import tq
     tq.initialize(str(USER / "tdxdata_test.py"))
