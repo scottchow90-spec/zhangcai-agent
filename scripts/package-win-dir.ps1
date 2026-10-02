@@ -5,6 +5,8 @@ $projectRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
 Assert-NewArtifact (Join-Path $releaseRoot 'win-unpacked')
 & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot 'stage-desktop-runtime.ps1')
 if ($LASTEXITCODE -ne 0) { throw 'Desktop environment layer staging failed; electron-builder was not started.' }
+& (Join-Path $projectRoot '.runtime\node\node.exe') (Join-Path $PSScriptRoot 'stage-recovered-frontend.mjs')
+if ($LASTEXITCODE -ne 0) { throw 'Verified recovered frontend/formula staging failed; electron-builder was not started.' }
 & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot 'package-preflight.ps1') -MainInstaller -RequireHarnessRuntime
 if ($LASTEXITCODE -ne 0) { throw 'Package preflight failed; electron-builder was not started.' }
 

@@ -4,6 +4,53 @@
 基线：`web-3003-14-skill-adapters` @ `89bbbb1a05e113772e82b963751fdbfddeb964f6`。
 产品版本：**0.1.22**；运行环境基线：**0.1.9**。未修改 main 或基线分支。
 
+## 2026-10-02 缺口补齐
+
+根据恢复脚本的调用参数、返回值门禁和现存技能接口，新增实现了四个缺失验证入口。它们是本次编写的补齐代码，**不是从更新包恢复的原始源码**：
+
+- `scripts/verify_skill14_archives.py`：14 个 ZIP 的清单映射、大小、SHA-256、CRC、安全解压与主 SKILL.md 校验。
+- `scripts/verify_stock_detail_skills.py`：10 个现存个股技能的独立临时目录 selftest，以及实际 Harness 技能发现与加载。
+- `scripts/tests/verify_stock_detail_skill_discovery.mjs`：使用锁定版本的真实 FileSystemSkillProvider 验证 10 个技能。
+- `scripts/tests/verify_skill14_packaged_runtime.mjs`：调用已恢复的 `prepare-harness-skill` 命令，校验 ZIP 哈希、隔离目录及真实 Harness 加载。
+
+新增两个配置清单分别记录 14 个 ZIP 的哈希来源与 10 个个股技能 ID；两个共享辅助模块和失败路径测试支撑上述入口。缺少 ZIP、运行环境或技能时返回 `BLOCKED` 和非零退出码，不以跳过检查获得通过。
+
+新增 `scripts/stage-recovered-frontend.mjs`，只复制通过原始恢复清单校验的 60 个 dist 文件至 `packaging/staging/site-build-0.1.22/dist`，并校验原包中的内置公式种子。现有 staging 如果字节不同或不完整会保留并阻止打包。Windows 两个主程序打包入口在 preflight 前调用它。
+
+修正 preflight 对用户 app-data 公式清单的依赖，使用已经恢复且有哈希证据的 `electron-app/resource-library/evidence/formulas/package`；主程序打包不再用用户目录覆盖该公式种子。同步修正依赖清单里与 builder 技能 ZIP 映射冲突的排除项，以及安装策略中的输入清单。生成的 staging 已忽略，不提交运行环境或用户数据。
+
+| 本轮验证（macOS） | 实际结果 |
+| --- | --- |
+| 新增测试 | 9 个 Node 测试及其中运行的 6 个 Python 用例通过 |
+| Python / Node 语法检查 | 10 / 8 个文件通过 |
+| 精确 dist staging / 内置公式 | 60 / 11 个文件通过；再次运行复用 staging |
+| 个股 selftest / 真实 Harness 发现与加载 | 10 / 10，通过 |
+| Skill14 ZIP 校验 | 13 / 14；缺失原始大 ZIP，`BLOCKED`，退出 1 |
+| Skill14 运行准备 / 真实 Harness 发现与加载 | 13 / 14；同一 ZIP 缺失，`BLOCKED`，退出 1 |
+| Windows PowerShell preflight / 安装器构建 | 未执行：缺 Windows 与私有运行环境 |
+| pnpm build | 本轮未重跑；首次恢复时已通过，精确发布 dist 继续保留 |
+
+Harness 校验使用测试目录中安装的官方 `@deepseek-ai/dsh-skill-filesystem@0.1.2-rc.1`，没有重建或升级 0.1.9 运行环境；只验证离线技能发现、加载与 selftest，未调用模型、未验收真实行情或业务报告。调用接口参考 [官方 filesystem provider 文档](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/skill/skill-filesystem/README.md) 与安装版本实际导出。
+
+本轮新增/修改文件的来源、原哈希与当前哈希见 `docs/recovery-0.1.22/completion-manifest.json`；实测结果见 `completion-validation.json`。原 `audit.json` 和首次 `validation.json` 保持不变，恢复核验脚本同时核验原恢复层与明确标注的新增实现。
+
+剩余外部缺口仍为：145,649,253 字节原始技能 ZIP、私有 Windows Node/Python/Harness 与通达信验证条件、8 个页面的 0.1.22 原始 TSX/source map。未生成替代 ZIP 或猜测 TSX；全部 8 个 TSX 和精确 dist 保持原字节。补齐验证入口不等于已经满足 Windows 发布条件。
+
+### 复核命令
+
+在仓库根目录运行以下命令。Windows 打包默认使用 `.runtime` 和 `packaging/staging/desktop-runtime/deepseek-harness`；其他平台须将 `ZHANGCAI_RELEASE_PYTHON` 指向可执行 Python，将 `ZHANGCAI_RELEASE_DSH_ROOT` 指向含上述锁定 provider 的测试 Harness 目录，必要时设置 `ZHANGCAI_RELEASE_NODE`。测试依赖应安装在仓库外。
+
+```text
+python -B scripts/verify-recovery-0.1.22.py
+pnpm run verify:recovery-completion
+pnpm run prepare:recovered-frontend
+python -B scripts/verify_stock_detail_skills.py
+python -B scripts/verify_skill14_archives.py
+pnpm run verify:skill14-packaged
+```
+
+以下为首次恢复时的来源记录和当时的验证结果；其中四个脚本及 site-build staging 缺口现已由上述新增实现补齐。
+
 ## 来源与核验边界
 
 本次输入是用户提供的 `zhangcai-recovery-0.1.22-source.zip`，SHA-256：
@@ -50,7 +97,7 @@ Node/Python/Electron/技能/配置层的明确内容按文件原样恢复，未�
 
 人工修改原因和哈希见 audit.json 的 localChanges；其余恢复文件保持 overlay 原字节。
 
-## 验证结果与实际缺口
+## 首次恢复验证结果与当时缺口（2026-10-01）
 
 | 验证 | 结果 |
 | --- | --- |
@@ -62,14 +109,14 @@ Node/Python/Electron/技能/配置层的明确内容按文件原样恢复，未�
 | pnpm run package:preflight | **未执行**，本机为 macOS，无 Windows/powershell.exe/私有 Windows 运行环境 |
 
 构建通过不证明前端源码与发布版完全相同，也不证明 Windows 安装器可发布。
-恢复的 package-preflight.ps1 引用了以下未在基线或恢复包中提供的文件，未臆造其源码：
+恢复的 package-preflight.ps1 引用了以下未在基线或恢复包中提供的文件，首次恢复时未生成替代源码；2026-10-02 已按调用契约新增实现，仍不宣称是原始恢复源码：
 
 - scripts/verify_skill14_archives.py
 - scripts/verify_stock_detail_skills.py
 - scripts/tests/verify_stock_detail_skill_discovery.mjs
 - scripts/tests/verify_skill14_packaged_runtime.mjs
 
-此外，版本对应的 site-build staging、私有 Windows Node/Python/Harness 和通达信环境未提供。
+此外，首次恢复时版本对应的 site-build staging、私有 Windows Node/Python/Harness 和通达信环境未提供；本轮已补齐 staging 生成与校验，其他外部条件仍缺失。
 145,649,253 字节的技能 ZIP 未包含在恢复包中，本次未上传；需取得原文件后通过 Git LFS 或 GitHub Release Asset 上传。
 这些缺口意味着本分支完成的是可审计的部分源码恢复，Windows 完整打包条件尚不齐备。
 

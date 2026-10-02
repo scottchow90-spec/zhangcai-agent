@@ -9,15 +9,14 @@ if ($LASTEXITCODE -ne 0) { throw 'Failed to stop packaging-conflicting project p
 if ($LASTEXITCODE -ne 0) {
   throw 'Desktop environment layer staging failed; electron-builder was not started.'
 }
+& (Join-Path $projectRoot '.runtime\node\node.exe') (Join-Path $PSScriptRoot 'stage-recovered-frontend.mjs')
+if ($LASTEXITCODE -ne 0) {
+  throw 'Verified recovered frontend/formula staging failed; electron-builder was not started.'
+}
 & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot 'package-preflight.ps1') -MainInstaller -RequireHarnessRuntime
 if ($LASTEXITCODE -ne 0) {
   throw 'Package preflight failed; electron-builder was not started.'
 }
-& powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot 'stage-desktop-formula-seed.ps1')
-if ($LASTEXITCODE -ne 0) {
-  throw 'Portable TQ formula seed staging failed; electron-builder was not started.'
-}
-
 $electronBuilder = Join-Path $projectRoot 'node_modules\.bin\electron-builder.cmd'
 $electronBuilderCli = Join-Path $projectRoot 'node_modules\electron-builder\cli.js'
 $nodeExecutable = Join-Path $projectRoot '.runtime\node\node.exe'

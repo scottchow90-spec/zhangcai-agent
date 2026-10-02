@@ -1,0 +1,159 @@
+{
+  "schema": "ZHANGCAI_RECOVERY_COMPLETION_MANIFEST_V1",
+  "kind": "newly-authored-completion",
+  "date": "2026-10-02",
+  "parentCommit": "54c70f9f70342ff69fcf7bc936d108c268cf604a",
+  "productVersion": "0.1.22",
+  "environmentBaseline": "0.1.9",
+  "scope": "New verification entry points and release staging/packaging repairs. No TSX reconstruction, dist replacement or fabricated archive.",
+  "integrity": "Original audit.json is retained. This additive manifest records all completion files except itself; Git records the manifest bytes.",
+  "changes": [
+    {
+      "path": ".gitignore",
+      "kind": "completion-repair",
+      "originalSha256": "7b79229344cff14060e67a06a164ae6159570e271aca4f5549eb926ea8e655dd",
+      "sha256": "da8227a636017a1f0c42b9598d989898006e5ecdf76754cc06466718991b9021",
+      "reason": "Ignore generated packaging staging; do not upload private runtimes or generated release copies."
+    },
+    {
+      "path": "RECOVERY-0.1.22.md",
+      "kind": "completion-repair",
+      "originalSha256": "92401038a025344e53edfc1d90083361c45fc2b3f81b18610813fd259a38aec9",
+      "sha256": "004afa9e5488b4aa409dc2166d3f112c24af4fc9548ec87969f860e6edca6573",
+      "reason": "Document newly authored completion, actual results and remaining original-source/external-input gaps."
+    },
+    {
+      "path": "config/skill14-archive-lock.json",
+      "kind": "new-implementation-or-evidence",
+      "originalSha256": null,
+      "sha256": "3d983dd91321802e3840d759929b228147f9dd0407b3ef99ea0ee8483f0f067b",
+      "reason": "Newly authored implementation/test/catalog/evidence based on recovered call contracts; not claimed as original recovered source."
+    },
+    {
+      "path": "config/stock-detail-release.json",
+      "kind": "new-implementation-or-evidence",
+      "originalSha256": null,
+      "sha256": "9622c625245afeac38f437409e0e6d18473c1d69e74564a8cb94559d40a6580a",
+      "reason": "Newly authored implementation/test/catalog/evidence based on recovered call contracts; not claimed as original recovered source."
+    },
+    {
+      "path": "docs/recovery-0.1.22/completion-validation.json",
+      "kind": "new-implementation-or-evidence",
+      "originalSha256": null,
+      "sha256": "dfa5d11bde917bfee4f51f70887df8ff005758aa9eafcaac77f629fbf7360e03",
+      "reason": "Newly authored implementation/test/catalog/evidence based on recovered call contracts; not claimed as original recovered source."
+    },
+    {
+      "path": "package.json",
+      "kind": "completion-repair",
+      "originalSha256": "a41876b6ab394635573d339e5143aab521c9d6ee4a7fb96825fe9808bfc7e7d0",
+      "sha256": "049629ed1a99b147f6423b7183a985cf5b97e819875c38e19f1e9f1a039d5487",
+      "reason": "Expose isolated staging and release-verification commands; product/dependency versions unchanged."
+    },
+    {
+      "path": "packaging/dependency-manifest.json",
+      "kind": "completion-repair",
+      "originalSha256": "dd61de8b88bb57dc4ff6ff6e8b9be8bf674b38b20a50e3f45573d9217f77044d",
+      "sha256": "e8ca3a6e7a2649baaa066e51c2f5a39ed03079ede0a5918d43775d871499fcba",
+      "reason": "Remove skill-archives exclusion conflicting with the recovered release builder mapping."
+    },
+    {
+      "path": "packaging/main-installer-policy.json",
+      "kind": "completion-repair",
+      "originalSha256": "d529896605985f798ba5a80c4a01d7f6abb30126f4ff32ef6aa9eb2fa38714ab",
+      "sha256": "f6db350053a096e3a3a0933dc523f785d422a76a744a1806885ac80a1d0dfb9c",
+      "reason": "Align allowed inputs with verified embedded formula seed, tdx-root and release skill archives."
+    },
+    {
+      "path": "scripts/package-preflight.ps1",
+      "kind": "completion-repair",
+      "originalSha256": "d62121d50735a34d4f0546ceb61b5f61bcbc17bea6c7f612bc0267c7b93ed6cd",
+      "sha256": "ba548f235ee0953f95e30f1232cd21df3d08743523ab02e23678fb7ec1f2a881",
+      "reason": "Require new release lock catalogs and use recovered embedded formula evidence instead of user app-data."
+    },
+    {
+      "path": "scripts/package-win-dir.ps1",
+      "kind": "completion-repair",
+      "originalSha256": "358f6660cc845d8a6eb4eadcdeee109662f0c8f04d32c89adc25ad8666022a55",
+      "sha256": "924b877436b90b427a26c381cf9b67e36c186c3c57ed32fe17db4499b67bf084",
+      "reason": "Stage exact recovered frontend before preflight."
+    },
+    {
+      "path": "scripts/package-win.ps1",
+      "kind": "completion-repair",
+      "originalSha256": "ee51ad2635acbc7de55dcdad461f1b8207ae30d0187ad83b940cb9b411e13a43",
+      "sha256": "94d814e7d7cf052de42eaabbaf58e7de5cfbb709ba9b45243c0b494485c546bc",
+      "reason": "Stage exact recovered frontend before preflight; preserve the verified embedded formula seed."
+    },
+    {
+      "path": "scripts/release_verification.py",
+      "kind": "new-implementation-or-evidence",
+      "originalSha256": null,
+      "sha256": "7e15a6b7fbe50966b1295689653d1c760cd1c3e4f138ff52c053ee5f612befa3",
+      "reason": "Newly authored implementation/test/catalog/evidence based on recovered call contracts; not claimed as original recovered source."
+    },
+    {
+      "path": "scripts/stage-recovered-frontend.mjs",
+      "kind": "new-implementation-or-evidence",
+      "originalSha256": null,
+      "sha256": "5a90c69107316fe2a927dbeeb50fda7d5fc3f0b7b5e98878e521e92c46cf97a3",
+      "reason": "Newly authored implementation/test/catalog/evidence based on recovered call contracts; not claimed as original recovered source."
+    },
+    {
+      "path": "scripts/tests/harness-provider.mjs",
+      "kind": "new-implementation-or-evidence",
+      "originalSha256": null,
+      "sha256": "b0a4030f1da8bb62ccd29f305b4ab758ffa62910ff24601fc27a5b6f9d54b576",
+      "reason": "Newly authored implementation/test/catalog/evidence based on recovered call contracts; not claimed as original recovered source."
+    },
+    {
+      "path": "scripts/tests/recovery-completion.test.mjs",
+      "kind": "new-implementation-or-evidence",
+      "originalSha256": null,
+      "sha256": "99011c223d2525681216c20663095c09f3e3e16ae5fbf33fc4dc15068c90c962",
+      "reason": "Newly authored implementation/test/catalog/evidence based on recovered call contracts; not claimed as original recovered source."
+    },
+    {
+      "path": "scripts/tests/test_release_verification.py",
+      "kind": "new-implementation-or-evidence",
+      "originalSha256": null,
+      "sha256": "084442341a8ffcdeac0e9eaab630de338b2b1c6490f350c62f3930874f23d4af",
+      "reason": "Newly authored implementation/test/catalog/evidence based on recovered call contracts; not claimed as original recovered source."
+    },
+    {
+      "path": "scripts/tests/verify_skill14_packaged_runtime.mjs",
+      "kind": "new-implementation-or-evidence",
+      "originalSha256": null,
+      "sha256": "8dff8b04bc90575a6e57f55d5cbadb2c082d63ba04d2c618d47277d84d524045",
+      "reason": "Newly authored implementation/test/catalog/evidence based on recovered call contracts; not claimed as original recovered source."
+    },
+    {
+      "path": "scripts/tests/verify_stock_detail_skill_discovery.mjs",
+      "kind": "new-implementation-or-evidence",
+      "originalSha256": null,
+      "sha256": "ced9706d8a1618aedf67f62414e7a25f2a9fac33fa0b4bcf753a13db3a17a1d7",
+      "reason": "Newly authored implementation/test/catalog/evidence based on recovered call contracts; not claimed as original recovered source."
+    },
+    {
+      "path": "scripts/verify-recovery-0.1.22.py",
+      "kind": "completion-repair",
+      "originalSha256": "3848e4471d2e51cc8ea533bcb3d2e07a7cec72012d487e93b53398b820c3d04f",
+      "sha256": "2e4b84c7fdcfc56aca00103d25120d10ee904b726268cbb077209277308c04f5",
+      "reason": "Validate original recovery records plus explicit before/after completion hashes; protect TSX and dist."
+    },
+    {
+      "path": "scripts/verify_skill14_archives.py",
+      "kind": "new-implementation-or-evidence",
+      "originalSha256": null,
+      "sha256": "e3142c849d9bef7335743f243066f9c44a52b2f0adc662cad1d2252cbaefb650",
+      "reason": "Newly authored implementation/test/catalog/evidence based on recovered call contracts; not claimed as original recovered source."
+    },
+    {
+      "path": "scripts/verify_stock_detail_skills.py",
+      "kind": "new-implementation-or-evidence",
+      "originalSha256": null,
+      "sha256": "dedd7edb257cab4b12d6985c233199350f9eb78c027e65518888fae592fd37da",
+      "reason": "Newly authored implementation/test/catalog/evidence based on recovered call contracts; not claimed as original recovered source."
+    }
+  ]
+}

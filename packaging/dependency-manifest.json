@@ -95,7 +95,6 @@
   },
   "mainProgramMustExclude": [
     "app-data",
-    "skill-archives",
     "*.lc5",
     "*.LC5",
     ".env.local",

@@ -10,6 +10,28 @@ def main():
     audit = json.loads((root / 'docs/recovery-0.1.22/audit.json').read_text())
     failures = []
     records = audit['files'] + audit['frontendPreserved'] + audit['localChanges']
+    completion_path = root / 'docs/recovery-0.1.22/completion-manifest.json'
+    completions = []
+    if completion_path.is_file():
+        completion = json.loads(completion_path.read_text())
+        if completion.get('kind') != 'newly-authored-completion':
+            failures.append('completion-manifest: invalid provenance kind')
+        original = {item['path']: item for item in records}
+        protected = {item['path'] for item in audit['frontendPreserved']}
+        seen = set()
+        for change in completion['changes']:
+            name = change['path']
+            relative = Path(name)
+            if relative.is_absolute() or '\\' in name or any(part in ('', '.', '..') for part in name.split('/')) or name in protected or name.startswith('dist/') or name in seen:
+                failures.append('completion-manifest: unsafe, duplicate or protected path: ' + name)
+                continue
+            seen.add(name)
+            if name in original and change['originalSha256'] != original[name]['sha256']:
+                failures.append('completion-manifest: original hash differs: ' + name)
+                continue
+            completions.append({'path': name, 'sha256': change['sha256']})
+        overridden = {item['path'] for item in completions}
+        records = [item for item in records if item['path'] not in overridden] + completions
     for item in records:
         path = root / item['path']
         if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != item['sha256']:
@@ -42,6 +64,7 @@ def main():
                       'recoveredFiles': len(audit['files']),
                       'frontendFilesPreserved': len(audit['frontendPreserved']),
                       'runtimeArtifactsExcluded': len(audit['excludedRuntimeArtifacts']),
+                      'completionFiles': len(completions),
                       'failures': failures}, ensure_ascii=False, indent=2))
     return 1 if failures else 0
 
