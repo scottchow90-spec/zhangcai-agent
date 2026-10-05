@@ -12,12 +12,18 @@ import json
 import os
 import re
 import subprocess
+import sys
 import time
 import urllib.parse
 from collections import Counter, defaultdict
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
+
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_app_root, resolve_tdx_root
 
 import requests
 
@@ -35,10 +41,8 @@ ALL_BOARDS = [
     "金融地产",
     "周期资源",
 ]
-DXX_CLIENT = Path(
-    r"D:\C盘转移\日志\codex\skills\a-share-hotspot-sentiment-analysis\scripts\duanxianxia_client.ps1"
-)
-TDX_ZTC = Path(r"C:\new_tdx_mock\T0002\blocknew\ZTC.blk")
+DXX_CLIENT = resolve_app_root() / "harness-skills" / "a-share-hotspot-sentiment-analysis" / "scripts" / "duanxianxia_client.ps1"
+TDX_ZTC = resolve_tdx_root() / "T0002" / "blocknew" / "ZTC.blk"
 EASTMONEY_UT = "7eea3edcaed734bea9cbfc24409ed989"
 CROSS_SOURCE_MAX_ATTEMPTS = 4
 CROSS_SOURCE_RETRY_DELAY_SECONDS = 5.0

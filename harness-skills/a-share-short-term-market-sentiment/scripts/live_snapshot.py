@@ -13,6 +13,12 @@ import json
 import struct
 from pathlib import Path
 from typing import Any
+import sys
+
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_tdx_root
 
 
 DAY = struct.Struct("<IIIIIfII")
@@ -192,7 +198,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--lianban", required=True)
     parser.add_argument("--duanxian", required=True)
-    parser.add_argument("--tdx-root", default=r"C:\new_tdx_mock")
+    parser.add_argument("--tdx-root", default=str(resolve_tdx_root()))
     parser.add_argument("--output")
     args = parser.parse_args()
     result = build_snapshot(Path(args.lianban), Path(args.duanxian), Path(args.tdx_root))

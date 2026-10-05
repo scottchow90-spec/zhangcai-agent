@@ -25,6 +25,11 @@ import sys, json, struct, math, os, re
 from datetime import datetime
 from pathlib import Path
 
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
+
 
 def resolve_quote_fields(records: list[dict], snapshot: dict, bar_meta: dict) -> dict:
     """Use the canonical analysis bars for OHLCV; snapshot fields are ancillary only."""
@@ -100,9 +105,9 @@ class DaniuxianAnalyzer:
     ]
 
     # TDX 路径常量
-    TDX_ROOT = r'C:\new_tdx_mock'
-    TQCENTER_PATH = r'C:\new_tdx_mock\PYPlugins\user'
-    TQ_INIT_PATH = r'C:\new_tdx_mock\PYPlugins\user\tdxdata_test.py'
+    TDX_ROOT = str(resolve_tdx_root())
+    TQCENTER_PATH = os.path.join(TDX_ROOT, 'PYPlugins', 'user')
+    TQ_INIT_PATH = os.path.join(TQCENTER_PATH, 'tdxdata_test.py')
 
     def __init__(self, stock_code: str):
         self._configure_symbol(stock_code)

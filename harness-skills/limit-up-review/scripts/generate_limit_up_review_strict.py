@@ -44,20 +44,25 @@ from limit_up_review_workflow_contract import (
 from entry_limit_up_review import DEFAULT_DELIVERY_ROOT, evaluate_date_gate, path_is_within
 from official_pool_date_reconciliation import is_cross_validated_official_pool_date
 
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_data_root, resolve_path_from, resolve_tdx_root
+
 try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 except Exception:
     pass
 
-WORKSPACE = Path(r"D:\C盘转移\日志\codex")
+WORKSPACE = resolve_data_root()
 BUSINESS_DATA_ROOT = WORKSPACE / "business_data" / "limit-up-review"
 DATE = os.environ.get("LIMITUP_DATE", datetime.now().strftime("%Y%m%d"))
 DATE_H = os.environ.get("LIMITUP_DATE_H", f"{DATE[:4]}-{DATE[4:6]}-{DATE[6:]}")
 TASK_DIR = Path(os.environ.get("LIMITUP_TASK_DIR", WORKSPACE / "reports" / f"{DATE}_limit_up_review_closed_loop"))
 MEM_DIR = Path(os.environ.get("LIMITUP_MEM_DIR", BUSINESS_DATA_ROOT))
 HISTORY_DIR = Path(os.environ.get("LIMITUP_HISTORY_DIR", BUSINESS_DATA_ROOT))
-DELIVERY = Path(os.environ.get("LIMITUP_DELIVERY", r"F:\小龙虾6月交付"))
+DELIVERY = resolve_path_from(os.environ.get("LIMITUP_DELIVERY", "deliveries"), WORKSPACE)
 RUN_ID = os.environ.get("LIMITUP_RUN_ID", f"limit-up-review-{DATE}-{datetime.now().strftime('%H%M%S')}")
 
 IN_TABLE = Path(os.environ.get("LIMITUP_TABLE", TASK_DIR / f"verified_limitup_union_{DATE}.csv"))
@@ -72,7 +77,7 @@ MARKET_BREADTH_JSON = TASK_DIR / f"market_breadth_{DATE}.json"
 MARKET_BREADTH_OVERRIDE_JSON = Path(os.environ.get("LIMITUP_MARKET_BREADTH_JSON", ""))
 TQ_SAMPLE_JSON = TASK_DIR / f"tq_core_sample_{DATE}.json"
 SCRIPTS_DIR = Path(__file__).resolve().parent
-TDX_ROOT = Path(os.environ.get("TDX_ROOT", r"C:\new_tdx_mock"))
+TDX_ROOT = resolve_tdx_root()
 TDX_VIPDOC = TDX_ROOT / "vipdoc"
 DAY_RECORD = struct.Struct("<IIIIIfII")
 DELISTING_HARD_EXCLUSION = "delisting_hard_exclusion"

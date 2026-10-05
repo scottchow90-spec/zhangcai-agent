@@ -15,6 +15,11 @@ import subprocess
 import sys
 from pathlib import Path
 
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_data_root, resolve_tdx_root
+
 from scoring_mode_gate import (
     CANONICAL_SCORING_MODE,
     LEGACY_COMPATIBILITY_FLAG,
@@ -24,10 +29,11 @@ from scoring_mode_gate import (
 
 SKILL = "big-bull-analysis-scoring-system"
 ROOT = Path(__file__).resolve().parents[1]
+TDX_ROOT = resolve_tdx_root()
 PRIMARY_REL = "scripts/analysis_scoring.py"
 DEFAULT_ARGS = [
     "--output-dir",
-    str(ROOT / "reports" / "latest"),
+    str(resolve_data_root() / "reports" / "skills" / "big-bull-analysis-scoring-system" / "latest"),
     CANONICAL_SCORING_MODE,
 ]
 
@@ -45,7 +51,7 @@ def selftest() -> int:
         ROOT / "scripts" / "daniuxian_analysis.py",
         ROOT / "scripts" / "big_bull_scoring.py",
         ROOT / "scripts" / "analysis_scoring.py",
-        Path(r"C:\new_tdx_mock"),
+        TDX_ROOT,
     ):
         if not required.exists():
             errors.append(f"missing:{required}")

@@ -5,16 +5,23 @@ from pathlib import Path as _OneStockEmbeddedPath
 _onestock_embedded_dir = str(_OneStockEmbeddedPath(__file__).resolve().parent)
 if _onestock_embedded_dir not in _onestock_embedded_sys.path:
     _onestock_embedded_sys.path.insert(0, _onestock_embedded_dir)
-import json, time, re, os
+import json, time, re, os, sys
 from pathlib import Path
 from datetime import datetime
 import requests
 import pandas as pd
 
-TASK = Path(os.environ.get("LIMITUP_TASK_DIR", r"D:\C盘转移\日志\codex\reports\2026-06-02_limit_up_review_word"))
-TABLE = Path(os.environ.get("LIMITUP_TABLE", str(Path.home() / ".codex" / "business_data" / "limit-up-review" / "2026-06-02-limit-up-table.csv")))
 DATE_H = os.environ.get("LIMITUP_DATE_H", datetime.now().strftime("%Y-%m-%d"))
 DATE = os.environ.get("LIMITUP_DATE", datetime.now().strftime("%Y%m%d"))
+APP_ROOT = Path(__file__).resolve().parents[3]
+APP_SCRIPTS = APP_ROOT / "scripts"
+if str(APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(APP_SCRIPTS))
+from tdx_path_config import resolve_data_root, resolve_path_from
+
+DATA_ROOT = resolve_data_root()
+TASK = resolve_path_from(os.environ.get("LIMITUP_TASK_DIR", str(DATA_ROOT / "reports" / f"{DATE_H}_limit_up_review_word")), DATA_ROOT)
+TABLE = resolve_path_from(os.environ.get("LIMITUP_TABLE", str(DATA_ROOT / "business_data" / "limit-up-review" / f"{DATE_H}-limit-up-table.csv")), DATA_ROOT)
 UA = {
     "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36",
     "Referer":"https://quote.eastmoney.com/",

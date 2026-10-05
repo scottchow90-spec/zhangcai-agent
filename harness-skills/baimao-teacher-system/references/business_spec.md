@@ -4,7 +4,7 @@
 
 name: baimao-teacher-system
 name_cn: 白猫老师六公式通达信体系
-description: 白猫老师六公式通达信体系技能。用于检查、调用和说明已经转换并安装到 C:\new_tdx_mock 的六个通达信公式：白猫RSI、白猫渡劫、白猫队长、躲猫猫、黑猫白猫、平均成本线。触发于“白猫老师体系”“白猫公式”“白猫RSI”“白猫渡劫”“白猫队长”“躲猫猫”“黑猫白猫”“平均成本线”等请求。
+description: 白猫老师六公式通达信体系技能。用于检查、调用和说明已经转换并安装到 $env:ZHANGCAI_TDX_ROOT 的六个通达信公式：白猫RSI、白猫渡劫、白猫队长、躲猫猫、黑猫白猫、平均成本线。触发于“白猫老师体系”“白猫公式”“白猫RSI”“白猫渡劫”“白猫队长”“躲猫猫”“黑猫白猫”“平均成本线”等请求。
 
 # 白猫老师体系
 
@@ -12,7 +12,7 @@ description: 白猫老师六公式通达信体系技能。用于检查、调用�
 
 本技能封装白猫老师六个通达信公式的本地调用、资产留存、安装验收和使用说明。它只管理公式文件与本地通达信注册状态，不给出买卖指令，不连接券商交易账户，不执行真实交易。
 
-本技能已经内置个股评分引擎：`scripts/baimao_stock_score.py`。评分引擎读取 `C:\new_tdx_mock\vipdoc` 本地日线，复刻六公式核心逻辑，输出 100 分制个股评分、模块得分、风险、关键价位、Markdown/JSON 报告。评分用于研究、观察池排序和风控提示，不等于交易指令。
+本技能已经内置个股评分引擎：`scripts/baimao_stock_score.py`。评分引擎读取 `$env:ZHANGCAI_TDX_ROOT\vipdoc` 本地日线，复刻六公式核心逻辑，输出 100 分制个股评分、模块得分、风险、关键价位、Markdown/JSON 报告。评分用于研究、观察池排序和风控提示，不等于交易指令。
 
 ## 固化公式
 
@@ -25,13 +25,13 @@ description: 白猫老师六公式通达信体系技能。用于检查、调用�
 | 黑猫白猫 | 副图 | `assets/formulas/heimao-baimao.tdx` |
 | 平均成本线 | 主图叠加 | `assets/formulas/avg-cost-line.tdx` |
 
-已安装目标为 `C:\new_tdx_mock`，通达信私有公式注册表读取位置为 `C:\new_tdx_mock\T0002\PriLoc.dat`，配套核心文件为 `PriGS.dat`、`PriCS.dat`、`PriLoc.dat`、`PriPack.dat`、`PriEx.dat`、`PriBand.dat`。
+已安装目标为 `$env:ZHANGCAI_TDX_ROOT`，通达信私有公式注册表读取位置为 `$env:ZHANGCAI_TDX_ROOT\T0002\PriLoc.dat`，配套核心文件为 `PriGS.dat`、`PriCS.dat`、`PriLoc.dat`、`PriPack.dat`、`PriEx.dat`、`PriBand.dat`。
 
 ## 标准调用
 
 - `info`：输出技能目录、入口、工作流、公式数量和本地通达信路径。
 - `list`：列出六个封装公式、主图/副图类型和资产路径。
-- `status`：读取 `C:\new_tdx_mock\T0002\PriLoc.dat`，返回安装命中、缺项、资产存在性和备份路径。
+- `status`：读取 `$env:ZHANGCAI_TDX_ROOT\T0002\PriLoc.dat`，返回安装命中、缺项、资产存在性和备份路径。
 - `verify-installed`：作为硬验收命令，六个公式都在本地注册表中时返回 `CLEAN_PASS`。
 - `score <股票代码>`：读取本地通达信日线，计算白猫老师六公式 100 分制个股评分。
 - `report <股票代码>`：生成单股评分 JSON 与 Markdown 报告，默认输出到 `reports/stock_score`。
@@ -63,14 +63,14 @@ description: 白猫老师六公式通达信体系技能。用于检查、调用�
 ## 防错纠错、数据矩阵与交付验收
 
 - 防错纠错：评分前必须完成任务闸门、股票身份闸门、K线数据闸门、公式版本闸门、样本规模闸门、重绘信号闸门和输出证据闸门。
-- 数据接口矩阵：日K线优先读取 `C:\new_tdx_mock\vipdoc\<market>\lday\*.day`；六公式源码优先读取本技能 `assets/formulas`；事件研究优先读取 `references\kline-research-20260629.json`；公告、新闻、基本面、行业主题缺失时只能降级输出。
+- 数据接口矩阵：日K线优先读取 `$env:ZHANGCAI_TDX_ROOT\vipdoc\<market>\lday\*.day`；六公式源码优先读取本技能 `assets/formulas`；事件研究优先读取 `references\kline-research-20260629.json`；公告、新闻、基本面、行业主题缺失时只能降级输出。
 - 降级机制：K线缺失为 DATA_BLOCKED；K线陈旧为 DATA_STALE；公式版本冲突为 FORMULA_CONFLICT；研究样本少于1000只时禁止体系性结论；新闻/基本面缺失时只允许技术评分。
 - 最新数据硬闸：当前日期为交易日或用户要求“今天/最新”时，个股评分必须使用当天最新有效交易日数据；本地K线最新日期不是当天时，必须返回 DATA_STALE，不得输出评级、买点、观察池或排除结论。
 - 执行闭环：`auto` 必须间接调用 `baimao_workflow_acceptance.py`；验收产物固定为 `reports\workflow_acceptance\latest_workflow_acceptance.json`。没有该文件或状态不是 CLEAN_PASS，不得宣称工作流可执行。
 
 ## 失败处置
 
-- `C:\new_tdx_mock` 不存在：停止调用并报告本地通达信路径不可用。
+- `$env:ZHANGCAI_TDX_ROOT` 不存在：停止调用并报告本地通达信路径不可用。
 - 六个公式任一未注册：停止输出公式已安装结论，返回缺项清单。
 - 资产文件任一不存在：停止技能验收，返回缺失资产路径。
 - Codex 硬闸未通过：使用硬闸返回的 blocks 作为排错依据。
@@ -93,9 +93,9 @@ description: 白猫老师六公式通达信体系技能。用于检查、调用�
 
 - 技能注册表：`references/formulas.json`
 - 技能公式资产：`assets/formulas/*.tdx`
-- 通达信本地注册表：`C:\new_tdx_mock\T0002\PriLoc.dat`
+- 通达信本地注册表：`$env:ZHANGCAI_TDX_ROOT\T0002\PriLoc.dat`
 
-安装目标固定为 `C:\new_tdx_mock`。已知安装备份目录为 `C:\new_tdx_mock\T0002\gs_bak\codex_install_baimao_20260629_1125`。本技能可读取 `tdx-local-hub` 作为本地通达信环境证据，但六个白猫公式的注册验收以 `PriLoc.dat` 中的公式名为准。
+安装目标固定为 `$env:ZHANGCAI_TDX_ROOT`。已知安装备份目录为 `$env:ZHANGCAI_TDX_ROOT\T0002\gs_bak\codex_install_baimao_20260629_1125`。本技能可读取 `tdx-local-hub` 作为本地通达信环境证据，但六个白猫公式的注册验收以 `PriLoc.dat` 中的公式名为准。
 
 ## 固化公式清单
 
@@ -111,7 +111,7 @@ description: 白猫老师六公式通达信体系技能。用于检查、调用�
 ## 执行步骤
 
 1. 读取 `references/formulas.json`，取得六个公式的安装名、主图/副图类型、源文件路径和资产路径。
-2. 检查 `C:\new_tdx_mock`、`C:\new_tdx_mock\T0002`、`PriLoc.dat` 是否存在。
+2. 检查 `$env:ZHANGCAI_TDX_ROOT`、`$env:ZHANGCAI_TDX_ROOT\T0002`、`PriLoc.dat` 是否存在。
 3. 按通达信私有公式索引格式读取 `PriLoc.dat`：跳过 24 字节头部，后续按 56 字节记录解析，记录名前 20 字节按 GBK 解码。
 4. 对比六个安装名，生成 found 与 missing 清单。
 5. 检查六个 `assets/formulas/*.tdx` 是否存在且大小大于零。
@@ -119,7 +119,7 @@ description: 白猫老师六公式通达信体系技能。用于检查、调用�
 
 ## 个股评分执行
 
-评分脚本直接读取 `C:\new_tdx_mock\vipdoc\<market>\lday\<symbol>.day`，至少需要 90 条日线记录。输出包括 `score`、`rating`、`modules`、`strengths`、`weaknesses`、`risks`、`levels`、`data_gate`。单股报告会落盘到 `reports/stock_score`。
+评分脚本直接读取 `$env:ZHANGCAI_TDX_ROOT\vipdoc\<market>\lday\<symbol>.day`，至少需要 90 条日线记录。输出包括 `score`、`rating`、`modules`、`strengths`、`weaknesses`、`risks`、`levels`、`data_gate`。单股报告会落盘到 `reports/stock_score`。
 
 六公式权重固定如下：平均成本线 25 分，白猫RSI 15 分，白猫渡劫 15 分，白猫队长 15 分，躲猫猫 15 分，黑猫白猫 5 分，六公式共振 10 分。躲猫猫=99定义为短期超跌/疑似神秘资金抄底窗口，99后转50定义为短线修复确认；黑猫白猫含 ZIG 类拐点辅助，实时评分必须降权；平均成本线作为主图确认层，权重最高；顶部结构、风险信号、最佳卖出会限制共振分。
 
@@ -139,7 +139,7 @@ description: 白猫老师六公式通达信体系技能。用于检查、调用�
 
 | 数据类别 | 主接口/路径 | 备用接口 | 失败处理 |
 |---|---|---|---|
-| 日K线/量价 | `C:\new_tdx_mock\vipdoc\<market>\lday\*.day` | 用户指定本地K线或TQ结构化数据 | 无K线则 DATA_BLOCKED，不评分 |
+| 日K线/量价 | `$env:ZHANGCAI_TDX_ROOT\vipdoc\<market>\lday\*.day` | 用户指定本地K线或TQ结构化数据 | 无K线则 DATA_BLOCKED，不评分 |
 | 六公式源码 | `assets/formulas/*.tdx` | `G:\白猫老师资料\指标` | 版本冲突则 FORMULA_CONFLICT |
 | 公式事件研究 | `references\kline-research-20260629.json` | `work\baimao_research\baimao_kline_research.json` | 样本少于1000只禁止体系性结论 |
 | 候选股票池 | 用户代码、本地 `.blk` 文件 | 用户表格/结构化问财 | 来源不明则不排名 |

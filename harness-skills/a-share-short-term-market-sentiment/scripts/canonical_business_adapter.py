@@ -18,6 +18,7 @@ _stock_adapter_shared_scripts = str(_OneStockEmbeddedPath(__file__).resolve().pa
 if _stock_adapter_shared_scripts not in _onestock_embedded_sys.path:
     _onestock_embedded_sys.path.insert(0, _stock_adapter_shared_scripts)
 from stock_adapter_io import atomic_write_json, atomic_write_text, enable_atomic_path_writes
+from tdx_path_config import resolve_tdx_root
 
 from poster_template import (
     POSTER_NAME,
@@ -30,6 +31,7 @@ from poster_validator import write_validation
 
 ROOT = Path(__file__).resolve().parents[1]
 LEGACY = ROOT / "scripts" / "legacy_codex_entry.py"
+TDX_ROOT = resolve_tdx_root()
 
 
 def sha256(path: Path) -> str:
@@ -79,7 +81,7 @@ def build_data_gate(
         "quote_kline": (
             clean
             and tdx.get("verified") is True
-            and str(tdx.get("root") or "") == r"C:\new_tdx_mock"
+            and Path(str(tdx.get("root") or "")).expanduser().resolve() == TDX_ROOT
             and all(isinstance(market.get(field), (int, float)) and not isinstance(market.get(field), bool) for field in numeric_market_fields)
         ),
         "fundamentals": (

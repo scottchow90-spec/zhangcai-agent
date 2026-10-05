@@ -4,7 +4,7 @@
 
 - 唯一外部入口：`scripts/codex_entry.py`
 - 唯一业务实现：`scripts/entry_golden_ignition.py`
-- 数据源：`C:\new_tdx_mock`，经 `tdx-local-hub` 读取。
+- 数据源：`$env:ZHANGCAI_TDX_ROOT`，经 `tdx-local-hub` 读取。
 - 通用范围：A股；输入可转债时自动映射正股。
 - 核心公式：`CROSS(EMA(CLOSE,3),EMA(CLOSE,21))`。
 - 运行态交叉验证：大牛线4.0 `OUTPUT59`、`OUTPUT60`、`OUTPUT61`。

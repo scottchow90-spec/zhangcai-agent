@@ -31,6 +31,10 @@ import subprocess
 import sys
 from datetime import date as calendar_date, datetime
 from pathlib import Path
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import path_is_within, resolve_data_root, resolve_tdx_root
 
 try:
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
@@ -39,10 +43,10 @@ except Exception:
 
 SCRIPT_DIR = Path(__file__).parent.resolve()
 SKILL_DIR = SCRIPT_DIR.parent
-WORKSPACE_DATA = Path(r"D:\C盘转移\日志\codex\tmp_lb\data")
+WORKSPACE_DATA = resolve_data_root() / "strategy-data" / "a-share-limit-up-mining"
 WORKSPACE_DATA.mkdir(parents=True, exist_ok=True)
-OUT_DIR = Path(r"F:\小龙虾6月交付")
-TEMPLATE = Path(r"F:\小龙虾6月交付\6月1日连板挖掘5标的.docx")
+OUT_DIR = resolve_data_root() / "reports" / "deliverables" / "a-share-limit-up-mining"
+TEMPLATE = Path(os.environ.get("ZHANGCAI_LIANBAN_TEMPLATE") or (SKILL_DIR / "assets" / "连板挖掘模板.docx"))
 AUDIT_GATE = SCRIPT_DIR / "lianban_prebuild_audit_gate.py"
 WORD_GATE = SCRIPT_DIR / "lianban_word_template_gate.py"
 DIFF_GATE = SCRIPT_DIR / "lianban_docx_template_diff.py"
@@ -84,11 +88,6 @@ def run_py(script, *args, capture=True, timeout=120, python_executable=None):
 
 def step_audit(date):
     """Step 1: Prebuild audit with --date."""
-    default_template = Path(r"F:\小龙虾6月交付\6月1日连板挖掘5标的.docx").resolve()
-    if TEMPLATE == default_template and ENSURE_TEMPLATE.exists():
-        rc, _, _ = run_py(ENSURE_TEMPLATE, timeout=90)
-        if rc != 0:
-            return rc, OUT_DIR / f"\u8fde\u677f\u6316\u6398_{date[:4]}-{date[4:6]}-{date[6:8]}_prebuild_audit.json"
     audit_json = OUT_DIR / f"\u8fde\u677f\u6316\u6398_{date[:4]}-{date[4:6]}-{date[6:8]}_prebuild_audit.json"
     if not AUDIT_GATE.exists():
         print(f"ERROR: prebuild audit gate missing: {AUDIT_GATE}")
@@ -279,7 +278,7 @@ def evaluate_source_roles(raw, analyzed):
             stock.get('k_line_verify') != 'PASS'
             or detail.get('status') != 'PASS'
             or detail.get('source_kind') != 'TDX_LOCAL_DAY'
-            or not source_path.upper().startswith('C:\\new_tdx_mockMONI\\')
+            or not path_is_within(source_path, resolve_tdx_root() / 'vipdoc')
         ):
             bad_kline.append(str(stock.get('code', '')))
 

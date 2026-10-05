@@ -12,6 +12,7 @@ from collections import Counter
 import hashlib
 import importlib.util
 import json
+import os
 import py_compile
 import re
 import struct
@@ -19,6 +20,11 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
+
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_tdx_root
 
 
 SKILL = "nana-teacher-five-strategies"
@@ -30,7 +36,7 @@ MANIFEST_PATH = ROOT / "references" / "asset_manifest.json"
 RUNNER = ROOT / "scripts" / "run_nana_five.py"
 EXPORTER = ROOT / "scripts" / "export_assets.py"
 QUOTE_FETCHER = ROOT / "scripts" / "nana_quote_fetcher.py"
-TDX_ROOT = Path(r"C:\new_tdx_mock")
+TDX_ROOT = resolve_tdx_root()
 FRESHNESS_GATE = ROOT / "scripts" / "nana_market_data.py"
 SELECTOR_FRESHNESS_GUARD = ROOT / "scripts" / "nana_freshness_guard.py"
 DAY_RECORD = struct.Struct("<IIIIIfII")

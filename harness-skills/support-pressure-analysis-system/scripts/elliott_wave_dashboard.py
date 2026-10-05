@@ -14,10 +14,16 @@ import json, sys, urllib.request, urllib.error, time, struct, os
 from datetime import datetime
 from pathlib import Path
 
-WORKSPACE = Path(__file__).resolve().parent.parent.parent.parent
+APP_ROOT = Path(__file__).resolve().parents[3]
+APP_SCRIPTS = APP_ROOT / "scripts"
+if str(APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(APP_SCRIPTS))
+from tdx_path_config import resolve_data_root, resolve_tdx_root
+
+WORKSPACE = resolve_data_root()
 RUN_ID = os.environ.get("SKILL_FULLFLOW_RUN_ID", "2026-06-12_skill_fullflow_all")
 OUT_DIR = WORKSPACE / "reports" / RUN_ID / "support-resistance-analysis"
-TDX_PATH = Path(r"C:\new_tdx_mock\vipdoc\sh\lday\sh000001.day")
+TDX_PATH = resolve_tdx_root() / "vipdoc" / "sh" / "lday" / "sh000001.day"
 
 URLS = [
     # eastmoney primary

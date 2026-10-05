@@ -19,6 +19,11 @@ import sys
 from pathlib import Path
 from typing import Any
 
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_data_root, resolve_tdx_root
+
 try:
     sys.stdout.reconfigure(encoding="utf-8")
     sys.stderr.reconfigure(encoding="utf-8")
@@ -26,9 +31,9 @@ except Exception:
     pass
 
 SKILL_DIR = Path(__file__).resolve().parents[1]
-TDX_ROOT = Path(os.environ.get("BAIMAO_TDX_ROOT", r"C:\new_tdx_mock"))
+TDX_ROOT = resolve_tdx_root()
 VIPDOC = TDX_ROOT / "vipdoc"
-REPORT_DIR = SKILL_DIR / "reports" / "stock_score"
+REPORT_DIR = resolve_data_root() / "reports" / "skills" / "baimao-score-system" / "stock_score"
 DAY_RECORD = struct.Struct("<IIIIIfII")
 REQUIRE_CURRENT_DATE = True
 

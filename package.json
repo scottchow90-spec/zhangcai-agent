@@ -1,6 +1,6 @@
 {
   "name": "zhangcai-agent",
-  "version": "0.1.18",
+  "version": "0.1.22",
   "private": true,
   "description": "掌财 4319 本地股票研究桌面程序",
   "author": {
@@ -22,6 +22,10 @@
     "start:chat": "vinext start --hostname 127.0.0.1 --port 3004",
     "prepare:runtime": "node scripts/prepare-runtime-assets.mjs",
     "prepare:skill14": "node scripts/skill14-runtime.mjs prepare-packages",
+    "prepare:recovered-frontend": "node scripts/stage-recovered-frontend.mjs",
+    "verify:stock-detail-discovery": "node scripts/tests/verify_stock_detail_skill_discovery.mjs",
+    "verify:skill14-packaged": "node scripts/tests/verify_skill14_packaged_runtime.mjs",
+    "verify:recovery-completion": "node --test scripts/tests/recovery-completion.test.mjs",
     "data:archive": "node scripts/skill14-runtime.mjs archive-daily",
     "start:local": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/start-local.ps1",
     "package:preflight": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/package-preflight.ps1 -MainInstaller",

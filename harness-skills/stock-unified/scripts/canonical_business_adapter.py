@@ -20,6 +20,7 @@ _stock_adapter_shared_scripts = str(_OneStockEmbeddedPath(__file__).resolve().pa
 if _stock_adapter_shared_scripts not in _onestock_embedded_sys.path:
     _onestock_embedded_sys.path.insert(0, _stock_adapter_shared_scripts)
 from stock_adapter_io import atomic_write_json, atomic_write_text, enable_atomic_path_writes
+from tdx_path_config import resolve_tdx_root, resolve_data_root
 from typing import Any
 
 
@@ -28,7 +29,7 @@ SKILL_ID = ROOT.name
 LEGACY_ENTRY = ROOT / "scripts" / "legacy_codex_entry.py"
 CATALOG = ROOT / "references" / "stock_skill_ids.json"
 SKILLS_ROOT = ROOT.parent
-CURRENT_REPORT = Path(os.environ.get("ONESTOCK_STOCK_DATA_ROOT", str(ROOT / "reports"))) / "selftests" / "stock-unified-current.json"
+CURRENT_REPORT = resolve_data_root() / "reports" / "selftests" / "stock-unified-current.json"
 DELIVERABLE_NAMES = {
     "production_readiness_report": "股票技能生产就绪报告.json",
     "per_skill_compliance_matrix": "股票技能生产控制矩阵.json",
@@ -293,9 +294,7 @@ def business_command(run_dir: Path) -> list[str]:
             "--as-of",
             datetime.now().strftime("%Y-%m-%d"),
             "--tdx",
-            os.environ.get("ZHANGCAI_TDX_ROOT")
-            or os.environ.get("TDX_ROOT")
-            or os.environ.get("ZHANGCAI_DEV_TDX_ROOT", r"C:\new_tdx_mock"),
+            str(resolve_tdx_root()),
             "--json",
             str(run_dir / "old-leader-result.json"),
             "--csv",

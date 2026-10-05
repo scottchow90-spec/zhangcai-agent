@@ -72,3 +72,6 @@ next-env.d.ts
 /data/dev-server*.log
 **/__pycache__/
 *.log
+
+# Verified frontend staging is a local packaging input, not recovered source.
+/packaging/staging/

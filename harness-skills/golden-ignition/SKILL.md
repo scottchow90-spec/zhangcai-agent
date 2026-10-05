@@ -10,18 +10,18 @@ description: 通用黄金点火技术分析技能。用于股票、A股、可转
 - 将黄金点火作为通用证券技术信号模块，不限定某一行业、品种或策略。
 - 股票代码直接分析；可转债代码先由本机通达信 `speckzzdata.txt` 映射到正股，再分析正股点火。
 - 核心定义固定为 `CROSS(EMA(CLOSE,3),EMA(CLOSE,21))`，并读取大牛线4.0运行态 `OUTPUT59-61` 交叉验证。
-- 只使用本机 Codex 与 `C:\new_tdx_mock` 数据，不访问OpenClaw运行时，不把国际黄金、白银期货涨跌当作黄金点火信号。
+- 只使用本机 Codex 与 `$env:ZHANGCAI_TDX_ROOT` 数据，不访问OpenClaw运行时，不把国际黄金、白银期货涨跌当作黄金点火信号。
 - 信号是技术条件，不保证收益；与选股或可转债工作流组合时仍需独立通过估值、流动性、强赎和风险门。
 - 已安装的“黄金点火AI”按通达信条件选股公式调用，历史输出固定读取 `XG` 日期记录；不得把它按指标公式调用，也不得用同名EMA规则替代其真实信号。
 - “黄金点火AI”回测只优化交易执行参数，并以验证集胜率和盈亏比同时超过基线作为双目标硬闸；不改写通达信原公式。
 
 ## 固定入口
 
-- 信息：`python D:\C盘转移\日志\codex\skills\golden-ignition\scripts\codex_entry.py info`
-- 自检：`python D:\C盘转移\日志\codex\skills\golden-ignition\scripts\codex_entry.py selftest`
-- 股票：`python D:\C盘转移\日志\codex\skills\golden-ignition\scripts\codex_entry.py run -- 600577.SH --lookback 5`
-- 可转债：`python D:\C盘转移\日志\codex\skills\golden-ignition\scripts\codex_entry.py run -- 110074.SH --lookback 5`
-- 黄金点火AI历史回测：`python D:\C盘转移\日志\codex\skills\golden-ignition\scripts\codex_entry.py run -- backtest --formula 黄金点火AI --start-date 20210101 --end-date 20260814 --max-symbols 500`
+- 信息：`python "$($env:STOCK_SKILLS_ROOT)\golden-ignition"\scripts\codex_entry.py info`
+- 自检：`python "$($env:STOCK_SKILLS_ROOT)\golden-ignition"\scripts\codex_entry.py selftest`
+- 股票：`python "$($env:STOCK_SKILLS_ROOT)\golden-ignition"\scripts\codex_entry.py run -- 600577.SH --lookback 5`
+- 可转债：`python "$($env:STOCK_SKILLS_ROOT)\golden-ignition"\scripts\codex_entry.py run -- 110074.SH --lookback 5`
+- 黄金点火AI历史回测：`python "$($env:STOCK_SKILLS_ROOT)\golden-ignition"\scripts\codex_entry.py run -- backtest --formula 黄金点火AI --start-date 20210101 --end-date 20260814 --max-symbols 500`
 
 必须通过 `codex_entry.py` 执行，不得直接运行内部业务脚本。读取结果JSON，核对输入标的、实际分析正股、最新交易日、信号状态和数据哈希后，才可把结果纳入上层分析。
 
@@ -42,6 +42,5 @@ description: 通用黄金点火技术分析技能。用于股票、A股、可转
 
 ## 验证
 
-- 结构：`python D:\C盘转移\日志\codex\skills\.system\skill-creator\scripts\quick_validate.py D:\C盘转移\日志\codex\skills\golden-ignition`
 - 入口：运行 `codex_entry.py selftest`，必须为 `CLEAN_PASS`。
 - 同类前向测试：至少各跑一只股票和一只可转债，股票保持原代码，可转债必须正确映射正股。

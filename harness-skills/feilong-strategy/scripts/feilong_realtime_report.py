@@ -30,6 +30,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_data_root, resolve_tdx_root
+
 import numpy as np
 import pandas as pd
 
@@ -43,13 +48,13 @@ from feilong_resonance_exhaustive import run_resonance_exhaustive
 from feilong_daily_yaogu_scoring import run as run_daily_yaogu_scoring
 from feilong_factor_correlation_v3_runner import run as run_factor_correlation_v3
 
-TDX_ROOT = Path(os.environ.get("ZHANGCAI_TDX_ROOT", r"C:\new_tdx_mock"))
-APP_ROOT = Path(os.environ.get("ZHANGCAI_APP_ROOT", str(Path(__file__).resolve().parents[3])))
-WORKSPACE = APP_ROOT
+TDX_ROOT = resolve_tdx_root()
+APP_ROOT = Path(os.environ.get("ZHANGCAI_APP_ROOT", str(Path(__file__).resolve().parents[3]))).resolve()
+WORKSPACE = resolve_data_root()
 VALIDATION = Path(os.environ.get(
     "FEILONG_VALIDATION_ROOT",
-    str(Path(os.environ.get("ONESTOCK_STOCK_DATA_ROOT", str(APP_ROOT / "data" / "strategy-results"))) / "reports" / "feilong"),
-))
+    str(resolve_data_root() / "reports" / "feilong"),
+)).expanduser().resolve()
 SKILL_ROOT = Path(__file__).resolve().parents[1]
 FORMULA_SOURCE_MANIFEST = SKILL_ROOT / "references" / "formula-source-manifest.json"
 FORMULA_DISPLAY_NAME = "飞龙在天"
@@ -1675,9 +1680,9 @@ def main(argv=None):
     ap.add_argument("--score-32d", action="store_true", help="运行飞龙共振首板32维妖股评分体系构建")
     ap.add_argument("--daily-score-32d", action="store_true", help="按本机最新通达信日线运行飞龙在天640因子32维实战评分")
     ap.add_argument("--scoring-builder", help="32维评分体系构建脚本绝对路径")
-    ap.add_argument("--scoring-model", default=r"F:\Codex\projects\飞龙在天评分体系彻底优化_20260901-184258\飞龙共振首板_32维评分模型配置.json")
-    ap.add_argument("--historical-factors", default=r"F:\Codex\projects\飞龙在天评分体系彻底优化_20260901-184258\因子全量重算\飞龙共振首板_全量因子事件值.csv")
-    ap.add_argument("--scoring-applier", default=r"F:\Codex\projects\飞龙在天评分体系彻底优化_20260901-184258\apply_yaogu_scoring.py")
+    ap.add_argument("--scoring-model", default=str(SKILL_ROOT / "models" / "daily-score-v2" / "飞龙共振首板_32维评分模型配置.json"))
+    ap.add_argument("--historical-factors", default=str(SKILL_ROOT / "models" / "daily-score-v2" / "history" / "飞龙共振首板_全量因子事件值.csv"))
+    ap.add_argument("--scoring-applier", default=str(SKILL_ROOT / "scripts" / "apply_yaogu_scoring.py"))
     ap.add_argument("--target-date", type=parse_as_of_date, help="日评分目标日期；必须等于本机最新有效交易日")
     ap.add_argument("--matches-csv", help="因子研究使用的158个首板飞龙在天命中CSV")
     ap.add_argument("--migration-manifest", help="因子研究使用的迁移包manifest.json")

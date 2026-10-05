@@ -15,26 +15,15 @@ import struct
 import sys
 from pathlib import Path
 
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
+
 # The old migrated copy enforced the developer machine's C: path.  The EXE
 # supplies the selected client directory through these aliases; keep the C:
 # default only for an explicit development invocation.
-_tdx_root_text = (
-    os.environ.get("ZHANGCAI_TDX_ROOT")
-    or os.environ.get("TDX_ROOT")
-    or os.environ.get("TDX_ROOTS")
-    or ""
-).strip()
-_packaged_runtime = os.environ.get("ZHANGCAI_PACKAGED") == "1"
-DEFAULT_ROOT = Path(
-    _tdx_root_text
-    or (
-        Path(os.environ.get("ZHANGCAI_DATA_DIR", Path.cwd()))
-        / "runtime"
-        / "__tdx_root_not_configured__"
-        if _packaged_runtime
-        else os.environ.get("ZHANGCAI_DEV_TDX_ROOT", r"C:\new_tdx_mock")
-    )
-).expanduser().resolve()
+DEFAULT_ROOT = resolve_tdx_root()
 DEFAULT_ROOTS = [("tdx_selected", DEFAULT_ROOT)]
 DAY_RECORD = struct.Struct("<IIIIIfII")
 LC5_RECORD = struct.Struct("<HHfffffII")

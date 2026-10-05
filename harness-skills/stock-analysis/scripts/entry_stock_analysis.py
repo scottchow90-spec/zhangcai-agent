@@ -12,7 +12,12 @@ from datetime import datetime
 from pathlib import Path
 import urllib.request
 
-WORKSPACE = Path(__file__).resolve().parent.parent.parent.parent
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_data_root, resolve_tdx_root
+
+WORKSPACE = resolve_data_root()
 RUN_ID = os.environ.get("SKILL_FULLFLOW_RUN_ID", "2026-06-12_skill_fullflow_all")
 OUTPUT_DIR = WORKSPACE / "reports" / RUN_ID / "stock-analysis"
 _tdx_root_text = (
@@ -20,7 +25,7 @@ _tdx_root_text = (
     or os.environ.get("TDX_ROOT")
     or ""
 ).strip()
-TDX_ROOT = Path(_tdx_root_text or os.environ.get("ZHANGCAI_DEV_TDX_ROOT", r"C:\new_tdx_mock")).expanduser().resolve()
+TDX_ROOT = resolve_tdx_root()
 TDX_PATH = TDX_ROOT / "vipdoc" / "sh" / "lday" / "sh600519.day"
 
 

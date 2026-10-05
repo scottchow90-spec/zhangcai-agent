@@ -24,7 +24,7 @@ def digest(path):
 
 def validate_run_dir(value):
     path = Path(value).resolve()
-    protected = Path(r'F:\Codex\Home\skills').resolve()
+    protected = ROOT.parents[1].resolve()
     if path == ROOT or ROOT in path.parents or path == protected or protected in path.parents:
         raise ValueError('output_inside_skill_directory_forbidden')
     path.mkdir(parents=True, exist_ok=True)

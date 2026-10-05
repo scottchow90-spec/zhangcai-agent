@@ -16,13 +16,19 @@ _onestock_embedded_dir = str(_OneStockEmbeddedPath(__file__).resolve().parent)
 if _onestock_embedded_dir not in _onestock_embedded_sys.path:
     _onestock_embedded_sys.path.insert(0, _onestock_embedded_dir)
 from pathlib import Path
+import sys
 import struct
 
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
 
+_TDX_ROOT = resolve_tdx_root()
 _CANDIDATES = [
-    Path(r"C:\new_tdx_mock\vipdoc\xinzeng\sh\lday\sh000001.day"),
-    Path(r"C:\new_tdx_mock\vipdoc\sh\lday\sh000001.day"),
-    Path(r"C:\new_tdx_mock\vipdoc\sz\lday\sz399001.day"),
+    _TDX_ROOT / "vipdoc" / "xinzeng" / "sh" / "lday" / "sh000001.day",
+    _TDX_ROOT / "vipdoc" / "sh" / "lday" / "sh000001.day",
+    _TDX_ROOT / "vipdoc" / "sz" / "lday" / "sz399001.day",
 ]
 
 

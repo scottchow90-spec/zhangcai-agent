@@ -22,6 +22,11 @@ from decimal import Decimal, ROUND_HALF_UP
 from pathlib import Path
 from typing import Any
 
+_app_scripts_dir = str(_OneStockEmbeddedPath(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in _onestock_embedded_sys.path:
+    _onestock_embedded_sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_tdx_root
+
 from nana_freshness_guard import (
     build_freshness_guard,
     canonical_sha256,
@@ -30,7 +35,7 @@ from nana_freshness_guard import (
 )
 
 
-TDX_ROOT = Path(r"C:\new_tdx_mock")
+TDX_ROOT = resolve_tdx_root()
 DAY = struct.Struct("<IIIIIfII")
 TNF_HEADER = 50
 TNF_RECORD = 360

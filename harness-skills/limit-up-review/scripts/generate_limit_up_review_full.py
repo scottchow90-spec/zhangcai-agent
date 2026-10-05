@@ -36,34 +36,45 @@ from docx.oxml import parse_xml
 
 import sys
 
-sys.path.insert(0, str(Path(r"D:\C盘转移\日志\codex")))
+APP_ROOT = Path(__file__).resolve().parents[3]
+APP_SCRIPTS = APP_ROOT / "scripts"
+TDX_DATA_SCRIPTS = APP_ROOT / "harness-skills" / "stock-unified" / "scripts"
+for _shared_scripts in (APP_SCRIPTS, TDX_DATA_SCRIPTS):
+    if str(_shared_scripts) not in sys.path:
+        sys.path.insert(0, str(_shared_scripts))
 
-from data_sources.tdx_local import read_day_file
+from tdx_path_config import resolve_data_root, resolve_path_from, resolve_tdx_root
+from tdx_local_data import DAY_RECORD, parse_day_record, read_fixed_records
+from types import SimpleNamespace
+
+
+def read_day_file(path: Path) -> list[SimpleNamespace]:
+    return [SimpleNamespace(**row) for row in read_fixed_records(path, DAY_RECORD, parse_day_record)]
 
 
 
-WORKSPACE = Path(r"D:\C盘转移\日志\codex")
+WORKSPACE = resolve_data_root()
 BUSINESS_DATA_ROOT = WORKSPACE / "business_data" / "limit-up-review"
 
 DATE = os.environ.get("LIMITUP_DATE", datetime.now().strftime("%Y%m%d"))
 DATE_H = os.environ.get("LIMITUP_DATE_H", datetime.now().strftime("%Y-%m-%d"))
-TASK = Path(os.environ.get("LIMITUP_TASK_DIR", str(WORKSPACE / "reports" / f"{DATE_H}_limit_up_review_word")))
+TASK = resolve_path_from(os.environ.get("LIMITUP_TASK_DIR", str(WORKSPACE / "reports" / f"{DATE_H}_limit_up_review_word")), WORKSPACE)
 
 TASK.mkdir(parents=True, exist_ok=True)
 
-MEM = Path(os.environ.get("LIMITUP_MEM_DIR", str(BUSINESS_DATA_ROOT)))
+MEM = resolve_path_from(os.environ.get("LIMITUP_MEM_DIR", str(BUSINESS_DATA_ROOT)), WORKSPACE)
 
 MEM.mkdir(parents=True, exist_ok=True)
 
-DELIVERY = Path(os.environ.get("LIMITUP_DELIVERY", r"F:\小龙虾6月交付"))
+DELIVERY = resolve_path_from(os.environ.get("LIMITUP_DELIVERY", str(WORKSPACE / "deliveries" / "limit-up-review")), WORKSPACE)
 
 DELIVERY.mkdir(parents=True, exist_ok=True)
 
-ZTC_BLK = Path(r"C:\new_tdx_mock\T0002\blocknew\ZTC.blk")
+TDX_ROOT = resolve_tdx_root()
+ZTC_BLK = TDX_ROOT / "T0002" / "blocknew" / "ZTC.blk"
 
-BLOCK_CFG = Path(r"C:\new_tdx_mock\T0002\blocknew\blocknew.cfg")
+BLOCK_CFG = TDX_ROOT / "T0002" / "blocknew" / "blocknew.cfg"
 
-TDX_ROOT = Path(r"C:\new_tdx_mock")
 
 
 
@@ -210,7 +221,7 @@ for df in (ak_zt, ak_lhb, ak_prev):
 
 # TDX name fallbacks
 
-for p in [Path(r"C:\new_tdx_mock\T0002\hq_cache\tdxpkmore.cfg"), Path(r"C:\new_tdx_mock\T0002\hq_cache\tdxbjmore.cfg"), Path(r"C:\new_tdx_mock\T0002\hq_cache\infoharbor_ex.code")]:
+for p in [TDX_ROOT / "T0002" / "hq_cache" / "tdxpkmore.cfg", TDX_ROOT / "T0002" / "hq_cache" / "tdxbjmore.cfg", TDX_ROOT / "T0002" / "hq_cache" / "infoharbor_ex.code"]:
 
     if not p.exists():
 
@@ -906,9 +917,9 @@ def build_live_tq_sample(codes):
 
     sample = {"大牛线4.0": {}, "飞龙在天": {}, "游资资金监控": {}}
 
-    user_dir = r'C:\new_tdx_mock\PYPlugins\user'
+    user_dir = str(TDX_ROOT / 'PYPlugins' / 'user')
 
-    init_file = r'C:\new_tdx_mock\PYPlugins\user\tdxdata_test.py'
+    init_file = str(TDX_ROOT / 'PYPlugins' / 'user' / 'tdxdata_test.py')
 
     try:
 

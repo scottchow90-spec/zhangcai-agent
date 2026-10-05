@@ -38,6 +38,10 @@ WORKFLOW = ROOT / "references" / "workflow.md"
 CHECKLIST = ROOT / "references" / "checklist.md"
 WORKSPACE = ROOT.parents[1]
 SHARED_SCRIPTS = WORKSPACE / "scripts"
+_app_scripts_dir = str(ROOT.parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_data_root, resolve_tdx_root
 if str(SHARED_SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SHARED_SCRIPTS))
 from sentiment_quality_contracts import (
@@ -49,8 +53,8 @@ WORKFLOW_LOCK = WORKSPACE / "hooks" / "skill_workflow_lock.py"
 SUBSTANTIVE_GATE = WORKSPACE / "hooks" / "stock_workflow_substantive_gate.py"
 LOCKED_EXECUTION = ROOT / "scripts" / "a-share-sentiment-workflow_closure_gate.py"
 PYTHON_EXE = sys.executable
-DEFAULT_REPORT_DIR = ROOT.parents[1] / "reports" / "a-share-sentiment" if len(ROOT.parents) >= 2 else ROOT / "reports"
-LOCAL_REVIEW_DIR = Path(r"D:\C盘转移\日志\codex\reports\20260630_limit_up_review_closed_loop")
+DEFAULT_REPORT_DIR = resolve_data_root() / "reports" / "a-share-sentiment"
+LOCAL_REVIEW_DIR = resolve_data_root() / "reports" / "20260630_limit_up_review_closed_loop"
 LOCKED_TEMPLATE = WORKSPACE / "assets" / "a-share-sentiment-report-template.docx"
 LOCKED_TEMPLATE_SHA256 = "e16ab8b9448b49ef66afec40a0015dfcf194771db639d5eae2f2382cd2dde68c"
 LOCKED_TEMPLATE_PARAGRAPHS = 43
@@ -117,7 +121,7 @@ AS_OF_ENV = "A_SHARE_SENTIMENT_AS_OF"
 LIANBAN_STATUS_ENV = "CODEX_LIANBAN_STATUS"
 LIANBAN_SNAPSHOT_ENV = "CODEX_LIANBAN_SNAPSHOT"
 DUANXIANXIA_SNAPSHOT_ENV = "CODEX_DUANXIANXIA_SNAPSHOT"
-TDX_ROOT = Path(r"C:\new_tdx_mock")
+TDX_ROOT = resolve_tdx_root()
 TDX_BLOCK_ROOT = TDX_ROOT / "T0002" / "blocknew"
 TDX_DAY_RECORD = struct.Struct("<IIIIIfII")
 
@@ -4185,7 +4189,7 @@ def local_review_data_profile(review_dir, ymd):
 
 
 def latest_local_review_dir(now=None):
-    root = Path(r"D:\C盘转移\日志\codex\reports")
+    root = resolve_data_root() / "reports"
     if not root.exists():
         return None, _expected_review_ymd()
     candidates = []

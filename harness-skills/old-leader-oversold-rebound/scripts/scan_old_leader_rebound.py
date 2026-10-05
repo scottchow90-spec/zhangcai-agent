@@ -336,7 +336,12 @@ def write_outputs(result: dict, json_path: Path, csv_path: Path) -> None:
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--as-of", required=True, help="Target trade date: YYYY-MM-DD or YYYYMMDD")
-    parser.add_argument("--tdx", type=Path, default=Path(r"C:\new_tdx_mock"))
+    app_scripts = Path(__file__).resolve().parents[3] / "scripts"
+    if str(app_scripts) not in sys.path:
+        sys.path.insert(0, str(app_scripts))
+    from tdx_path_config import resolve_tdx_root
+
+    parser.add_argument("--tdx", type=Path, default=resolve_tdx_root())
     parser.add_argument("--fresh-limit-csv", type=Path)
     parser.add_argument("--json", type=Path, required=True)
     parser.add_argument("--csv", type=Path, required=True)

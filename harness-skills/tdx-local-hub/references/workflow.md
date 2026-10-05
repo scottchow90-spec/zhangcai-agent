@@ -2,7 +2,7 @@
 
 `NO_CROSS_JUMP: true`
 
-1. 目标锁定为当前 `C:\new_tdx_mock` 通达信数据面，不切换系统或股票技能。
+1. 目标锁定为当前 `$env:ZHANGCAI_TDX_ROOT` 通达信数据面，不切换系统或股票技能。
 2. 通用本地读取使用 `scripts/tdx_hub.py`；实时 TQ 功能使用 `scripts/tq_dynamic_bridge.py` 或本机 `tqcenter.py` 公开接口。
 3. 盘中任务每轮重新获取全市场或目标池，禁止把旧快照、静态名单或模板样例当作动态结果。
 4. 对价格、涨停价、板块成员、排序等关键结果使用当前回合数据复核。

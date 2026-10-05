@@ -4,10 +4,16 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import sys
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_tdx_root
 
 import numpy as np
 import pandas as pd
@@ -38,6 +44,7 @@ from feilong_resonance_exhaustive import (
 SCHEMA = "FEILONG_DEEP_FACTOR_RESEARCH_V1"
 MANIFEST_SCHEMA = "FEILONG_DEEP_FACTOR_RESEARCH_MANIFEST_V1"
 FORMULA_NAME = "飞龙在天"
+TDX_ROOT = resolve_tdx_root()
 FORMULA_SHA256 = "aabcec3d83b2b37d01d53ba4d9c281a745e29f53d941f3704da95dcea114e1e0"
 OUTCOMES = ("reach2", "reach3")
 BOOTSTRAP_REPETITIONS = 500
@@ -1635,13 +1642,13 @@ def run_deep_factor_research(
     events_csv: str | Path,
     source_manifest: str | Path,
     out_dir: str | Path,
-    tdx_root: str | Path = r"C:\new_tdx_mock",
+    tdx_root: str | Path = TDX_ROOT,
 ) -> dict[str, Any]:
     generated_at = datetime.now().astimezone().isoformat()
     events, _source_manifest, research = load_verified_input(events_csv, source_manifest)
     root = Path(tdx_root).resolve()
-    if root != Path(r"C:\new_tdx_mock").resolve() or not root.is_dir():
-        raise RuntimeError("tdx_root_not_authorized_default")
+    if root != TDX_ROOT.resolve() or not root.is_dir():
+        raise RuntimeError(f"tdx_root_not_authorized_selected_installation:{TDX_ROOT}")
     formula_source = research.get("formula", {}).get("source", {})
     if research.get("formula", {}).get("name") != FORMULA_NAME or formula_source.get("sha256") != FORMULA_SHA256:
         raise RuntimeError("current_formula_binding_mismatch")

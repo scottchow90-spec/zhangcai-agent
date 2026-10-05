@@ -19,13 +19,18 @@ import re
 import sys
 from pathlib import Path
 
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_tdx_root
+
 try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 except Exception:
     pass
 
-DEFAULT_TDX_ROOT = Path(r"C:\new_tdx_mock")
+DEFAULT_TDX_ROOT = resolve_tdx_root()
 
 
 def read_text(path: Path) -> str:

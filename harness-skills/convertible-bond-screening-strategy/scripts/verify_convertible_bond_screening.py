@@ -61,12 +61,18 @@ TDX_DAY_UPDATE_RACE = "TDX_DAY_UPDATE_RACE"
 BOND_PREFIXES = ("110", "111", "113", "118", "123", "127", "128", "132")
 MARKET_BY_FLAG = {"1": "sh", "0": "sz"}
 TERM_DATE_STATUSES = {"FIELD_ABSENT", "MISSING", "INVALID_FORMAT", "INVALID_CALENDAR", "VALID"}
-TRUSTED_TDX_ROOT = Path(r"C:\new_tdx_mock")
+APP_ROOT = Path(__file__).resolve().parents[3]
+APP_SCRIPTS = APP_ROOT / "scripts"
+if str(APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
+
+TRUSTED_TDX_ROOT = resolve_tdx_root()
 TRUSTED_VIPDOC_ROOT = TRUSTED_TDX_ROOT / "vipdoc"
 TRUSTED_HQ_CACHE = TRUSTED_TDX_ROOT / "T0002" / "hq_cache"
 TRUSTED_SOURCE_PATHS = {
     "convertible_bond_master": TRUSTED_HQ_CACHE / "speckzzdata.txt",
-    "tdx_hub": Path(r"D:\C盘转移\日志\codex\skills\tdx-local-hub\scripts\tdx_hub.py"),
+    "tdx_hub": APP_ROOT / "harness-skills" / "tdx-local-hub" / "scripts" / "tdx_hub.py",
     "industry_membership": TRUSTED_HQ_CACHE / "tdxhy.cfg",
     "industry_names": TRUSTED_HQ_CACHE / "tdxzs3.cfg",
     "concept_membership": TRUSTED_HQ_CACHE / "infoharbor_block.dat",

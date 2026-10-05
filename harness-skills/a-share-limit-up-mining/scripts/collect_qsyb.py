@@ -11,6 +11,15 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta
 from pathlib import Path
 import warnings
+
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_data_root
+
+DATA_DIR = resolve_data_root() / 'strategy-data' / 'a-share-limit-up-mining'
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+
 warnings.filterwarnings('ignore')
 try:
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
@@ -44,7 +53,7 @@ def confirm_no_research_rows(code):
 
 def main():
     import akshare as ak
-    raw_path = Path(fr"D:\C盘转移\日志\codex\tmp_lb\data\raw_{DATE}.json")
+    raw_path = DATA_DIR / f"raw_{DATE}.json"
     out = json.loads(raw_path.read_text(encoding='utf-8'))
     name_map = {r['code']: r['name'] for r in out['zt_pool']}
     # The downstream Word report only binds QSYB rows to the涨停池/pick codes.
@@ -142,7 +151,7 @@ def main():
         return 2
     print(f'qsyb: {len(research)}')
 
-    p = Path(fr"D:\C盘转移\日志\codex\tmp_lb\data\raw2_{DATE}.json")
+    p = DATA_DIR / f"raw2_{DATE}.json"
     p.write_text(json.dumps(out, ensure_ascii=False, indent=2, default=str), encoding='utf-8')
     print(f'saved: {p}')
     return 0

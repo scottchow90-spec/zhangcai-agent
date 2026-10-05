@@ -80,6 +80,7 @@
       "summary": "完整涨停池、基线、题材、资金、结构与次日情景复盘。",
       "required": ["limit_up_pool", "public_research"],
       "optional": ["tdx_daily_history", "lhb_data"],
+      "degradable_required": ["public_research"],
       "degrade": "允许明确标注辅助数据降级；正式涨停名单与关键日期缺失时阻断。"
     },
     {

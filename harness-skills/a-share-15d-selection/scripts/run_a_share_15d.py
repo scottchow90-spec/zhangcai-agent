@@ -26,6 +26,11 @@ from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
 
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
+
 from audit_engine import validate_artifacts, validate_candidate_score
 
 from docx import Document
@@ -41,12 +46,7 @@ SKILL_DIR = Path(__file__).resolve().parent.parent
 # The packaged desktop passes the user-selected TDX directory through the
 # environment. Keep the development default behind an explicit variable so a
 # copied EXE never silently reads C:\\new_tdx_mock on another computer.
-_configured_tdx_root = (
-    os.environ.get("ZHANGCAI_TDX_ROOT")
-    or os.environ.get("TDX_ROOT")
-    or os.environ.get("ZHANGCAI_DEV_TDX_ROOT", r"C:\\new_tdx_mock")
-).strip()
-TDX_ROOT = Path(_configured_tdx_root).expanduser().resolve()
+TDX_ROOT = resolve_tdx_root()
 
 
 def runtime_home(skill_dir: Path) -> Path:

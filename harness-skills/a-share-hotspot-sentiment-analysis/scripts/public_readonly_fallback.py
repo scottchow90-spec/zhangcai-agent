@@ -15,6 +15,7 @@ import json
 import os
 import re
 import subprocess
+import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
@@ -65,10 +66,13 @@ MANDATORY_SITE_MINIMUM = 10
 GUBA_ARTICLE_LIST = (
     "https://gbapi.eastmoney.com/webarticlelist/api/Article/Articlelist"
 )
-DUANXIANXIA_CLIENT = Path(
-    r"D:\C盘转移\日志\codex\skills\a-share-hotspot-sentiment-analysis\scripts\duanxianxia_client.ps1"
-)
-DEFAULT_REVIEW_ROOT = Path(r"D:\C盘转移\日志\codex\reports")
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_data_root
+
+DUANXIANXIA_CLIENT = Path(__file__).resolve().parent / "duanxianxia_client.ps1"
+DEFAULT_REVIEW_ROOT = resolve_data_root() / "reports"
 FINANCE_TERMS = (
     "A股",
     "股票",

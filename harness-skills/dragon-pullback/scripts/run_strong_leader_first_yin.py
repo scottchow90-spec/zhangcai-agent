@@ -22,10 +22,15 @@ from decimal import Decimal, ROUND_HALF_UP
 from pathlib import Path
 from typing import Any
 
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_data_root, resolve_tdx_root
+
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
-REPORTS = SKILL_ROOT / "reports"
-TDX_ROOT = Path(os.environ.get("ZHANGCAI_TDX_ROOT", r"C:\new_tdx_mock"))
+REPORTS = resolve_data_root() / "reports" / "skills" / "dragon-pullback"
+TDX_ROOT = resolve_tdx_root()
 TDX_HUB_PATH = Path(os.environ.get(
     "TDX_HUB_PATH",
     str(Path(__file__).resolve().parents[2] / "tdx-local-hub" / "scripts" / "tdx_hub.py"),

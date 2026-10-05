@@ -12,12 +12,18 @@ if _onestock_embedded_dir not in _onestock_embedded_sys.path:
 import argparse
 import importlib.util
 import json
+import os
 import re
 import sys
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
 
 
 FORMULA_NAMES = ("大牛线撑压版", "飞龙在天", "庄家资金监控")
@@ -392,7 +398,7 @@ def main() -> int:
         description="本机三公式全子系统技术分析执行器"
     )
     parser.add_argument("--code", default="600000.SH")
-    parser.add_argument("--tdx", default=r"C:\new_tdx_mock")
+    parser.add_argument("--tdx", default=str(resolve_tdx_root()))
     parser.add_argument("--json", action="store_true")
     parser.add_argument(
         "--test-fail-formula",

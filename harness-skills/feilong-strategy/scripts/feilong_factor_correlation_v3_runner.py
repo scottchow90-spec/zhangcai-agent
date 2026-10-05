@@ -2,7 +2,13 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
+import sys
 from typing import Any
+
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_tdx_root
 
 from feilong_deep_factor_research import load_verified_input
 from feilong_factor_correlation_research import (
@@ -14,7 +20,7 @@ from feilong_resonance_exhaustive import normalize_bool_series
 
 
 FORMULA_NAME = "飞龙在天"
-TDX_ROOT = Path(r"C:\new_tdx_mock")
+TDX_ROOT = resolve_tdx_root()
 
 
 def _main_board(symbol: str) -> bool:

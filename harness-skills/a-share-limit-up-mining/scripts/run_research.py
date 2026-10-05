@@ -52,6 +52,11 @@ import warnings
 from datetime import datetime
 from pathlib import Path
 
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_data_root, resolve_tdx_root
+
 from _date_utils import resolve_latest_trade_date
 
 warnings.filterwarnings('ignore')
@@ -62,25 +67,12 @@ try:
 except Exception:
     pass
 
-WORKSPACE = Path.home() / '.codex'
+WORKSPACE = resolve_data_root()
 SKILL_DIR = Path(__file__).resolve().parents[1]
-REPORTS = WORKSPACE / 'reports'
-ZTC_CANDIDATES = [
-    Path(r'C:\new_tdx_mock\T0002\blocknew\ZTC.blk'),
-    Path(r'C:\new_tdx\vipdoc\sh\lday'),
-    Path(r'C:\zd_tdx\vipdoc\sh\lday'),
-]
-TDX_DAY_CANDIDATES = [
-    Path(r'C:\new_tdx_mock\vipdoc\sh\lday'),
-    Path(r'C:\new_tdx_mock\vipdoc\sz\lday'),
-    Path(r'C:\new_tdx_mock\vipdoc\bj\lday'),
-    Path(r'C:\new_tdx\vipdoc\sh\lday'),
-    Path(r'C:\new_tdx\vipdoc\sz\lday'),
-    Path(r'C:\new_tdx\vipdoc\bj\lday'),
-    Path(r'C:\zd_tdx\vipdoc\sh\lday'),
-    Path(r'C:\zd_tdx\vipdoc\sz\lday'),
-    Path(r'C:\zd_tdx\vipdoc\bj\lday'),
-]
+REPORTS = WORKSPACE / 'reports' / 'skills' / 'a-share-limit-up-mining'
+TDX_ROOT = resolve_tdx_root()
+ZTC_CANDIDATES = [TDX_ROOT / 'T0002' / 'blocknew' / 'ZTC.blk']
+TDX_DAY_CANDIDATES = [TDX_ROOT / 'vipdoc' / market / 'lday' for market in ('sh', 'sz', 'bj')]
 
 # 长期运行配套脚本路径必须收束在本 skill 内，禁止跳到旧外部基础设施目录。
 INFRA_SCRIPTS = SKILL_DIR / 'scripts'
@@ -199,7 +191,7 @@ def load_tdx_stock_name_index() -> dict[str, str]:
       文件格式: '000001|平安银行|平安保险,...'
       size: 180 KB / 5535 行 (覆盖全 A 股)
     """
-    index_path = Path(r'C:\new_tdx_mock\T0002\hq_cache\infoharbor_ex.code')
+    index_path = TDX_ROOT / 'T0002' / 'hq_cache' / 'infoharbor_ex.code'
     if not index_path.exists():
         _fallback('TDX 股票名索引缺失, 将用 "涨停池" 作为默认名')
         return {}
@@ -386,10 +378,9 @@ def find_tdx_day_path(code: str) -> Path | None:
             if p.exists():
                 return p
     # 尝试所有候选根
-    for root in [Path(r'C:\new_tdx_mock'), Path(r'C:\new_tdx'), Path(r'C:\zd_tdx')]:
-        p = root / 'vipdoc' / market / 'lday' / fname
-        if p.exists():
-            return p
+    p = TDX_ROOT / 'vipdoc' / market / 'lday' / fname
+    if p.exists():
+        return p
     return None
 
 

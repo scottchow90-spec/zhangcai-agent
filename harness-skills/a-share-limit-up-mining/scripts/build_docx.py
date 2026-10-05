@@ -17,6 +17,15 @@ import sys
 import warnings
 from pathlib import Path
 
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_data_root
+
+_SKILL_ROOT = Path(__file__).resolve().parents[1]
+_WORKSPACE_DATA = resolve_data_root() / "strategy-data" / "a-share-limit-up-mining"
+_DEFAULT_TEMPLATE = _SKILL_ROOT / "assets" / "连板挖掘模板.docx"
+
 warnings.filterwarnings('ignore')
 try:
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
@@ -1254,13 +1263,13 @@ def main():
     ap.add_argument('--data-evidence', required=True, help='股票数据新鲜度证据 JSON')
     args = ap.parse_args()
 
-    template = args.template or r"F:\小龙虾6月交付\6月1日连板挖掘5标的.docx"
-    workspace_data = Path(r"D:\C盘转移\日志\codex\tmp_lb\data")
+    template = args.template or str(_DEFAULT_TEMPLATE)
+    workspace_data = _WORKSPACE_DATA
     data = args.data or str(workspace_data / f"analyzed2_{args.date}.json")
     raw = args.raw or str(workspace_data / f"raw4_{args.date}.json")
     if not args.out:
         date_pretty = f"{args.date[:4]}-{args.date[4:6]}-{args.date[6:8]}"
-        args.out = str(Path(r"F:\小龙虾6月交付") / f"\u8fde\u677f\u6316\u6398_{date_pretty}.docx")
+        args.out = str(resolve_data_root() / "reports" / "deliverables" / "a-share-limit-up-mining" / f"\u8fde\u677f\u6316\u6398_{date_pretty}.docx")
 
     print(f"date: {args.date}")
     print(f"tpl : {template}")

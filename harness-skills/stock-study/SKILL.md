@@ -5,6 +5,8 @@ description: 面向单一股票的高级研究流程，覆盖公司概况、机�
 
 # 高级股票研究
 
+桌面端必须从 `STOCK_SKILLS_ROOT` 定位技能文件，不得使用旧开发机 D 盘绝对路径；通达信目录统一读取 `ZHANGCAI_TDX_ROOT`。
+
 ## 执行边界
 
 - 目标系统固定为本机 Codex，不调用 OpenClaw 网关、注册表或旧总执行器。
@@ -16,7 +18,7 @@ description: 面向单一股票的高级研究流程，覆盖公司概况、机�
 
 唯一公开入口：
 
-`python D:\C盘转移\日志\codex\skills\stock-study\scripts\codex_entry.py run -- --symbol 600519`
+`python "%STOCK_SKILLS_ROOT%\stock-study\scripts\codex_entry.py" run -- --symbol 600519`
 
 执行链固定为：
 

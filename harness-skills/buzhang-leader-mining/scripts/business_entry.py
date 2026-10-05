@@ -29,7 +29,6 @@ CODEX_HOME = runtime_home(SKILL_DIR)
 SHORTLINE = CODEX_HOME / "shortline-hotspot-mining" / "scripts" / "codex_entry.py"
 LIMITUP = CODEX_HOME / "a-share-limit-up-mining" / "scripts" / "codex_entry.py"
 TDX_FORMULA = SKILL_DIR / "scripts" / "tdx_formula.py"
-AKSHARE_FALLBACK = Path(r"F:\Codex\Workspace\2026-07-16\a-word-word\work\limit-up-review-pydeps")
 RESEARCH_SCHEMA = "BUZHANG-CANDIDATE-RESEARCH-V1"
 HARD_RISK_KEYS = (
     "st_or_delisting",
@@ -66,7 +65,7 @@ def selftest() -> int:
         TDX_FORMULA,
     ]
     missing = [str(p) for p in required if not p.is_file()]
-    akshare_available = importlib.util.find_spec("akshare") is not None or (AKSHARE_FALLBACK / "akshare").is_dir()
+    akshare_available = importlib.util.find_spec("akshare") is not None
     status = "PASS" if not missing and akshare_available else "BLOCKED"
     print(json.dumps({
         "status": status,
@@ -324,8 +323,6 @@ def read_limitup_rows(path: Path) -> list[dict]:
 
 
 def load_zt_rows(trade_date: str) -> list[dict]:
-    if (AKSHARE_FALLBACK / "akshare").is_dir() and str(AKSHARE_FALLBACK) not in sys.path:
-        sys.path.insert(0, str(AKSHARE_FALLBACK))
     try:
         import akshare as ak
         df = ak.stock_zt_pool_em(date=trade_date)
@@ -383,8 +380,6 @@ def run(args: argparse.Namespace) -> int:
     env = os.environ.copy()
     env.setdefault("PYTHONUTF8", "1")
     env.setdefault("PYTHONIOENCODING", "utf-8")
-    if (AKSHARE_FALLBACK / "akshare").is_dir():
-        env["PYTHONPATH"] = str(AKSHARE_FALLBACK) + os.pathsep + env.get("PYTHONPATH", "")
 
     commands = build_upstream_commands(trade_date, out)
     steps = {}

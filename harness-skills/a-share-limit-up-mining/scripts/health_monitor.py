@@ -11,8 +11,14 @@ import argparse
 import json
 from datetime import datetime
 from pathlib import Path
+import sys
 
-ROOT = Path.home() / ".codex" / "reports" / "_lianban_runtime" / "health"
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_data_root
+
+ROOT = resolve_data_root() / "runtime" / "skills" / "a-share-limit-up-mining" / "health"
 
 
 def now_iso() -> str:

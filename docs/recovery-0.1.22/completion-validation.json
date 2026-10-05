@@ -1,0 +1,199 @@
+{
+  "schema": "ZHANGCAI_RECOVERY_COMPLETION_VALIDATION_V1",
+  "kind": "newly-authored-completion",
+  "date": "2026-10-02",
+  "platform": "macOS",
+  "productVersion": "0.1.22",
+  "environmentBaseline": "0.1.9",
+  "tools": {
+    "node": "24.19.0",
+    "python": "3.12.14",
+    "harnessFilesystemProvider": "0.1.2-rc.1",
+    "providerInstallation": "Separate test directory outside the repository; no production runtime rebuilt."
+  },
+  "results": {
+    "regressionTests": {
+      "status": "PASS",
+      "exitCode": 0,
+      "nodeTests": 9,
+      "nodeFailures": 0,
+      "pythonFixtureTests": 6,
+      "fixtures": "Synthetic ZIP/dist/formula fixtures are isolated in temporary directories; they are never release substitutes."
+    },
+    "syntax": {
+      "status": "PASS",
+      "exitCode": 0,
+      "pythonFiles": 10,
+      "nodeFiles": 8
+    },
+    "frontendStaging": {
+      "exitCode": 0,
+      "status": "CLEAN_PASS",
+      "productVersion": "0.1.22",
+      "source": "exact-recovered-release",
+      "frontendSourceVersion": "0.1.18",
+      "files": 60,
+      "formulaFiles": 11,
+      "reused": true,
+      "target": "packaging/staging/site-build-0.1.22"
+    },
+    "stockDetail": {
+      "exitCode": 0,
+      "schema": "ZHANGCAI_STOCK_DETAIL_VERIFICATION_V1",
+      "status": "CLEAN_PASS",
+      "expected_skills": 10,
+      "selftests_passed": 10,
+      "dsh_discovered": 10,
+      "business_execution_tested": false,
+      "passed": [
+        "baimao-score-system",
+        "big-bull-analysis-scoring-system",
+        "financial-roe-analysis",
+        "stock-analysis",
+        "stock-research-engine",
+        "stock-study",
+        "support-pressure-analysis-system",
+        "risk-mine-clearance",
+        "baimao-teacher-system",
+        "technical-analysis"
+      ],
+      "errors": []
+    },
+    "skill14Archives": {
+      "exitCode": 1,
+      "schema": "ZHANGCAI_SKILL14_ARCHIVE_VERIFICATION_V1",
+      "status": "BLOCKED",
+      "checked_count": 13,
+      "expected_count": 14,
+      "archives": [
+        {
+          "id": "individual-stock-analysis-v31",
+          "archive": "个股分析_WorkBuddy电脑版_通达信版_V3.1_生产验收版.zip",
+          "sha256": "b39a4bcc62daf050132eac861c27d4273366645e924e46dba549e603c1e78040",
+          "skill_name": "individual-stock-analysis"
+        },
+        {
+          "id": "golden-ignition-v8",
+          "archive": "黄金点火策略_WorkBuddy最终版.zip",
+          "sha256": "2d8567bd792b45f6417a16a68c465bdb890ca36c1f00fbef42994fc5df620e21",
+          "skill_name": "golden-ignition-strategy"
+        },
+        {
+          "id": "limit-advance-v44",
+          "archive": "连板晋级量化决策系统_V4.4_深度审计与训练交付包.zip",
+          "sha256": "b7a8ea49088666a57e98ee3ee59c2ad1b98b703580a97630f160400ae44a3fd6",
+          "skill_name": "a-share-limit-advance"
+        },
+        {
+          "id": "leader-deep-research",
+          "archive": "龙头深度分析_WorkBuddy电脑版.zip",
+          "sha256": "8b65f83759c512603522ed107ae8545e07bf74ce23da37de1618a9ab9b9bc80b",
+          "skill_name": "a-share-leader-deep-research-workbuddy"
+        },
+        {
+          "id": "unified-shortterm-score-v4",
+          "archive": "统一短线个股评分系统_WorkBuddy电脑版_通达信版_V4.zip",
+          "sha256": "915d958cfc7218342dddfdcb2bb2aaa0eb80087dce06e2fd07f4d87dbb993eca",
+          "skill_name": "unified-shortterm-stock-score-desktop"
+        },
+        {
+          "id": "limit-up-review",
+          "archive": "涨停板深度复盘_WorkBuddy电脑版.zip",
+          "sha256": "f5969dd698c57d212870ec487a8cbfffa1bf71255c44361be9b395e605c4261a",
+          "skill_name": "limit-up-review"
+        },
+        {
+          "id": "short-burst-score-v5",
+          "archive": "A股短线爆发力评分系统_V5.0_优化版.zip",
+          "sha256": "3199b8bdafd8355e1f1b86600f55d2efb9d8904ed4068b06348b6592f8f82226",
+          "skill_name": "a-share-short-burst-score"
+        },
+        {
+          "id": "short-term-sentiment-v22",
+          "archive": "A股短线市场情绪研判系统_实战固化版_V2.2_WorkBuddy.zip",
+          "sha256": "ca1039b45cbbe8559f86a7cf0d2c1ac2ca6cddc53adf5aa97c0ffeeba4682c81",
+          "skill_name": "a-share-short-term-market-sentiment-workbuddy"
+        },
+        {
+          "id": "quant-production-v65",
+          "archive": "A股量化生产定型工程_V6.5_WorkBuddy双路容灾最终生产版.zip",
+          "sha256": "d0cb7eeecb43f92b564a3359a9ea8bf7bc877c0500edc7f7d65aefad1d3d3759",
+          "skill_name": "a-share-quant-production-v65-workbuddy"
+        },
+        {
+          "id": "lhb-postmarket-v43",
+          "archive": "A股盘后龙虎榜强势股决策系统_WorkBuddy彻底优化版_V4.3.zip",
+          "sha256": "acbdb2895ce7ed11c2409ae531613023c8be4738e25855e9c9cd7396ef705770",
+          "skill_name": "a-share-lhb-postmarket-decision"
+        },
+        {
+          "id": "market-environment-v5",
+          "archive": "A股市场环境决策系统_WorkBuddy技能包_5.0防回归版.zip",
+          "sha256": "6fc4d1380195e3bebee377dfae2bbfcc6809eee6edcaca8aade2b89b4dd5caab",
+          "skill_name": "a-share-market-environment"
+        },
+        {
+          "id": "morning-intelligence-plan",
+          "archive": "A股早盘资讯与盘前计划（电脑版）_a-share-morning-intelligence-plan.zip",
+          "sha256": "74189fe5340245b8b85d72c128285deb9625dc2547f667c6a937853483211d07",
+          "skill_name": "a-share-morning-intelligence-plan"
+        },
+        {
+          "id": "workbuddy-evolution-v22",
+          "archive": "WorkBuddy_自我进化_V2.2_深度适配版_单文件.zip",
+          "sha256": "076aed7b7197fa149a3b10701fb42f1f7eceed71037dc686c25c31fbcac44360",
+          "skill_name": "workbuddy-evolution-kernel"
+        }
+      ],
+      "errors": [
+        "market-data-capabilities: ValueError: missing archive: A股行情资讯全接口与数据能力大全_WorkBuddy电脑版_20260908-014459.zip"
+      ]
+    },
+    "skill14PackagedRuntime": {
+      "exitCode": 1,
+      "status": "BLOCKED",
+      "prepared": 13,
+      "discovered": 13,
+      "business_execution_tested": false,
+      "errors": [
+        "market-data-capabilities: RuntimeError: 缺少随主程序提供的技能包：<repository>/skill-archives/A股行情资讯全接口与数据能力大全_WorkBuddy电脑版_20260908-014459.zip"
+      ]
+    },
+    "windowsPreflight": {
+      "status": "NOT_RUN",
+      "reason": "macOS host; Windows PowerShell and verified private Windows runtime staging unavailable."
+    },
+    "windowsInstaller": {
+      "status": "NOT_RUN",
+      "reason": "Windows preflight and all fourteen original ZIP inputs are required."
+    },
+    "webBuild": {
+      "status": "NOT_RERUN",
+      "reason": "Initial restoration build passed (validation.json); this completion changes release checks/packaging only. Exact recovered dist remains unchanged."
+    }
+  },
+  "limits": {
+    "modelCallsMade": false,
+    "liveMarketBusinessAcceptance": false,
+    "frontendTsxReconstructed": false,
+    "sourceRecoveryClaim": "These entry points are newly implemented from existing call contracts, not the missing original 0.1.22 source."
+  },
+  "remainingInputs": [
+    {
+      "kind": "archive",
+      "id": "market-data-capabilities",
+      "file": "A股行情资讯全接口与数据能力大全_WorkBuddy电脑版_20260908-014459.zip",
+      "bytes": 145649253,
+      "sha256": "4f492bf7167cf45c523bfb533806a790b0d00ea08f9ce8eda26084944bb504e4",
+      "hashProvenance": "Supplied original recovery manifest; archive not present and cannot be independently hashed."
+    },
+    {
+      "kind": "environment",
+      "description": "Verified private Windows Node/Python/Harness runtime baseline and TDX acceptance conditions."
+    },
+    {
+      "kind": "source",
+      "description": "Original 0.1.22 source/source maps for eight TSX pages remain unavailable; original baseline files preserved."
+    }
+  ]
+}

@@ -5,7 +5,7 @@ This is the fixed verification order recovered from the active `stock-unified` w
 ## Required sequence
 
 1. Initialize once:
-   - `tq.initialize(r'C:\new_tdx_mock\PYPlugins\user\tdxdata_test.py')`
+   - `tq.initialize(r'$env:ZHANGCAI_TDX_ROOT\PYPlugins\user\tdxdata_test.py')`
 2. Main trend filter:
    - `tq.formula_process_mul_zb('大牛线4.0', stock_list=[...], count=20, dividend_type=1)`
 3. Wave / breakout state:

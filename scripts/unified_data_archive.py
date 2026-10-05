@@ -15,6 +15,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import zipfile
 from datetime import datetime
 from pathlib import Path
@@ -74,6 +75,57 @@ def file_asset(path: Path, source: str, status: str = "available", **extra: Any)
     if not path.is_file() and status == "available":
         value["status"] = "missing"
     return value
+
+
+def public_research_asset(data_root: Path, target_date: str) -> tuple[Path, str, Dict[str, Any]]:
+    """Prefer real dated news over a market-only fallback at the stable alias."""
+    candidates = [
+        data_root / "evidence" / "public" / "latest.json",
+        data_root / "news" / "latest.json",
+        data_root / "evidence" / "public" / "fallback-latest.json",
+    ]
+    inspected: list[tuple[Path, Dict[str, Any], list[Dict[str, Any]], str]] = []
+    for path in candidates:
+        value = read_json(path, {})
+        if not isinstance(value, dict) or not value:
+            continue
+        snapshot = value.get("snapshot") if isinstance(value.get("snapshot"), dict) else value
+        records = snapshot.get("records") if isinstance(snapshot.get("records"), list) else []
+        if not records and isinstance(snapshot.get("providers"), dict):
+            records = [row for provider in snapshot["providers"].values() if isinstance(provider, dict) for row in provider.get("records", []) if isinstance(row, dict)]
+        if not records and isinstance(snapshot.get("source"), dict):
+            records = snapshot["source"].get("records", []) if isinstance(snapshot["source"].get("records"), list) else []
+        records = [row for row in records if isinstance(row, dict)]
+        fallback_kind = str(value.get("fallback_kind") or "")
+        inspected.append((path, value, records, fallback_kind))
+    selected = next((item for item in inspected if item[2] and not item[3]), None)
+    if selected is None:
+        selected = next((item for item in inspected if item[3]), None)
+    if selected is None:
+        return candidates[0], "missing", {"context_record_count": 0, "same_day_record_count": 0, "source_date": "", "fallback_kind": ""}
+    path, value, records, fallback_kind = selected
+    date_pattern = re.compile(r"(\d{4}-\d{1,2}-\d{1,2})")
+    record_dates = []
+    same_day_count = 0
+    for record in records:
+        raw_date = str(record.get("source_timestamp") or record.get("publishedAt") or record.get("published_at") or record.get("publish_time") or record.get("date") or "")
+        match = date_pattern.search(raw_date.replace("/", "-"))
+        if not match:
+            continue
+        parts = match.group(1).split("-")
+        record_date = f"{parts[0]}-{int(parts[1]):02d}-{int(parts[2]):02d}"
+        record_dates.append(record_date)
+        if record_date == display_date(target_date):
+            same_day_count += 1
+    source_date = max(record_dates) if record_dates else str(value.get("source_date") or value.get("date") or "")
+    status = "available" if records and same_day_count > 0 and not fallback_kind else "degraded"
+    return path, status, {
+        "context_record_count": len(records),
+        "same_day_record_count": same_day_count,
+        "source_date": source_date,
+        "fallback_kind": fallback_kind,
+        "target_date": display_date(target_date),
+    }
 
 
 def compact_date(value: str) -> str:
@@ -270,7 +322,7 @@ def snapshot(date_value: str) -> Dict[str, Any]:
     security_path = DATA_ROOT / "market" / "security-master" / f"{date}.jsonl"
     formula_manifest = DATA_ROOT / "evidence" / "formulas" / "package" / "manifest.json"
     public_path = DATA_ROOT / "public" / "latest.json"
-    public_research_path = DATA_ROOT / "evidence" / "public" / "latest.json"
+    public_research_path, public_research_status, public_research_meta = public_research_asset(DATA_ROOT, date)
     news_path = DATA_ROOT / "news" / "latest.json"
     supplemental_path = DATA_ROOT / "evidence" / "supplemental" / date / "market.json"
     supplemental = read_json(supplemental_path, {})
@@ -287,7 +339,16 @@ def snapshot(date_value: str) -> Dict[str, Any]:
         file_asset(DATA_ROOT / "public" / "limit-up" / f"{display_date(date)}.json", "公开涨停池归档", "available"),
         file_asset(DATA_ROOT / "public" / "lhb" / f"{display_date(date)}.json", "公开龙虎榜归档", "available"),
         file_asset(news_path, "东方财富 7×24 快讯", "available" if news.get("status") == "available" else "missing", source_date=news.get("date", "")),
-        file_asset(public_research_path, "公开研究统一快照", "available" if public_research_path.is_file() else "missing", source_date=date),
+        file_asset(
+            public_research_path,
+            "公开研究统一快照",
+            public_research_status,
+            source_date=public_research_meta.get("source_date", ""),
+            target_date=public_research_meta.get("target_date", display_date(date)),
+            context_record_count=public_research_meta.get("context_record_count", 0),
+            same_day_record_count=public_research_meta.get("same_day_record_count", 0),
+            fallback_kind=public_research_meta.get("fallback_kind", ""),
+        ),
         file_asset(supplemental_path, "财务/股本/指数日线/龙虎榜/融资融券统一补充快照", "available" if supplemental else "missing", trade_date=date, coverage=supplemental.get("coverage", {}) if isinstance(supplemental, dict) else {}),
         file_asset(
             formula_manifest,

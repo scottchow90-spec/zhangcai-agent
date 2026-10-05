@@ -7,13 +7,16 @@ if _onestock_embedded_dir not in _onestock_embedded_sys.path:
     _onestock_embedded_sys.path.insert(0, _onestock_embedded_dir)
 
 import math
+import os
 import sys
 from pathlib import Path
 
 import numpy as np
 
 
-CORE_DIR = Path(r"D:\C盘转移\日志\codex\skills\stock-unified\scripts")
+SKILL_ROOT = Path(__file__).resolve().parents[1]
+SKILLS_ROOT = Path(os.environ.get("STOCK_SKILLS_ROOT", str(SKILL_ROOT.parent))).expanduser().resolve()
+CORE_DIR = SKILLS_ROOT / "stock-unified" / "scripts"
 sys.path.insert(0, str(CORE_DIR))
 import stock_strategy_backtest as core  # noqa: E402
 

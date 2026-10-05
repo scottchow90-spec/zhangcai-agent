@@ -9,6 +9,7 @@ if _onestock_embedded_dir not in _onestock_embedded_sys.path:
 import argparse
 import hashlib
 import json
+import os
 import struct
 import subprocess
 import sys
@@ -36,6 +37,10 @@ from validate_delivery_contract import (
     DeliveryContractError,
     build_delivery_payload,
 )
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_tdx_root
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -50,6 +55,7 @@ RUN_LOCK = RUN / ".run.lock"
 SELFTEST_LOCK = RUN / ".selftest.lock"
 
 DAY_RECORD_SIZE = 32
+TDX_ROOT = resolve_tdx_root()
 DAY_INPUT_SCHEMA = "CONVERTIBLE-BOND-DAY-INPUT-MANIFEST-2"
 DAY_INPUT_BINDING_MODE = "immutable_tail_snapshot_pre_and_post"
 DAY_INPUT_TAIL_RECORD_LIMIT = 260
@@ -328,7 +334,7 @@ def binding_matches(binding: dict[str, Any], path: Path) -> bool:
 
 
 def latest_local_benchmark_date() -> str:
-    benchmark = Path(r"C:\new_tdx_mock\vipdoc\sh\lday\sh999999.day")
+    benchmark = TDX_ROOT / "vipdoc" / "sh" / "lday" / "sh999999.day"
     size = benchmark.stat().st_size
     if size < DAY_RECORD_SIZE or size % DAY_RECORD_SIZE != 0:
         raise RuntimeError(f"invalid local benchmark DAY file: {benchmark}")

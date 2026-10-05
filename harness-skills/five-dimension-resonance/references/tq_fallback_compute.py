@@ -13,7 +13,16 @@ _onestock_embedded_dir = str(_OneStockEmbeddedPath(__file__).resolve().parent)
 if _onestock_embedded_dir not in _onestock_embedded_sys.path:
     _onestock_embedded_sys.path.insert(0, _onestock_embedded_dir)
 import sys
-sys.path.insert(0, r"C:\new_tdx_mock\PYPlugins\user")
+from pathlib import Path
+APP_ROOT = Path(__file__).resolve().parents[3]
+APP_SCRIPTS = APP_ROOT / "scripts"
+if str(APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
+
+TDX_ROOT = resolve_tdx_root()
+TQ_USER_DIR = TDX_ROOT / "PYPlugins" / "user"
+sys.path.insert(0, str(TQ_USER_DIR))
 from tqcenter import tq
 import pandas as pd
 import numpy as np
@@ -49,7 +58,7 @@ def compute_wuwei(code: str, days: int = 60):
     market = "SH" if code.startswith("6") else "SZ"
     sm = f"{code}.{market}"
 
-    tq.initialize(r"C:\new_tdx_mock\PYPlugins\user\openclaw_tq_test.py")
+    tq.initialize(str(TQ_USER_DIR / "openclaw_tq_test.py"))
 
     # ── 1. K线数据 ──
     md = tq.get_market_data(stock_list=[sm], period="1d", count=days)

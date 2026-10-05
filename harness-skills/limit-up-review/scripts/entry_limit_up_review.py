@@ -27,19 +27,24 @@ from datetime import date as date_type, datetime, time as time_type, timedelta, 
 from pathlib import Path
 from typing import Any
 
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_data_root, resolve_tdx_root
+
 try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 except Exception:
     pass
 
-WORKSPACE = Path(r"D:\C盘转移\日志\codex")
+WORKSPACE = resolve_data_root()
 SKILL_DIR = Path(__file__).resolve().parents[1]
 SCRIPTS_DIR = SKILL_DIR / "scripts"
 REPORT_ROOT = WORKSPACE / "reports"
 BUSINESS_DATA_ROOT = WORKSPACE / "business_data" / "limit-up-review"
-DEFAULT_TDX_ROOT = Path(r"C:\new_tdx_mock")
-DEFAULT_DELIVERY_ROOT = Path(r"F:\小龙虾6月交付")
+DEFAULT_TDX_ROOT = resolve_tdx_root()
+DEFAULT_DELIVERY_ROOT = WORKSPACE / "deliveries"
 LATEST_CLOSE_TIME = time_type(15, 5)
 STRICT_STEPS = [
     "collect_limitup_data_strict.py",
@@ -373,7 +378,7 @@ def run_python(script_name: str, env: dict[str, str], extra_args: list[str] | No
     }
 
 
-def full_run(date: str, tdx_root: Path, out_dir: Path | None = None, delivery_root: str = r"F:\小龙虾6月交付", mode: str = "latest") -> dict[str, Any]:
+def full_run(date: str, tdx_root: Path, out_dir: Path | None = None, delivery_root: str | Path = DEFAULT_DELIVERY_ROOT, mode: str = "latest") -> dict[str, Any]:
     audit = preflight(date, tdx_root, out_dir=out_dir, mode=mode)
     if audit.get("status") != "CLEAN_PASS":
         return audit

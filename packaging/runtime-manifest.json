@@ -1,7 +1,7 @@
 {
   "schema": "ZHANGCAI_4319_DESKTOP_PACKAGE_PLAN_V2",
   "product": "掌财桌面端",
-  "packageVersion": "0.1.13",
+  "packageVersion": "0.1.22",
   "scope": "current-4319-3003-3004-main-program",
   "releaseMode": "integrated-main-installer-plus-program-update",
   "packagingPolicy": {
@@ -12,13 +12,13 @@
     "dataPackMode": "optional-post-install"
   },
   "releaseLayers": {
-    "environmentBaseline": "dist-installer/releases/0.1.13/掌财桌面端-0.1.13-x64.exe",
+    "environmentBaseline": "dist-installer/releases/0.1.22/掌财桌面端-0.1.22-x64.exe",
     "environmentBaselineVersion": "packaging/environment-baseline-version.txt",
     "environmentBaselineReusable": true,
-    "mainProgram": "dist-installer/releases/0.1.13/掌财桌面端-0.1.13-x64.exe",
+    "mainProgram": "dist-installer/releases/0.1.22/掌财桌面端-0.1.22-x64.exe",
     "mainProgramRequiresEnvironment": false,
     "mainProgramContains": ["Electron", "private Node.js", "private Python", "DeepSeek Harness", "pruned Vinext runtime dependencies"],
-    "programUpdate": "dist-installer/releases/0.1.13/掌财桌面端-程序更新-0.1.13-x64.exe",
+    "programUpdate": "dist-installer/releases/0.1.22/掌财桌面端-程序更新-0.1.22-x64.exe",
     "programUpdateExcludes": ["resources/runtime", "resources/deepseek-harness", "resources/app/node_modules", "data/resource-library"],
     "legacyEnvironmentArtifacts": [
       "dist-installer/releases/0.1.6/掌财桌面端-运行环境-0.1.6-x64.exe",

@@ -20,6 +20,7 @@ _stock_adapter_shared_scripts = str(_OneStockEmbeddedPath(__file__).resolve().pa
 if _stock_adapter_shared_scripts not in _onestock_embedded_sys.path:
     _onestock_embedded_sys.path.insert(0, _stock_adapter_shared_scripts)
 from stock_adapter_io import atomic_write_json, atomic_write_text, enable_atomic_path_writes
+from tdx_path_config import path_is_within, resolve_tdx_root
 from typing import Any
 
 
@@ -27,6 +28,7 @@ ROOT = Path(__file__).resolve().parents[1]
 HOME = ROOT.parents[1]
 SKILLS_ROOT = HOME / "harness-skills"
 SKILL_ID = ROOT.name
+TDX_ROOT = resolve_tdx_root()
 RUNNER = ROOT / "scripts" / "run_core_mainline_scoring.py"
 DUANXIANXIA_CLIENT = SKILLS_ROOT / "a-share-hotspot-sentiment-analysis" / "scripts" / "duanxianxia_client.ps1"
 LIANBAN_CLIENT = HOME / "scripts" / "lianban_daily_client.py"
@@ -123,7 +125,7 @@ def build_data_gate(
     turnover_current = bool(turnover) and all(
         isinstance(item, dict)
         and int(item.get("current_date") or 0) == expected_numeric_date
-        and str(item.get("source_path") or "").startswith("C:\\new_tdx_mock\\vipdoc\\")
+        and path_is_within(item.get("source_path") or "", TDX_ROOT / "vipdoc")
         and len(str(item.get("source_sha256") or "")) == 64
         for item in turnover
     )
@@ -141,7 +143,7 @@ def build_data_gate(
             source_status.get("tdx_turnover") == "VERIFIED"
             and isinstance(sector_return, dict)
             and int(sector_return.get("current_date") or 0) == expected_numeric_date
-            and str(sector_return.get("source_path") or "").startswith("C:\\new_tdx_mock\\vipdoc\\")
+            and path_is_within(sector_return.get("source_path") or "", TDX_ROOT / "vipdoc")
             and len(str(sector_return.get("source_sha256") or "")) == 64
             and turnover_current
         ),
@@ -149,7 +151,7 @@ def build_data_gate(
             source_status.get("tdx_constituents") == "VERIFIED"
             and isinstance(constituent, dict)
             and int(selected_input.get("constituent_count") or 0) > 100
-            and str(constituent.get("source_path") or "").startswith("C:\\new_tdx_mock\\")
+            and path_is_within(constituent.get("source_path") or "", TDX_ROOT)
             and len(str(constituent.get("source_sha256") or "")) == 64
         ),
         "news_announcements": bool(

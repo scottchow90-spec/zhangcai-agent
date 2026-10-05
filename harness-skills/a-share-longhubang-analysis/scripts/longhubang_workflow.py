@@ -14,16 +14,22 @@ from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
 
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_data_root
+
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from poster_builder import POLICY as POSTER_POLICY, build_pages, finalize
 
 DIRECT_GUARD = "canonical_stock_legacy_entry_direct_execution_blocked"
 ROOT = Path(__file__).resolve().parents[1]
-DXX_CLIENT = Path(r"D:\C盘转移\日志\codex\skills\a-share-hotspot-sentiment-analysis\scripts\duanxianxia_client.ps1")
-LIANBAN_CLIENT = Path(r"D:\C盘转移\日志\codex\scripts\lianban_daily_client.py")
+APP_ROOT = ROOT.parents[1]
+DXX_CLIENT = ROOT.parent / "a-share-hotspot-sentiment-analysis" / "scripts" / "duanxianxia_client.ps1"
+LIANBAN_CLIENT = APP_ROOT / "scripts" / "lianban_daily_client.py"
 SUMMARY_REPORT = "RPT_DAILYBILLBOARD_DETAILSNEW"
 EQUITY_PREFIXES = ("000", "001", "002", "003", "300", "301", "600", "601", "603", "605", "688", "689")
-YOUZI_PROFILES = Path(r"D:\C盘转移\日志\codex\knowledge-base\personal-investment\historical-a-share-kb\data\youzi\youzi_profiles.json")
+YOUZI_PROFILES = resolve_data_root() / "knowledge-base" / "personal-investment" / "historical-a-share-kb" / "data" / "youzi" / "youzi_profiles.json"
 LIANBAN_SEAT_INDEX_URL = "https://lianban.net/xiwei/"
 OFFICIAL_CONCEPT_URL = "https://emweb.securities.eastmoney.com/PC_HSF10/CoreConception/PageAjax?code={market}{code}"
 FORBIDDEN_PLACEHOLDER_TEXT = ("未可靠识别", "未识别", "其他主题", "题材识别不足", "方向识别不足", "无可靠题材标签", "默认结论", "固定措辞", "兜底判断")

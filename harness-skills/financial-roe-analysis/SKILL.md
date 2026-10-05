@@ -23,7 +23,7 @@ description: "以资深财务分析师视角，基于杜邦分析体系对上市
 
 ## 固定入口
 
-- 技能信息与静态自检：`python D:\C盘转移\日志\codex\skills\financial-roe-analysis\scripts\codex_entry.py info` / `selftest`。
+- 技能信息与静态自检：`python "$($env:STOCK_SKILLS_ROOT)\financial-roe-analysis"\scripts\codex_entry.py info` / `selftest`。
 - 该技能是程序化知识工作流，没有可证明独立于 OpenClaw 的业务脚本；由 Codex 按参考资料执行，禁止调用旧包装器。
 
 ## 参考资料
@@ -36,7 +36,6 @@ description: "以资深财务分析师视角，基于杜邦分析体系对上市
 
 ## 验证
 
-- 结构：`python D:\C盘转移\日志\codex\skills\.system\skill-creator\scripts\quick_validate.py D:\C盘转移\日志\codex\skills\financial-roe-analysis`。
 - 入口：运行 `codex_entry.py selftest`，必须确认本技能路径、脚本编译和 OpenClaw 运行依赖扫描均通过。
 - 业务：只有本回合数据、结果文件和相应验收证据均通过后，才可声称完成。
 

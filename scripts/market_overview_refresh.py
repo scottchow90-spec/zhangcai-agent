@@ -18,6 +18,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
+from tdx_process import detect_tdx_process
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
@@ -51,22 +52,8 @@ PUBLIC_INDEX_SECIDS = {
 
 
 def tdx_is_running() -> bool:
-    """检测通达信主进程，避免把 TQ 初始化异常直接显示给网页。"""
-    if os.name != "nt":
-        return True
-    names = {"tdxw.exe", "tdx.exe", "new_tdx.exe", "通达信.exe"}
-    try:
-        result = subprocess.run(
-            ["tasklist", "/FO", "CSV", "/NH"],
-            capture_output=True,
-            check=False,
-            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
-        )
-        output = result.stdout.decode("mbcs", errors="ignore").lower()
-        return any(f'"{name}"' in output for name in names)
-    except OSError:
-        # 无法读取进程列表时继续尝试 TQ；真正的初始化错误会被友好化。
-        return True
+    """Only report closed when process enumeration confirms the client is absent."""
+    return detect_tdx_process(TDX_ROOT).get("running") is not False
 
 
 def connection_script(scope: str) -> Path:

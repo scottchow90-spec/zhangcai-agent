@@ -15,11 +15,16 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-USER_DIR = Path(r'C:\new_tdx_mock\PYPlugins\user')
+APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
+
+TDX_ROOT = resolve_tdx_root()
+USER_DIR = TDX_ROOT / 'PYPlugins' / 'user'
 TQCENTER = USER_DIR / 'tqcenter.py'
 DEFAULT_INIT = USER_DIR / 'openclaw_tq_test.py'
 FALLBACK_INIT = USER_DIR / 'tdxdata_test.py'
-TDX_ROOT = USER_DIR.parents[1]
 NODE_TOOL = TDX_ROOT / 'NodeTool.exe'
 PY_STRATEGY_CFG = USER_DIR.parent / 'py_strategy.cfg'
 BRIDGE_SCRIPT = USER_DIR / 'openclaw_bridge_simple.py'
@@ -99,22 +104,51 @@ def _get_tdx_process_info():
     command = [
         'powershell',
         '-NoProfile',
+        '-NonInteractive',
         '-Command',
-        "Get-Process TdxW -ErrorAction SilentlyContinue | Select-Object Id,ProcessName,StartTime | ConvertTo-Json -Compress",
+        "$rows = @(Get-CimInstance Win32_Process | Where-Object { $_.Name -match '^(TdxW|tdx|new_tdx_mock)\\.exe$' } | Select-Object ProcessId,Name,CreationDate,ExecutablePath); ConvertTo-Json -InputObject $rows -Compress",
     ]
     try:
-        result = subprocess.run(command, capture_output=True, text=True, encoding='utf-8', errors='replace', check=False)
+        result = subprocess.run(command, capture_output=True, text=True, encoding='utf-8', errors='replace', check=False, timeout=8)
         text = (result.stdout or '').strip()
         if result.returncode != 0 or not text:
             return {'running': False}
         data = json.loads(text)
-        if isinstance(data, list):
-            data = data[0] if data else {}
+        rows = data if isinstance(data, list) else [data]
+        processes = [row for row in rows if isinstance(row, dict)]
+        for row in processes:
+            executable = str(row.get('ExecutablePath') or '')
+            candidate = Path(executable).parent if executable else None
+            for _depth in range(8):
+                if candidate is None:
+                    break
+                if (candidate / 'vipdoc').is_dir() or (candidate / 'T0002').is_dir():
+                    row['tdx_root'] = str(candidate)
+                    break
+                parent = candidate.parent
+                if parent == candidate:
+                    row['tdx_root'] = str(Path(executable).parent) if executable else ''
+                    break
+                candidate = parent
+            if not row.get('tdx_root'):
+                row['tdx_root'] = ''
+            if executable and row['tdx_root']:
+                normalize = lambda value: os.path.normcase(os.path.abspath(value)).rstrip('\\/')
+                row['root_matches'] = normalize(row['tdx_root']) == normalize(str(TDX_ROOT))
+            else:
+                row['root_matches'] = None
+        roots = [row['tdx_root'] for row in processes if row.get('tdx_root')]
+        matching = next((row for row in processes if row.get('root_matches') is True), None)
+        selected = matching or (processes[0] if processes else {})
         return {
-            'running': bool(data),
-            'id': data.get('Id'),
-            'name': data.get('ProcessName'),
-            'start_time': data.get('StartTime'),
+            'running': bool(processes),
+            'id': selected.get('ProcessId'),
+            'name': selected.get('Name'),
+            'start_time': selected.get('CreationDate'),
+            'process_root': selected.get('tdx_root', ''),
+            'root_matches': any(row.get('root_matches') is True for row in processes) if roots else None,
+            'running_roots': roots,
+            'processes': processes,
         }
     except Exception as exc:
         return {'running': False, 'error': str(exc)}
@@ -288,6 +322,11 @@ def patch_zhuang_result(tq, formula_name: str, symbol: str, result, count: int):
 
 
 def load_tq():
+    process_info = _get_tdx_process_info()
+    if not process_info.get('running'):
+        raise RuntimeError(f'未检测到正在运行的通达信客户端：{TDX_ROOT}')
+    if process_info.get('root_matches') is False:
+        raise RuntimeError(f"通达信正在运行，但进程目录与当前配置不一致：配置 {TDX_ROOT}；运行中 {process_info.get('running_roots', [])}")
     os.chdir(str(TDX_ROOT))
     sys.path.insert(0, str(USER_DIR))
     from tqcenter import tq  # type: ignore

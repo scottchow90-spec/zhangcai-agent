@@ -1,4 +1,1247 @@
-import{createRequire as e}from"node:module";import t from"./__vite_rsc_assets_manifest.js";import*as n from"node:async_hooks";import{AsyncLocalStorage as r}from"node:async_hooks";import*as i from"react";import a,{Fragment as o,createElement as s,isValidElement as c,use as l}from"react";import{Fragment as u,jsx as d,jsxs as f}from"react/jsx-runtime";import{renderToReadableStream as p,renderToStaticMarkup as m}from"react-dom/server.edge";import*as h from"react-dom";import{preinitModule as g}from"react-dom";import _ from"./vinext-client-assets.js";var v=Object.create,y=Object.defineProperty,b=Object.getOwnPropertyDescriptor,x=Object.getOwnPropertyNames,ee=Object.getPrototypeOf,S=Object.prototype.hasOwnProperty,C=(e,t)=>()=>(t||(e((t={exports:{}}).exports,t),e=null),t.exports),w=(e,t)=>{let n={};for(var r in e)y(n,r,{get:e[r],enumerable:!0});return t||y(n,Symbol.toStringTag,{value:`Module`}),n},T=(e,t,n,r)=>{if(t&&typeof t==`object`||typeof t==`function`)for(var i=x(t),a=0,o=i.length,s;a<o;a++)s=i[a],!S.call(e,s)&&s!==n&&y(e,s,{get:(e=>t[e]).bind(null,s),enumerable:!(r=b(t,s))||r.enumerable});return e},E=(e,t,n)=>(n=e==null?{}:v(ee(e)),T(t||!e||!e.__esModule?y(n,`default`,{value:e,enumerable:!0}):n,e)),D=e(import.meta.url);function O(e){let t=Object.getOwnPropertyDescriptor(globalThis,e);if(!(!t&&Reflect.get(globalThis,e)===void 0)&&(t?t.configurable?Reflect.deleteProperty(globalThis,e):Reflect.set(globalThis,e,void 0):Object.defineProperty(globalThis,e,{configurable:!0,value:void 0,writable:!0}),Reflect.get(globalThis,e)!==void 0))throw Error(`[vinext] Server runtime exposes a non-removable \`${e}\` global. This breaks Next.js SSR semantics where browser globals must be absent.`)}function k(){O(`window`),O(`document`),Reflect.get(globalThis,`AsyncLocalStorage`)===void 0&&Object.defineProperty(globalThis,`AsyncLocalStorage`,{configurable:!0,value:r,writable:!0})}k();function A(e){return new Response(`This page could not be found`,{status:404,headers:e?.headers})}function j(e){if(!e.startsWith(`/`))return!1;let t=e.slice(1);if(t.startsWith(`/`)||t.startsWith(`\\`))return!0;if(t.length>=3&&t[0]===`%`){let e=t.slice(0,3).toLowerCase();if(e===`%5c`||e===`%2f`)return!0}return!1}function te(e){return e.startsWith(`/`)&&!e.startsWith(`//`)&&!e.includes(`?`)&&!e.includes(`#`)&&!e.includes(`\0`)}var M=(e,t)=>e<t?-1:+(e>t);function N(e){return typeof e==`object`&&!!e&&!Array.isArray(e)}function P(e={}){return{schemaVersion:1,graphVersion:e.graphVersion??null,deploymentVersion:e.deploymentVersion??null,appElementsSchemaVersion:1,rscPayloadSchemaVersion:1,rootBoundaryId:e.rootBoundaryId??null,renderEpoch:e.renderEpoch??null}}function F(e){return typeof e==`string`||e===null}function I(e){return e.schemaVersion===1&&e.appElementsSchemaVersion===1&&e.rscPayloadSchemaVersion===1}function ne(e){return!N(e)||!I(e)||!F(e.graphVersion)||!F(e.deploymentVersion)||!F(e.rootBoundaryId)||!F(e.renderEpoch)?null:{schemaVersion:1,graphVersion:e.graphVersion,deploymentVersion:e.deploymentVersion,appElementsSchemaVersion:1,rscPayloadSchemaVersion:1,rootBoundaryId:e.rootBoundaryId,renderEpoch:e.renderEpoch}}var L=new WeakMap;function re(e,t){L.get(e)?.get(t)?.release()}var ie=`\0`,ae=`__sourcePage`,oe=`__artifactCompatibility`,R=`__cacheEntryReuseProof`,z=`__dynamicStaleTime`,B=`__interception`,se=`__interceptionContext`,V=`__layoutIds`,H=`__layoutFlags`,U=`__route`,W=`__rootLayout`,ce=`__skippedLayoutIds`,le=`__srcPage`,G=`__slotBindings`,ue=`__bfcacheSegmentIdentities`,de=`__VINEXT_UNMATCHED_SLOT__`,fe=Symbol.for(`vinext.unmatchedSlot`),pe=new Set;function me(e){return new Set(e)}var he=me(`CP_CACHE_ENTRY_PROOF_MISSING.CP_MODEL_DISABLED.CP_ARTIFACT_COMPATIBILITY_INCOMPATIBLE.CP_ARTIFACT_COMPATIBILITY_UNKNOWN.CP_DIMENSION_COUNT_EXCEEDED.CP_DIMENSION_NAME_MISSING.CP_DIMENSION_NAME_TOO_LONG.CP_DIMENSION_VALUE_COUNT_EXCEEDED.CP_DIMENSION_VALUE_TOO_LONG.CP_DIMENSION_VALUES_MISSING.CP_ENCODED_VARIANT_TOO_LONG.CP_INVALID_VARIANT_BUDGET.CP_ROUTE_VARIANT_BUDGET_ROUTE_MISMATCH.CP_ROUTE_VARIANT_CEILING_EXCEEDED.CP_UNSAFE_PUBLIC_DIMENSION.CP_BOUNDARY_OUTCOME_MISMATCH.CP_BOUNDARY_OUTCOME_UNKNOWN.CP_PRIVATE_DYNAMIC_DOWNGRADE.CP_STATIC_LAYOUT_CANDIDATE_OUTPUT_KIND.CP_STATIC_LAYOUT_CURRENT_OUTPUT_KIND.CP_STATIC_LAYOUT_ID_MISMATCH.CP_STATIC_LAYOUT_OBSERVATION_OUTPUT_KIND.CP_STATIC_LAYOUT_OBSERVATION_OUTPUT_MISMATCH.CP_STATIC_LAYOUT_PRIVATE_DYNAMIC_DOWNGRADE.CP_STATIC_LAYOUT_REQUEST_API_OBSERVED.CP_STATIC_LAYOUT_REQUEST_API_UNKNOWN.CP_STATIC_LAYOUT_ROOT_BOUNDARY_MISMATCH.CP_STATIC_LAYOUT_ROOT_BOUNDARY_UNKNOWN.CP_STATIC_LAYOUT_VARIANT_DIMENSION_UNPROVEN`.split(`.`)),ge=M;function _e(e,t){return ge(e.slotId,t.slotId)}function ve(e,t={}){let n=t.layoutIds?new Set(t.layoutIds):null,r=new Set,i=[];for(let t of e){if(r.has(t.slotId))throw Error(`[vinext] Invalid __slotBindings in App Router payload: duplicate slot id`);if(r.add(t.slotId),n&&t.ownerLayoutId!==null&&!n.has(t.ownerLayoutId))throw Error(`[vinext] Invalid __slotBindings in App Router payload: owner layout id missing from __layoutIds`);i.push({...t})}return i.sort(_e)}function K(e,t){return t===null?e:`${e}${ie}${t}`}function ye(e,t){return K(`route:${e}`,t)}function be(e,t){return K(`page:${e}`,t)}function xe(e){return`layout:${e}`}function Se(e){return`template:${e}`}function Ce(e,t){return`slot:${e}:${t}`}function we(e,t){return K(e,t)}function Te(e){let t=e.indexOf(ie),n=t===-1?e:e.slice(0,t);return n.startsWith(`/`)?{interceptionContext:t===-1?null:e.slice(t+1),path:n}:null}function q(e){return e.startsWith(`/`)?e:null}function J(e){if(e.startsWith(`route:`)){let t=Te(e.slice(6));return t?{interceptionContext:t.interceptionContext,kind:`route`,path:t.path}:null}if(e.startsWith(`page:`)){let t=Te(e.slice(5));return t?{interceptionContext:t.interceptionContext,kind:`page`,path:t.path}:null}if(e.startsWith(`layout:`)){let t=q(e.slice(7));return t?{kind:`layout`,treePath:t}:null}if(e.startsWith(`template:`)){let t=q(e.slice(9));return t?{kind:`template`,treePath:t}:null}if(e.startsWith(`slot:`)){let t=e.slice(5),n=t.indexOf(`:`);if(n<=0)return null;let r=t.slice(0,n),i=q(t.slice(n+1));return i?{kind:`slot`,name:r,treePath:i}:null}return null}function Ee(e){let t=J(e)?.kind;return t===`page`||t===`layout`||t===`template`||t===`slot`}function De(e){if(!e.startsWith(`slot:`))return!1;let t=e.slice(5),n=t.indexOf(`:`);return n>0&&t.charCodeAt(n+1)===47}function Oe(e){return Array.isArray(e)&&e.length>0&&e.every(e=>typeof e==`string`&&e.length>0&&!e.includes(`/`))}function ke(e){if(typeof e!=`string`||!e.startsWith(`/`))return null;let t=e.slice(1).split(`/`);return Oe(t)?t:null}function Ae(e){let t=[...e.layoutIds??[]],n=ke(e.sourcePage),r={[U]:e.routeId,[se]:e.interceptionContext,[V]:t,[W]:e.rootLayoutTreePath,...e.dynamicStaleTimeSeconds===void 0?{}:{[z]:e.dynamicStaleTimeSeconds},...e.bfcacheSegmentIdentities&&Object.keys(e.bfcacheSegmentIdentities).length>0?{[ue]:e.bfcacheSegmentIdentities}:{},...n===null?{}:{[le]:n}},i=e.interception?{...r,[B]:e.interception}:r;return e.slotBindings&&e.slotBindings.length>0?{...i,[G]:ve(e.slotBindings,{layoutIds:t})}:i}function je(e){let t=!1;for(let[n,r]of Object.entries(e))if(De(n)&&r===`__VINEXT_UNMATCHED_SLOT__`){t=!0;break}if(!t)return e;let n={};for(let[t,r]of Object.entries(e))n[t]=De(t)&&r===`__VINEXT_UNMATCHED_SLOT__`?fe:r;return n}function Me(e){if(typeof e!=`object`||!e||Array.isArray(e))return!1;for(let t of Object.values(e))if(t!==`s`&&t!==`d`)return!1;return!0}function Ne(e){return Me(e)?e:{}}function Pe(e,t){if(e===void 0)return[];if(!Array.isArray(e))throw Error(`[vinext] Invalid ${t} in App Router payload: expected layout id string[]`);let n=[];for(let r of e){if(typeof r!=`string`)throw Error(`[vinext] Invalid ${t} in App Router payload: expected layout id string[]`);if(J(r)?.kind!==`layout`)throw Error(`[vinext] Invalid ${t} in App Router payload: expected layout ids`);n.push(r)}return n}function Fe(e){return Pe(e,V)}function Ie(e){return Pe(e,ce)}function Le(e){return e===`active`||e===`default`||e===`unmatched`}function Re(e,t={}){if(e===void 0)return[];if(!Array.isArray(e))throw Error(`[vinext] Invalid __slotBindings in App Router payload: expected array`);let n=[];for(let t of e){if(!N(t))throw Error(`[vinext] Invalid __slotBindings in App Router payload: expected objects`);let e=t.slotId;if(typeof e!=`string`||J(e)?.kind!==`slot`)throw Error(`[vinext] Invalid __slotBindings in App Router payload: expected slot ids`);let r=t.ownerLayoutId;if(r!==null&&(typeof r!=`string`||J(r)?.kind!==`layout`))throw Error(`[vinext] Invalid __slotBindings in App Router payload: expected owner layout ids`);let i=t.state;if(!Le(i))throw Error(`[vinext] Invalid __slotBindings in App Router payload: expected state`);let a=t.activeRouteId;if(a!=null&&(typeof a!=`string`||J(a)?.kind!==`route`))throw Error(`[vinext] Invalid __slotBindings in App Router payload: expected route ids`);n.push({...a===void 0?{}:{activeRouteId:a},ownerLayoutId:r,slotId:e,state:i})}return ve(n,t)}function ze(e,t){let n=e[t];if(typeof n!=`string`)throw Error(`[vinext] Invalid __interception in App Router payload: expected strings`);return n}function Be(e){if(!te(e))throw Error(`[vinext] Invalid __interception in App Router payload: expected path URLs`);return e}function Ve(e,t){let n=J(e);if(n?.kind!==`route`||n.path!==t||n.interceptionContext!==null)throw Error(`[vinext] Invalid __interception in App Router payload: expected route ids`);return e}function He(e){if(J(e)?.kind!==`slot`)throw Error(`[vinext] Invalid __interception in App Router payload: expected slot id`);return e}function Ue(e){if(e==null)return null;if(!N(e))throw Error(`[vinext] Invalid __interception in App Router payload: expected object`);let t=Be(ze(e,`sourceMatchedUrl`)),n=Be(ze(e,`targetMatchedUrl`));return{sourceMatchedUrl:t,sourceRouteId:Ve(ze(e,`sourceRouteId`),t),slotId:He(ze(e,`slotId`)),targetMatchedUrl:n,targetRouteId:Ve(ze(e,`targetRouteId`),n)}}function We(e){return!(typeof e!=`object`||!e||Array.isArray(e)||c(e))}function Ge(e,t){return{...e,[H]:t}}function Ke(e){if(!We(e.element))return e.element;let t=qe(e.skipDisposition),n={};for(let[r,i]of Object.entries(e.element)){if(t.has(r)){re(e.element,r);continue}n[r]=i===fe?de:i}return n[H]=e.layoutFlags,t.size>0&&(n[ce]=[...t]),n[oe]=e.artifactCompatibility??P(),e.cacheEntryReuseProof&&(n[R]=e.cacheEntryReuseProof),e.dynamicStaleTimeSeconds!==void 0&&(n[z]=e.dynamicStaleTimeSeconds),n}function qe(e){if(e?.enabled!==!0)return pe;let t=new Set;for(let n of e.skippedEntryIds)J(n)?.kind===`layout`&&t.add(n);return t}function Je(e){return e===void 0?P():ne(e)??P()}function Ye(e){return e==null?null:typeof e==`string`?e.startsWith(`/`)?e:null:Oe(e)?`/${e.join(`/`)}`:null}function Xe(){return{kind:`runtime-cache-entry`,decision:null}}function Ze(e){return typeof e==`string`&&he.has(e)}function Qe(e){return e===`renderFresh`||e===`privateUncacheable`}function $e(e){return e===`affectedOutput`||e===`route`}function et(e){if(e===void 0)return null;if(!N(e)||e.kind!==`runtime-cache-entry`)return Xe();let t=e.decision;return t===null||!N(t)?Xe():t.kind===`reuse`&&t.canReuse===!0&&t.code===`CP_STATIC_LAYOUT_REUSE_PROVEN`&&t.reuseClass===`static-layout`?{kind:`runtime-cache-entry`,decision:{canReuse:!0,code:t.code,kind:`reuse`,reuseClass:t.reuseClass}}:t.kind===`reject`&&t.canReuse===!1&&Ze(t.code)&&Qe(t.mode)&&$e(t.scope)?{kind:`runtime-cache-entry`,decision:{canReuse:!1,code:t.code,kind:`reject`,mode:t.mode,scope:t.scope}}:Xe()}function tt(e){if(!N(e))return{};let t={};for(let[n,r]of Object.entries(e)){if(typeof r!=`string`||!Ee(n))return{};t[n]=r}return t}function nt(e){let t=e[U];if(typeof t!=`string`)throw Error(`[vinext] Missing __route string in App Router payload`);let n=e[se];if(n!=null&&typeof n!=`string`)throw Error(`[vinext] Invalid __interceptionContext in App Router payload`);let r=e[W];if(r===void 0)throw Error(`[vinext] Missing __rootLayout key in App Router payload`);if(r!==null&&typeof r!=`string`)throw Error(`[vinext] Invalid __rootLayout in App Router payload: expected string or null`);let i=Ne(e[H]),a=Fe(e[V]),o=Ie(e[ce]),s=Re(e[G],{layoutIds:a}),c=Ue(e[B]),l=Je(e[oe]),u=et(e[R]),d=e[z],f=typeof d==`number`&&Number.isFinite(d)&&d>=0?d:void 0,p=Ye(Object.hasOwn(e,`__srcPage`)?e[le]:e[ae]),m=tt(e[ue]);return{artifactCompatibility:l,...u?{cacheEntryReuseProof:u}:{},...f===void 0?{}:{dynamicStaleTimeSeconds:f},interception:c,interceptionContext:n??null,layoutIds:a,layoutFlags:i,routeId:t,rootLayoutTreePath:r,bfcacheSegmentIdentities:m,skippedLayoutIds:o,slotBindings:s,sourcePage:p}}var Y={keys:{artifactCompatibility:oe,cacheEntryReuseProof:R,dynamicStaleTime:z,interception:B,interceptionContext:se,layoutIds:V,layoutFlags:H,rootLayout:W,route:U,bfcacheSegmentIdentities:ue,skippedLayoutIds:ce,slotBindings:G,sourcePageSegments:le},unmatchedSlotValue:de,createMetadataEntries:Ae,decode:je,encodeCacheKey:we,encodeLayoutId:xe,encodeOutgoingPayload:Ke,encodePageId:be,encodeRouteId:ye,encodeSlotId:Ce,encodeTemplateId:Se,isSlotId:De,parseElementKey:J,readMetadata:nt,withLayoutFlags:Ge};globalThis.AsyncLocalStorage=n.AsyncLocalStorage;var rt=globalThis,it=Symbol.for(`vinext.als.registry`),at=rt[it]??=new Set,ot=class{getStore(){}run(e,t,...n){return t(...n)}exit(e,...t){return e(...t)}enterWith(e){}disable(){}};function X(e){let t=Symbol.for(e),n=rt[t]??=typeof r==`function`?new r:new ot;return at.add(n),n}var st=X(`vinext.pprFallbackShell.als`),ct=X(`vinext.pprFallbackShell.cacheTaskStack.als`);function lt(e){let t=setTimeout(()=>{t=null,n=setTimeout(()=>{n=null,e()},0)},0),n=null;return()=>{t!==null&&(clearTimeout(t),t=null),n!==null&&(clearTimeout(n),n=null)}}function ut(e){if(e.pendingCacheTasks!==0)return;let t=e.cacheReadyResolvers.splice(0);for(let e of t)e()}function dt(e){e.pendingCacheTasks!==0||e.pendingCacheReadyCleanup!==null||(e.pendingCacheReadyCleanup=lt(()=>{e.pendingCacheReadyCleanup=null,ut(e),e.phase===`final`&&ft(e)}))}function ft(e){e.phase!==`final`||!e.isFinalRenderStarted||!e.hasDynamicBoundary||e.pendingCacheTasks>0||e.pendingCacheReadyCleanup!==null||e.isAbortScheduled||(e.isAbortScheduled=!0,e.pendingAbortCleanup=lt(()=>{e.pendingAbortCleanup=null,e.isAbortScheduled=!1,e.phase===`final`&&e.hasDynamicBoundary&&e.pendingCacheTasks===0&&e.pendingCacheReadyCleanup===null&&!e.reactAbortController.signal.aborted&&(e.reactAbortController.abort(),e.abortController.abort())}))}function pt(e,t){t.isPending&&(t.isPending=!1,t.epoch===e.cacheEpoch&&(e.pendingCacheTasks--,dt(e)))}function mt(e,t){!t.isPending||t.isIgnored||(t.isIgnored=!0,pt(e,t))}function ht(){return st.getStore()??null}function gt(e){e.hasDynamicBoundary=!0;for(let t of ct.getStore()??[])mt(e,t);dt(e)}function _t(){let e=ht();e===null||e.fallbackParamNames.size===0||gt(e)}function vt(e){return typeof DOMException<`u`&&e instanceof DOMException&&e.name===`AbortError`?!0:e instanceof Error&&e.name===`HangingPromiseRejectionError`}var yt=Symbol.for(`vinext.appRouterContext`),bt=Symbol.for(`vinext.globalLayoutRouterContext`),xt=Symbol.for(`vinext.layoutRouterContext`),St=Symbol.for(`vinext.missingSlotContext`),Ct=Symbol.for(`vinext.templateContext`);function wt(e,t){if(typeof i.createContext!=`function`)return null;let n=globalThis;return n[e]||(n[e]=i.createContext(t)),n[e]??null}var Tt=wt(yt,null);wt(bt,null),wt(xt,null),wt(St,new Set),wt(Ct,null);function Et(e,t=void 0){if(!t)return e;let n=e.indexOf(`#`),r=n===-1?e:e.slice(0,n),i=n===-1?``:e.slice(n);return new URL(r,`http://vinext.local`).searchParams.has(`dpl`)?e:`${r}${r.includes(`?`)?`&`:`?`}dpl=${t}${i}`}function Dt(e,t=void 0){return new URL(e,`http://vinext.local`).pathname.includes(`/_next/static/`)?Et(e,t):e}var Ot=typeof a.createContext==`function`?a.createContext(void 0):null;function kt(e){return Ot?a.createElement(Ot.Provider,{value:e.nonce},e.children):a.createElement(a.Fragment,null,e.children)}function At(e,t){return!t||!Ot?e:a.createElement(kt,{nonce:t},e)}function jt(e){return!e||typeof a.useContext!=`function`?function(){}:function(){return a.useContext(e)}}jt(Ot);function Z(e){return JSON.stringify(e).replace(/</g,`\\u003c`).replace(/>/g,`\\u003e`).replace(/&/g,`\\u0026`).replace(/\u2028/g,`\\u2028`).replace(/\u2029/g,`\\u2029`)}function Q(e){return e.replace(/&/g,`&amp;`).replace(/"/g,`&quot;`).replace(/</g,`&lt;`).replace(/>/g,`&gt;`)}var Mt=/[\t\n\f\r ]+/;function Nt(e,t){return e===null?!1:e.split(Mt).some(e=>e.length>0&&e.toLowerCase()===t.toLowerCase())}function Pt(e){return e?` nonce="${Q(e)}"`:``}function Ft(e,t){return`<script${Pt(t)}>${e}<\/script>`}var It={set(e,t,n){typeof t!=`string`||typeof n!=`string`||e.push({key:t,value:n})}},Lt=Symbol.for(`opentelemetry.js.api.1`),Rt=Symbol.for(`OpenTelemetry Context Key SPAN`);function zt(){let e=null;try{let t=globalThis[Lt];if(!t?.context||!t.propagation)return null;let n=t.context,r=t.propagation,i=n.active();e=i.getValue(Rt)===void 0?t.trace?.getTracer(`vinext`).startSpan(`vinext.clientTraceMetadata`,void 0,i)??null:null;let a=e?i.setValue(Rt,e):i,o=[];return n.with(a,()=>{r.inject(a,o,It)}),o}catch{return[]}finally{e?.end()}}function Bt(){let e=zt();if(e)return e;let t;try{let e=globalThis.require;typeof e==`function`&&(t=e(`@opentelemetry/api`))}catch{return[]}if(!t)return[];try{let e=t.context.active(),n=[];return t.propagation.inject(e,n,It),n}catch{return[]}}function Vt(e,t){if(!t||t.length===0)return;let n=new Set(t);return e.filter(({key:e})=>n.has(e))}function Ht(e){if(!e||e.length===0)return``;let t=``;for(let{key:n,value:r}of e)t+=`<meta name="${Q(n)}" content="${Q(r)}"/>`;return t}function Ut(e){return!e||e.length===0||typeof process<`u`&&process.env.VINEXT_PRERENDER===`1`?``:Ht(Vt(Bt(),e))}var Wt=Symbol.for(`vinext.layoutSegmentContext`),Gt=Symbol.for(`vinext.serverInsertedHTMLContext`),Kt=Symbol.for(`vinext.bfcacheIdMapContext`),qt=Symbol.for(`vinext.bfcacheSegmentIdContext`),Jt=Symbol.for(`vinext.navigation.fallback`);function Yt(e){return typeof i.createContext==`function`?i.createContext(e):null}function Xt(){let e=globalThis;return e[Gt]||(e[Gt]=Yt(null)),e[Gt]??null}var Zt=Xt();function Qt(){let e=globalThis;return e[Wt]||(e[Wt]=Yt({children:[]})),e[Wt]??null}function $t(){let e=globalThis;return e[Kt]||(e[Kt]=Yt(null)),e[Kt]??null}function en(){let e=globalThis;return e[qt]||(e[qt]=Yt(null)),e[qt]??null}var tn=Symbol.for(`vinext.navigation.globalAccessors`);function nn(){let e=globalThis;return e[Jt]??={serverContext:null,serverInsertedHTMLCallbacks:[]}}function rn(){return globalThis[tn]}var an=()=>rn()?.getServerContext()??nn().serverContext,on=e=>{let t=rn();t?t.setServerContext(e):nn().serverContext=e},sn=()=>rn()?.getInsertedHTMLCallbacks()??nn().serverInsertedHTMLCallbacks,cn=()=>{let e=rn();e?e.clearInsertedHTMLCallbacks():nn().serverInsertedHTMLCallbacks=[]};function ln(e){an=e.getServerContext,on=e.setServerContext,sn=e.getInsertedHTMLCallbacks,cn=e.clearInsertedHTMLCallbacks}function un(){return an()}function dn(e){on(e)}function fn(e){sn().push(e)}function pn(e){let t=sn(),n=[];for(let e of t)try{let t=e();t!=null&&n.push(t)}catch{}return e&&(t.length=0),n}function mn(){return pn(!1)}function hn(){cn()}var gn=`NEXT_REDIRECT;`;function _n(e){if(!e.startsWith(gn))return null;let t=e.indexOf(`;`,14);if(t===-1)return null;let n=e.slice(t+1),r=n.match(/;(303|307|308);?$/),i=n!==``&&e.endsWith(`;`);if(i&&!r)return null;let a=r?n.slice(0,-r[0].length):n,o=a;if(!i)try{o=decodeURIComponent(a)}catch{return null}return{status:r?Number(r[1]):307,type:e.slice(14,t)||null,url:o}}var vn=`NEXT_HTTP_ERROR_FALLBACK`,yn=class extends Error{digest;constructor(e,t){super(e),this.digest=t}};function bn(){throw new yn(`NEXT_NOT_FOUND`,`${vn};404`)}function xn(e){return!!e&&typeof e==`object`&&`digest`in e&&typeof e.digest==`string`&&e.digest.startsWith(`NEXT_REDIRECT;`)}function Sn(e){let t=_n(e);return t?{url:t.url,type:t.type===`push`?`push`:`replace`}:null}var Cn=w({default:()=>Dn}),$={container:{fontFamily:`system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji"`,height:`100vh`,display:`flex`,alignItems:`center`,justifyContent:`center`},card:{marginTop:`-32px`,maxWidth:`325px`,padding:`32px 28px`,textAlign:`left`},icon:{marginBottom:`24px`},title:{fontSize:`24px`,fontWeight:500,letterSpacing:`-0.02em`,lineHeight:`32px`,margin:`0 0 12px 0`,color:`var(--next-error-title)`},message:{fontSize:`14px`,fontWeight:400,lineHeight:`21px`,margin:`0 0 20px 0`,color:`var(--next-error-message)`},form:{margin:0},buttonGroup:{display:`flex`,gap:`8px`,alignItems:`center`},button:{display:`inline-flex`,alignItems:`center`,justifyContent:`center`,height:`32px`,padding:`0 12px`,fontSize:`14px`,fontWeight:500,lineHeight:`20px`,borderRadius:`6px`,cursor:`pointer`,color:`var(--next-error-btn-text)`,background:`var(--next-error-btn-bg)`,border:`var(--next-error-btn-border)`},buttonSecondary:{display:`inline-flex`,alignItems:`center`,justifyContent:`center`,height:`32px`,padding:`0 12px`,fontSize:`14px`,fontWeight:500,lineHeight:`20px`,borderRadius:`6px`,cursor:`pointer`,color:`var(--next-error-btn-secondary-text)`,background:`var(--next-error-btn-secondary-bg)`,border:`var(--next-error-btn-secondary-border)`},digestFooter:{position:`fixed`,bottom:`32px`,left:`0`,right:`0`,textAlign:`center`,fontFamily:`ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace`,fontSize:`12px`,lineHeight:`18px`,fontWeight:400,margin:`0`,color:`var(--next-error-digest)`}},wn=`
+import { createRequire } from "node:module";
+import __vite_rsc_assets_manifest from "./__vite_rsc_assets_manifest.js";
+import * as __viteRscAsyncHooks from "node:async_hooks";
+import { AsyncLocalStorage } from "node:async_hooks";
+import * as React$1 from "react";
+import React, { Fragment, createElement, isValidElement, use } from "react";
+import { Fragment as Fragment$1, jsx, jsxs } from "react/jsx-runtime";
+import { renderToReadableStream, renderToStaticMarkup } from "react-dom/server.edge";
+import * as ReactDOM from "react-dom";
+import { preinitModule } from "react-dom";
+import pagesClientAssets from "./vinext-client-assets.js";
+//#region \0rolldown/runtime.js
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __commonJSMin = (cb, mod) => () => (mod || (cb((mod = { exports: {} }).exports, mod), cb = null), mod.exports);
+var __exportAll = (all, no_symbols) => {
+	let target = {};
+	for (var name in all) __defProp(target, name, {
+		get: all[name],
+		enumerable: true
+	});
+	if (!no_symbols) __defProp(target, Symbol.toStringTag, { value: "Module" });
+	return target;
+};
+var __copyProps = (to, from, except, desc) => {
+	if (from && typeof from === "object" || typeof from === "function") for (var keys = __getOwnPropNames(from), i = 0, n = keys.length, key; i < n; i++) {
+		key = keys[i];
+		if (!__hasOwnProp.call(to, key) && key !== except) __defProp(to, key, {
+			get: ((k) => from[k]).bind(null, key),
+			enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
+		});
+	}
+	return to;
+};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", {
+	value: mod,
+	enumerable: true
+}) : target, mod));
+var __require = /* @__PURE__ */ createRequire(import.meta.url);
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/server-globals.js
+/**
+* Server runtime global setup shared by vinext's generated server entries.
+*
+* This module intentionally runs its installer at import time. Generated entry
+* modules import user pages and layouts as static dependencies, so any global
+* correction that must happen before user module evaluation has to live in a
+* side-effect dependency. A runtime function call from the generated entry
+* body would run after static user imports have already evaluated.
+*/
+function clearBrowserGlobal(name) {
+	const descriptor = Object.getOwnPropertyDescriptor(globalThis, name);
+	if (!descriptor && typeof Reflect.get(globalThis, name) === "undefined") return;
+	if (!descriptor) Object.defineProperty(globalThis, name, {
+		configurable: true,
+		value: void 0,
+		writable: true
+	});
+	else if (descriptor.configurable) Reflect.deleteProperty(globalThis, name);
+	else Reflect.set(globalThis, name, void 0);
+	if (typeof Reflect.get(globalThis, name) !== "undefined") throw new Error(`[vinext] Server runtime exposes a non-removable \`${name}\` global. This breaks Next.js SSR semantics where browser globals must be absent.`);
+}
+function installServerGlobals() {
+	clearBrowserGlobal("window");
+	clearBrowserGlobal("document");
+	if (typeof Reflect.get(globalThis, "AsyncLocalStorage") === "undefined") Object.defineProperty(globalThis, "AsyncLocalStorage", {
+		configurable: true,
+		value: AsyncLocalStorage,
+		writable: true
+	});
+}
+installServerGlobals();
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/http-error-responses.js
+/**
+* Build a 404 Not Found plain-text response.
+*
+* The body matches Next.js's plain-text 404 response exactly. Next.js writes
+* `res.end('This page could not be found')` (no trailing period) for the
+* fallback 404 path; see in `.nextjs-ref`:
+*   - packages/next/src/server/route-modules/pages/pages-handler.ts L121, L535
+*   - packages/next/src/build/templates/app-route.ts L170, L349
+*   - packages/next/src/build/templates/app-page.ts L701, L1043
+* (The React-rendered not-found component in `packages/next/src/client/components/builtin/not-found.tsx`
+* uses the same text with a trailing period — that variant is rendered as HTML,
+* not returned as the plain-text body.)
+*
+* The `headers` option lets call sites merge middleware response headers into
+* the 404, matching the pattern used by `app-rsc-handler` after a route match
+* fails but middleware has already contributed headers.
+*/
+function notFoundResponse(init) {
+	return new Response("This page could not be found", {
+		status: 404,
+		headers: init?.headers
+	});
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/open-redirect.js
+/**
+* Returns true if a request pathname looks like a protocol-relative open
+* redirect, in either literal or percent-encoded form.
+*
+* A pathname is considered "open redirect shaped" when its first segment,
+* after decoding backslashes and encoded delimiters, would cause a browser
+* to resolve a `Location` containing the pathname as protocol-relative.
+*/
+function isOpenRedirectShaped(rawPathname) {
+	if (!rawPathname.startsWith("/")) return false;
+	const afterSlash = rawPathname.slice(1);
+	if (afterSlash.startsWith("/") || afterSlash.startsWith("\\")) return true;
+	if (afterSlash.length >= 3 && afterSlash[0] === "%") {
+		const encoded = afterSlash.slice(0, 3).toLowerCase();
+		if (encoded === "%5c" || encoded === "%2f") return true;
+	}
+	return false;
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/normalize-path.js
+function isInterceptionMatchedUrlPath(value) {
+	return value.startsWith("/") && !value.startsWith("//") && !value.includes("?") && !value.includes("#") && !value.includes("\0");
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/utils/compare.js
+var compareStrings = (left, right) => {
+	if (left < right) return -1;
+	if (left > right) return 1;
+	return 0;
+};
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/utils/record.js
+function isUnknownRecord(value) {
+	return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/artifact-compatibility.js
+function createArtifactCompatibilityEnvelope(input = {}) {
+	return {
+		schemaVersion: 1,
+		graphVersion: input.graphVersion ?? null,
+		deploymentVersion: input.deploymentVersion ?? null,
+		appElementsSchemaVersion: 1,
+		rscPayloadSchemaVersion: 1,
+		rootBoundaryId: input.rootBoundaryId ?? null,
+		renderEpoch: input.renderEpoch ?? null
+	};
+}
+function isStringOrNull(value) {
+	return typeof value === "string" || value === null;
+}
+function hasCurrentSchemaVersions(record) {
+	return record.schemaVersion === 1 && record.appElementsSchemaVersion === 1 && record.rscPayloadSchemaVersion === 1;
+}
+function parseArtifactCompatibilityEnvelope(value) {
+	if (!isUnknownRecord(value)) return null;
+	if (!hasCurrentSchemaVersions(value)) return null;
+	if (!isStringOrNull(value.graphVersion)) return null;
+	if (!isStringOrNull(value.deploymentVersion)) return null;
+	if (!isStringOrNull(value.rootBoundaryId)) return null;
+	if (!isStringOrNull(value.renderEpoch)) return null;
+	return {
+		schemaVersion: 1,
+		graphVersion: value.graphVersion,
+		deploymentVersion: value.deploymentVersion,
+		appElementsSchemaVersion: 1,
+		rscPayloadSchemaVersion: 1,
+		rootBoundaryId: value.rootBoundaryId,
+		renderEpoch: value.renderEpoch
+	};
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/app-render-dependency.js
+var appElementRenderDependencies = /* @__PURE__ */ new WeakMap();
+function releaseAppElementRenderDependency(elements, elementId) {
+	appElementRenderDependencies.get(elements)?.get(elementId)?.release();
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/app-elements-wire.js
+var APP_INTERCEPTION_SEPARATOR = "\0";
+var LEGACY_APP_SOURCE_PAGE_KEY = "__sourcePage";
+var APP_ARTIFACT_COMPATIBILITY_KEY = "__artifactCompatibility";
+var APP_CACHE_ENTRY_REUSE_PROOF_KEY = "__cacheEntryReuseProof";
+var APP_DYNAMIC_STALE_TIME_KEY = "__dynamicStaleTime";
+var APP_INTERCEPTION_KEY = "__interception";
+var APP_INTERCEPTION_CONTEXT_KEY = "__interceptionContext";
+var APP_LAYOUT_IDS_KEY = "__layoutIds";
+var APP_LAYOUT_FLAGS_KEY = "__layoutFlags";
+var APP_ROUTE_KEY = "__route";
+var APP_ROOT_LAYOUT_KEY = "__rootLayout";
+var APP_SKIPPED_LAYOUT_IDS_KEY = "__skippedLayoutIds";
+var APP_SOURCE_PAGE_SEGMENTS_KEY = "__srcPage";
+var APP_SLOT_BINDINGS_KEY = "__slotBindings";
+/** Opaque per-segment identities derived at the server route-graph boundary. */
+var APP_BFCACHE_SEGMENT_IDENTITIES_KEY = "__bfcacheSegmentIdentities";
+var APP_UNMATCHED_SLOT_WIRE_VALUE = "__VINEXT_UNMATCHED_SLOT__";
+var UNMATCHED_SLOT = Symbol.for("vinext.unmatchedSlot");
+var EMPTY_SKIPPED_LAYOUT_IDS = /* @__PURE__ */ new Set();
+function createCacheProofRejectionCodeSet(codes) {
+	return new Set(codes);
+}
+var CACHE_PROOF_REJECTION_CODES = createCacheProofRejectionCodeSet([
+	"CP_CACHE_ENTRY_PROOF_MISSING",
+	"CP_MODEL_DISABLED",
+	"CP_ARTIFACT_COMPATIBILITY_INCOMPATIBLE",
+	"CP_ARTIFACT_COMPATIBILITY_UNKNOWN",
+	"CP_DIMENSION_COUNT_EXCEEDED",
+	"CP_DIMENSION_NAME_MISSING",
+	"CP_DIMENSION_NAME_TOO_LONG",
+	"CP_DIMENSION_VALUE_COUNT_EXCEEDED",
+	"CP_DIMENSION_VALUE_TOO_LONG",
+	"CP_DIMENSION_VALUES_MISSING",
+	"CP_ENCODED_VARIANT_TOO_LONG",
+	"CP_INVALID_VARIANT_BUDGET",
+	"CP_ROUTE_VARIANT_BUDGET_ROUTE_MISMATCH",
+	"CP_ROUTE_VARIANT_CEILING_EXCEEDED",
+	"CP_UNSAFE_PUBLIC_DIMENSION",
+	"CP_BOUNDARY_OUTCOME_MISMATCH",
+	"CP_BOUNDARY_OUTCOME_UNKNOWN",
+	"CP_PRIVATE_DYNAMIC_DOWNGRADE",
+	"CP_STATIC_LAYOUT_CANDIDATE_OUTPUT_KIND",
+	"CP_STATIC_LAYOUT_CURRENT_OUTPUT_KIND",
+	"CP_STATIC_LAYOUT_ID_MISMATCH",
+	"CP_STATIC_LAYOUT_OBSERVATION_OUTPUT_KIND",
+	"CP_STATIC_LAYOUT_OBSERVATION_OUTPUT_MISMATCH",
+	"CP_STATIC_LAYOUT_PRIVATE_DYNAMIC_DOWNGRADE",
+	"CP_STATIC_LAYOUT_REQUEST_API_OBSERVED",
+	"CP_STATIC_LAYOUT_REQUEST_API_UNKNOWN",
+	"CP_STATIC_LAYOUT_ROOT_BOUNDARY_MISMATCH",
+	"CP_STATIC_LAYOUT_ROOT_BOUNDARY_UNKNOWN",
+	"CP_STATIC_LAYOUT_VARIANT_DIMENSION_UNPROVEN"
+]);
+var compareAppElementsSlotIds = compareStrings;
+function compareAppElementsSlotBindingsBySlotId(left, right) {
+	return compareAppElementsSlotIds(left.slotId, right.slotId);
+}
+function normalizeAppElementsSlotBindings(slotBindings, options = {}) {
+	const ownerLayoutIds = options.layoutIds ? new Set(options.layoutIds) : null;
+	const seenSlotIds = /* @__PURE__ */ new Set();
+	const normalized = [];
+	for (const binding of slotBindings) {
+		if (seenSlotIds.has(binding.slotId)) throw new Error("[vinext] Invalid __slotBindings in App Router payload: duplicate slot id");
+		seenSlotIds.add(binding.slotId);
+		if (ownerLayoutIds && binding.ownerLayoutId !== null && !ownerLayoutIds.has(binding.ownerLayoutId)) throw new Error("[vinext] Invalid __slotBindings in App Router payload: owner layout id missing from __layoutIds");
+		normalized.push({ ...binding });
+	}
+	return normalized.sort(compareAppElementsSlotBindingsBySlotId);
+}
+function appendInterceptionContext(identity, interceptionContext) {
+	return interceptionContext === null ? identity : `${identity}${APP_INTERCEPTION_SEPARATOR}${interceptionContext}`;
+}
+function createAppPayloadRouteId(routePath, interceptionContext) {
+	return appendInterceptionContext(`route:${routePath}`, interceptionContext);
+}
+function createAppPayloadPageId(routePath, interceptionContext) {
+	return appendInterceptionContext(`page:${routePath}`, interceptionContext);
+}
+function createAppPayloadLayoutId(treePath) {
+	return `layout:${treePath}`;
+}
+function createAppPayloadTemplateId(treePath) {
+	return `template:${treePath}`;
+}
+function createAppPayloadSlotId(slotName, treePath) {
+	return `slot:${slotName}:${treePath}`;
+}
+function createAppPayloadCacheKey(rscUrl, interceptionContext) {
+	return appendInterceptionContext(rscUrl, interceptionContext);
+}
+function parsePathWithInterception(input) {
+	const separatorIndex = input.indexOf(APP_INTERCEPTION_SEPARATOR);
+	const path = separatorIndex === -1 ? input : input.slice(0, separatorIndex);
+	if (!path.startsWith("/")) return null;
+	return {
+		interceptionContext: separatorIndex === -1 ? null : input.slice(separatorIndex + 1),
+		path
+	};
+}
+/**
+* AppElements tree paths are absolute route-tree paths on the wire.
+* Bare segment names are not valid layout/template/slot tree identities.
+*/
+function parseTreePath(input) {
+	return input.startsWith("/") ? input : null;
+}
+function parseAppElementsWireElementKey(key) {
+	if (key.startsWith("route:")) {
+		const parsed = parsePathWithInterception(key.slice(6));
+		if (!parsed) return null;
+		return {
+			interceptionContext: parsed.interceptionContext,
+			kind: "route",
+			path: parsed.path
+		};
+	}
+	if (key.startsWith("page:")) {
+		const parsed = parsePathWithInterception(key.slice(5));
+		if (!parsed) return null;
+		return {
+			interceptionContext: parsed.interceptionContext,
+			kind: "page",
+			path: parsed.path
+		};
+	}
+	if (key.startsWith("layout:")) {
+		const treePath = parseTreePath(key.slice(7));
+		return treePath ? {
+			kind: "layout",
+			treePath
+		} : null;
+	}
+	if (key.startsWith("template:")) {
+		const treePath = parseTreePath(key.slice(9));
+		return treePath ? {
+			kind: "template",
+			treePath
+		} : null;
+	}
+	if (key.startsWith("slot:")) {
+		const body = key.slice(5);
+		const separatorIndex = body.indexOf(":");
+		if (separatorIndex <= 0) return null;
+		const name = body.slice(0, separatorIndex);
+		const treePath = parseTreePath(body.slice(separatorIndex + 1));
+		return treePath ? {
+			kind: "slot",
+			name,
+			treePath
+		} : null;
+	}
+	return null;
+}
+function isAppElementsWireBfcacheIdentityId(key) {
+	const kind = parseAppElementsWireElementKey(key)?.kind;
+	return kind === "page" || kind === "layout" || kind === "template" || kind === "slot";
+}
+function isAppElementsWireSlotId(key) {
+	if (!key.startsWith("slot:")) return false;
+	const body = key.slice(5);
+	const separatorIndex = body.indexOf(":");
+	return separatorIndex > 0 && body.charCodeAt(separatorIndex + 1) === 47;
+}
+function isSourcePageSegments(value) {
+	return Array.isArray(value) && value.length > 0 && value.every((segment) => typeof segment === "string" && segment.length > 0 && !segment.includes("/"));
+}
+function encodeSourcePageSegments(sourcePage) {
+	if (typeof sourcePage !== "string" || !sourcePage.startsWith("/")) return null;
+	const segments = sourcePage.slice(1).split("/");
+	return isSourcePageSegments(segments) ? segments : null;
+}
+function createAppElementsWireMetadataEntries(input) {
+	const layoutIds = [...input.layoutIds ?? []];
+	const sourcePageSegments = encodeSourcePageSegments(input.sourcePage);
+	const entries = {
+		[APP_ROUTE_KEY]: input.routeId,
+		[APP_INTERCEPTION_CONTEXT_KEY]: input.interceptionContext,
+		[APP_LAYOUT_IDS_KEY]: layoutIds,
+		[APP_ROOT_LAYOUT_KEY]: input.rootLayoutTreePath,
+		...input.dynamicStaleTimeSeconds === void 0 ? {} : { [APP_DYNAMIC_STALE_TIME_KEY]: input.dynamicStaleTimeSeconds },
+		...input.bfcacheSegmentIdentities && Object.keys(input.bfcacheSegmentIdentities).length > 0 ? { [APP_BFCACHE_SEGMENT_IDENTITIES_KEY]: input.bfcacheSegmentIdentities } : {},
+		...sourcePageSegments === null ? {} : { [APP_SOURCE_PAGE_SEGMENTS_KEY]: sourcePageSegments }
+	};
+	const entriesWithInterception = input.interception ? {
+		...entries,
+		[APP_INTERCEPTION_KEY]: input.interception
+	} : entries;
+	if (input.slotBindings && input.slotBindings.length > 0) return {
+		...entriesWithInterception,
+		[APP_SLOT_BINDINGS_KEY]: normalizeAppElementsSlotBindings(input.slotBindings, { layoutIds })
+	};
+	return entriesWithInterception;
+}
+function normalizeAppElements(elements) {
+	let needsNormalization = false;
+	for (const [key, value] of Object.entries(elements)) if (isAppElementsWireSlotId(key) && value === "__VINEXT_UNMATCHED_SLOT__") {
+		needsNormalization = true;
+		break;
+	}
+	if (!needsNormalization) return elements;
+	const normalized = {};
+	for (const [key, value] of Object.entries(elements)) normalized[key] = isAppElementsWireSlotId(key) && value === "__VINEXT_UNMATCHED_SLOT__" ? UNMATCHED_SLOT : value;
+	return normalized;
+}
+function isLayoutFlagsRecord(value) {
+	if (typeof value !== "object" || value === null || Array.isArray(value)) return false;
+	for (const v of Object.values(value)) if (v !== "s" && v !== "d") return false;
+	return true;
+}
+function parseLayoutFlags(value) {
+	if (isLayoutFlagsRecord(value)) return value;
+	return {};
+}
+function parseLayoutIdList(value, fieldName) {
+	if (value === void 0) return [];
+	if (!Array.isArray(value)) throw new Error(`[vinext] Invalid ${fieldName} in App Router payload: expected layout id string[]`);
+	const layoutIds = [];
+	for (const entry of value) {
+		if (typeof entry !== "string") throw new Error(`[vinext] Invalid ${fieldName} in App Router payload: expected layout id string[]`);
+		if (parseAppElementsWireElementKey(entry)?.kind !== "layout") throw new Error(`[vinext] Invalid ${fieldName} in App Router payload: expected layout ids`);
+		layoutIds.push(entry);
+	}
+	return layoutIds;
+}
+function parseLayoutIds(value) {
+	return parseLayoutIdList(value, APP_LAYOUT_IDS_KEY);
+}
+function parseSkippedLayoutIds(value) {
+	return parseLayoutIdList(value, APP_SKIPPED_LAYOUT_IDS_KEY);
+}
+function isSlotBindingState(value) {
+	return value === "active" || value === "default" || value === "unmatched";
+}
+function parseSlotBindings(value, options = {}) {
+	if (value === void 0) return [];
+	if (!Array.isArray(value)) throw new Error("[vinext] Invalid __slotBindings in App Router payload: expected array");
+	const slotBindings = [];
+	for (const entry of value) {
+		if (!isUnknownRecord(entry)) throw new Error("[vinext] Invalid __slotBindings in App Router payload: expected objects");
+		const slotId = entry.slotId;
+		if (typeof slotId !== "string" || parseAppElementsWireElementKey(slotId)?.kind !== "slot") throw new Error("[vinext] Invalid __slotBindings in App Router payload: expected slot ids");
+		const ownerLayoutId = entry.ownerLayoutId;
+		if (ownerLayoutId !== null && (typeof ownerLayoutId !== "string" || parseAppElementsWireElementKey(ownerLayoutId)?.kind !== "layout")) throw new Error("[vinext] Invalid __slotBindings in App Router payload: expected owner layout ids");
+		const state = entry.state;
+		if (!isSlotBindingState(state)) throw new Error("[vinext] Invalid __slotBindings in App Router payload: expected state");
+		const activeRouteId = entry.activeRouteId;
+		if (activeRouteId !== void 0 && activeRouteId !== null && (typeof activeRouteId !== "string" || parseAppElementsWireElementKey(activeRouteId)?.kind !== "route")) throw new Error("[vinext] Invalid __slotBindings in App Router payload: expected route ids");
+		slotBindings.push({
+			...activeRouteId !== void 0 ? { activeRouteId } : {},
+			ownerLayoutId,
+			slotId,
+			state
+		});
+	}
+	return normalizeAppElementsSlotBindings(slotBindings, options);
+}
+function readRequiredInterceptionString(entry, fieldName) {
+	const value = entry[fieldName];
+	if (typeof value !== "string") throw new Error("[vinext] Invalid __interception in App Router payload: expected strings");
+	return value;
+}
+function parseInterceptionMatchedUrl(value) {
+	if (!isInterceptionMatchedUrlPath(value)) throw new Error("[vinext] Invalid __interception in App Router payload: expected path URLs");
+	return value;
+}
+function parseInterceptionRouteId(value, matchedUrl) {
+	const parsed = parseAppElementsWireElementKey(value);
+	if (parsed?.kind !== "route" || parsed.path !== matchedUrl || parsed.interceptionContext !== null) throw new Error("[vinext] Invalid __interception in App Router payload: expected route ids");
+	return value;
+}
+function parseInterceptionSlotId(value) {
+	if (parseAppElementsWireElementKey(value)?.kind !== "slot") throw new Error("[vinext] Invalid __interception in App Router payload: expected slot id");
+	return value;
+}
+function parseInterceptionMetadata(value) {
+	if (value === void 0 || value === null) return null;
+	if (!isUnknownRecord(value)) throw new Error("[vinext] Invalid __interception in App Router payload: expected object");
+	const sourceMatchedUrl = parseInterceptionMatchedUrl(readRequiredInterceptionString(value, "sourceMatchedUrl"));
+	const targetMatchedUrl = parseInterceptionMatchedUrl(readRequiredInterceptionString(value, "targetMatchedUrl"));
+	return {
+		sourceMatchedUrl,
+		sourceRouteId: parseInterceptionRouteId(readRequiredInterceptionString(value, "sourceRouteId"), sourceMatchedUrl),
+		slotId: parseInterceptionSlotId(readRequiredInterceptionString(value, "slotId")),
+		targetMatchedUrl,
+		targetRouteId: parseInterceptionRouteId(readRequiredInterceptionString(value, "targetRouteId"), targetMatchedUrl)
+	};
+}
+/**
+* Type predicate for a plain (non-null, non-array) record of app payload values.
+* Used to distinguish the App Router payload object from bare React elements at
+* the render boundary. Narrows to `Readonly<Record<string, unknown>>` because
+* the outgoing payload carries heterogeneous values (ReactNodes for the rendered
+* tree, plus metadata like `__layoutFlags` which is a plain object). Delegates
+* to React's canonical `isValidElement` so we don't depend on React's internal
+* `$$typeof` marker scheme.
+*/
+function isAppElementsRecord(value) {
+	if (typeof value !== "object" || value === null) return false;
+	if (Array.isArray(value)) return false;
+	if (isValidElement(value)) return false;
+	return true;
+}
+function withLayoutFlags(elements, layoutFlags) {
+	return {
+		...elements,
+		[APP_LAYOUT_FLAGS_KEY]: layoutFlags
+	};
+}
+function buildOutgoingAppPayload(input) {
+	if (!isAppElementsRecord(input.element)) return input.element;
+	const skippedLayoutIds = createSkippedLayoutIds(input.skipDisposition);
+	const payload = {};
+	for (const [key, value] of Object.entries(input.element)) {
+		if (skippedLayoutIds.has(key)) {
+			releaseAppElementRenderDependency(input.element, key);
+			continue;
+		}
+		payload[key] = value === UNMATCHED_SLOT ? APP_UNMATCHED_SLOT_WIRE_VALUE : value;
+	}
+	payload[APP_LAYOUT_FLAGS_KEY] = input.layoutFlags;
+	if (skippedLayoutIds.size > 0) payload[APP_SKIPPED_LAYOUT_IDS_KEY] = [...skippedLayoutIds];
+	payload[APP_ARTIFACT_COMPATIBILITY_KEY] = input.artifactCompatibility ?? createArtifactCompatibilityEnvelope();
+	if (input.cacheEntryReuseProof) payload[APP_CACHE_ENTRY_REUSE_PROOF_KEY] = input.cacheEntryReuseProof;
+	if (input.dynamicStaleTimeSeconds !== void 0) payload[APP_DYNAMIC_STALE_TIME_KEY] = input.dynamicStaleTimeSeconds;
+	return payload;
+}
+function createSkippedLayoutIds(skipDisposition) {
+	if (skipDisposition?.enabled !== true) return EMPTY_SKIPPED_LAYOUT_IDS;
+	const skippedLayoutIds = /* @__PURE__ */ new Set();
+	for (const id of skipDisposition.skippedEntryIds) if (parseAppElementsWireElementKey(id)?.kind === "layout") skippedLayoutIds.add(id);
+	return skippedLayoutIds;
+}
+function readArtifactCompatibilityMetadata(value) {
+	if (value === void 0) return createArtifactCompatibilityEnvelope();
+	return parseArtifactCompatibilityEnvelope(value) ?? createArtifactCompatibilityEnvelope();
+}
+function readSourcePageMetadata(value) {
+	if (value === void 0 || value === null) return null;
+	if (typeof value === "string") return value.startsWith("/") ? value : null;
+	if (!isSourcePageSegments(value)) return null;
+	return `/${value.join("/")}`;
+}
+function createMissingCacheEntryReuseProof() {
+	return {
+		kind: "runtime-cache-entry",
+		decision: null
+	};
+}
+function isCacheProofRejectionCode(value) {
+	return typeof value === "string" && CACHE_PROOF_REJECTION_CODES.has(value);
+}
+function isCacheProofFallbackMode(value) {
+	return value === "renderFresh" || value === "privateUncacheable";
+}
+function isCacheProofFallbackScope(value) {
+	return value === "affectedOutput" || value === "route";
+}
+function parseCacheEntryReuseProofMetadata(value) {
+	if (value === void 0) return null;
+	if (!isUnknownRecord(value) || value.kind !== "runtime-cache-entry") return createMissingCacheEntryReuseProof();
+	const decision = value.decision;
+	if (decision === null) return createMissingCacheEntryReuseProof();
+	if (!isUnknownRecord(decision)) return createMissingCacheEntryReuseProof();
+	if (decision.kind === "reuse" && decision.canReuse === true && decision.code === "CP_STATIC_LAYOUT_REUSE_PROVEN" && decision.reuseClass === "static-layout") return {
+		kind: "runtime-cache-entry",
+		decision: {
+			canReuse: true,
+			code: decision.code,
+			kind: "reuse",
+			reuseClass: decision.reuseClass
+		}
+	};
+	if (decision.kind === "reject" && decision.canReuse === false && isCacheProofRejectionCode(decision.code) && isCacheProofFallbackMode(decision.mode) && isCacheProofFallbackScope(decision.scope)) return {
+		kind: "runtime-cache-entry",
+		decision: {
+			canReuse: false,
+			code: decision.code,
+			kind: "reject",
+			mode: decision.mode,
+			scope: decision.scope
+		}
+	};
+	return createMissingCacheEntryReuseProof();
+}
+function parseBfcacheSegmentIdentities(value) {
+	if (!isUnknownRecord(value)) return {};
+	const parsed = {};
+	for (const [key, entry] of Object.entries(value)) {
+		if (typeof entry !== "string" || !isAppElementsWireBfcacheIdentityId(key)) return {};
+		parsed[key] = entry;
+	}
+	return parsed;
+}
+function readAppElementsMetadata$1(elements) {
+	const routeId = elements[APP_ROUTE_KEY];
+	if (typeof routeId !== "string") throw new Error("[vinext] Missing __route string in App Router payload");
+	const interceptionContext = elements[APP_INTERCEPTION_CONTEXT_KEY];
+	if (interceptionContext !== void 0 && interceptionContext !== null && typeof interceptionContext !== "string") throw new Error("[vinext] Invalid __interceptionContext in App Router payload");
+	const rootLayoutTreePath = elements[APP_ROOT_LAYOUT_KEY];
+	if (rootLayoutTreePath === void 0) throw new Error("[vinext] Missing __rootLayout key in App Router payload");
+	if (rootLayoutTreePath !== null && typeof rootLayoutTreePath !== "string") throw new Error("[vinext] Invalid __rootLayout in App Router payload: expected string or null");
+	const layoutFlags = parseLayoutFlags(elements[APP_LAYOUT_FLAGS_KEY]);
+	const layoutIds = parseLayoutIds(elements[APP_LAYOUT_IDS_KEY]);
+	const skippedLayoutIds = parseSkippedLayoutIds(elements[APP_SKIPPED_LAYOUT_IDS_KEY]);
+	const slotBindings = parseSlotBindings(elements[APP_SLOT_BINDINGS_KEY], { layoutIds });
+	const interception = parseInterceptionMetadata(elements[APP_INTERCEPTION_KEY]);
+	const artifactCompatibility = readArtifactCompatibilityMetadata(elements[APP_ARTIFACT_COMPATIBILITY_KEY]);
+	const cacheEntryReuseProof = parseCacheEntryReuseProofMetadata(elements[APP_CACHE_ENTRY_REUSE_PROOF_KEY]);
+	const dynamicStaleTime = elements[APP_DYNAMIC_STALE_TIME_KEY];
+	const dynamicStaleTimeSeconds = typeof dynamicStaleTime === "number" && Number.isFinite(dynamicStaleTime) && dynamicStaleTime >= 0 ? dynamicStaleTime : void 0;
+	const sourcePage = Object.hasOwn(elements, "__srcPage") ? readSourcePageMetadata(elements[APP_SOURCE_PAGE_SEGMENTS_KEY]) : readSourcePageMetadata(elements[LEGACY_APP_SOURCE_PAGE_KEY]);
+	const bfcacheSegmentIdentities = parseBfcacheSegmentIdentities(elements[APP_BFCACHE_SEGMENT_IDENTITIES_KEY]);
+	return {
+		artifactCompatibility,
+		...cacheEntryReuseProof ? { cacheEntryReuseProof } : {},
+		...dynamicStaleTimeSeconds === void 0 ? {} : { dynamicStaleTimeSeconds },
+		interception,
+		interceptionContext: interceptionContext ?? null,
+		layoutIds,
+		layoutFlags,
+		routeId,
+		rootLayoutTreePath,
+		bfcacheSegmentIdentities,
+		skippedLayoutIds,
+		slotBindings,
+		sourcePage
+	};
+}
+var AppElementsWire = {
+	keys: {
+		artifactCompatibility: APP_ARTIFACT_COMPATIBILITY_KEY,
+		cacheEntryReuseProof: APP_CACHE_ENTRY_REUSE_PROOF_KEY,
+		dynamicStaleTime: APP_DYNAMIC_STALE_TIME_KEY,
+		interception: APP_INTERCEPTION_KEY,
+		interceptionContext: APP_INTERCEPTION_CONTEXT_KEY,
+		layoutIds: APP_LAYOUT_IDS_KEY,
+		layoutFlags: APP_LAYOUT_FLAGS_KEY,
+		rootLayout: APP_ROOT_LAYOUT_KEY,
+		route: APP_ROUTE_KEY,
+		bfcacheSegmentIdentities: APP_BFCACHE_SEGMENT_IDENTITIES_KEY,
+		skippedLayoutIds: APP_SKIPPED_LAYOUT_IDS_KEY,
+		slotBindings: APP_SLOT_BINDINGS_KEY,
+		sourcePageSegments: APP_SOURCE_PAGE_SEGMENTS_KEY
+	},
+	unmatchedSlotValue: APP_UNMATCHED_SLOT_WIRE_VALUE,
+	createMetadataEntries: createAppElementsWireMetadataEntries,
+	decode: normalizeAppElements,
+	encodeCacheKey: createAppPayloadCacheKey,
+	encodeLayoutId: createAppPayloadLayoutId,
+	encodeOutgoingPayload: buildOutgoingAppPayload,
+	encodePageId: createAppPayloadPageId,
+	encodeRouteId: createAppPayloadRouteId,
+	encodeSlotId: createAppPayloadSlotId,
+	encodeTemplateId: createAppPayloadTemplateId,
+	isSlotId: isAppElementsWireSlotId,
+	parseElementKey: parseAppElementsWireElementKey,
+	readMetadata: readAppElementsMetadata$1,
+	withLayoutFlags
+};
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/internal/als-registry.js
+globalThis.AsyncLocalStorage = __viteRscAsyncHooks.AsyncLocalStorage;
+/**
+* Shared helper for registering AsyncLocalStorage instances on `globalThis`
+* via `Symbol.for(...)` so that they survive multiple module instances.
+*
+* Why this helper exists
+* ----------------------
+* Vite's multi-environment setup (RSC / SSR / client) and HMR can load a
+* single source module under several different specifiers, producing more
+* than one module instance at runtime. If each instance kept its own
+* module-local `new AsyncLocalStorage()`, request-scoped state would silently
+* fork across instances — `headers()` in one environment wouldn't see what
+* `connection()` registered in another, concurrent requests would stomp each
+* other, etc.
+*
+* The fix every shim was applying inline:
+*
+*   const _ALS_KEY = Symbol.for("vinext.foo.als");
+*   const _g = globalThis as unknown as Record<PropertyKey, unknown>;
+*   const _als = (_g[_ALS_KEY] ??=
+*     new AsyncLocalStorage<T>()) as AsyncLocalStorage<T>;
+*
+* This helper packages that pattern.
+*
+* Cross-bundle singleton property — preserved
+* -------------------------------------------
+* - `Symbol.for(key)` consults the global symbol registry and returns the
+*   same symbol regardless of which module instance calls it.
+* - `globalThis[sym]` is a single slot shared by every module instance.
+* - `??=` only assigns when the slot is empty, so the first caller wins and
+*   every subsequent caller (in any module instance) reads the same ALS.
+*
+* The helper module itself never holds the ALS by reference — it always
+* round-trips through `globalThis`. So even if this helper file is itself
+* loaded under multiple module instances, every copy still hands back the
+* one true ALS for a given key.
+*/
+var _g$3 = globalThis;
+/**
+* Every ALS handed out by `getOrCreateAls`, so `runOutsideRequestScopes` can
+* exit all of them without an enumeration that goes stale as shims are added.
+* Shares the `globalThis` slot for the same cross-module-instance reason.
+*/
+var _REGISTRY_KEY = Symbol.for("vinext.als.registry");
+var _registry = _g$3[_REGISTRY_KEY] ??= /* @__PURE__ */ new Set();
+/**
+* No-op AsyncLocalStorage used when the runtime does not provide a usable
+* `AsyncLocalStorage` constructor.
+*
+* In browser/client bundles `node:async_hooks` can resolve to a stub without a
+* usable constructor (e.g. Vite's `__vite-browser-external`). Constructing such
+* a value with `new` throws `TypeError: AsyncLocalStorage is not a constructor`
+* at module-eval time, crashing every client-reachable shim that calls
+* `getOrCreateAls` on import (request-context, headers, cache, …).
+*
+* Mirrors Next.js' `FakeAsyncLocalStorage` (and this repo's
+* `async-hooks-stub.ts` client virtual module): `getStore()` returns
+* `undefined` so shims fall back to their non-ALS code path, and the mutating
+* methods are best-effort no-ops that still invoke the callback.
+* See: https://github.com/vercel/next.js/blob/canary/packages/next/src/server/app-render/async-local-storage.ts
+*/
+var NoopAsyncLocalStorage = class {
+	getStore() {}
+	run(_store, fn, ...args) {
+		return fn(...args);
+	}
+	exit(fn, ...args) {
+		return fn(...args);
+	}
+	enterWith(_store) {}
+	disable() {}
+};
+/**
+* Get (or lazily create) the AsyncLocalStorage registered on `globalThis`
+* under `Symbol.for(key)`. Multiple callers — including callers in different
+* module instances — that pass the same `key` receive the same ALS instance.
+*
+* @param key - String key fed to `Symbol.for(...)`. By convention vinext
+*   shims use a dotted namespace such as `"vinext.cache.als"`.
+*/
+function getOrCreateAls(key) {
+	const sym = Symbol.for(key);
+	const als = _g$3[sym] ??= typeof AsyncLocalStorage === "function" ? new AsyncLocalStorage() : new NoopAsyncLocalStorage();
+	_registry.add(als);
+	return als;
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/ppr-fallback-shell.js
+var pprFallbackShellAls = getOrCreateAls("vinext.pprFallbackShell.als");
+var pprFallbackShellCacheTaskStackAls = getOrCreateAls("vinext.pprFallbackShell.cacheTaskStack.als");
+function scheduleAfterTask(callback) {
+	let firstTimer = setTimeout(() => {
+		firstTimer = null;
+		secondTimer = setTimeout(() => {
+			secondTimer = null;
+			callback();
+		}, 0);
+	}, 0);
+	let secondTimer = null;
+	return () => {
+		if (firstTimer !== null) {
+			clearTimeout(firstTimer);
+			firstTimer = null;
+		}
+		if (secondTimer !== null) {
+			clearTimeout(secondTimer);
+			secondTimer = null;
+		}
+	};
+}
+function resolveCacheReadyIfSettled(state) {
+	if (state.pendingCacheTasks !== 0) return;
+	const resolvers = state.cacheReadyResolvers.splice(0);
+	for (const resolve of resolvers) resolve();
+}
+function scheduleCacheReadyIfSettled(state) {
+	if (state.pendingCacheTasks !== 0 || state.pendingCacheReadyCleanup !== null) return;
+	state.pendingCacheReadyCleanup = scheduleAfterTask(() => {
+		state.pendingCacheReadyCleanup = null;
+		resolveCacheReadyIfSettled(state);
+		if (state.phase === "final") scheduleAbortIfReady(state);
+	});
+}
+function scheduleAbortIfReady(state) {
+	if (state.phase !== "final" || !state.isFinalRenderStarted || !state.hasDynamicBoundary || state.pendingCacheTasks > 0 || state.pendingCacheReadyCleanup !== null || state.isAbortScheduled) return;
+	state.isAbortScheduled = true;
+	state.pendingAbortCleanup = scheduleAfterTask(() => {
+		state.pendingAbortCleanup = null;
+		state.isAbortScheduled = false;
+		if (state.phase === "final" && state.hasDynamicBoundary && state.pendingCacheTasks === 0 && state.pendingCacheReadyCleanup === null && !state.reactAbortController.signal.aborted) {
+			state.reactAbortController.abort();
+			state.abortController.abort();
+		}
+	});
+}
+function completeCacheTask(state, task) {
+	if (!task.isPending) return;
+	task.isPending = false;
+	if (task.epoch !== state.cacheEpoch) return;
+	state.pendingCacheTasks--;
+	scheduleCacheReadyIfSettled(state);
+}
+function ignoreCacheTask(state, task) {
+	if (!task.isPending || task.isIgnored) return;
+	task.isIgnored = true;
+	completeCacheTask(state, task);
+}
+function getPprFallbackShellState() {
+	return pprFallbackShellAls.getStore() ?? null;
+}
+function markPprFallbackShellDynamicBoundaryForState(state) {
+	state.hasDynamicBoundary = true;
+	for (const task of pprFallbackShellCacheTaskStackAls.getStore() ?? []) ignoreCacheTask(state, task);
+	scheduleCacheReadyIfSettled(state);
+}
+function markPprFallbackShellDynamicBoundary() {
+	const state = getPprFallbackShellState();
+	if (state === null || state.fallbackParamNames.size === 0) return;
+	markPprFallbackShellDynamicBoundaryForState(state);
+}
+function isPprFallbackShellAbortError(error) {
+	if (typeof DOMException !== "undefined" && error instanceof DOMException && error.name === "AbortError") return true;
+	return error instanceof Error && error.name === "HangingPromiseRejectionError";
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/internal/app-router-context.js
+/**
+* Shim for next/dist/shared/lib/app-router-context.shared-runtime
+*
+* Used by: @clerk/nextjs, next-intl, next-nprogress-bar, nextjs-toploader,
+* next-view-transitions. Mostly type-only imports in published .d.ts files.
+*
+* We export the types and minimal context objects so these libraries resolve.
+*/
+var APP_ROUTER_CONTEXT_KEY = Symbol.for("vinext.appRouterContext");
+var GLOBAL_LAYOUT_ROUTER_CONTEXT_KEY = Symbol.for("vinext.globalLayoutRouterContext");
+var LAYOUT_ROUTER_CONTEXT_KEY = Symbol.for("vinext.layoutRouterContext");
+var MISSING_SLOT_CONTEXT_KEY = Symbol.for("vinext.missingSlotContext");
+var TEMPLATE_CONTEXT_KEY = Symbol.for("vinext.templateContext");
+function getOrCreateContext(key, defaultValue) {
+	if (typeof React$1.createContext !== "function") return null;
+	const globalState = globalThis;
+	if (!globalState[key]) globalState[key] = React$1.createContext(defaultValue);
+	return globalState[key] ?? null;
+}
+var AppRouterContext = getOrCreateContext(APP_ROUTER_CONTEXT_KEY, null);
+getOrCreateContext(GLOBAL_LAYOUT_ROUTER_CONTEXT_KEY, null);
+getOrCreateContext(LAYOUT_ROUTER_CONTEXT_KEY, null);
+getOrCreateContext(MISSING_SLOT_CONTEXT_KEY, /* @__PURE__ */ new Set());
+getOrCreateContext(TEMPLATE_CONTEXT_KEY, null);
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/utils/deployment-id.js
+function appendDeploymentIdQuery(value, deploymentId = void 0) {
+	if (!deploymentId) return value;
+	const hashIndex = value.indexOf("#");
+	const url = hashIndex === -1 ? value : value.slice(0, hashIndex);
+	const fragment = hashIndex === -1 ? "" : value.slice(hashIndex);
+	if (new URL(url, "http://vinext.local").searchParams.has("dpl")) return value;
+	return `${url}${url.includes("?") ? "&" : "?"}dpl=${deploymentId}${fragment}`;
+}
+function appendAssetDeploymentIdQuery(value, deploymentId = void 0) {
+	if (!new URL(value, "http://vinext.local").pathname.includes("/_next/static/")) return value;
+	return appendDeploymentIdQuery(value, deploymentId);
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/script-nonce-context.js
+var ScriptNonceContext = typeof React.createContext === "function" ? React.createContext(void 0) : null;
+function ScriptNonceProvider(props) {
+	if (!ScriptNonceContext) return React.createElement(React.Fragment, null, props.children);
+	return React.createElement(ScriptNonceContext.Provider, { value: props.nonce }, props.children);
+}
+function withScriptNonce(element, nonce) {
+	if (!nonce || !ScriptNonceContext) return element;
+	return React.createElement(ScriptNonceProvider, { nonce }, element);
+}
+function createScriptNonceHook(context) {
+	if (!context || typeof React.useContext !== "function") return function useScriptNonceFromContext() {};
+	return function useScriptNonceFromContext() {
+		return React.useContext(context);
+	};
+}
+createScriptNonceHook(ScriptNonceContext);
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/html.js
+/**
+* HTML-safe JSON serialization for embedding data in <script> tags.
+*
+* JSON.stringify does NOT escape characters that are meaningful to the
+* HTML parser. If a JSON string value contains "<\/script>", the browser
+* closes the script tag early — anything after it executes as HTML.
+* This is a well-known stored XSS vector in SSR frameworks.
+*
+* Next.js mitigates this with htmlEscapeJsonString(). We do the same.
+*
+* Characters escaped:
+*   <   → \u003c   (prevents <\/script> and <!-- breakout)
+*   >   → \u003e   (prevents --> and other HTML close sequences)
+*   &   → \u0026   (prevents &lt; entity interpretation in XHTML)
+*   \u2028 → \\u2028 (line separator — invalid in JS string literals pre-ES2019)
+*   \u2029 → \\u2029 (paragraph separator — same)
+*
+* The result is valid JSON that is also safe to embed in any HTML context
+* without additional escaping.
+*/
+function safeJsonStringify(data) {
+	return JSON.stringify(data).replace(/</g, "\\u003c").replace(/>/g, "\\u003e").replace(/&/g, "\\u0026").replace(/\u2028/g, "\\u2028").replace(/\u2029/g, "\\u2029");
+}
+function escapeHtmlAttr(value) {
+	return value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+var HTML_SPACE_RE = /[\t\n\f\r ]+/;
+function htmlTokenListContains(value, token) {
+	if (value === null) return false;
+	return value.split(HTML_SPACE_RE).some((part) => part.length > 0 && part.toLowerCase() === token.toLowerCase());
+}
+function createNonceAttribute(nonce) {
+	if (!nonce) return "";
+	return ` nonce="${escapeHtmlAttr(nonce)}"`;
+}
+function createInlineScriptTag(content, nonce) {
+	return `<script${createNonceAttribute(nonce)}>${content}<\/script>`;
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/client-trace-metadata.js
+/**
+* Client trace metadata renderer.
+*
+* When `experimental.clientTraceMetadata` is configured in `next.config`,
+* vinext emits `<meta name="..." content="...">` tags in the SSR HTML head
+* for each configured key. The values are sourced from the active
+* OpenTelemetry context via the registered propagator.
+*
+* This mirrors Next.js' implementation:
+*  - packages/next/src/server/lib/trace/utils.ts (getTracedMetadata)
+*  - packages/next/src/server/app-render/make-get-server-inserted-html.tsx (traceMetaTags)
+*
+* OpenTelemetry is an optional peer — we resolve `@opentelemetry/api` at
+* runtime and silently no-op when it is not installed. This matches user
+* expectations: apps that don't configure OTel get no meta tags, and apps
+* that do get the filtered subset they asked for in `clientTraceMetadata`.
+*/
+var carrierSetter = { set(carrier, key, value) {
+	if (typeof key !== "string" || typeof value !== "string") return;
+	carrier.push({
+		key,
+		value
+	});
+} };
+var OPEN_TELEMETRY_API_SYMBOL = Symbol.for("opentelemetry.js.api.1");
+var OPEN_TELEMETRY_SPAN_SYMBOL = Symbol.for("OpenTelemetry Context Key SPAN");
+function getRegisteredOpenTelemetryTraceData() {
+	let metadataSpan = null;
+	try {
+		const registry = globalThis[OPEN_TELEMETRY_API_SYMBOL];
+		if (!registry?.context || !registry.propagation) return null;
+		const contextApi = registry.context;
+		const propagation = registry.propagation;
+		const activeContext = contextApi.active();
+		metadataSpan = activeContext.getValue(OPEN_TELEMETRY_SPAN_SYMBOL) !== void 0 ? null : registry.trace?.getTracer("vinext").startSpan("vinext.clientTraceMetadata", void 0, activeContext) ?? null;
+		const context = metadataSpan ? activeContext.setValue(OPEN_TELEMETRY_SPAN_SYMBOL, metadataSpan) : activeContext;
+		const entries = [];
+		contextApi.with(context, () => {
+			propagation.inject(context, entries, carrierSetter);
+		});
+		return entries;
+	} catch {
+		return [];
+	} finally {
+		metadataSpan?.end();
+	}
+}
+function getOpenTelemetryTraceData() {
+	const registeredEntries = getRegisteredOpenTelemetryTraceData();
+	if (registeredEntries) return registeredEntries;
+	let api;
+	try {
+		const req = globalThis.require;
+		if (typeof req === "function") api = req("@opentelemetry/api");
+	} catch {
+		return [];
+	}
+	if (!api) return [];
+	try {
+		const activeContext = api.context.active();
+		const entries = [];
+		api.propagation.inject(activeContext, entries, carrierSetter);
+		return entries;
+	} catch {
+		return [];
+	}
+}
+/**
+* Filter an entry list against the configured `clientTraceMetadata` allow-list.
+* Returns `undefined` when the allow-list is unset so callers can skip
+* rendering altogether.
+*/
+function filterClientTraceMetadata(entries, allowList) {
+	if (!allowList || allowList.length === 0) return void 0;
+	const allowSet = new Set(allowList);
+	return entries.filter(({ key }) => allowSet.has(key));
+}
+/**
+* Render the filtered entries as a sequence of self-closing `<meta>` tags.
+* Names and values are HTML-attribute escaped. Returns an empty string when
+* `entries` is empty or undefined so callers can append unconditionally.
+*/
+function renderClientTraceMetadataTags(entries) {
+	if (!entries || entries.length === 0) return "";
+	let html = "";
+	for (const { key, value } of entries) html += `<meta name="${escapeHtmlAttr(key)}" content="${escapeHtmlAttr(value)}"/>`;
+	return html;
+}
+/**
+* Convenience helper: read OTel propagation data, filter against the
+* configured allow-list, and render the resulting `<meta>` tags. Returns an
+* empty string when the allow-list is unset, OTel is not installed, or no
+* matching keys were emitted by the propagator.
+*
+* Safe to call unconditionally on every SSR render — when nothing is
+* configured/active this is a few `try/catch`-bounded operations and returns
+* `""`.
+*/
+function getClientTraceMetadataHTML(allowList) {
+	if (!allowList || allowList.length === 0) return "";
+	if (typeof process !== "undefined" && process.env.VINEXT_PRERENDER === "1") return "";
+	return renderClientTraceMetadataTags(filterClientTraceMetadata(getOpenTelemetryTraceData(), allowList));
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/navigation-context-state.js
+var LAYOUT_SEGMENT_CONTEXT_KEY = Symbol.for("vinext.layoutSegmentContext");
+var SERVER_INSERTED_HTML_CONTEXT_KEY = Symbol.for("vinext.serverInsertedHTMLContext");
+var BFCACHE_ID_MAP_CONTEXT_KEY = Symbol.for("vinext.bfcacheIdMapContext");
+var BFCACHE_SEGMENT_ID_CONTEXT_KEY = Symbol.for("vinext.bfcacheSegmentIdContext");
+var NAVIGATION_FALLBACK_STATE_KEY = Symbol.for("vinext.navigation.fallback");
+function createContextIfAvailable(defaultValue) {
+	return typeof React$1.createContext === "function" ? React$1.createContext(defaultValue) : null;
+}
+function getServerInsertedHTMLContext() {
+	const globalState = globalThis;
+	if (!globalState[SERVER_INSERTED_HTML_CONTEXT_KEY]) globalState[SERVER_INSERTED_HTML_CONTEXT_KEY] = createContextIfAvailable(null);
+	return globalState[SERVER_INSERTED_HTML_CONTEXT_KEY] ?? null;
+}
+var ServerInsertedHTMLContext = getServerInsertedHTMLContext();
+function getLayoutSegmentContext() {
+	const globalState = globalThis;
+	if (!globalState[LAYOUT_SEGMENT_CONTEXT_KEY]) globalState[LAYOUT_SEGMENT_CONTEXT_KEY] = createContextIfAvailable({ children: [] });
+	return globalState[LAYOUT_SEGMENT_CONTEXT_KEY] ?? null;
+}
+function getBfcacheIdMapContext() {
+	const globalState = globalThis;
+	if (!globalState[BFCACHE_ID_MAP_CONTEXT_KEY]) globalState[BFCACHE_ID_MAP_CONTEXT_KEY] = createContextIfAvailable(null);
+	return globalState[BFCACHE_ID_MAP_CONTEXT_KEY] ?? null;
+}
+function getBfcacheSegmentIdContext() {
+	const globalState = globalThis;
+	if (!globalState[BFCACHE_SEGMENT_ID_CONTEXT_KEY]) globalState[BFCACHE_SEGMENT_ID_CONTEXT_KEY] = createContextIfAvailable(null);
+	return globalState[BFCACHE_SEGMENT_ID_CONTEXT_KEY] ?? null;
+}
+var GLOBAL_ACCESSORS_KEY = Symbol.for("vinext.navigation.globalAccessors");
+function getFallbackState() {
+	const globalState = globalThis;
+	return globalState[NAVIGATION_FALLBACK_STATE_KEY] ??= {
+		serverContext: null,
+		serverInsertedHTMLCallbacks: []
+	};
+}
+function getGlobalAccessors() {
+	return globalThis[GLOBAL_ACCESSORS_KEY];
+}
+var getServerContext = () => {
+	return getGlobalAccessors()?.getServerContext() ?? getFallbackState().serverContext;
+};
+var setServerContext = (context) => {
+	const accessors = getGlobalAccessors();
+	if (accessors) accessors.setServerContext(context);
+	else getFallbackState().serverContext = context;
+};
+var getInsertedHTMLCallbacks = () => getGlobalAccessors()?.getInsertedHTMLCallbacks() ?? getFallbackState().serverInsertedHTMLCallbacks;
+var clearInsertedHTMLCallbacks = () => {
+	const accessors = getGlobalAccessors();
+	if (accessors) accessors.clearInsertedHTMLCallbacks();
+	else getFallbackState().serverInsertedHTMLCallbacks = [];
+};
+/**
+* Register request-scoped accessors supplied by navigation-state.ts.
+* The global accessor key also bridges separate Vite module instances.
+*/
+function _registerStateAccessors(accessors) {
+	getServerContext = accessors.getServerContext;
+	setServerContext = accessors.setServerContext;
+	getInsertedHTMLCallbacks = accessors.getInsertedHTMLCallbacks;
+	clearInsertedHTMLCallbacks = accessors.clearInsertedHTMLCallbacks;
+}
+function getNavigationContext() {
+	return getServerContext();
+}
+function setNavigationContext(context) {
+	setServerContext(context);
+}
+function registerServerInsertedHTMLCallback(callback) {
+	getInsertedHTMLCallbacks().push(callback);
+}
+function renderInsertedHTMLCallbacks(clear) {
+	const callbacks = getInsertedHTMLCallbacks();
+	const results = [];
+	for (const callback of callbacks) try {
+		const result = callback();
+		if (result != null) results.push(result);
+	} catch {}
+	if (clear) callbacks.length = 0;
+	return results;
+}
+function renderServerInsertedHTML() {
+	return renderInsertedHTMLCallbacks(false);
+}
+function clearServerInsertedHTML() {
+	clearInsertedHTMLCallbacks();
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/utils/redirect-digest.js
+var NEXT_REDIRECT_PREFIX = "NEXT_REDIRECT;";
+function parseRedirectDigest(digest) {
+	if (!digest.startsWith(NEXT_REDIRECT_PREFIX)) return null;
+	const firstSemi = digest.indexOf(";", 14);
+	if (firstSemi === -1) return null;
+	const rest = digest.slice(firstSemi + 1);
+	const statusMatch = rest.match(/;(303|307|308);?$/);
+	const isCanonical = rest !== "" && digest.endsWith(";");
+	if (isCanonical && !statusMatch) return null;
+	const target = statusMatch ? rest.slice(0, -statusMatch[0].length) : rest;
+	let url = target;
+	if (!isCanonical) try {
+		url = decodeURIComponent(target);
+	} catch {
+		return null;
+	}
+	return {
+		status: statusMatch ? Number(statusMatch[1]) : 307,
+		type: digest.slice(14, firstSemi) || null,
+		url
+	};
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/navigation-errors.js
+/**
+* Server-safe navigation control-flow errors and predicates.
+*
+* This module intentionally has no React or browser-runtime dependencies so
+* RSC, SSR, and the public next/navigation shim can share one implementation.
+*/
+var HTTP_ERROR_FALLBACK_ERROR_CODE = "NEXT_HTTP_ERROR_FALLBACK";
+var VinextNavigationError = class extends Error {
+	digest;
+	constructor(message, digest) {
+		super(message);
+		this.digest = digest;
+	}
+};
+function notFound() {
+	throw new VinextNavigationError("NEXT_NOT_FOUND", `${HTTP_ERROR_FALLBACK_ERROR_CODE};404`);
+}
+/**
+* vinext accepts its three-part redirect digest and Next.js's five-part form.
+* This is deliberately only a cheap prefix gate because vinext permits an
+* empty redirect type; parseRedirectDigest is the authoritative validator.
+*/
+function isRedirectError(error) {
+	return !!error && typeof error === "object" && "digest" in error && typeof error.digest === "string" && error.digest.startsWith("NEXT_REDIRECT;");
+}
+function decodeRedirectError(digest) {
+	const redirect = parseRedirectDigest(digest);
+	if (!redirect) return null;
+	return {
+		url: redirect.url,
+		type: redirect.type === "push" ? "push" : "replace"
+	};
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/default-global-error.js
+var default_global_error_exports = /* @__PURE__ */ __exportAll({ default: () => DefaultGlobalError });
+var errorStyles = {
+	container: {
+		fontFamily: "system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"",
+		height: "100vh",
+		display: "flex",
+		alignItems: "center",
+		justifyContent: "center"
+	},
+	card: {
+		marginTop: "-32px",
+		maxWidth: "325px",
+		padding: "32px 28px",
+		textAlign: "left"
+	},
+	icon: { marginBottom: "24px" },
+	title: {
+		fontSize: "24px",
+		fontWeight: 500,
+		letterSpacing: "-0.02em",
+		lineHeight: "32px",
+		margin: "0 0 12px 0",
+		color: "var(--next-error-title)"
+	},
+	message: {
+		fontSize: "14px",
+		fontWeight: 400,
+		lineHeight: "21px",
+		margin: "0 0 20px 0",
+		color: "var(--next-error-message)"
+	},
+	form: { margin: 0 },
+	buttonGroup: {
+		display: "flex",
+		gap: "8px",
+		alignItems: "center"
+	},
+	button: {
+		display: "inline-flex",
+		alignItems: "center",
+		justifyContent: "center",
+		height: "32px",
+		padding: "0 12px",
+		fontSize: "14px",
+		fontWeight: 500,
+		lineHeight: "20px",
+		borderRadius: "6px",
+		cursor: "pointer",
+		color: "var(--next-error-btn-text)",
+		background: "var(--next-error-btn-bg)",
+		border: "var(--next-error-btn-border)"
+	},
+	buttonSecondary: {
+		display: "inline-flex",
+		alignItems: "center",
+		justifyContent: "center",
+		height: "32px",
+		padding: "0 12px",
+		fontSize: "14px",
+		fontWeight: 500,
+		lineHeight: "20px",
+		borderRadius: "6px",
+		cursor: "pointer",
+		color: "var(--next-error-btn-secondary-text)",
+		background: "var(--next-error-btn-secondary-bg)",
+		border: "var(--next-error-btn-secondary-border)"
+	},
+	digestFooter: {
+		position: "fixed",
+		bottom: "32px",
+		left: "0",
+		right: "0",
+		textAlign: "center",
+		fontFamily: "ui-monospace,SFMono-Regular,\"SF Mono\",Menlo,Consolas,monospace",
+		fontSize: "12px",
+		lineHeight: "18px",
+		fontWeight: 400,
+		margin: "0",
+		color: "var(--next-error-digest)"
+	}
+};
+var errorThemeCss = `
 :root {
   --next-error-bg: #fff;
   --next-error-text: #171717;
@@ -28,6 +1271,3039 @@ import{createRequire as e}from"node:module";import t from"./__vite_rsc_assets_ma
   }
 }
 body { margin: 0; color: var(--next-error-text); background: var(--next-error-bg); }
-`.replace(/\n\s*/g,``);function Tn(){return d(`svg`,{width:`32`,height:`32`,viewBox:`-0.2 -1.5 32 32`,fill:`none`,style:$.icon,children:d(`path`,{d:`M16.9328 0C18.0839 0.000116771 19.1334 0.658832 19.634 1.69531L31.4299 26.1309C32.0708 27.4588 31.1036 28.9999 29.6291 29H2.00215C0.527541 29 -0.439628 27.4588 0.201371 26.1309L11.9973 1.69531C12.4979 0.658823 13.5474 7.75066e-05 14.6984 0H16.9328ZM3.59493 26H28.0363L16.9328 3H14.6984L3.59493 26ZM15.8156 19C16.9202 19.0001 17.8156 19.8955 17.8156 21C17.8156 22.1045 16.9202 22.9999 15.8156 23C14.7111 23 13.8156 22.1046 13.8156 21C13.8156 19.8954 14.7111 19 15.8156 19ZM17.3156 16.5H14.3156V8.5H17.3156V16.5Z`,fill:`var(--next-error-title)`})})}function En(){}function Dn({error:e}){let t=e?.digest,n=!!t,r=n?`A server error occurred. Reload to try again.`:`Reload to try again, or go back.`;return f(`html`,{id:`__next_error__`,children:[d(`head`,{children:d(`style`,{dangerouslySetInnerHTML:{__html:wn}})}),f(`body`,{children:[d(`div`,{style:$.container,children:f(`div`,{style:$.card,children:[d(Tn,{}),d(`h1`,{style:$.title,children:`This page couldn’t load`}),d(`p`,{style:$.message,children:r}),f(`div`,{style:$.buttonGroup,children:[d(`form`,{style:$.form,children:d(`button`,{type:`submit`,style:$.button,children:`Reload`})}),!n&&d(`button`,{type:`button`,style:$.buttonSecondary,onClick:En,children:`Back`})]})]})}),t&&f(`p`,{style:$.digestFooter,children:[`ERROR `,t]})]})]})}var On=w({BfcacheIdentityMapContext:()=>Rn,BfcacheSegmentBoundary:()=>ir,Children:()=>lr,ChildrenContext:()=>jn,ElementsContext:()=>An,ParallelSlot:()=>ur,ParallelSlotsContext:()=>Mn,Slot:()=>cr,UNMATCHED_SLOT:()=>fe,getNonCacheComponentsSegmentKey:()=>ar,resolveBfcacheSegmentStateKey:()=>or,stageBfcacheSlotEntryForRender:()=>Gn,updateBfcacheSlotEntryOrder:()=>Hn}),kn=Object.freeze({}),An=i.createContext(kn),jn=i.createContext(null),Mn=i.createContext(null),Nn=$t(),Pn=en(),Fn=Object.freeze({}),In=3,Ln=1,Rn=i.createContext(Fn);function zn(){return!1}function Bn(){return zn()?In:Ln}function Vn(e){return Number.isFinite(e)?Math.max(1,Math.trunc(e)):1}function Hn(e,t,n=Bn()){let r=Vn(n),i=[t];for(let n of e){if(i.length>=r)break;n!==t&&i.push(n)}return i}function Un(e,t){let n=new Set(t);for(let t of e.keys())n.has(t)||e.delete(t)}function Wn(e,t){if(e.length!==t.length)return!1;for(let n=0;n<e.length;n++)if(e[n]!==t[n])return!1;return!0}function Gn(e,t,n,r=Bn()){let i=new Map(e);i.set(n.stateKey,n);let a=Hn(t,n.stateKey,r);return Un(i,a),{entries:a.map(e=>i.get(e)).filter(e=>e!==void 0),order:a,snapshots:i}}function Kn(e){if(typeof e!=`object`||!e||Array.isArray(e))return!1;let t=Object.values(e);return t.length>0&&t.every(e=>e===`s`||e===`d`)}function qn(e){return typeof e!=`object`||!e||Array.isArray(e)?!1:`schemaVersion`in e&&`appElementsSchemaVersion`in e&&`rscPayloadSchemaVersion`in e&&`graphVersion`in e&&`deploymentVersion`in e&&`rootBoundaryId`in e&&`renderEpoch`in e}function Jn(e){return typeof e!=`object`||!e||Array.isArray(e)?!1:`ownerLayoutId`in e&&`slotId`in e&&`state`in e}function Yn(e){return Array.isArray(e)&&e.length>0&&e.every(Jn)}function Xn(e,t){return e===`__skippedLayoutIds`&&Array.isArray(t)&&t.every(e=>typeof e==`string`)}function Zn(e,t){return e!==`__bfcacheSegmentIdentities`||typeof t!=`object`||!t||Array.isArray(t)?!1:Object.entries(t).every(([e,t])=>{let n=Y.parseElementKey(e);return n!==null&&n.kind!==`route`&&typeof t==`string`})}function Qn(e){return typeof e!=`object`||!e||Array.isArray(e)?!1:`sourceMatchedUrl`in e&&typeof e.sourceMatchedUrl==`string`&&`sourceRouteId`in e&&typeof e.sourceRouteId==`string`&&`slotId`in e&&typeof e.slotId==`string`&&`targetMatchedUrl`in e&&typeof e.targetMatchedUrl==`string`&&`targetRouteId`in e&&typeof e.targetRouteId==`string`}function $n(e){return typeof e!=`object`||!e||Array.isArray(e)?!1:`kind`in e&&e.kind===`runtime-cache-entry`&&`decision`in e}function er(e,t){return Kn(t)||Zn(e,t)||qn(t)||$n(t)||Qn(t)||Xn(e,t)||Yn(t)}function tr({entry:e,fallbackElements:t,fallbackSegmentId:n,fallbackStateKeyMap:r,SegmentContext:i}){return d(Rn.Provider,{value:e.stateKeyMap??r,children:d(An.Provider,{value:e.elements??t,children:d(i.Provider,{value:e.segmentId??n,children:e.content})})})}function nr(e){let t=i.useRef(new Map),[n,r]=i.useState(()=>[e.stateKey]),a=Gn(t.current,n,e),o=a.order,s=!Wn(n,o);return i.useLayoutEffect(()=>{t.current=a.snapshots},[a.snapshots]),s&&r(o),a.entries}function rr({activeStateKey:e,content:t,elements:n,id:r,SegmentContext:a,stateKeyMap:o}){return d(u,{children:nr({content:t,elements:n,segmentId:r,stateKey:e,stateKeyMap:o}).map(t=>d(i.Activity,{mode:t.stateKey===e?`visible`:`hidden`,children:d(tr,{entry:t,fallbackElements:n,fallbackSegmentId:r,fallbackStateKeyMap:o,SegmentContext:a})},t.stateKey))})}function ir({children:e,id:t,stateKey:n}){let r=i.useContext(An),a=i.useContext(Rn),o=or(t,a,i.useContext(Nn));return!Pn||o===void 0?d(i.Fragment,{children:e},n):zn()?d(rr,{activeStateKey:o,content:e,elements:r,id:t,SegmentContext:Pn,stateKeyMap:a}):d(Pn.Provider,{value:t,children:e},o)}function ar(e,t){let n=Y.parseElementKey(e);return n!==null&&n.kind!==`route`?t:void 0}function or(e,t,n){return t[e]??n?.[e]}function sr({content:e,id:t}){let n=Pn,r=i.useContext(An),a=i.useContext(Rn),o=or(t,a,i.useContext(Nn));return n?o===void 0?d(n.Provider,{value:t,children:e}):zn()?d(rr,{activeStateKey:o,content:e,elements:r,id:t,SegmentContext:n,stateKeyMap:a}):d(n.Provider,{value:t,children:e},ar(t,o)):d(u,{children:e})}function cr({id:e,children:t,parallelSlots:n}){let r=i.useContext(An);if(!Object.hasOwn(r,e))return null;let a=r[e];if(er(e,a)||(a===fe&&bn(),a===null))return null;let o=d(Mn.Provider,{value:n??null,children:d(jn.Provider,{value:t??null,children:a})});return Nn&&Pn?d(sr,{id:e,content:o}):o}function lr(){return i.useContext(jn)}function ur({name:e}){return i.useContext(Mn)?.[e]??null}function dr(e,t){return t?e===t||e.startsWith(t+`/`):!1}function fr(e,t){return dr(e,t)?e.slice(t.length)||`/`:e}function pr(e,t){return!t||dr(e,t)?e:e===`/`?t:`${t}${e}`}function mr(e){return!e||typeof e!=`object`||!(`digest`in e)?null:String(e.digest)}function hr(e){return _n(e)}function gr(e){return e===`NEXT_NOT_FOUND`?{status:404}:e.startsWith(`NEXT_HTTP_ERROR_FALLBACK;`)?{status:parseInt(e.split(`;`)[1],10)}:null}var _r=308;function vr(e,t){if(!t||!e.startsWith(`/`))return e;let n=e.indexOf(`#`),r=e.indexOf(`?`),i=r===-1?n===-1?e.length:n:n===-1?r:Math.min(r,n);return pr(e.slice(0,i),t)+e.slice(i)}function yr(e,t){let n=mr(e);if(!n)return``;if(gr(n)){let e=`<meta name="robots" content="noindex"/>`;return(t.nodeEnv??`production`)===`development`&&(e+=`<meta name="next-error" content="not-found"/>`),e}let r=hr(n);if(!r)return``;let i=r.status===_r?0:1,a=vr(r.url,t.basePath);return`<meta id="__next-page-redirect" http-equiv="refresh" content="`+i+`;url=`+Q(a)+`"/>`}function br(e,t={}){let n=``;for(let r of e)n+=yr(r,t);return n}function xr(e={}){let t=[],n=0;return{capture(e){t.push(e)},flush(){if(n>=t.length)return``;let r=br(t.slice(n),e);return n=t.length,r}}}var Sr=32768;new TextEncoder;function Cr(e){let t=``;for(let n=0;n<e.byteLength;n+=Sr)t+=String.fromCharCode(...e.subarray(n,n+Sr));return btoa(t)}function wr(e){let t=0;for(let n of e)t+=n.byteLength;let n=new Uint8Array(t),r=0;for(let t of e)n.set(t,r),r+=t.byteLength;return n}var Tr=`vinext.navigationRuntime`;function Er(){return new Promise(e=>setTimeout(e,0))}var Dr=`self[Symbol.for(${Z(Tr)})]`;function Or(){return`((${Dr}??={bootstrap:{routeManifest:null},functions:{}}).bootstrap.rsc??={rsc:[]})`}function kr(e,t,n){return`Object.assign(`+Or()+`,{params:`+Z(e)+`,nav:`+Z(t)+(n===void 0?``:`,dynamicStaleTimeSeconds:`+Z(n))+`})`}function Ar(e){return Or()+`.rsc.push(`+Z(e)+`)`}function jr(e){let t=Or();return(e===void 0?``:`Object.assign(`+t+`,`+Z({initialCacheKind:e.kind,...e.dynamicStaleTimeSeconds===void 0?{}:{dynamicStaleTimeSeconds:e.dynamicStaleTimeSeconds},...e.staleTimeSeconds===void 0?{}:{staleTimeSeconds:e.staleTimeSeconds}})+`);`)+t+`.done=true`}function Mr(e,t,n){let r=e.getReader(),i=[],a=[],o=!1;async function s(){if(!o){o=!0;try{for(;;){let e=await r.read();if(e.done)break;a.push(e.value);try{let t=new TextDecoder(`utf-8`,{fatal:!0}).decode(e.value);i.push(t)}catch{i.push([3,Cr(e.value)])}}}catch(e){throw e}finally{o=!1}}}let c=s();return{flush(){if(i.length===0)return``;let e=i;i=[];let n=``;for(let r of e)n+=Ft(Ar(r),t);return n},async finalize(){await c;let e=this.flush();return e+=Ft(jr(n?.()),t),e},async getRawBuffer(){await c;let e=wr(a);return a.length=0,e.buffer}}}function Nr(e){return e.replace(/<link(?=[^>]*\srel="preload")[^>]*>/g,e=>e.replace(` as="stylesheet"`,` as="style"`))}var Pr=/<link\b[^>]*>/gi,Fr=/<!--[\s\S]*?-->|<(script|style|textarea|title)\b[^>]*>[\s\S]*?<\/\1\s*>/gi,Ir=/<!--|<(script|style|textarea|title)\b[^>]*>/gi,Lr={script:/<\/script\s*>/i,style:/<\/style\s*>/i,textarea:/<\/textarea\s*>/i,title:/<\/title\s*>/i};function Rr(e,t){let n=/\s([^\s"'=<>`]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+)))?/g,r;for(;(r=n.exec(e))!==null;)if(r[1]?.toLowerCase()===t.toLowerCase())return r[2]??r[3]??r[4]??``;return null}function zr(e,t,n){return Nt(Rr(e,t),n)}function Br(e,t){if(Object.prototype.hasOwnProperty.call(e,t))return e[t]??``;try{let n=new URL(t).pathname;if(Object.prototype.hasOwnProperty.call(e,n))return e[n]??``}catch{}return null}var Vr=/<link/gi;function Hr(e){Vr.lastIndex=0;let t=-1,n;for(;(n=Vr.exec(e))!==null;)t=n.index;return t===-1||e.indexOf(`>`,t)!==-1?{complete:e,trailing:``}:{complete:e.slice(0,t),trailing:e.slice(t)}}function Ur(e){let t;for(Ir.lastIndex=0;(t=Ir.exec(e))!==null;){let n=t.index;if(t[0]===`<!--`){let t=e.indexOf(`-->`,Ir.lastIndex);if(t===-1)return n;Ir.lastIndex=t+3;continue}let r=t[1]?.toLowerCase();if(!r)continue;let i=Lr[r];if(!i)continue;let a=i.exec(e.slice(Ir.lastIndex));if(!a)return n;Ir.lastIndex+=a.index+a[0].length}return null}function Wr(e){let t=Hr(e),n=t.trailing?t.complete.length:null,r=Ur(e),i=n===null?r:r===null?n:Math.min(n,r);return i===null?{complete:e,trailing:``}:{complete:e.slice(0,i),trailing:e.slice(i)}}function Gr(e){return e.replace(/<\/style/gi,`<\\/style`)}var Kr=/^\uFEFF?(?:\s|\/\*[\s\S]*?\*\/)*@(charset|import|layer|namespace)\b/i;function qr(e){return!Kr.test(e)}function Jr(e,t){return Pr.lastIndex=0,e.replace(Pr,t)}function Yr(e,t){let n=``,r=0,i;for(Fr.lastIndex=0;(i=Fr.exec(e))!==null;)n+=Jr(e.slice(r,i.index),t),n+=i[0],r=i.index+i[0].length;let a=e.slice(r),o=Ur(a);return o===null?n+Jr(a,t):n+Jr(a.slice(0,o),t)+a.slice(o)}function Xr(e,t,n,r){if(!t||Object.keys(t).length===0)return{html:e,consumedPrependCss:!1};let i=!1;return{html:Yr(e,e=>{if(!zr(e,`rel`,`stylesheet`))return e;let a=Rr(e,`href`),o=Rr(e,`data-precedence`)??Rr(e,`precedence`);if(!a||!o)return e;let s=Br(t,a);if(s===null)return e;let c=Rr(e,`nonce`)??r,l=c?` nonce="${Q(c)}"`:``,u=!i&&n.length>0&&qr(s)?`${n}\n`:``;return i||=u.length>0,`<style data-vinext-inline-css${l} data-precedence="${Q(o)}" data-href="${Q(a)}">${Gr(u+s)}</style>`}),consumedPrependCss:i}}var Zr=/<head\b[^>]*>/,Qr=`</body></html>`;function $r(e,t=``,n=``,r,i=``,a=``,o){let s=new TextDecoder,c=new TextEncoder,l=typeof t==`function`,u=!1,d=!1,f=!1,p=[],m=``,h=null,g=r!==void 0&&Object.keys(r).length>0,_=e=>{if(f)return e;let t=e.indexOf(Qr);return t===-1?e:(f=!0,e.slice(0,t)+e.slice(t+14))},v=()=>typeof t==`function`?t():t,y=()=>typeof n==`function`?n():n,b=()=>!i||!a?``:(i=``,a),x=e=>{let t=b()+v();t&&e.enqueue(c.encode(t))},ee=e=>{if(d)return{chunk:e,spliced:!1};let t=y();if(!t)return{chunk:e,spliced:!1};let n=Zr.exec(e);if(!n)return{chunk:e,spliced:!1};let r=n.index+n[0].length;return{chunk:e.slice(0,r)+t+e.slice(r),spliced:!0}},S=(e,t=!1)=>{if(p.length===0&&!m)return;let n=m+p.join(``);p=[],m=``;let a=t||!g?{complete:n,trailing:``}:Wr(n);if(a.trailing&&(m=a.trailing),!a.complete)return;u&&l&&x(e);let s=Nr(a.complete),f=g?Xr(s,r,i,o):{html:s,consumedPrependCss:!1};f.consumedPrependCss&&(i=``);let h=f.html;if(!d){let e=ee(h);e.spliced&&(h=e.chunk,d=!0)}if(!u){let t=h.indexOf(`</head>`);if(t!==-1){let n=h.slice(0,t),r=_(h.slice(t));e.enqueue(c.encode(n+b()+v()+r)),u=!0;return}}h=_(h),e.enqueue(c.encode(h))};return new TransformStream({transform(t,n){p.push(s.decode(t,{stream:!0})),h===null&&(h=setTimeout(()=>{try{S(n);let t=e.flush();t&&n.enqueue(c.encode(t))}catch{}h=null},0))},async flush(t){h!==null&&(clearTimeout(h),h=null);let n=s.decode();n&&p.push(n),S(t,!0),u?l&&x(t):(x(t),u=!0);let r=await e.finalize();r&&t.enqueue(c.encode(r)),t.enqueue(c.encode(Qr))}})}function ei(e){let t=Y.parseElementKey(e);return t?.kind===`layout`||t?.kind===`page`||t?.kind===`slot`||t?.kind===`template`}function ti(e){try{return Y.readMetadata(e)}catch{return null}}function ni(e,t){let n=new Set(Object.keys(e)),r=t===void 0?ti(e):t;for(let e of r?.layoutIds??[])n.add(e);for(let e of Object.keys(r?.bfcacheSegmentIdentities??{}))n.add(e);return Array.from(n).filter(ei)}function ri(e){let t=e.metadata,n={};for(let r of ni(e.elements,t))n[r]=`0`;return{bfcacheIds:n,identities:t.bfcacheSegmentIdentities}}var ii=`__VINEXT_RSC_FORM_STATE__`,ai=Promise.resolve();function oi(e){let t=!1,n=null,r=new Set,i=new Map;function a(t,n){if(r.has(t))return ai;let a=i.get(t);if(a)return a;let o=n(t).catch(n=>{e.onPreloadError?.(t,n)}).then(()=>{r.add(t)}).finally(()=>{i.delete(t)});return i.set(t,o),o}function o(e,t,n){let r=[];for(let i of e)Object.hasOwn(t,i)&&r.push(a(i,n));return r.length===0?ai:Promise.all(r).then(()=>{})}return{preload(r){let i=e.getReferences(),a=e.getClientRequire();return!i||!a?ai:r?o(r,i,a):t?ai:n||(n=o(Object.keys(i),i,a).then(()=>{t=!0}).finally(()=>{n=null}),n)}}}function si(e,t){let n=!1,r=()=>{n||(n=!0,t())},i=new TransformStream({flush(){r()}}),a=e.pipeThrough(i).getReader();return new ReadableStream({pull(e){return a.read().then(({done:t,value:n})=>{t?e.close():e.enqueue(n)},t=>{r(),e.error(t)})},cancel(e){return r(),a.cancel(e)}})}var ci=Symbol.for(`vinext.requestContext.als`),li=globalThis,ui=X(`vinext.unifiedRequestContext.als`);function di(){let e=ui.getStore();return e?e.executionContext:li[ci]?.getStore()??null}function fi(e){return{headersContext:null,actionRevalidationKind:0,pendingRevalidatedTags:new Set,pendingRevalidations:new Set,dynamicUsageDetected:!1,renderRequestApiUsage:new Set,connectionProbe:null,invalidDynamicUsageError:null,pendingSetCookies:[],draftModeCookieHeader:null,phase:`render`,i18nContext:null,serverContext:null,serverInsertedHTMLCallbacks:[],requestScopedCacheLife:null,unstableCacheObservations:new Map,unstableCacheRevalidation:`foreground`,_privateCache:null,cacheableFetchUrls:new Set,currentRequestTags:[],currentFetchSoftTags:[],currentFetchCacheMode:null,currentForceDynamicFetchDefault:!1,dynamicFetchUrls:new Set,refreshStaleFetchesInForeground:!1,isFetchDedupeActive:!1,currentFetchDedupeEntries:new Map,executionContext:di(),requestCache:new WeakMap,afterContext:{callbacks:[],responseClosed:!1,pendingCallbacks:0,pendingPromises:0,completion:null,resolveCompletion:null},ssrContext:null,ssrHeadChildren:[],documentInitialHead:[],rootParams:null,...e}}function pi(e,t){let n=ui.getStore();if(!n)return t();let r={...n};return e(r),ui.run(r,t)}function mi(){return ui.getStore()??fi()}function hi(){return ui.getStore()!=null}var gi=Symbol.for(`vinext.rootParams.fallback`),_i=globalThis,vi=X(`vinext.rootParams.als`);X(`vinext.rootParams.usage.als`),_i[gi]??={rootParams:null};function yi(e,t){return hi()?pi(t=>{t.rootParams=e},t):vi.run({rootParams:e},t)}var bi=Symbol.for(`vinext.navigation.fallback`),xi=globalThis,Si=X(`vinext.navigation.als`),Ci=xi[bi]??={serverContext:null,serverInsertedHTMLCallbacks:[]};function wi(){return hi()?mi():Si.getStore()??Ci}function Ti(e){return hi()?pi(e=>{e.serverContext=null,e.serverInsertedHTMLCallbacks=[]},e):Si.run({serverContext:null,serverInsertedHTMLCallbacks:[]},e)}var Ei={getServerContext(){return wi().serverContext},setServerContext(e){wi().serverContext=e},getInsertedHTMLCallbacks(){return wi().serverInsertedHTMLCallbacks},clearInsertedHTMLCallbacks(){wi().serverInsertedHTMLCallbacks=[]}};ln(Ei),globalThis[tn]=Ei;var Di=a.createContext(null),Oi=/^[a-zA-Z][\w.-]*$/,ki=/^on/i;function Ai(e){if(e.length===0)return``;let t=``;for(let n of e){let e=``;if(n.id&&(e+=` id="${Q(n.id)}"`),n.src&&(e+=` src="${Q(n.src)}"`),e+=Pt(n.nonce),n.attributes)for(let[t,r]of Object.entries(n.attributes))Oi.test(t)&&(ki.test(t)||t!==`data-nscript`&&(r===!0?e+=` ${t}`:typeof r==`string`&&(e+=` ${t}="${Q(r)}"`)));e+=` data-nscript="beforeInteractive"`,t+=`<script${e}>${n.innerHTML??``}<\/script>`}return t}var ji=`__VINEXT_INITIAL_DEV_ERRORS__`;function Mi(e){if(typeof e==`string`)return e;try{return String(e)}catch{return Object.prototype.toString.call(e)}}function Ni(e){return e instanceof Error?{message:e.message,name:e.name||void 0,stack:e.stack||void 0}:{message:Mi(e)}}function Pi(e,t,n=`production`){if(e==null||n===`production`)return``;let r=`self[`+Z(ji)+`]`;return Ft(`${r}=${r}||[];${r}.push(${Z(Ni(e))})`,t)}var Fi=`[\\u0000-\\u001F \\u200B\\uFEFF]*`,Ii=`[\\r\\n\\t]*`;function Li(e){let t=e.split(``).join(Ii);return RegExp(`^${Fi}${t}${Ii}:`,`i`)}var Ri=[Li(`javascript`),Li(`data`),Li(`vbscript`)],zi=`Next.js has blocked a javascript: URL as a security precaution.`;function Bi(e){let t=``+e;return Ri.some(e=>e.test(t))}function Vi(){console.error(zi)}function Hi(e,t=Error){if(Bi(e))throw Vi(),new t(zi)}function Ui(e){Hi(e)}var Wi={bfcacheId:`0`,back(){},forward(){},refresh(){},push(e,t){Ui(e)},replace(e,t){Ui(e)},prefetch(e){Ui(e)}};function Gi(e){return e}function Ki(e,t){let n=t?.keyFn??((...e)=>e[0]),r=t?.cache??new Map;return Gi(function(...t){let i=n(...t),a=r.get(i);if(a!==void 0)return a;let o=e.apply(this,t);return r.set(i,o),o})}function qi(e){return e.split(`$$cache=`)[0]}function Ji(){globalThis.__vite_rsc_require__=e=>e.startsWith(`$$server:`)?(e=e.slice(9),globalThis.__vite_rsc_server_require__(e)):globalThis.__vite_rsc_client_require__(e)}var Yi=!1;function Xi(e){if(Yi)return;Yi=!0;let t=Ki(t=>e.load(qi(t)));globalThis.__vite_rsc_client_require__=t,Ji()}function Zi(){return{}}var Qi=C((e=>{var t=D(`react-dom`),n={stream:!0},r=Object.prototype.hasOwnProperty;function i(e,t){if(e){var n=e[t[0]];if(e=n&&n[t[2]])n=e.name;else{if(e=n&&n[`*`],!e)throw Error(`Could not find the module "`+t[0]+`" in the React Server Consumer Manifest. This is probably a bug in the React Server Components bundler.`);n=t[2]}return t.length===4?[e.id,e.chunks,n,1]:[e.id,e.chunks,n]}return t}function a(e,t){var n=``,r=e[t];if(r)n=r.name;else{var i=t.lastIndexOf(`#`);if(i!==-1&&(n=t.slice(i+1),r=e[t.slice(0,i)]),!r)throw Error(`Could not find the module "`+t+`" in the React Server Manifest. This is probably a bug in the React Server Components bundler.`)}return r.async?[r.id,r.chunks,n,1]:[r.id,r.chunks,n]}var o=new Map;function s(e){var t=__vite_rsc_require__(e);return typeof t.then!=`function`||t.status===`fulfilled`?null:(t.then(function(e){t.status=`fulfilled`,t.value=e},function(e){t.status=`rejected`,t.reason=e}),t)}function c(){}function l(e){for(var t=e[1],n=[],r=0;r<t.length;){var i=t[r++];t[r++];var a=o.get(i);if(a===void 0){a=__webpack_chunk_load__(i),n.push(a);var l=o.set.bind(o,i,null);a.then(l,c),o.set(i,a)}else a!==null&&n.push(a)}return e.length===4?n.length===0?s(e[0]):Promise.all(n).then(function(){return s(e[0])}):0<n.length?Promise.all(n):null}function u(e){var t=__vite_rsc_require__(e[0]);if(e.length===4&&typeof t.then==`function`)if(t.status===`fulfilled`)t=t.value;else throw t.reason;if(e[2]===`*`)return t;if(e[2]===``)return t.__esModule?t.default:t;if(r.call(t,e[2]))return t[e[2]]}function d(e,t,n){if(e!==null)for(var r=1;r<t.length;r+=2){var i=n,a=f.d,o=a.X,s=e.prefix+t[r],c=e.crossOrigin;c=typeof c==`string`?c===`use-credentials`?c:``:void 0,o.call(a,s,{crossOrigin:c,nonce:i})}}var f=t.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE,p=Symbol.for(`react.transitional.element`),m=Symbol.for(`react.lazy`),h=Symbol.iterator;function g(e){return typeof e!=`object`||!e?null:(e=h&&e[h]||e[`@@iterator`],typeof e==`function`?e:null)}var _=Symbol.asyncIterator,v=Array.isArray,y=Object.getPrototypeOf,b=Object.prototype,x=new WeakMap;function ee(e){return Number.isFinite(e)?e===0&&1/e==-1/0?`$-0`:e:e===1/0?`$Infinity`:e===-1/0?`$-Infinity`:`$NaN`}function S(e,t,n,r,i){function a(e,n){n=new Blob([new Uint8Array(n.buffer,n.byteOffset,n.byteLength)]);var r=f++;return S===null&&(S=new FormData),S.append(t+r,n),`$`+e+r.toString(16)}function o(e){function n(c){c.done?(c=f++,a.append(t+c,new Blob(s)),a.append(t+o,`"$o`+c.toString(16)+`"`),a.append(t+o,`C`),h--,h===0&&r(a)):(s.push(c.value),e.read(new Uint8Array(1024)).then(n,i))}S===null&&(S=new FormData);var a=S;h++;var o=f++,s=[];return e.read(new Uint8Array(1024)).then(n,i),`$r`+o.toString(16)}function s(e){function n(s){if(s.done)a.append(t+o,`C`),h--,h===0&&r(a);else try{var c=JSON.stringify(s.value,u);a.append(t+o,c),e.read().then(n,i)}catch(e){i(e)}}S===null&&(S=new FormData);var a=S;h++;var o=f++;return e.read().then(n,i),`$R`+o.toString(16)}function c(e){try{var t=e.getReader({mode:`byob`})}catch{return s(e.getReader())}return o(t)}function l(e,n){function a(e){if(e.done){if(e.value===void 0)o.append(t+s,`C`);else try{var c=JSON.stringify(e.value,u);o.append(t+s,`C`+c)}catch(e){i(e);return}h--,h===0&&r(o)}else try{var l=JSON.stringify(e.value,u);o.append(t+s,l),n.next().then(a,i)}catch(e){i(e)}}S===null&&(S=new FormData);var o=S;h++;var s=f++;return e=e===n,n.next().then(a,i),`$`+(e?`x`:`X`)+s.toString(16)}function u(e,o){if(o===null)return null;if(typeof o==`object`){switch(o.$$typeof){case p:if(n!==void 0&&e.indexOf(`:`)===-1){var s=C.get(this);if(s!==void 0)return n.set(s+`:`+e,o),`$T`}throw Error(`React Element cannot be passed to Server Functions from the Client without a temporary reference set. Pass a TemporaryReferenceSet to the options.`);case m:s=o._payload;var T=o._init;S===null&&(S=new FormData),h++;try{var E=T(s),D=f++,O=d(E,D);return S.append(t+D,O),`$`+D.toString(16)}catch(e){if(typeof e==`object`&&e&&typeof e.then==`function`){h++;var k=f++;return s=function(){try{var e=d(o,k),n=S;n.append(t+k,e),h--,h===0&&r(n)}catch(e){i(e)}},e.then(s,s),`$`+k.toString(16)}return i(e),null}finally{h--}}if(s=C.get(o),typeof o.then==`function`){if(s!==void 0)if(w===o)w=null;else return s;S===null&&(S=new FormData),h++;var A=f++;return e=`$@`+A.toString(16),C.set(o,e),o.then(function(e){try{var n=C.get(e),a=n===void 0?d(e,A):JSON.stringify(n);e=S,e.append(t+A,a),h--,h===0&&r(e)}catch(e){i(e)}},i),e}if(s!==void 0)if(w===o)w=null;else return s;else e.indexOf(`:`)===-1&&(s=C.get(this),s!==void 0&&(e=s+`:`+e,C.set(o,e),n!==void 0&&n.set(e,o)));if(v(o))return o;if(o instanceof FormData){S===null&&(S=new FormData);var j=S;e=f++;var te=t+`_`+e+`_`;return o.forEach(function(e,t){j.append(te+t,e)}),`$K`+e.toString(16)}if(o instanceof Map)return e=f++,s=d(Array.from(o),e),S===null&&(S=new FormData),S.append(t+e,s),`$Q`+e.toString(16);if(o instanceof Set)return e=f++,s=d(Array.from(o),e),S===null&&(S=new FormData),S.append(t+e,s),`$W`+e.toString(16);if(o instanceof ArrayBuffer)return e=new Blob([o]),s=f++,S===null&&(S=new FormData),S.append(t+s,e),`$A`+s.toString(16);if(o instanceof Int8Array)return a(`O`,o);if(o instanceof Uint8Array)return a(`o`,o);if(o instanceof Uint8ClampedArray)return a(`U`,o);if(o instanceof Int16Array)return a(`S`,o);if(o instanceof Uint16Array)return a(`s`,o);if(o instanceof Int32Array)return a(`L`,o);if(o instanceof Uint32Array)return a(`l`,o);if(o instanceof Float32Array)return a(`G`,o);if(o instanceof Float64Array)return a(`g`,o);if(o instanceof BigInt64Array)return a(`M`,o);if(o instanceof BigUint64Array)return a(`m`,o);if(o instanceof DataView)return a(`V`,o);if(typeof Blob==`function`&&o instanceof Blob)return S===null&&(S=new FormData),e=f++,S.append(t+e,o),`$B`+e.toString(16);if(e=g(o))return s=e.call(o),s===o?(e=f++,s=d(Array.from(s),e),S===null&&(S=new FormData),S.append(t+e,s),`$i`+e.toString(16)):Array.from(s);if(typeof ReadableStream==`function`&&o instanceof ReadableStream)return c(o);if(e=o[_],typeof e==`function`)return l(o,e.call(o));if(e=y(o),e!==b&&(e===null||y(e)!==null)){if(n===void 0)throw Error(`Only plain objects, and a few built-ins, can be passed to Server Functions. Classes or null prototypes are not supported.`);return`$T`}return o}if(typeof o==`string`)return o[o.length-1]===`Z`&&this[e]instanceof Date?`$D`+o:(e=o[0]===`$`?`$`+o:o,e);if(typeof o==`boolean`)return o;if(typeof o==`number`)return ee(o);if(o===void 0)return`$undefined`;if(typeof o==`function`){if(s=x.get(o),s!==void 0)return e=C.get(o),e===void 0?(e=JSON.stringify({id:s.id,bound:s.bound},u),S===null&&(S=new FormData),s=f++,S.set(t+s,e),e=`$h`+s.toString(16),C.set(o,e),e):e;if(n!==void 0&&e.indexOf(`:`)===-1&&(s=C.get(this),s!==void 0))return n.set(s+`:`+e,o),`$T`;throw Error(`Client Functions cannot be passed directly to Server Functions. Only Functions passed from the Server can be passed back again.`)}if(typeof o==`symbol`){if(n!==void 0&&e.indexOf(`:`)===-1&&(s=C.get(this),s!==void 0))return n.set(s+`:`+e,o),`$T`;throw Error(`Symbols cannot be passed to a Server Function without a temporary reference set. Pass a TemporaryReferenceSet to the options.`)}if(typeof o==`bigint`)return`$n`+o.toString(10);throw Error(`Type `+typeof o+` is not supported as an argument to a Server Function.`)}function d(e,t){return typeof e==`object`&&e&&(t=`$`+t.toString(16),C.set(e,t),n!==void 0&&n.set(t,e)),w=e,JSON.stringify(e,u)}var f=1,h=0,S=null,C=new WeakMap,w=e,T=d(e,0);return S===null?r(T):(S.set(t+`0`,T),h===0&&r(S)),function(){0<h&&(h=0,r(S===null?T:S))}}var C=new WeakMap;function w(e){var t,n,r=new Promise(function(e,r){t=e,n=r});return S(e,``,void 0,function(e){if(typeof e==`string`){var n=new FormData;n.append(`0`,e),e=n}r.status=`fulfilled`,r.value=e,t(e)},function(e){r.status=`rejected`,r.reason=e,n(e)}),r}function T(e){var t=x.get(this);if(!t)throw Error(`Tried to encode a Server Action from a different instance than the encoder is from. This is a bug in React.`);var n=null;if(t.bound!==null){if(n=C.get(t),n||(n=w({id:t.id,bound:t.bound}),C.set(t,n)),n.status===`rejected`)throw n.reason;if(n.status!==`fulfilled`)throw n;t=n.value;var r=new FormData;t.forEach(function(t,n){r.append(`$ACTION_`+e+`:`+n,t)}),n=r,t=`$ACTION_REF_`+e}else t=`$ACTION_ID_`+t.id;return{name:t,method:`POST`,encType:`multipart/form-data`,data:n}}function E(e,t){var n=x.get(this);if(!n)throw Error(`Tried to encode a Server Action from a different instance than the encoder is from. This is a bug in React.`);if(n.id!==e)return!1;var r=n.bound;if(r===null)return t===0;switch(r.status){case`fulfilled`:return r.value.length===t;case`pending`:throw r;case`rejected`:throw r.reason;default:throw typeof r.status!=`string`&&(r.status=`pending`,r.then(function(e){r.status=`fulfilled`,r.value=e},function(e){r.status=`rejected`,r.reason=e})),r}}function O(e,t,n,r){x.has(e)||(x.set(e,{id:t,originalBind:e.bind,bound:n}),Object.defineProperties(e,{$$FORM_ACTION:{value:r===void 0?T:function(){var e=x.get(this);if(!e)throw Error(`Tried to encode a Server Action from a different instance than the encoder is from. This is a bug in React.`);var t=e.bound;return t===null&&(t=Promise.resolve([])),r(e.id,t)}},$$IS_SIGNATURE_EQUAL:{value:E},bind:{value:j}}))}var k=Function.prototype.bind,A=Array.prototype.slice;function j(){var e=x.get(this);if(!e)return k.apply(this,arguments);var t=e.originalBind.apply(this,arguments),n=A.call(arguments,1),r=null;return r=e.bound===null?Promise.resolve(n):Promise.resolve(e.bound).then(function(e){return e.concat(n)}),x.set(t,{id:e.id,originalBind:t.bind,bound:r}),Object.defineProperties(t,{$$FORM_ACTION:{value:this.$$FORM_ACTION},$$IS_SIGNATURE_EQUAL:{value:E},bind:{value:j}}),t}function te(e,t,n){function r(){var e=Array.prototype.slice.call(arguments);return a?a.status===`fulfilled`?t(i,a.value.concat(e)):Promise.resolve(a).then(function(n){return t(i,n.concat(e))}):t(i,e)}var i=e.id,a=e.bound;return O(r,i,a,n),r}function M(e,t,n){this.status=e,this.value=t,this.reason=n}M.prototype=Object.create(Promise.prototype),M.prototype.then=function(e,t){switch(this.status){case`resolved_model`:z(this);break;case`resolved_module`:B(this)}switch(this.status){case`fulfilled`:typeof e==`function`&&e(this.value);break;case`pending`:case`blocked`:typeof e==`function`&&(this.value===null&&(this.value=[]),this.value.push(e)),typeof t==`function`&&(this.reason===null&&(this.reason=[]),this.reason.push(t));break;case`halted`:break;default:typeof t==`function`&&t(this.reason)}};function N(e){switch(e.status){case`resolved_model`:z(e);break;case`resolved_module`:B(e)}switch(e.status){case`fulfilled`:return e.value;case`pending`:case`blocked`:case`halted`:throw e;default:throw e.reason}}function P(e,t,n){for(var r=0;r<e.length;r++){var i=e[r];typeof i==`function`?i(t):U(i,t,n)}}function F(e,t){for(var n=0;n<e.length;n++){var r=e[n];typeof r==`function`?r(t):W(r,t)}}function I(e,t){var n=t.handler.chunk;if(n===null)return null;if(n===e)return t.handler;if(t=n.value,t!==null)for(n=0;n<t.length;n++){var r=t[n];if(typeof r!=`function`&&(r=I(e,r),r!==null))return r}return null}function ne(e,t,n){switch(e.status){case`fulfilled`:P(t,e.value,e);break;case`blocked`:for(var r=0;r<t.length;r++){var i=t[r];if(typeof i!=`function`){var a=I(e,i);if(a!==null)switch(U(i,a.value,e),t.splice(r,1),r--,n!==null&&(i=n.indexOf(i),i!==-1&&n.splice(i,1)),e.status){case`fulfilled`:P(t,e.value,e);return;case`rejected`:n!==null&&F(n,e.reason);return}}}case`pending`:if(e.value)for(r=0;r<t.length;r++)e.value.push(t[r]);else e.value=t;if(e.reason){if(n)for(t=0;t<n.length;t++)e.reason.push(n[t])}else e.reason=n;break;case`rejected`:n&&F(n,e.reason)}}function L(e,t,n){t.status!==`pending`&&t.status!==`blocked`?t.reason.error(n):(e=t.reason,t.status=`rejected`,t.reason=n,e!==null&&F(e,n))}function re(e,t,n){return new M(`resolved_model`,(n?`{"done":true,"value":`:`{"done":false,"value":`)+t+`}`,e)}function ie(e,t,n,r){ae(e,t,(r?`{"done":true,"value":`:`{"done":false,"value":`)+n+`}`)}function ae(e,t,n){if(t.status!==`pending`)t.reason.enqueueModel(n);else{var r=t.value,i=t.reason;t.status=`resolved_model`,t.value=n,t.reason=e,r!==null&&(z(t),ne(t,r,i))}}function oe(e,t,n){if(t.status===`pending`||t.status===`blocked`){e=t.value;var r=t.reason;t.status=`resolved_module`,t.value=n,t.reason=null,e!==null&&(B(t),ne(t,e,r))}}var R=null;function z(e){var t=R;R=null;var n=e.value,r=e.reason;e.status=`blocked`,e.value=null,e.reason=null;try{var i=JSON.parse(n,r._fromJSON),a=e.value;if(a!==null)for(e.value=null,e.reason=null,n=0;n<a.length;n++){var o=a[n];typeof o==`function`?o(i):U(o,i,e)}if(R!==null){if(R.errored)throw R.reason;if(0<R.deps){R.value=i,R.chunk=e;return}}e.status=`fulfilled`,e.value=i}catch(t){e.status=`rejected`,e.reason=t}finally{R=t}}function B(e){try{var t=u(e.value);e.status=`fulfilled`,e.value=t}catch(t){e.status=`rejected`,e.reason=t}}function se(e,t){e._closed=!0,e._closedReason=t,e._chunks.forEach(function(n){n.status===`pending`?L(e,n,t):n.status===`fulfilled`&&n.reason!==null&&n.reason.error(t)})}function V(e){return{$$typeof:m,_payload:e,_init:N}}function H(e,t){var n=e._chunks,r=n.get(t);return r||(r=e._closed?new M(`rejected`,null,e._closedReason):new M(`pending`,null,null),n.set(t,r)),r}function U(e,t){var n=e.response,i=e.handler,a=e.parentObject,o=e.key,s=e.map,c=e.path;try{for(var l=1;l<c.length;l++){for(;typeof t==`object`&&t&&t.$$typeof===m;){var u=t._payload;if(u===i.chunk)t=i.value;else{switch(u.status){case`resolved_model`:z(u);break;case`resolved_module`:B(u)}switch(u.status){case`fulfilled`:t=u.value;continue;case`blocked`:var d=I(u,e);if(d!==null){t=d.value;continue}case`pending`:c.splice(0,l-1),u.value===null?u.value=[e]:u.value.push(e),u.reason===null?u.reason=[e]:u.reason.push(e);return;case`halted`:return;default:W(e,u.reason);return}}}var f=c[l];if(typeof t==`object`&&t&&r.call(t,f))t=t[f];else throw Error(`Invalid reference.`)}for(;typeof t==`object`&&t&&t.$$typeof===m;){var h=t._payload;if(h===i.chunk)t=i.value;else{switch(h.status){case`resolved_model`:z(h);break;case`resolved_module`:B(h)}switch(h.status){case`fulfilled`:t=h.value;continue}break}}var g=s(n,t,a,o);if(o!==`__proto__`&&(a[o]=g),o===``&&i.value===null&&(i.value=g),a[0]===p&&typeof i.value==`object`&&i.value!==null&&i.value.$$typeof===p){var _=i.value;switch(o){case`3`:_.props=g}}}catch(t){W(e,t);return}i.deps--,i.deps===0&&(e=i.chunk,e!==null&&e.status===`blocked`&&(t=e.value,e.status=`fulfilled`,e.value=i.value,e.reason=i.reason,t!==null&&P(t,i.value,e)))}function W(e,t){var n=e.handler;e=e.response,n.errored||(n.errored=!0,n.value=null,n.reason=t,n=n.chunk,n!==null&&n.status===`blocked`&&L(e,n,t))}function ce(e,t,n,r,i,a){if(R){var o=R;o.deps++}else o=R={parent:null,chunk:null,value:null,reason:null,deps:1,errored:!1};return t={response:r,handler:o,parentObject:t,key:n,map:i,path:a},e.value===null?e.value=[t]:e.value.push(t),e.reason===null?e.reason=[t]:e.reason.push(t),null}function le(e,t,n,r){if(!e._serverReferenceConfig)return te(t,e._callServer,e._encodeFormAction);var i=a(e._serverReferenceConfig,t.id),o=l(i);if(o)t.bound&&(o=Promise.all([o,t.bound]));else if(t.bound)o=Promise.resolve(t.bound);else return o=u(i),O(o,t.id,t.bound,e._encodeFormAction),o;if(R){var s=R;s.deps++}else s=R={parent:null,chunk:null,value:null,reason:null,deps:1,errored:!1};return o.then(function(){var a=u(i);if(t.bound){var o=t.bound.value.slice(0);o.unshift(null),a=a.bind.apply(a,o)}if(O(a,t.id,t.bound,e._encodeFormAction),r!==`__proto__`&&(n[r]=a),r===``&&s.value===null&&(s.value=a),n[0]===p&&typeof s.value==`object`&&s.value!==null&&s.value.$$typeof===p)switch(o=s.value,r){case`3`:o.props=a}s.deps--,s.deps===0&&(a=s.chunk,a!==null&&a.status===`blocked`&&(o=a.value,a.status=`fulfilled`,a.value=s.value,a.reason=null,o!==null&&P(o,s.value,a)))},function(t){if(!s.errored){s.errored=!0,s.value=null,s.reason=t;var n=s.chunk;n!==null&&n.status===`blocked`&&L(e,n,t)}}),null}function G(e,t,n,r,i){t=t.split(`:`);var a=parseInt(t[0],16);switch(a=H(e,a),a.status){case`resolved_model`:z(a);break;case`resolved_module`:B(a)}switch(a.status){case`fulfilled`:a=a.value;for(var o=1;o<t.length;o++){for(;typeof a==`object`&&a&&a.$$typeof===m;){switch(a=a._payload,a.status){case`resolved_model`:z(a);break;case`resolved_module`:B(a)}switch(a.status){case`fulfilled`:a=a.value;break;case`blocked`:case`pending`:return ce(a,n,r,e,i,t.slice(o-1));case`halted`:return R?(e=R,e.deps++):R={parent:null,chunk:null,value:null,reason:null,deps:1,errored:!1},null;default:return R?(R.errored=!0,R.value=null,R.reason=a.reason):R={parent:null,chunk:null,value:null,reason:a.reason,deps:0,errored:!0},null}}a=a[t[o]]}for(;typeof a==`object`&&a&&a.$$typeof===m;){switch(t=a._payload,t.status){case`resolved_model`:z(t);break;case`resolved_module`:B(t)}switch(t.status){case`fulfilled`:a=t.value;continue}break}return i(e,a,n,r);case`pending`:case`blocked`:return ce(a,n,r,e,i,t);case`halted`:return R?(e=R,e.deps++):R={parent:null,chunk:null,value:null,reason:null,deps:1,errored:!1},null;default:return R?(R.errored=!0,R.value=null,R.reason=a.reason):R={parent:null,chunk:null,value:null,reason:a.reason,deps:0,errored:!0},null}}function ue(e,t){return new Map(t)}function de(e,t){return new Set(t)}function fe(e,t){return new Blob(t.slice(1),{type:t[0]})}function pe(e,t){e=new FormData;for(var n=0;n<t.length;n++)e.append(t[n][0],t[n][1]);return e}function me(e,t){return t[Symbol.iterator]()}function he(e,t){return t}function ge(e,t,n,r){if(r[0]===`$`){if(r===`$`)return R!==null&&n===`0`&&(R={parent:R,chunk:null,value:null,reason:null,deps:0,errored:!1}),p;switch(r[1]){case`$`:return r.slice(1);case`L`:return t=parseInt(r.slice(2),16),e=H(e,t),V(e);case`@`:return t=parseInt(r.slice(2),16),H(e,t);case`S`:return Symbol.for(r.slice(2));case`h`:return r=r.slice(2),G(e,r,t,n,le);case`T`:if(t=`$`+r.slice(2),e=e._tempRefs,e==null)throw Error(`Missing a temporary reference set but the RSC response returned a temporary reference. Pass a temporaryReference option with the set that was used with the reply.`);return e.get(t);case`Q`:return r=r.slice(2),G(e,r,t,n,ue);case`W`:return r=r.slice(2),G(e,r,t,n,de);case`B`:return r=r.slice(2),G(e,r,t,n,fe);case`K`:return r=r.slice(2),G(e,r,t,n,pe);case`Z`:return Te();case`i`:return r=r.slice(2),G(e,r,t,n,me);case`I`:return 1/0;case`-`:return r===`$-0`?-0:-1/0;case`N`:return NaN;case`u`:return;case`D`:return new Date(Date.parse(r.slice(2)));case`n`:return BigInt(r.slice(2));default:return r=r.slice(1),G(e,r,t,n,he)}}return r}function _e(){throw Error(`Trying to call a function from "use server" but the callServer option was not implemented in your router runtime.`)}function ve(e,t,n,r,i,a,o){var s=new Map;this._bundlerConfig=e,this._serverReferenceConfig=t,this._moduleLoading=n,this._callServer=r===void 0?_e:r,this._encodeFormAction=i,this._nonce=a,this._chunks=s,this._stringDecoder=new TextDecoder,this._fromJSON=null,this._closed=!1,this._closedReason=null,this._tempRefs=o,this._fromJSON=De(this)}function K(e,t,n){e=e._chunks;var r=e.get(t);r&&r.status!==`pending`?r.reason.enqueueValue(n):(n=new M(`fulfilled`,n,null),e.set(t,n))}function ye(e,t,n){var r=e._chunks,a=r.get(t);n=JSON.parse(n,e._fromJSON);var o=i(e._bundlerConfig,n);if(d(e._moduleLoading,n[1],e._nonce),n=l(o)){if(a){var s=a;s.status=`blocked`}else s=new M(`blocked`,null,null),r.set(t,s);n.then(function(){return oe(e,s,o)},function(t){return L(e,s,t)})}else a?oe(e,a,o):(a=new M(`resolved_module`,o,null),r.set(t,a))}function be(e,t,n,r){e=e._chunks;var i=e.get(t);i?i.status===`pending`&&(t=i.value,i.status=`fulfilled`,i.value=n,i.reason=r,t!==null&&P(t,i.value,i)):(n=new M(`fulfilled`,n,r),e.set(t,n))}function xe(e,t,n){var r=null,i=!1;n=new ReadableStream({type:n,start:function(e){r=e}});var a=null;be(e,t,n,{enqueueValue:function(e){a===null?r.enqueue(e):a.then(function(){r.enqueue(e)})},enqueueModel:function(t){if(a===null){var n=new M(`resolved_model`,t,e);z(n),n.status===`fulfilled`?r.enqueue(n.value):(n.then(function(e){return r.enqueue(e)},function(e){return r.error(e)}),a=n)}else{n=a;var i=new M(`pending`,null,null);i.then(function(e){return r.enqueue(e)},function(e){return r.error(e)}),a=i,n.then(function(){a===i&&(a=null),ae(e,i,t)})}},close:function(){if(!i)if(i=!0,a===null)r.close();else{var e=a;a=null,e.then(function(){return r.close()})}},error:function(e){if(!i)if(i=!0,a===null)r.error(e);else{var t=a;a=null,t.then(function(){return r.error(e)})}}})}function Se(){return this}function Ce(e){return e={next:e},e[_]=Se,e}function we(e,t,n){var r=[],i=!1,a=0,o={};o[_]=function(){var e=0;return Ce(function(t){if(t!==void 0)throw Error(`Values cannot be passed to next() of AsyncIterables passed to Client Components.`);if(e===r.length){if(i)return new M(`fulfilled`,{done:!0,value:void 0},null);r[e]=new M(`pending`,null,null)}return r[e++]})},be(e,t,n?o[_]():o,{enqueueValue:function(e){if(a===r.length)r[a]=new M(`fulfilled`,{done:!1,value:e},null);else{var t=r[a],n=t.value,i=t.reason;t.status=`fulfilled`,t.value={done:!1,value:e},t.reason=null,n!==null&&ne(t,n,i)}a++},enqueueModel:function(t){a===r.length?r[a]=re(e,t,!1):ie(e,r[a],t,!1),a++},close:function(t){if(!i)for(i=!0,a===r.length?r[a]=re(e,t,!0):ie(e,r[a],t,!0),a++;a<r.length;)ie(e,r[a++],`"$undefined"`,!0)},error:function(t){if(!i)for(i=!0,a===r.length&&(r[a]=new M(`pending`,null,null));a<r.length;)L(e,r[a++],t)}})}function Te(){var e=Error(`An error occurred in the Server Components render. The specific message is omitted in production builds to avoid leaking sensitive details. A digest property is included on this error instance which may provide additional details about the nature of the error.`);return e.stack=`Error: `+e.message,e}function q(e,t){for(var n=e.length,r=t.length,i=0;i<n;i++)r+=e[i].byteLength;r=new Uint8Array(r);for(var a=i=0;a<n;a++){var o=e[a];r.set(o,i),i+=o.byteLength}return r.set(t,i),r}function J(e,t,n,r,i,a){n=n.length===0&&r.byteOffset%a===0?r:q(n,r),i=new i(n.buffer,n.byteOffset,n.byteLength/a),K(e,t,i)}function Ee(e,t,r,i,a,o){switch(i){case 65:K(e,r,q(a,o).buffer);return;case 79:J(e,r,a,o,Int8Array,1);return;case 111:K(e,r,a.length===0?o:q(a,o));return;case 85:J(e,r,a,o,Uint8ClampedArray,1);return;case 83:J(e,r,a,o,Int16Array,2);return;case 115:J(e,r,a,o,Uint16Array,2);return;case 76:J(e,r,a,o,Int32Array,4);return;case 108:J(e,r,a,o,Uint32Array,4);return;case 71:J(e,r,a,o,Float32Array,4);return;case 103:J(e,r,a,o,Float64Array,8);return;case 77:J(e,r,a,o,BigInt64Array,8);return;case 109:J(e,r,a,o,BigUint64Array,8);return;case 86:J(e,r,a,o,DataView,1);return}t=e._stringDecoder;for(var s=``,c=0;c<a.length;c++)s+=t.decode(a[c],n);switch(a=s+=t.decode(o),i){case 73:ye(e,r,a);break;case 72:switch(r=a[0],a=a.slice(1),e=JSON.parse(a,e._fromJSON),a=f.d,r){case`D`:a.D(e);break;case`C`:typeof e==`string`?a.C(e):a.C(e[0],e[1]);break;case`L`:r=e[0],i=e[1],e.length===3?a.L(r,i,e[2]):a.L(r,i);break;case`m`:typeof e==`string`?a.m(e):a.m(e[0],e[1]);break;case`X`:typeof e==`string`?a.X(e):a.X(e[0],e[1]);break;case`S`:typeof e==`string`?a.S(e):a.S(e[0],e[1]===0?void 0:e[1],e.length===3?e[2]:void 0);break;case`M`:typeof e==`string`?a.M(e):a.M(e[0],e[1])}break;case 69:i=e._chunks,o=i.get(r),a=JSON.parse(a),t=Te(),t.digest=a.digest,o?L(e,o,t):(e=new M(`rejected`,null,t),i.set(r,e));break;case 84:e=e._chunks,(i=e.get(r))&&i.status!==`pending`?i.reason.enqueueValue(a):(a=new M(`fulfilled`,a,null),e.set(r,a));break;case 78:case 68:case 74:case 87:throw Error(`Failed to read a RSC payload created by a development version of React on the server while using a production version on the client. Always use matching versions on the server and the client.`);case 82:xe(e,r,void 0);break;case 114:xe(e,r,`bytes`);break;case 88:we(e,r,!1);break;case 120:we(e,r,!0);break;case 67:(r=e._chunks.get(r))&&r.status===`fulfilled`&&r.reason.close(a===``?`"$undefined"`:a);break;default:i=e._chunks,(o=i.get(r))?ae(e,o,a):(e=new M(`resolved_model`,a,e),i.set(r,e))}}function De(e){return function(t,n){if(t!==`__proto__`){if(typeof n==`string`)return ge(e,this,t,n);if(typeof n==`object`&&n){if(n[0]===p){if(t={$$typeof:p,type:n[1],key:n[2],ref:null,props:n[3]},R!==null){if(n=R,R=n.parent,n.errored)t=new M(`rejected`,null,n.reason),t=V(t);else if(0<n.deps){var r=new M(`blocked`,null,null);n.value=t,n.chunk=r,t=V(r)}}}else t=n;return t}return n}}}function Oe(e){se(e,Error(`Connection closed.`))}function ke(){throw Error(`Server Functions cannot be called during initial render. This would create a fetch waterfall. Try to use a Server Component to pass data to Client Components instead.`)}function Ae(e){return new ve(e.serverConsumerManifest.moduleMap,e.serverConsumerManifest.serverModuleMap,e.serverConsumerManifest.moduleLoading,ke,e.encodeFormAction,typeof e.nonce==`string`?e.nonce:void 0,e&&e.temporaryReferences?e.temporaryReferences:void 0)}function je(e,t,n){function r(t){var s=t.value;if(t.done)return n();var c=0,l=a._rowState;t=a._rowID;for(var u=a._rowTag,d=a._rowLength,f=a._buffer,p=s.length;c<p;){var m=-1;switch(l){case 0:m=s[c++],m===58?l=1:t=t<<4|(96<m?m-87:m-48);continue;case 1:l=s[c],l===84||l===65||l===79||l===111||l===85||l===83||l===115||l===76||l===108||l===71||l===103||l===77||l===109||l===86?(u=l,l=2,c++):64<l&&91>l||l===35||l===114||l===120?(u=l,l=3,c++):(u=0,l=3);continue;case 2:m=s[c++],m===44?l=4:d=d<<4|(96<m?m-87:m-48);continue;case 3:m=s.indexOf(10,c);break;case 4:m=c+d,m>s.length&&(m=-1)}var h=s.byteOffset+c;if(-1<m)d=new Uint8Array(s.buffer,h,m-c),Ee(e,a,t,u,f,d),c=m,l===3&&c++,d=t=u=l=0,f.length=0;else{s=new Uint8Array(s.buffer,h,s.byteLength-c),f.push(s),d-=s.byteLength;break}}return a._rowState=l,a._rowID=t,a._rowTag=u,a._rowLength=d,o.read().then(r).catch(i)}function i(t){se(e,t)}var a={_rowState:0,_rowID:0,_rowTag:0,_rowLength:0,_buffer:[]},o=t.getReader();o.read().then(r).catch(i)}e.createFromReadableStream=function(e,t){return t=Ae(t),je(t,e,Oe.bind(null,t)),H(t,0)}})),$i=E(C(((e,t)=>{t.exports=Qi()}))(),1);function ea(e,t={}){return $i.createFromReadableStream(e,{serverConsumerManifest:Zi(),...t})}var ta={"0132a7525229":async()=>{let e=await import(`./_next/static/home-client-BuYLjkke.js`);return{get default(){return e.default}}},"08b22e263b8c":async()=>{let e=await import(`./_next/static/streamed-icons-JsA12Qah.js`);return{get StreamedIconsInsertion(){return e.StreamedIconsInsertion}}},"0bef8629d058":async()=>{let e=await import(`./_next/static/error-boundary-CfJR1rkC.js`);return{get ErrorBoundary(){return e.ErrorBoundary},get ForbiddenBoundary(){return e.ForbiddenBoundary},get GlobalErrorBoundary(){return e.GlobalErrorBoundary},get NotFoundBoundary(){return e.NotFoundBoundary},get RedirectBoundary(){return e.RedirectBoundary},get SerializedErrorBoundary(){return e.SerializedErrorBoundary},get UnauthorizedBoundary(){return e.UnauthorizedBoundary}}},"3bb4c73cb361":async()=>{let e=await Promise.resolve().then(()=>On);return{get BfcacheSegmentBoundary(){return e.BfcacheSegmentBoundary},get Children(){return e.Children},get ParallelSlot(){return e.ParallelSlot},get Slot(){return e.Slot}}},a7f3f1d63985:async()=>{let e=await Promise.resolve().then(()=>Cn);return{get default(){return e.default}}},bcc88b3729e4:async()=>{let e=await import(`./_next/static/layout-segment-context-6sYF5ZVQ.js`);return{get LayoutSegmentProvider(){return e.LayoutSegmentProvider}}},e7673c357e7c:async()=>(await import(`./_next/static/app-prefetch-fetch-queue-DOPEQW2-.js`),{}),fdec6512cad3:async()=>{let e=await import(`./_next/static/app-router-scroll-B-C19qlb.js`);return{get AppRouterScrollTarget(){return e.AppRouterScrollTarget}}}},na;ra();function ra(){Xi({load:async e=>{{let n=ta[e];if(!n)throw Error(`client reference not found '${e}'`);let r=t.clientReferenceDeps[e]??{js:[],css:[]};return aa(r),na?.({id:e,deps:r}),ia(await n(),e,r)}}})}function ia(e,t,n){return new Proxy(e,{get(r,i,a){return i in e&&(aa(n),na?.({id:t,deps:n})),Reflect.get(r,i,a)}})}function aa(e){for(let t of e.js)h.preloadModule(t,{as:`script`,crossOrigin:``});for(let n of e.css)h.preinit(n,{as:`style`,precedence:t.cssLinkPrecedence===!1?void 0:`vite-rsc/client-reference`})}var oa=6e3;function sa(){return!1}function ca(e){return typeof e==`object`&&!!e&&`prerender`in e&&typeof e.prerender==`function`}async function la(){let e=await import(`react-dom/static.edge`);if(ca(e))return e.prerender;if(sa())try{let[{createRequire:e},t]=await Promise.all([import(`node:module`),import(`node:path`)]),n=e(import.meta.url).resolve(`react-dom/package.json`),r=t.dirname(n),i=await import(t.join(r,`cjs/react-dom-server.edge.development.js`));if(ca(i))return i.prerender;let a=typeof i==`object`&&!!i&&`default`in i&&i.default;if(ca(a))return a.prerender;throw Error(`react-dom development renderer did not expose prerender().`)}catch(e){throw Error(`[vinext] Failed to load React static development renderer.`,{cause:e})}throw Error(`[vinext] react-dom/static.edge did not expose prerender().`)}function ua(e){let t=new TextEncoder;return new ReadableStream({start(n){n.enqueue(t.encode(e)),n.close()}})}function da(e,t){return e?`<script type="module"${Pt(t)} src="`+Q(e)+`" id="_R_" async=""><\/script>`:``}function fa(e,t){let n=m(s(Dn,{error:null})).replace(`<style>`,`<style data-vinext-error-shell-style="">`),r=da(e,t);if(!r)return ua(`<!DOCTYPE html>${n}`);let i=`</body></html>`;return n.endsWith(i)?ua(`<!DOCTYPE html>${n.slice(0,-14)}${r}${i}`):ua(`<!DOCTYPE html>${n}${r}`)}var pa=oi({getReferences(){return ta},getClientRequire(){return globalThis.__vite_rsc_client_require__},onPreloadError(e,t){}}),ma=$t();function ha(e){let t=5381;for(let n=e.length-1;n>=0;n--)t=t*33^e.charCodeAt(n);return(t>>>0).toString()}function ga(e){return e instanceof Error?e.message:typeof e==`string`?e:Object.prototype.toString.call(e)}function _a(e){let t=``;for(let n of e)try{t+=m(s(o,null,n))}catch{}return t}function va(e,t,n={}){if(!e)return``;let r=``,i=Pt(t),a=n.includeStyles??!0;for(let t of e.links??[])r+=`<link rel="stylesheet"${i} href="${Q(Dt(t))}" />\n`;for(let t of e.preloads??[])r+=`<link rel="preload"${i} href="${Q(t.href)}" as="font" type="${Q(t.type)}" crossorigin />\n`;return a&&e.styles&&e.styles.length>0&&(r+=`<style data-vinext-fonts${i}>${e.styles.join(`
-`)}</style>\n`),r}function ya(e){return e!==void 0&&Object.keys(e).length>0}function ba(e){if(e)return e.match(/import\(["']([^"']+)["']\)/)?.[1]??void 0}function xa(e,t){return e?`<link rel="modulepreload"${Pt(t)} href="${Q(e)}" />\n`:``}function Sa(e,t,n,r,i,a,o){let s={pathname:e.pathname,searchParams:[...e.searchParams.entries()]};return Ft(kr(e.params,s,a),o)+(n===null?``:Ft(`self[`+Z(ii)+`]=`+Z(n),o))+xa(t,o)+r+i}function Ca(e){if(!e)throw Error(`App SSR requires navigation context for BFCache state keys`);return e}async function wa(e,n,r,i){return Ti(async()=>{let a=Ca(n);await pa.preload(),dn(a),hn();let o=()=>{dn(null),hn()};return yi(i?.rootParams??{},async()=>{try{let n,c;if(i?.sideStream)n=e,c=Mr(i.sideStream,i?.scriptNonce,i?.getInitialNavigationCacheMetadata),i.capturedRscDataRef&&(i.capturedRscDataRef.value=c.getRawBuffer());else{let[t,r]=e.tee();n=t,c=Mr(r,i?.scriptNonce,i?.getInitialNavigationCacheMetadata)}let u=null;function d(){for(let e of _.appBootstrapPreinitModules??[])g(e,{as:`script`,nonce:i?.scriptNonce});u||=ea(n);let e=l(u),t=Y.decode(e),r=Y.readMetadata(t),a=ri({elements:t,metadata:r}),o=s(An.Provider,{value:t},s(cr,{id:r.routeId})),c=s(Rn.Provider,{value:a.identities},o);return ma?s(ma.Provider,{value:a.bfcacheIds},c):c}let f=s(d),m=Tt?s(Tt.Provider,{value:Wi},f):f,h=Zt?s(Zt.Provider,{value:fn},m):m,v=[],y=At(s(Di.Provider,{value:e=>{v.push(e)}},h),i?.scriptNonce),b=ba(await Promise.resolve(t.bootstrapScriptContent)),x=xr({basePath:i?.basePath}),ee=i?.pprFallbackShellSignal,S=``,C=i?.reactMaxHeadersLength??oa,w=C>0,T={bootstrapModules:b?[b]:void 0,formState:i?.formState??null,nonce:i?.scriptNonce,onHeaders:w?e=>{let t=e.get(`Link`);t&&(S=t)}:void 0,maxHeadersLength:w?C:void 0,onError(e){if(!(ee&&vt(e))){if(x.capture(e),e&&typeof e==`object`&&`digest`in e)return String(e.digest);if(e)return ha(ga(e)+(e instanceof Error?e.stack??``:``))}}},E,D=!1,O=!1;if(ee){let e=await la(),t=new AbortController,n=e(y,{...T,signal:t.signal});setTimeout(()=>t.abort(),0),E=(await n).prelude}else{let e;try{e=await p(y,{...T}),i?.waitForAllReady===!0?await e.allReady:O=!0,E=e}catch(t){if(e?.cancel().catch(()=>{}),i?.fallbackToErrorDocumentOnShellError!==!0||i?.waitForAllReady===!0||typeof t?.digest==`string`)throw t;D=!0,E=fa(b,i?.scriptNonce)}}let k=globalThis.__VINEXT_INLINE_CSS__,A=r?.styles??[],j=A.length>0&&ya(k),te=j?A.join(`
-`):``,M=j?va({styles:A},i?.scriptNonce):``,N=va(r,i?.scriptNonce,{includeStyles:!j}),P=null,F=()=>(P===null&&(P=Ut(i?.clientTraceMetadata)),P),I=!1;return O&&await Er(),{htmlStream:si(E.pipeThrough($r(c,()=>{let e=_a(mn()),t=x.flush(),n=Pi(i?.initialDevServerError,i?.scriptNonce);return I?e+t:(I=!0,Sa(a,b,i?.formState??null,e+t+F()+n,N,i?.dynamicStaleTimeSeconds,i?.scriptNonce))},()=>Ai(v),k,te,M,i?.scriptNonce)),o),metadataReady:Promise.resolve(),capturedRscData:i?.capturedRscDataRef?.value??null,shellErrorRecovered:D,linkHeader:S}}catch(e){throw o(),e}})})}var Ta={async fetch(e){if(j(new URL(e.url).pathname))return A();let t=await(await import(`../index.js`)).default(e);return t instanceof Response?t:t==null?A():new Response(String(t),{status:200})}};export{Qt as a,_t as c,Ta as default,wa as handleSsr,xn as i,C as l,Dn as n,un as o,Sn as r,Tt as s,fr as t,D as u};
+`.replace(/\n\s*/g, "");
+function WarningIcon() {
+	return /* @__PURE__ */ jsx("svg", {
+		width: "32",
+		height: "32",
+		viewBox: "-0.2 -1.5 32 32",
+		fill: "none",
+		style: errorStyles.icon,
+		children: /* @__PURE__ */ jsx("path", {
+			d: "M16.9328 0C18.0839 0.000116771 19.1334 0.658832 19.634 1.69531L31.4299 26.1309C32.0708 27.4588 31.1036 28.9999 29.6291 29H2.00215C0.527541 29 -0.439628 27.4588 0.201371 26.1309L11.9973 1.69531C12.4979 0.658823 13.5474 7.75066e-05 14.6984 0H16.9328ZM3.59493 26H28.0363L16.9328 3H14.6984L3.59493 26ZM15.8156 19C16.9202 19.0001 17.8156 19.8955 17.8156 21C17.8156 22.1045 16.9202 22.9999 15.8156 23C14.7111 23 13.8156 22.1046 13.8156 21C13.8156 19.8954 14.7111 19 15.8156 19ZM17.3156 16.5H14.3156V8.5H17.3156V16.5Z",
+			fill: "var(--next-error-title)"
+		})
+	});
+}
+function handleBackClick() {}
+function DefaultGlobalError({ error }) {
+	const digest = error?.digest;
+	const isServerError = !!digest;
+	const message = isServerError ? "A server error occurred. Reload to try again." : "Reload to try again, or go back.";
+	return /* @__PURE__ */ jsxs("html", {
+		id: "__next_error__",
+		children: [/* @__PURE__ */ jsx("head", { children: /* @__PURE__ */ jsx("style", { dangerouslySetInnerHTML: { __html: errorThemeCss } }) }), /* @__PURE__ */ jsxs("body", { children: [/* @__PURE__ */ jsx("div", {
+			style: errorStyles.container,
+			children: /* @__PURE__ */ jsxs("div", {
+				style: errorStyles.card,
+				children: [
+					/* @__PURE__ */ jsx(WarningIcon, {}),
+					/* @__PURE__ */ jsx("h1", {
+						style: errorStyles.title,
+						children: "This page couldn’t load"
+					}),
+					/* @__PURE__ */ jsx("p", {
+						style: errorStyles.message,
+						children: message
+					}),
+					/* @__PURE__ */ jsxs("div", {
+						style: errorStyles.buttonGroup,
+						children: [/* @__PURE__ */ jsx("form", {
+							style: errorStyles.form,
+							children: /* @__PURE__ */ jsx("button", {
+								type: "submit",
+								style: errorStyles.button,
+								children: "Reload"
+							})
+						}), !isServerError && /* @__PURE__ */ jsx("button", {
+							type: "button",
+							style: errorStyles.buttonSecondary,
+							onClick: handleBackClick,
+							children: "Back"
+						})]
+					})
+				]
+			})
+		}), digest && /* @__PURE__ */ jsxs("p", {
+			style: errorStyles.digestFooter,
+			children: ["ERROR ", digest]
+		})] })]
+	});
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/slot.js
+var slot_exports = /* @__PURE__ */ __exportAll({
+	BfcacheIdentityMapContext: () => BfcacheIdentityMapContext,
+	BfcacheSegmentBoundary: () => BfcacheSegmentBoundary,
+	Children: () => Children,
+	ChildrenContext: () => ChildrenContext,
+	ElementsContext: () => ElementsContext,
+	ParallelSlot: () => ParallelSlot,
+	ParallelSlotsContext: () => ParallelSlotsContext,
+	Slot: () => Slot,
+	UNMATCHED_SLOT: () => UNMATCHED_SLOT,
+	getNonCacheComponentsSegmentKey: () => getNonCacheComponentsSegmentKey,
+	resolveBfcacheSegmentStateKey: () => resolveBfcacheSegmentStateKey,
+	stageBfcacheSlotEntryForRender: () => stageBfcacheSlotEntryForRender,
+	updateBfcacheSlotEntryOrder: () => updateBfcacheSlotEntryOrder
+});
+var EMPTY_ELEMENTS = Object.freeze({});
+/**
+* Holds resolved AppElements (not a Promise). React 19's use(Promise) during
+* hydration triggers "async Client Component" for native Promises that lack
+* React's internal .status property. Storing resolved values sidesteps this.
+*/
+var ElementsContext = React$1.createContext(EMPTY_ELEMENTS);
+var ChildrenContext = React$1.createContext(null);
+var ParallelSlotsContext = React$1.createContext(null);
+var BfcacheIdMapContext$1 = getBfcacheIdMapContext();
+var BfcacheSegmentIdContext = getBfcacheSegmentIdContext();
+var EMPTY_BFCACHE_STATE_KEYS = Object.freeze({});
+var MAX_BFCACHE_SLOT_ENTRIES_WITH_CACHE_COMPONENTS = 3;
+var MAX_BFCACHE_SLOT_ENTRIES_WITHOUT_CACHE_COMPONENTS = 1;
+var BfcacheIdentityMapContext = React$1.createContext(EMPTY_BFCACHE_STATE_KEYS);
+function isCacheComponentsEnabled() {
+	return String(false) === "true";
+}
+function getBfcacheSlotEntryLimit() {
+	return isCacheComponentsEnabled() ? MAX_BFCACHE_SLOT_ENTRIES_WITH_CACHE_COMPONENTS : MAX_BFCACHE_SLOT_ENTRIES_WITHOUT_CACHE_COMPONENTS;
+}
+function normalizeBfcacheSlotEntryLimit(maxEntries) {
+	if (!Number.isFinite(maxEntries)) return 1;
+	return Math.max(1, Math.trunc(maxEntries));
+}
+function updateBfcacheSlotEntryOrder(previousOrder, activeStateKey, maxEntries = getBfcacheSlotEntryLimit()) {
+	const entryLimit = normalizeBfcacheSlotEntryLimit(maxEntries);
+	const nextOrder = [activeStateKey];
+	for (const stateKey of previousOrder) {
+		if (nextOrder.length >= entryLimit) break;
+		if (stateKey === activeStateKey) continue;
+		nextOrder.push(stateKey);
+	}
+	return nextOrder;
+}
+function pruneBfcacheSlotEntrySnapshots(snapshotsByStateKey, retainedOrder) {
+	const retainedKeys = new Set(retainedOrder);
+	for (const stateKey of snapshotsByStateKey.keys()) if (!retainedKeys.has(stateKey)) snapshotsByStateKey.delete(stateKey);
+}
+function haveSameBfcacheSlotEntryOrder(left, right) {
+	if (left.length !== right.length) return false;
+	for (let index = 0; index < left.length; index++) if (left[index] !== right[index]) return false;
+	return true;
+}
+function stageBfcacheSlotEntryForRender(committedSnapshots, committedOrder, activeEntry, maxEntries = getBfcacheSlotEntryLimit()) {
+	const snapshots = new Map(committedSnapshots);
+	snapshots.set(activeEntry.stateKey, activeEntry);
+	const order = updateBfcacheSlotEntryOrder(committedOrder, activeEntry.stateKey, maxEntries);
+	pruneBfcacheSlotEntrySnapshots(snapshots, order);
+	return {
+		entries: order.map((stateKey) => snapshots.get(stateKey)).filter((entry) => entry !== void 0),
+		order,
+		snapshots
+	};
+}
+function isLayoutFlagsValue(value) {
+	if (typeof value !== "object" || value === null || Array.isArray(value)) return false;
+	const entries = Object.values(value);
+	return entries.length > 0 && entries.every((entry) => entry === "s" || entry === "d");
+}
+function isArtifactCompatibilityEnvelopeValue(value) {
+	if (typeof value !== "object" || value === null || Array.isArray(value)) return false;
+	return "schemaVersion" in value && "appElementsSchemaVersion" in value && "rscPayloadSchemaVersion" in value && "graphVersion" in value && "deploymentVersion" in value && "rootBoundaryId" in value && "renderEpoch" in value;
+}
+function isSlotBindingValue(value) {
+	if (typeof value !== "object" || value === null || Array.isArray(value)) return false;
+	return "ownerLayoutId" in value && "slotId" in value && "state" in value;
+}
+function isSlotBindingListValue(value) {
+	return Array.isArray(value) && value.length > 0 && value.every(isSlotBindingValue);
+}
+function isSkippedLayoutIdsMetadataValue(id, value) {
+	return id === "__skippedLayoutIds" && Array.isArray(value) && value.every((entry) => typeof entry === "string");
+}
+function isBfcacheSegmentIdentitiesMetadataValue(id, value) {
+	if (id !== "__bfcacheSegmentIdentities" || typeof value !== "object" || value === null || Array.isArray(value)) return false;
+	return Object.entries(value).every(([elementId, identity]) => {
+		const parsed = AppElementsWire.parseElementKey(elementId);
+		return parsed !== null && parsed.kind !== "route" && typeof identity === "string";
+	});
+}
+function isInterceptionMetadataValue(value) {
+	if (typeof value !== "object" || value === null || Array.isArray(value)) return false;
+	return "sourceMatchedUrl" in value && typeof value.sourceMatchedUrl === "string" && "sourceRouteId" in value && typeof value.sourceRouteId === "string" && "slotId" in value && typeof value.slotId === "string" && "targetMatchedUrl" in value && typeof value.targetMatchedUrl === "string" && "targetRouteId" in value && typeof value.targetRouteId === "string";
+}
+function isCacheEntryReuseProofValue(value) {
+	if (typeof value !== "object" || value === null || Array.isArray(value)) return false;
+	return "kind" in value && value.kind === "runtime-cache-entry" && "decision" in value;
+}
+function isTransportMetadataValue(id, value) {
+	return isLayoutFlagsValue(value) || isBfcacheSegmentIdentitiesMetadataValue(id, value) || isArtifactCompatibilityEnvelopeValue(value) || isCacheEntryReuseProofValue(value) || isInterceptionMetadataValue(value) || isSkippedLayoutIdsMetadataValue(id, value) || isSlotBindingListValue(value);
+}
+/**
+* Provider stack for Activity-retained BFCache entries. Each retained entry
+* re-provides the elements, state-key map, and segment id it was captured with,
+* falling back to the live boundary values for entries that predate per-entry
+* capture.
+*/
+function BfcacheEntryProviders({ entry, fallbackElements, fallbackSegmentId, fallbackStateKeyMap, SegmentContext }) {
+	return /* @__PURE__ */ jsx(BfcacheIdentityMapContext.Provider, {
+		value: entry.stateKeyMap ?? fallbackStateKeyMap,
+		children: /* @__PURE__ */ jsx(ElementsContext.Provider, {
+			value: entry.elements ?? fallbackElements,
+			children: /* @__PURE__ */ jsx(SegmentContext.Provider, {
+				value: entry.segmentId ?? fallbackSegmentId,
+				children: entry.content
+			})
+		})
+	});
+}
+function useBfcacheSlotEntries(activeEntry) {
+	const snapshotsByStateKey = React$1.useRef(/* @__PURE__ */ new Map());
+	const [entryOrder, setEntryOrder] = React$1.useState(() => [activeEntry.stateKey]);
+	const staged = stageBfcacheSlotEntryForRender(snapshotsByStateKey.current, entryOrder, activeEntry);
+	const nextOrder = staged.order;
+	const orderChanged = !haveSameBfcacheSlotEntryOrder(entryOrder, nextOrder);
+	React$1.useLayoutEffect(() => {
+		snapshotsByStateKey.current = staged.snapshots;
+	}, [staged.snapshots]);
+	if (orderChanged) setEntryOrder(nextOrder);
+	return staged.entries;
+}
+function BfcacheActivitySlotBoundary({ activeStateKey, content, elements, id, SegmentContext, stateKeyMap }) {
+	return /* @__PURE__ */ jsx(Fragment$1, { children: useBfcacheSlotEntries({
+		content,
+		elements,
+		segmentId: id,
+		stateKey: activeStateKey,
+		stateKeyMap
+	}).map((entry) => /* @__PURE__ */ jsx(React$1.Activity, {
+		mode: entry.stateKey === activeStateKey ? "visible" : "hidden",
+		children: /* @__PURE__ */ jsx(BfcacheEntryProviders, {
+			entry,
+			fallbackElements: elements,
+			fallbackSegmentId: id,
+			fallbackStateKeyMap: stateKeyMap,
+			SegmentContext
+		})
+	}, entry.stateKey)) });
+}
+/**
+* Adds a nested segment-owned Activity cache inside a flattened AppElements
+* entry. Named parallel routes are transported as one slot value, but Next.js
+* retains each descendant segment independently. This boundary recreates that
+* ownership without requiring a separate wire entry for every nested segment.
+*/
+function BfcacheSegmentBoundary({ children, id, stateKey }) {
+	const elements = React$1.useContext(ElementsContext);
+	const identityMap = React$1.useContext(BfcacheIdentityMapContext);
+	const activeStateKey = resolveBfcacheSegmentStateKey(id, identityMap, React$1.useContext(BfcacheIdMapContext$1));
+	if (!BfcacheSegmentIdContext || activeStateKey === void 0) return /* @__PURE__ */ jsx(React$1.Fragment, { children }, stateKey);
+	if (!isCacheComponentsEnabled()) return /* @__PURE__ */ jsx(BfcacheSegmentIdContext.Provider, {
+		value: id,
+		children
+	}, activeStateKey);
+	return /* @__PURE__ */ jsx(BfcacheActivitySlotBoundary, {
+		activeStateKey,
+		content: children,
+		elements,
+		id,
+		SegmentContext: BfcacheSegmentIdContext,
+		stateKeyMap: identityMap
+	});
+}
+function getNonCacheComponentsSegmentKey(id, activeStateKey) {
+	const parsed = AppElementsWire.parseElementKey(id);
+	return parsed !== null && parsed.kind !== "route" ? activeStateKey : void 0;
+}
+function resolveBfcacheSegmentStateKey(id, identityMap, bfcacheIdMap) {
+	return identityMap[id] ?? bfcacheIdMap?.[id];
+}
+function BfcacheSlotBoundary({ content, id }) {
+	const SegmentContext = BfcacheSegmentIdContext;
+	const elements = React$1.useContext(ElementsContext);
+	const identityMap = React$1.useContext(BfcacheIdentityMapContext);
+	const activeStateKey = resolveBfcacheSegmentStateKey(id, identityMap, React$1.useContext(BfcacheIdMapContext$1));
+	if (!SegmentContext) return /* @__PURE__ */ jsx(Fragment$1, { children: content });
+	if (activeStateKey === void 0) return /* @__PURE__ */ jsx(SegmentContext.Provider, {
+		value: id,
+		children: content
+	});
+	if (!isCacheComponentsEnabled()) return /* @__PURE__ */ jsx(SegmentContext.Provider, {
+		value: id,
+		children: content
+	}, getNonCacheComponentsSegmentKey(id, activeStateKey));
+	return /* @__PURE__ */ jsx(BfcacheActivitySlotBoundary, {
+		activeStateKey,
+		content,
+		elements,
+		id,
+		SegmentContext,
+		stateKeyMap: identityMap
+	});
+}
+function Slot({ id, children, parallelSlots }) {
+	const elements = React$1.useContext(ElementsContext);
+	if (!Object.hasOwn(elements, id)) return null;
+	const element = elements[id];
+	if (isTransportMetadataValue(id, element)) return null;
+	if (element === UNMATCHED_SLOT) notFound();
+	if (element === null) return null;
+	const content = /* @__PURE__ */ jsx(ParallelSlotsContext.Provider, {
+		value: parallelSlots ?? null,
+		children: /* @__PURE__ */ jsx(ChildrenContext.Provider, {
+			value: children ?? null,
+			children: element
+		})
+	});
+	return BfcacheIdMapContext$1 && BfcacheSegmentIdContext ? /* @__PURE__ */ jsx(BfcacheSlotBoundary, {
+		id,
+		content
+	}) : content;
+}
+function Children() {
+	return React$1.useContext(ChildrenContext);
+}
+function ParallelSlot({ name }) {
+	return React$1.useContext(ParallelSlotsContext)?.[name] ?? null;
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/utils/base-path.js
+/**
+* Shared basePath helpers.
+*
+* Next.js only treats a pathname as being under basePath when it is an exact
+* match ("/app") or starts with the basePath followed by a path separator
+* ("/app/..."). Prefix-only matches like "/application" must be left intact.
+*/
+/**
+* Check whether a pathname is inside the configured basePath.
+*/
+function hasBasePath(pathname, basePath) {
+	if (!basePath) return false;
+	return pathname === basePath || pathname.startsWith(basePath + "/");
+}
+/**
+* Strip the basePath prefix from a pathname when it matches on a segment
+* boundary. Returns the original pathname when it is outside the basePath.
+*/
+function stripBasePath(pathname, basePath) {
+	if (!hasBasePath(pathname, basePath)) return pathname;
+	return pathname.slice(basePath.length) || "/";
+}
+/**
+* Add the configured basePath to a pathname unless it is already inside that
+* basePath. Query strings and hashes must be handled by callers before calling
+* this pathname-only helper.
+*/
+function addBasePathToPathname(pathname, basePath) {
+	if (!basePath || hasBasePath(pathname, basePath)) return pathname;
+	return pathname === "/" ? basePath : `${basePath}${pathname}`;
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/next-error-digest.js
+/**
+* Helpers for parsing Next.js error `digest` strings shared across the App
+* Router execution paths (server actions, page renders, route handlers).
+*
+* Special control flow is encoded as thrown errors carrying a `digest` field.
+* Redirect digests may appear as vinext's encoded three-part form or Next.js's
+* raw, semicolon-terminated form:
+*  - `NEXT_REDIRECT;<type>;<url>[;<status>[;]]` — `redirect()` / `permanentRedirect()`
+*  - `NEXT_NOT_FOUND` — `notFound()`
+*  - `NEXT_HTTP_ERROR_FALLBACK;<status>` — `forbidden()` / `unauthorized()` / etc.
+*
+* Each call site needs slightly different post-processing (URL resolution
+* against the request, 303-vs-307 status overrides for actions, etc.), so
+* these helpers only handle the parsing — callers shape the result.
+*/
+/**
+* Pulls a stringified `digest` off an unknown thrown value, or returns null
+* when the value is not a digest-bearing error.
+*/
+function getNextErrorDigest(error) {
+	if (!error || typeof error !== "object" || !("digest" in error)) return null;
+	return String(error.digest);
+}
+/**
+* Parses redirect digests from vinext's encoded three-part form and Next.js's
+* raw, semicolon-terminated form. Returns null when the digest is not a
+* redirect digest. Vinext's encoded URL is decoded with `decodeURIComponent`;
+* Next.js's canonical raw URL is preserved verbatim. The `status` defaults to
+* 307 when omitted; an omitted `type` is left as null so the caller can apply
+* the correct context-sensitive default.
+*/
+function parseNextRedirectDigest(digest) {
+	return parseRedirectDigest(digest);
+}
+/**
+* Parses a `NEXT_NOT_FOUND` or `NEXT_HTTP_ERROR_FALLBACK;<status>` digest.
+* Returns `{ status: 404 }` for `NEXT_NOT_FOUND` and the parsed status code
+* for the fallback form. Returns null otherwise.
+*/
+function parseNextHttpErrorDigest(digest) {
+	if (digest === "NEXT_NOT_FOUND") return { status: 404 };
+	if (digest.startsWith("NEXT_HTTP_ERROR_FALLBACK;")) return { status: parseInt(digest.split(";")[1], 10) };
+	return null;
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/app-ssr-error-meta.js
+var PERMANENT_REDIRECT_STATUS = 308;
+function prefixRedirectLocation(location, basePath) {
+	if (!basePath || !location.startsWith("/")) return location;
+	const hashIndex = location.indexOf("#");
+	const queryIndex = location.indexOf("?");
+	const pathnameEnd = queryIndex === -1 ? hashIndex === -1 ? location.length : hashIndex : hashIndex === -1 ? queryIndex : Math.min(queryIndex, hashIndex);
+	return addBasePathToPathname(location.slice(0, pathnameEnd), basePath) + location.slice(pathnameEnd);
+}
+function renderSsrErrorMetaTag(error, options) {
+	const digest = getNextErrorDigest(error);
+	if (!digest) return "";
+	if (parseNextHttpErrorDigest(digest)) {
+		let html = "<meta name=\"robots\" content=\"noindex\"/>";
+		if ((options.nodeEnv ?? "production") === "development") html += "<meta name=\"next-error\" content=\"not-found\"/>";
+		return html;
+	}
+	const redirect = parseNextRedirectDigest(digest);
+	if (!redirect) return "";
+	const delay = redirect.status === PERMANENT_REDIRECT_STATUS ? 0 : 1;
+	const location = prefixRedirectLocation(redirect.url, options.basePath);
+	return "<meta id=\"__next-page-redirect\" http-equiv=\"refresh\" content=\"" + delay + ";url=" + escapeHtmlAttr(location) + "\"/>";
+}
+function renderSsrErrorMetaTags(errors, options = {}) {
+	let html = "";
+	for (const error of errors) html += renderSsrErrorMetaTag(error, options);
+	return html;
+}
+function createSsrErrorMetaRenderer(options = {}) {
+	const capturedErrors = [];
+	let flushedUntil = 0;
+	return {
+		capture(error) {
+			capturedErrors.push(error);
+		},
+		flush() {
+			if (flushedUntil >= capturedErrors.length) return "";
+			const html = renderSsrErrorMetaTags(capturedErrors.slice(flushedUntil), options);
+			flushedUntil = capturedErrors.length;
+			return html;
+		}
+	};
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/app-rsc-embedded-chunks.js
+var BASE64_CHUNK_SIZE = 32768;
+new TextEncoder();
+function bytesToBase64(bytes) {
+	let binary = "";
+	for (let offset = 0; offset < bytes.byteLength; offset += BASE64_CHUNK_SIZE) binary += String.fromCharCode(...bytes.subarray(offset, offset + BASE64_CHUNK_SIZE));
+	return btoa(binary);
+}
+function concatUint8Arrays(chunks) {
+	let totalLength = 0;
+	for (const chunk of chunks) totalLength += chunk.byteLength;
+	const result = new Uint8Array(totalLength);
+	let offset = 0;
+	for (const chunk of chunks) {
+		result.set(chunk, offset);
+		offset += chunk.byteLength;
+	}
+	return result;
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/client/navigation-runtime.js
+var NAVIGATION_RUNTIME_SYMBOL_DESCRIPTION = "vinext.navigationRuntime";
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/app-ssr-stream.js
+function waitAtLeastOneReactRenderTask() {
+	return new Promise((resolve) => setTimeout(resolve, 0));
+}
+var NAVIGATION_RUNTIME_REFERENCE = `self[Symbol.for(${safeJsonStringify(NAVIGATION_RUNTIME_SYMBOL_DESCRIPTION)})]`;
+function navigationRuntimeRscBootstrapExpression() {
+	return `((${NAVIGATION_RUNTIME_REFERENCE}??={bootstrap:{routeManifest:null},functions:{}}).bootstrap.rsc??={rsc:[]})`;
+}
+function createNavigationRuntimeRscMetadataScript(params, nav, dynamicStaleTimeSeconds) {
+	return "Object.assign(" + navigationRuntimeRscBootstrapExpression() + ",{params:" + safeJsonStringify(params) + ",nav:" + safeJsonStringify(nav) + (dynamicStaleTimeSeconds === void 0 ? "" : ",dynamicStaleTimeSeconds:" + safeJsonStringify(dynamicStaleTimeSeconds)) + "})";
+}
+function createNavigationRuntimeRscChunkScript(chunk) {
+	return navigationRuntimeRscBootstrapExpression() + ".rsc.push(" + safeJsonStringify(chunk) + ")";
+}
+function createNavigationRuntimeRscDoneScript(metadata) {
+	const bootstrap = navigationRuntimeRscBootstrapExpression();
+	return (metadata === void 0 ? "" : "Object.assign(" + bootstrap + "," + safeJsonStringify({
+		initialCacheKind: metadata.kind,
+		...metadata.dynamicStaleTimeSeconds === void 0 ? {} : { dynamicStaleTimeSeconds: metadata.dynamicStaleTimeSeconds },
+		...metadata.staleTimeSeconds === void 0 ? {} : { staleTimeSeconds: metadata.staleTimeSeconds }
+	}) + ");") + bootstrap + ".done=true";
+}
+/**
+* Create a helper that progressively embeds RSC chunks as inline <script> tags.
+* The browser entry turns the embedded chunks back into Uint8Array data.
+*/
+function createRscEmbedTransform(embedStream, scriptNonce, getInitialNavigationCacheMetadata) {
+	const reader = embedStream.getReader();
+	let pendingChunks = [];
+	const rawChunks = [];
+	let reading = false;
+	async function pumpReader() {
+		if (reading) return;
+		reading = true;
+		try {
+			while (true) {
+				const result = await reader.read();
+				if (result.done) break;
+				rawChunks.push(result.value);
+				try {
+					const text = new TextDecoder("utf-8", { fatal: true }).decode(result.value);
+					pendingChunks.push(text);
+				} catch {
+					pendingChunks.push([3, bytesToBase64(result.value)]);
+				}
+			}
+		} catch (error) {
+			throw error;
+		} finally {
+			reading = false;
+		}
+	}
+	const pumpPromise = pumpReader();
+	return {
+		flush() {
+			if (pendingChunks.length === 0) return "";
+			const chunks = pendingChunks;
+			pendingChunks = [];
+			let scripts = "";
+			for (const chunk of chunks) scripts += createInlineScriptTag(createNavigationRuntimeRscChunkScript(chunk), scriptNonce);
+			return scripts;
+		},
+		async finalize() {
+			await pumpPromise;
+			let scripts = this.flush();
+			scripts += createInlineScriptTag(createNavigationRuntimeRscDoneScript(getInitialNavigationCacheMetadata?.()), scriptNonce);
+			return scripts;
+		},
+		async getRawBuffer() {
+			await pumpPromise;
+			const buffer = concatUint8Arrays(rawChunks);
+			rawChunks.length = 0;
+			return buffer.buffer;
+		}
+	};
+}
+/**
+* Fix invalid preload "as" values in server-rendered HTML.
+* React Fizz emits <link rel="preload" as="stylesheet"> for CSS, but the
+* HTML spec requires as="style" for <link rel="preload">.
+*/
+function fixPreloadAs(html) {
+	return html.replace(/<link(?=[^>]*\srel="preload")[^>]*>/g, (tag) => tag.replace(" as=\"stylesheet\"", " as=\"style\""));
+}
+var LINK_TAG_RE = /<link\b[^>]*>/gi;
+var HTML_REWRITE_EXCLUDED_REGION_RE = /<!--[\s\S]*?-->|<(script|style|textarea|title)\b[^>]*>[\s\S]*?<\/\1\s*>/gi;
+var HTML_REWRITE_EXCLUDED_REGION_START_RE = /<!--|<(script|style|textarea|title)\b[^>]*>/gi;
+var CLOSE_TAG_RES = {
+	script: /<\/script\s*>/i,
+	style: /<\/style\s*>/i,
+	textarea: /<\/textarea\s*>/i,
+	title: /<\/title\s*>/i
+};
+function getHtmlAttribute(tag, name) {
+	const attrRe = /\s([^\s"'=<>`]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+)))?/g;
+	let match;
+	while ((match = attrRe.exec(tag)) !== null) {
+		if (match[1]?.toLowerCase() !== name.toLowerCase()) continue;
+		return match[2] ?? match[3] ?? match[4] ?? "";
+	}
+	return null;
+}
+function htmlAttributeHasToken(tag, name, token) {
+	return htmlTokenListContains(getHtmlAttribute(tag, name), token);
+}
+function getInlineCss(manifest, href) {
+	if (Object.prototype.hasOwnProperty.call(manifest, href)) return manifest[href] ?? "";
+	try {
+		const pathname = new URL(href).pathname;
+		if (Object.prototype.hasOwnProperty.call(manifest, pathname)) return manifest[pathname] ?? "";
+	} catch {}
+	return null;
+}
+var TRAILING_LINK_OPEN_RE = /<link/gi;
+function splitTrailingIncompleteLinkTag(html) {
+	TRAILING_LINK_OPEN_RE.lastIndex = 0;
+	let lastIndex = -1;
+	let match;
+	while ((match = TRAILING_LINK_OPEN_RE.exec(html)) !== null) lastIndex = match.index;
+	if (lastIndex === -1) return {
+		complete: html,
+		trailing: ""
+	};
+	if (html.indexOf(">", lastIndex) !== -1) return {
+		complete: html,
+		trailing: ""
+	};
+	return {
+		complete: html.slice(0, lastIndex),
+		trailing: html.slice(lastIndex)
+	};
+}
+function findTrailingOpenHtmlRewriteExcludedRegionStart(html) {
+	let match;
+	HTML_REWRITE_EXCLUDED_REGION_START_RE.lastIndex = 0;
+	while ((match = HTML_REWRITE_EXCLUDED_REGION_START_RE.exec(html)) !== null) {
+		const start = match.index;
+		if (match[0] === "<!--") {
+			const close = html.indexOf("-->", HTML_REWRITE_EXCLUDED_REGION_START_RE.lastIndex);
+			if (close === -1) return start;
+			HTML_REWRITE_EXCLUDED_REGION_START_RE.lastIndex = close + 3;
+			continue;
+		}
+		const tagName = match[1]?.toLowerCase();
+		if (!tagName) continue;
+		const closeTagRe = CLOSE_TAG_RES[tagName];
+		if (!closeTagRe) continue;
+		const close = closeTagRe.exec(html.slice(HTML_REWRITE_EXCLUDED_REGION_START_RE.lastIndex));
+		if (!close) return start;
+		HTML_REWRITE_EXCLUDED_REGION_START_RE.lastIndex += close.index + close[0].length;
+	}
+	return null;
+}
+function splitTrailingInlineCssRewriteBoundary(html) {
+	const linkSplit = splitTrailingIncompleteLinkTag(html);
+	const incompleteLinkStart = linkSplit.trailing ? linkSplit.complete.length : null;
+	const openRegionStart = findTrailingOpenHtmlRewriteExcludedRegionStart(html);
+	const trailingStart = incompleteLinkStart === null ? openRegionStart : openRegionStart === null ? incompleteLinkStart : Math.min(incompleteLinkStart, openRegionStart);
+	if (trailingStart === null) return {
+		complete: html,
+		trailing: ""
+	};
+	return {
+		complete: html.slice(0, trailingStart),
+		trailing: html.slice(trailingStart)
+	};
+}
+function escapeStyleText(css) {
+	return css.replace(/<\/style/gi, "<\\/style");
+}
+var CSS_PREPEND_UNSAFE_PREAMBLE_RE = /^\uFEFF?(?:\s|\/\*[\s\S]*?\*\/)*@(charset|import|layer|namespace)\b/i;
+function canPrependCss(css) {
+	return !CSS_PREPEND_UNSAFE_PREAMBLE_RE.test(css);
+}
+function replaceLinkTags(html, replaceLinkTag) {
+	LINK_TAG_RE.lastIndex = 0;
+	return html.replace(LINK_TAG_RE, replaceLinkTag);
+}
+function replaceLinkTagsOutsideRawText(html, replaceLinkTag) {
+	let rewritten = "";
+	let cursor = 0;
+	let match;
+	HTML_REWRITE_EXCLUDED_REGION_RE.lastIndex = 0;
+	while ((match = HTML_REWRITE_EXCLUDED_REGION_RE.exec(html)) !== null) {
+		rewritten += replaceLinkTags(html.slice(cursor, match.index), replaceLinkTag);
+		rewritten += match[0];
+		cursor = match.index + match[0].length;
+	}
+	const tail = html.slice(cursor);
+	const openRegionStart = findTrailingOpenHtmlRewriteExcludedRegionStart(tail);
+	if (openRegionStart === null) return rewritten + replaceLinkTags(tail, replaceLinkTag);
+	return rewritten + replaceLinkTags(tail.slice(0, openRegionStart), replaceLinkTag) + tail.slice(openRegionStart);
+}
+function rewriteInlineCssStylesheetLinks(html, inlineCssManifest, prependCss, ssrScriptNonce) {
+	if (!inlineCssManifest || Object.keys(inlineCssManifest).length === 0) return {
+		html,
+		consumedPrependCss: false
+	};
+	let consumedPrependCss = false;
+	return {
+		html: replaceLinkTagsOutsideRawText(html, (tag) => {
+			if (!htmlAttributeHasToken(tag, "rel", "stylesheet")) return tag;
+			const href = getHtmlAttribute(tag, "href");
+			const precedence = getHtmlAttribute(tag, "data-precedence") ?? getHtmlAttribute(tag, "precedence");
+			if (!href || !precedence) return tag;
+			const css = getInlineCss(inlineCssManifest, href);
+			if (css === null) return tag;
+			const effectiveNonce = getHtmlAttribute(tag, "nonce") ?? ssrScriptNonce;
+			const nonceAttr = effectiveNonce ? ` nonce="${escapeHtmlAttr(effectiveNonce)}"` : "";
+			const cssPrefix = !consumedPrependCss && prependCss.length > 0 && canPrependCss(css) ? `${prependCss}\n` : "";
+			consumedPrependCss ||= cssPrefix.length > 0;
+			return `<style data-vinext-inline-css${nonceAttr} data-precedence="${escapeHtmlAttr(precedence)}" data-href="${escapeHtmlAttr(href)}">${escapeStyleText(cssPrefix + css)}</style>`;
+		}),
+		consumedPrependCss
+	};
+}
+/**
+* Match the `<head ...>` opening tag in a chunk. Matches both bare `<head>`
+* and `<head class="foo">` shapes. Used to splice HTML immediately after the
+* opening tag so injected content runs before any React-emitted resource
+* hints (stylesheets, modulepreloads) that React Float hoists into `<head>`.
+*/
+var HEAD_OPEN_RE = /<head\b[^>]*>/;
+/**
+* Final closing tags of the streamed HTML document. We track this suffix
+* separately so we can move it to the very end of the stream — trailing flight
+* chunks and preinit scripts emitted by `rscEmbed.finalize()` are appended in
+* `flush()`, which would otherwise land them after `</body></html>` and break
+* any consumer that asserts the document terminates with a well-formed close.
+*
+* Ported from Next.js: packages/next/src/server/stream-utils/node-web-streams-helper.ts
+* https://github.com/vercel/next.js/blob/canary/packages/next/src/server/stream-utils/node-web-streams-helper.ts
+* (see `createMoveSuffixStream` and `CLOSE_TAG`)
+*/
+var DOCUMENT_CLOSE_SUFFIX = "</body></html>";
+/**
+* Create the tick-buffered HTML transform that injects RSC scripts between
+* React Fizz flush cycles without corrupting split HTML chunks.
+*
+* Two insertion points are supported in tandem:
+*
+*  - `injectHTML` is emitted immediately before `</head>`. This is where the
+*    bulk of vinext's head additions live (RSC navigation runtime metadata,
+*    bootstrap modulepreload, server-inserted HTML, font preloads, etc.).
+*  - `injectAfterHeadOpenHTML` is emitted immediately after the `<head ...>`
+*    opening tag so the content runs before any React-emitted resource
+*    hints. This is where inline `<Script strategy="beforeInteractive">`
+*    captures land so the no-flash dark-mode pattern works.
+*
+* Fallback behaviour differs by insertion point:
+*
+*  - `injectHTML` is emitted at end-of-stream by the `flush` handler when no
+*    chunk ever contained `</head>` — callers still see the payload on
+*    highly fragmented streams (just at the end of the body rather than in
+*    the head).
+*  - `injectAfterHeadOpenHTML` is silently dropped when `<head ...>` is not
+*    found in a discoverable chunk. Emitting it at end-of-stream would put
+*    it after the document body, defeating the point — the splice has to
+*    happen before resource hints to be useful, so the safer behaviour is
+*    to no-op and let the user-rendered Script (in its source-order
+*    position) ship as-is.
+*/
+function createTickBufferedTransform(rscEmbed, injectHTML = "", injectAfterHeadOpenHTML = "", inlineCssManifest, inlineCssPrependCss = "", inlineCssPrependFallbackHTML = "", inlineCssScriptNonce) {
+	const decoder = new TextDecoder();
+	const encoder = new TextEncoder();
+	const insertsPerFlush = typeof injectHTML === "function";
+	let injected = false;
+	let preHeadInjected = false;
+	let suffixStripped = false;
+	let buffered = [];
+	let pendingHtml = "";
+	let timeoutId = null;
+	const hasInlineCssManifest = inlineCssManifest !== void 0 && Object.keys(inlineCssManifest).length > 0;
+	/**
+	* Strip the first occurrence of `</body></html>` from `chunk` so it can be
+	* re-emitted at the very end of the stream. Returns the rewritten chunk and
+	* a flag indicating whether a suffix was found. If `suffixStripped` is
+	* already true (i.e. an earlier chunk contained the suffix), this is a
+	* no-op — additional matches in later chunks shouldn't happen in practice,
+	* but we leave them alone to avoid corrupting unexpected output.
+	*/
+	const stripDocumentCloseSuffix = (chunk) => {
+		if (suffixStripped) return chunk;
+		const index = chunk.indexOf(DOCUMENT_CLOSE_SUFFIX);
+		if (index === -1) return chunk;
+		suffixStripped = true;
+		return chunk.slice(0, index) + chunk.slice(index + 14);
+	};
+	const readInsertion = () => typeof injectHTML === "function" ? injectHTML() : injectHTML;
+	const readPreHeadInsertion = () => typeof injectAfterHeadOpenHTML === "function" ? injectAfterHeadOpenHTML() : injectAfterHeadOpenHTML;
+	const readInlineCssPrependFallback = () => {
+		if (!inlineCssPrependCss || !inlineCssPrependFallbackHTML) return "";
+		inlineCssPrependCss = "";
+		return inlineCssPrependFallbackHTML;
+	};
+	const emitInsertion = (controller) => {
+		const insertion = readInlineCssPrependFallback() + readInsertion();
+		if (insertion) controller.enqueue(encoder.encode(insertion));
+	};
+	/**
+	* Splice the pre-head insertion (typically captured beforeInteractive inline
+	* scripts) immediately after the `<head ...>` opening tag. Returns the
+	* rewritten chunk and a flag indicating whether the splice happened, so the
+	* caller can mark `preHeadInjected` and stop scanning further chunks.
+	*
+	* NOTE: This is called only when `<head ...>` lies fully inside the current
+	* tick-buffered batch. We deliberately avoid retaining arbitrary output until
+	* a future chunk completes `<head ...>`, which would delay TTFB and complicate
+	* the existing `</head>` injection path. In practice React Fizz emits the
+	* opening shell as a single batch.
+	*/
+	const spliceAfterHeadOpen = (chunk) => {
+		if (preHeadInjected) return {
+			chunk,
+			spliced: false
+		};
+		const insertion = readPreHeadInsertion();
+		if (!insertion) return {
+			chunk,
+			spliced: false
+		};
+		const match = HEAD_OPEN_RE.exec(chunk);
+		if (!match) return {
+			chunk,
+			spliced: false
+		};
+		const insertAt = match.index + match[0].length;
+		return {
+			chunk: chunk.slice(0, insertAt) + insertion + chunk.slice(insertAt),
+			spliced: true
+		};
+	};
+	const flushBuffered = (controller, final = false) => {
+		if (buffered.length === 0 && !pendingHtml) return;
+		const rawHtml = pendingHtml + buffered.join("");
+		buffered = [];
+		pendingHtml = "";
+		const split = final || !hasInlineCssManifest ? {
+			complete: rawHtml,
+			trailing: ""
+		} : splitTrailingInlineCssRewriteBoundary(rawHtml);
+		if (split.trailing) pendingHtml = split.trailing;
+		if (!split.complete) return;
+		if (injected && insertsPerFlush) emitInsertion(controller);
+		const preparedHtml = fixPreloadAs(split.complete);
+		const inlineCssResult = hasInlineCssManifest ? rewriteInlineCssStylesheetLinks(preparedHtml, inlineCssManifest, inlineCssPrependCss, inlineCssScriptNonce) : {
+			html: preparedHtml,
+			consumedPrependCss: false
+		};
+		if (inlineCssResult.consumedPrependCss) inlineCssPrependCss = "";
+		let working = inlineCssResult.html;
+		if (!preHeadInjected) {
+			const result = spliceAfterHeadOpen(working);
+			if (result.spliced) {
+				working = result.chunk;
+				preHeadInjected = true;
+			}
+		}
+		if (!injected) {
+			const headEnd = working.indexOf("</head>");
+			if (headEnd !== -1) {
+				const before = working.slice(0, headEnd);
+				const after = stripDocumentCloseSuffix(working.slice(headEnd));
+				controller.enqueue(encoder.encode(before + readInlineCssPrependFallback() + readInsertion() + after));
+				injected = true;
+				return;
+			}
+		}
+		working = stripDocumentCloseSuffix(working);
+		controller.enqueue(encoder.encode(working));
+	};
+	return new TransformStream({
+		transform(chunk, controller) {
+			buffered.push(decoder.decode(chunk, { stream: true }));
+			if (timeoutId !== null) return;
+			timeoutId = setTimeout(() => {
+				try {
+					flushBuffered(controller);
+					const rscScripts = rscEmbed.flush();
+					if (rscScripts) controller.enqueue(encoder.encode(rscScripts));
+				} catch {}
+				timeoutId = null;
+			}, 0);
+		},
+		async flush(controller) {
+			if (timeoutId !== null) {
+				clearTimeout(timeoutId);
+				timeoutId = null;
+			}
+			const remainder = decoder.decode();
+			if (remainder) buffered.push(remainder);
+			flushBuffered(controller, true);
+			if (!injected) {
+				emitInsertion(controller);
+				injected = true;
+			} else if (insertsPerFlush) emitInsertion(controller);
+			const finalScripts = await rscEmbed.finalize();
+			if (finalScripts) controller.enqueue(encoder.encode(finalScripts));
+			controller.enqueue(encoder.encode(DOCUMENT_CLOSE_SUFFIX));
+		}
+	});
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/app-history-state.js
+function isBfcacheSegmentId(id) {
+	const parsed = AppElementsWire.parseElementKey(id);
+	return parsed?.kind === "layout" || parsed?.kind === "page" || parsed?.kind === "slot" || parsed?.kind === "template";
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/app-bfcache-identity.js
+function readAppElementsMetadata(elements) {
+	try {
+		return AppElementsWire.readMetadata(elements);
+	} catch {
+		return null;
+	}
+}
+function collectBfcacheSegmentIds(elements, metadata) {
+	const ids = new Set(Object.keys(elements));
+	const parsedMetadata = metadata === void 0 ? readAppElementsMetadata(elements) : metadata;
+	for (const layoutId of parsedMetadata?.layoutIds ?? []) ids.add(layoutId);
+	for (const identityId of Object.keys(parsedMetadata?.bfcacheSegmentIdentities ?? {})) ids.add(identityId);
+	return Array.from(ids).filter(isBfcacheSegmentId);
+}
+function createInitialBfcacheMaps(options) {
+	const metadata = options.metadata;
+	const bfcacheIds = {};
+	for (const id of collectBfcacheSegmentIds(options.elements, metadata)) bfcacheIds[id] = "0";
+	return {
+		bfcacheIds,
+		identities: metadata.bfcacheSegmentIdentities
+	};
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/app-browser-hydration.js
+var RSC_FORM_STATE_GLOBAL = "__VINEXT_RSC_FORM_STATE__";
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/app-client-reference-preloader.js
+var resolvedPreload = Promise.resolve();
+function createClientReferencePreloader(options) {
+	let allReferencesPreloaded = false;
+	let allReferencesPreloadPromise = null;
+	const preloadedReferences = /* @__PURE__ */ new Set();
+	const referencePreloadPromises = /* @__PURE__ */ new Map();
+	function preloadReference(id, clientRequire) {
+		if (preloadedReferences.has(id)) return resolvedPreload;
+		const existing = referencePreloadPromises.get(id);
+		if (existing) return existing;
+		const preloadPromise = clientRequire(id).catch((error) => {
+			options.onPreloadError?.(id, error);
+		}).then(() => {
+			preloadedReferences.add(id);
+		}).finally(() => {
+			referencePreloadPromises.delete(id);
+		});
+		referencePreloadPromises.set(id, preloadPromise);
+		return preloadPromise;
+	}
+	function preloadReferenceSet(referenceIds, refs, clientRequire) {
+		const pending = [];
+		for (const id of referenceIds) if (Object.hasOwn(refs, id)) pending.push(preloadReference(id, clientRequire));
+		if (pending.length === 0) return resolvedPreload;
+		return Promise.all(pending).then(() => {});
+	}
+	return { preload(referenceIds) {
+		const refs = options.getReferences();
+		const clientRequire = options.getClientRequire();
+		if (!refs || !clientRequire) return resolvedPreload;
+		if (referenceIds) return preloadReferenceSet(referenceIds, refs, clientRequire);
+		if (allReferencesPreloaded) return resolvedPreload;
+		if (allReferencesPreloadPromise) return allReferencesPreloadPromise;
+		allReferencesPreloadPromise = preloadReferenceSet(Object.keys(refs), refs, clientRequire).then(() => {
+			allReferencesPreloaded = true;
+		}).finally(() => {
+			allReferencesPreloadPromise = null;
+		});
+		return allReferencesPreloadPromise;
+	} };
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/defer-until-stream-consumed.js
+/**
+* Defers cleanup until the downstream consumer drains or cancels the stream.
+*/
+function deferUntilStreamConsumed(stream, onFlush) {
+	let called = false;
+	const once = () => {
+		if (!called) {
+			called = true;
+			onFlush();
+		}
+	};
+	const cleanup = new TransformStream({ flush() {
+		once();
+	} });
+	const reader = stream.pipeThrough(cleanup).getReader();
+	return new ReadableStream({
+		pull(controller) {
+			return reader.read().then(({ done, value }) => {
+				if (done) controller.close();
+				else controller.enqueue(value);
+			}, (error) => {
+				once();
+				controller.error(error);
+			});
+		},
+		cancel(reason) {
+			once();
+			return reader.cancel(reason);
+		}
+	});
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/unified-request-context.js
+var _REQUEST_CONTEXT_ALS_KEY = Symbol.for("vinext.requestContext.als");
+var _g$2 = globalThis;
+var _als$2 = getOrCreateAls("vinext.unifiedRequestContext.als");
+function _getInheritedExecutionContext() {
+	const unifiedStore = _als$2.getStore();
+	if (unifiedStore) return unifiedStore.executionContext;
+	return _g$2[_REQUEST_CONTEXT_ALS_KEY]?.getStore() ?? null;
+}
+/**
+* Create a fresh `UnifiedRequestContext` with defaults for all fields.
+* Pass partial overrides for the fields you need to pre-populate.
+*/
+function createRequestContext(opts) {
+	return {
+		headersContext: null,
+		actionRevalidationKind: 0,
+		pendingRevalidatedTags: /* @__PURE__ */ new Set(),
+		pendingRevalidations: /* @__PURE__ */ new Set(),
+		dynamicUsageDetected: false,
+		renderRequestApiUsage: /* @__PURE__ */ new Set(),
+		connectionProbe: null,
+		invalidDynamicUsageError: null,
+		pendingSetCookies: [],
+		draftModeCookieHeader: null,
+		phase: "render",
+		i18nContext: null,
+		serverContext: null,
+		serverInsertedHTMLCallbacks: [],
+		requestScopedCacheLife: null,
+		unstableCacheObservations: /* @__PURE__ */ new Map(),
+		unstableCacheRevalidation: "foreground",
+		_privateCache: null,
+		cacheableFetchUrls: /* @__PURE__ */ new Set(),
+		currentRequestTags: [],
+		currentFetchSoftTags: [],
+		currentFetchCacheMode: null,
+		currentForceDynamicFetchDefault: false,
+		dynamicFetchUrls: /* @__PURE__ */ new Set(),
+		refreshStaleFetchesInForeground: false,
+		isFetchDedupeActive: false,
+		currentFetchDedupeEntries: /* @__PURE__ */ new Map(),
+		executionContext: _getInheritedExecutionContext(),
+		requestCache: /* @__PURE__ */ new WeakMap(),
+		afterContext: {
+			callbacks: [],
+			responseClosed: false,
+			pendingCallbacks: 0,
+			pendingPromises: 0,
+			completion: null,
+			resolveCompletion: null
+		},
+		ssrContext: null,
+		ssrHeadChildren: [],
+		documentInitialHead: [],
+		rootParams: null,
+		...opts
+	};
+}
+function runWithUnifiedStateMutation(mutate, fn) {
+	const parentCtx = _als$2.getStore();
+	if (!parentCtx) return fn();
+	const childCtx = { ...parentCtx };
+	mutate(childCtx);
+	return _als$2.run(childCtx, fn);
+}
+/**
+* Get the current unified request context.
+* Returns the ALS store when inside a `runWithRequestContext()` scope,
+* or a fresh detached context otherwise. Unlike the legacy per-shim fallback
+* singletons, this detached value is ephemeral — mutations do not persist
+* across calls. This is intentional to prevent state leakage outside request
+* scopes.
+*
+* Only direct callers observe this detached fallback. Shim `_getState()`
+* helpers should continue to gate on `isInsideUnifiedScope()` and fall back
+* to their standalone ALS/fallback singletons outside the unified scope.
+* If called inside a standalone `runWithExecutionContext()` scope, the
+* detached context still reflects that inherited `executionContext`.
+*/
+function getRequestContext() {
+	return _als$2.getStore() ?? createRequestContext();
+}
+/**
+* Check whether the current execution is inside a `runWithRequestContext()` scope.
+* Shim modules use this to decide whether to read from the unified store
+* or fall back to their own standalone ALS.
+*/
+function isInsideUnifiedScope() {
+	return _als$2.getStore() != null;
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/root-params.js
+var _FALLBACK_KEY$1 = Symbol.for("vinext.rootParams.fallback");
+var _g$1 = globalThis;
+var _als$1 = getOrCreateAls("vinext.rootParams.als");
+getOrCreateAls("vinext.rootParams.usage.als");
+_g$1[_FALLBACK_KEY$1] ??= { rootParams: null };
+function runWithRootParamsScope(params, fn) {
+	if (isInsideUnifiedScope()) return runWithUnifiedStateMutation((ctx) => {
+		ctx.rootParams = params;
+	}, fn);
+	else return _als$1.run({ rootParams: params }, fn);
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/navigation-state.js
+/**
+* Server-only navigation state backed by AsyncLocalStorage.
+*
+* This module provides request-scoped isolation for navigation context
+* and useServerInsertedHTML callbacks. Without ALS, concurrent requests
+* on Cloudflare Workers would share module-level state and leak data
+* (pathnames, params, CSS-in-JS styles) between requests.
+*
+* This module is server-only — it imports node:async_hooks and must NOT
+* be bundled for the browser. The dual-environment navigation.ts shim
+* uses a registration pattern so it works in both environments.
+*/
+var _FALLBACK_KEY = Symbol.for("vinext.navigation.fallback");
+var _g = globalThis;
+var _als = getOrCreateAls("vinext.navigation.als");
+var _fallbackState = _g[_FALLBACK_KEY] ??= {
+	serverContext: null,
+	serverInsertedHTMLCallbacks: []
+};
+function _getState() {
+	if (isInsideUnifiedScope()) return getRequestContext();
+	return _als.getStore() ?? _fallbackState;
+}
+function runWithNavigationContext(fn) {
+	if (isInsideUnifiedScope()) return runWithUnifiedStateMutation((uCtx) => {
+		uCtx.serverContext = null;
+		uCtx.serverInsertedHTMLCallbacks = [];
+	}, fn);
+	return _als.run({
+		serverContext: null,
+		serverInsertedHTMLCallbacks: []
+	}, fn);
+}
+var _accessors = {
+	getServerContext() {
+		return _getState().serverContext;
+	},
+	setServerContext(ctx) {
+		_getState().serverContext = ctx;
+	},
+	getInsertedHTMLCallbacks() {
+		return _getState().serverInsertedHTMLCallbacks;
+	},
+	clearInsertedHTMLCallbacks() {
+		_getState().serverInsertedHTMLCallbacks = [];
+	}
+};
+_registerStateAccessors(_accessors);
+globalThis[GLOBAL_ACCESSORS_KEY] = _accessors;
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/before-interactive-context.js
+var BeforeInteractiveContext = React.createContext(null);
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/before-interactive-head.js
+var VALID_ATTR_NAME = /^[a-zA-Z][\w.-]*$/;
+var EVENT_HANDLER_ATTR_NAME = /^on/i;
+/**
+* Render captured `<Script strategy="beforeInteractive">` scripts to HTML,
+* ready to splice immediately after `<head ...>` opens. Each entry has already
+* had its inline content escaped via `escapeInlineContent(..., "script")`
+* inside the Script shim, so this function only quotes the attributes that
+* actually go on the tag (id, src, nonce, plus the residual passthroughs).
+*
+* Keeping this function in its own module makes the boundary obvious: anything
+* passed through here is being concatenated directly into HTML; treat the
+* inputs accordingly.
+*/
+function renderBeforeInteractiveInlineScripts(scripts) {
+	if (scripts.length === 0) return "";
+	let html = "";
+	for (const script of scripts) {
+		let attrs = "";
+		if (script.id) attrs += ` id="${escapeHtmlAttr(script.id)}"`;
+		if (script.src) attrs += ` src="${escapeHtmlAttr(script.src)}"`;
+		attrs += createNonceAttribute(script.nonce);
+		if (script.attributes) for (const [key, value] of Object.entries(script.attributes)) {
+			if (!VALID_ATTR_NAME.test(key)) continue;
+			if (EVENT_HANDLER_ATTR_NAME.test(key)) continue;
+			if (key === "data-nscript") continue;
+			if (value === true) attrs += ` ${key}`;
+			else if (typeof value === "string") attrs += ` ${key}="${escapeHtmlAttr(value)}"`;
+		}
+		attrs += ` data-nscript="beforeInteractive"`;
+		html += `<script${attrs}>${script.innerHTML ?? ""}<\/script>`;
+	}
+	return html;
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/dev-initial-server-error.js
+var INITIAL_DEV_SERVER_ERRORS_GLOBAL = "__VINEXT_INITIAL_DEV_ERRORS__";
+function stringifyThrownValue(error) {
+	if (typeof error === "string") return error;
+	try {
+		return String(error);
+	} catch {
+		return Object.prototype.toString.call(error);
+	}
+}
+function createInitialDevServerErrorPayload(error) {
+	if (error instanceof Error) return {
+		message: error.message,
+		name: error.name || void 0,
+		stack: error.stack || void 0
+	};
+	return { message: stringifyThrownValue(error) };
+}
+function createInitialDevServerErrorScript(error, scriptNonce, nodeEnv = "production") {
+	if (error == null || nodeEnv === "production") return "";
+	const globalRef = "self[" + safeJsonStringify(INITIAL_DEV_SERVER_ERRORS_GLOBAL) + "]";
+	return createInlineScriptTag(`${globalRef}=${globalRef}||[];${globalRef}.push(${safeJsonStringify(createInitialDevServerErrorPayload(error))})`, scriptNonce);
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/shims/url-safety.js
+/**
+* Shared URL safety utilities for Link, Form, and navigation shims.
+*
+* Centralizes dangerous URI scheme detection so all components and
+* navigation functions use the same validation logic.
+*/
+/**
+* Detect dangerous URI schemes that should never be navigated to.
+*
+* Adapted from Next.js's javascript URL detector:
+* packages/next/src/client/lib/javascript-url.ts
+* https://github.com/vercel/next.js/blob/canary/packages/next/src/client/lib/javascript-url.ts
+*
+* URL parsing ignores leading C0 control characters / spaces, and treats
+* embedded tab/newline characters in the scheme as insignificant. We mirror
+* that behavior here so obfuscated values like `java\nscript:` and
+* `\x00javascript:` are still blocked.
+*
+* Vinext intentionally extends this handling to `data:` and `vbscript:` too,
+* since both are also dangerous navigation targets.
+*/
+var LEADING_IGNORED = "[\\u0000-\\u001F \\u200B\\uFEFF]*";
+var SCHEME_IGNORED = "[\\r\\n\\t]*";
+function buildDangerousSchemeRegex(scheme) {
+	const chars = scheme.split("").join(SCHEME_IGNORED);
+	return new RegExp(`^${LEADING_IGNORED}${chars}${SCHEME_IGNORED}:`, "i");
+}
+var DANGEROUS_SCHEME_RES = [
+	buildDangerousSchemeRegex("javascript"),
+	buildDangerousSchemeRegex("data"),
+	buildDangerousSchemeRegex("vbscript")
+];
+var DANGEROUS_URL_BLOCK_MESSAGE = "Next.js has blocked a javascript: URL as a security precaution.";
+function isDangerousScheme(url) {
+	const str = "" + url;
+	return DANGEROUS_SCHEME_RES.some((re) => re.test(str));
+}
+/**
+* Emit a `console.error` matching Next.js's blocked-navigation message.
+*
+* Next.js's `router.push` / `router.replace` / `router.prefetch` (and the
+* Pages Router equivalents) throw an `Error` when the URL has a dangerous
+* scheme. In the browser, React's event-handler runtime catches that throw
+* and reports it through `console.error`, which is what the Next.js E2E
+* `test/e2e/app-dir/javascript-urls` suite asserts on.
+*
+* Vinext's navigation guards run synchronously inside async event handlers
+* (e.g. Link's `void handleClick(event)`), so a raw throw is dropped on the
+* floor instead of bubbling up to React. Emitting the same `console.error`
+* explicitly keeps observable behaviour aligned with Next.js — the test
+* matcher uses `.includes("has blocked a javascript: URL as a security
+* precaution.")` so any message containing that phrase satisfies it.
+*
+* Source reference (Next.js):
+*   packages/next/src/client/components/segment-cache/navigation.ts:537
+*   packages/next/src/client/components/app-router-instance.ts:345,402,442,460
+*   packages/next/src/shared/lib/router/router.ts:1025,1057
+*/
+function reportBlockedDangerousNavigation() {
+	console.error(DANGEROUS_URL_BLOCK_MESSAGE);
+}
+function assertSafeNavigationUrl(url, ErrorConstructor = Error) {
+	if (isDangerousScheme(url)) {
+		reportBlockedDangerousNavigation();
+		throw new ErrorConstructor(DANGEROUS_URL_BLOCK_MESSAGE);
+	}
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/vinext@1.0.0-beta.5_@vitejs_b79f96eac0df69dff29a3f5c3c8024f5/node_modules/vinext/dist/server/app-ssr-router-instance.js
+function validateNavigationHref(href) {
+	assertSafeNavigationUrl(href);
+}
+var ssrAppRouterInstance = {
+	bfcacheId: "0",
+	back() {},
+	forward() {},
+	refresh() {},
+	push(href, _options) {
+		validateNavigationHref(href);
+	},
+	replace(href, _options) {
+		validateNavigationHref(href);
+	},
+	prefetch(href) {
+		validateNavigationHref(href);
+	}
+};
+//#endregion
+//#region ../../../node_modules/.pnpm/@vitejs+plugin-rsc@0.5.26_r_d7be5b5d64a64a218ac22ba955ebe0d2/node_modules/@vitejs/plugin-rsc/dist/dist-rz-Bnebz.js
+function safeFunctionCast(f) {
+	return f;
+}
+function memoize(f, options) {
+	const keyFn = options?.keyFn ?? ((...args) => args[0]);
+	const cache = options?.cache ?? /* @__PURE__ */ new Map();
+	return safeFunctionCast(function(...args) {
+		const key = keyFn(...args);
+		const value = cache.get(key);
+		if (typeof value !== "undefined") return value;
+		const newValue = f.apply(this, args);
+		cache.set(key, newValue);
+		return newValue;
+	});
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/@vitejs+plugin-rsc@0.5.26_r_d7be5b5d64a64a218ac22ba955ebe0d2/node_modules/@vitejs/plugin-rsc/dist/shared-BViDMJTQ.js
+function removeReferenceCacheTag(id) {
+	return id.split("$$cache=")[0];
+}
+function setInternalRequire() {
+	globalThis.__vite_rsc_require__ = (id) => {
+		if (id.startsWith("$$server:")) {
+			id = id.slice(9);
+			return globalThis.__vite_rsc_server_require__(id);
+		}
+		return globalThis.__vite_rsc_client_require__(id);
+	};
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/@vitejs+plugin-rsc@0.5.26_r_d7be5b5d64a64a218ac22ba955ebe0d2/node_modules/@vitejs/plugin-rsc/dist/core/ssr.js
+var init = false;
+function setRequireModule(options) {
+	if (init) return;
+	init = true;
+	const requireModule = memoize((id) => {
+		return options.load(removeReferenceCacheTag(id));
+	});
+	globalThis.__vite_rsc_client_require__ = requireModule;
+	setInternalRequire();
+}
+function createServerConsumerManifest() {
+	return {};
+}
+//#endregion
+//#region ../../../node_modules/.pnpm/react-server-dom-webpack@19_30d794e78d18a882de9dd6dc6e476909/node_modules/react-server-dom-webpack/cjs/react-server-dom-webpack-client.edge.production.js
+/**
+* @license React
+* react-server-dom-webpack-client.edge.production.js
+*
+* Copyright (c) Meta Platforms, Inc. and affiliates.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+var require_react_server_dom_webpack_client_edge_production = /* @__PURE__ */ __commonJSMin(((exports) => {
+	var ReactDOM$1 = __require("react-dom"), decoderOptions = { stream: !0 }, hasOwnProperty = Object.prototype.hasOwnProperty;
+	function resolveClientReference(bundlerConfig, metadata) {
+		if (bundlerConfig) {
+			var moduleExports = bundlerConfig[metadata[0]];
+			if (bundlerConfig = moduleExports && moduleExports[metadata[2]]) moduleExports = bundlerConfig.name;
+			else {
+				bundlerConfig = moduleExports && moduleExports["*"];
+				if (!bundlerConfig) throw Error("Could not find the module \"" + metadata[0] + "\" in the React Server Consumer Manifest. This is probably a bug in the React Server Components bundler.");
+				moduleExports = metadata[2];
+			}
+			return 4 === metadata.length ? [
+				bundlerConfig.id,
+				bundlerConfig.chunks,
+				moduleExports,
+				1
+			] : [
+				bundlerConfig.id,
+				bundlerConfig.chunks,
+				moduleExports
+			];
+		}
+		return metadata;
+	}
+	function resolveServerReference(bundlerConfig, id) {
+		var name = "", resolvedModuleData = bundlerConfig[id];
+		if (resolvedModuleData) name = resolvedModuleData.name;
+		else {
+			var idx = id.lastIndexOf("#");
+			-1 !== idx && (name = id.slice(idx + 1), resolvedModuleData = bundlerConfig[id.slice(0, idx)]);
+			if (!resolvedModuleData) throw Error("Could not find the module \"" + id + "\" in the React Server Manifest. This is probably a bug in the React Server Components bundler.");
+		}
+		return resolvedModuleData.async ? [
+			resolvedModuleData.id,
+			resolvedModuleData.chunks,
+			name,
+			1
+		] : [
+			resolvedModuleData.id,
+			resolvedModuleData.chunks,
+			name
+		];
+	}
+	var chunkCache = /* @__PURE__ */ new Map();
+	function requireAsyncModule(id) {
+		var promise = __vite_rsc_require__(id);
+		if ("function" !== typeof promise.then || "fulfilled" === promise.status) return null;
+		promise.then(function(value) {
+			promise.status = "fulfilled";
+			promise.value = value;
+		}, function(reason) {
+			promise.status = "rejected";
+			promise.reason = reason;
+		});
+		return promise;
+	}
+	function ignoreReject() {}
+	function preloadModule(metadata) {
+		for (var chunks = metadata[1], promises = [], i = 0; i < chunks.length;) {
+			var chunkId = chunks[i++];
+			chunks[i++];
+			var entry = chunkCache.get(chunkId);
+			if (void 0 === entry) {
+				entry = __webpack_chunk_load__(chunkId);
+				promises.push(entry);
+				var resolve = chunkCache.set.bind(chunkCache, chunkId, null);
+				entry.then(resolve, ignoreReject);
+				chunkCache.set(chunkId, entry);
+			} else null !== entry && promises.push(entry);
+		}
+		return 4 === metadata.length ? 0 === promises.length ? requireAsyncModule(metadata[0]) : Promise.all(promises).then(function() {
+			return requireAsyncModule(metadata[0]);
+		}) : 0 < promises.length ? Promise.all(promises) : null;
+	}
+	function requireModule(metadata) {
+		var moduleExports = __vite_rsc_require__(metadata[0]);
+		if (4 === metadata.length && "function" === typeof moduleExports.then) if ("fulfilled" === moduleExports.status) moduleExports = moduleExports.value;
+		else throw moduleExports.reason;
+		if ("*" === metadata[2]) return moduleExports;
+		if ("" === metadata[2]) return moduleExports.__esModule ? moduleExports.default : moduleExports;
+		if (hasOwnProperty.call(moduleExports, metadata[2])) return moduleExports[metadata[2]];
+	}
+	function prepareDestinationWithChunks(moduleLoading, chunks, nonce$jscomp$0) {
+		if (null !== moduleLoading) for (var i = 1; i < chunks.length; i += 2) {
+			var nonce = nonce$jscomp$0, JSCompiler_temp_const = ReactDOMSharedInternals.d, JSCompiler_temp_const$jscomp$0 = JSCompiler_temp_const.X, JSCompiler_temp_const$jscomp$1 = moduleLoading.prefix + chunks[i];
+			var JSCompiler_inline_result = moduleLoading.crossOrigin;
+			JSCompiler_inline_result = "string" === typeof JSCompiler_inline_result ? "use-credentials" === JSCompiler_inline_result ? JSCompiler_inline_result : "" : void 0;
+			JSCompiler_temp_const$jscomp$0.call(JSCompiler_temp_const, JSCompiler_temp_const$jscomp$1, {
+				crossOrigin: JSCompiler_inline_result,
+				nonce
+			});
+		}
+	}
+	var ReactDOMSharedInternals = ReactDOM$1.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, REACT_ELEMENT_TYPE = Symbol.for("react.transitional.element"), REACT_LAZY_TYPE = Symbol.for("react.lazy"), MAYBE_ITERATOR_SYMBOL = Symbol.iterator;
+	function getIteratorFn(maybeIterable) {
+		if (null === maybeIterable || "object" !== typeof maybeIterable) return null;
+		maybeIterable = MAYBE_ITERATOR_SYMBOL && maybeIterable[MAYBE_ITERATOR_SYMBOL] || maybeIterable["@@iterator"];
+		return "function" === typeof maybeIterable ? maybeIterable : null;
+	}
+	var ASYNC_ITERATOR = Symbol.asyncIterator, isArrayImpl = Array.isArray, getPrototypeOf = Object.getPrototypeOf, ObjectPrototype = Object.prototype, knownServerReferences = /* @__PURE__ */ new WeakMap();
+	function serializeNumber(number) {
+		return Number.isFinite(number) ? 0 === number && -Infinity === 1 / number ? "$-0" : number : Infinity === number ? "$Infinity" : -Infinity === number ? "$-Infinity" : "$NaN";
+	}
+	function processReply(root, formFieldPrefix, temporaryReferences, resolve, reject) {
+		function serializeTypedArray(tag, typedArray) {
+			typedArray = new Blob([new Uint8Array(typedArray.buffer, typedArray.byteOffset, typedArray.byteLength)]);
+			var blobId = nextPartId++;
+			null === formData && (formData = new FormData());
+			formData.append(formFieldPrefix + blobId, typedArray);
+			return "$" + tag + blobId.toString(16);
+		}
+		function serializeBinaryReader(reader) {
+			function progress(entry) {
+				entry.done ? (entry = nextPartId++, data.append(formFieldPrefix + entry, new Blob(buffer)), data.append(formFieldPrefix + streamId, "\"$o" + entry.toString(16) + "\""), data.append(formFieldPrefix + streamId, "C"), pendingParts--, 0 === pendingParts && resolve(data)) : (buffer.push(entry.value), reader.read(new Uint8Array(1024)).then(progress, reject));
+			}
+			null === formData && (formData = new FormData());
+			var data = formData;
+			pendingParts++;
+			var streamId = nextPartId++, buffer = [];
+			reader.read(new Uint8Array(1024)).then(progress, reject);
+			return "$r" + streamId.toString(16);
+		}
+		function serializeReader(reader) {
+			function progress(entry) {
+				if (entry.done) data.append(formFieldPrefix + streamId, "C"), pendingParts--, 0 === pendingParts && resolve(data);
+				else try {
+					var partJSON = JSON.stringify(entry.value, resolveToJSON);
+					data.append(formFieldPrefix + streamId, partJSON);
+					reader.read().then(progress, reject);
+				} catch (x) {
+					reject(x);
+				}
+			}
+			null === formData && (formData = new FormData());
+			var data = formData;
+			pendingParts++;
+			var streamId = nextPartId++;
+			reader.read().then(progress, reject);
+			return "$R" + streamId.toString(16);
+		}
+		function serializeReadableStream(stream) {
+			try {
+				var binaryReader = stream.getReader({ mode: "byob" });
+			} catch (x) {
+				return serializeReader(stream.getReader());
+			}
+			return serializeBinaryReader(binaryReader);
+		}
+		function serializeAsyncIterable(iterable, iterator) {
+			function progress(entry) {
+				if (entry.done) {
+					if (void 0 === entry.value) data.append(formFieldPrefix + streamId, "C");
+					else try {
+						var partJSON = JSON.stringify(entry.value, resolveToJSON);
+						data.append(formFieldPrefix + streamId, "C" + partJSON);
+					} catch (x) {
+						reject(x);
+						return;
+					}
+					pendingParts--;
+					0 === pendingParts && resolve(data);
+				} else try {
+					var partJSON$21 = JSON.stringify(entry.value, resolveToJSON);
+					data.append(formFieldPrefix + streamId, partJSON$21);
+					iterator.next().then(progress, reject);
+				} catch (x$22) {
+					reject(x$22);
+				}
+			}
+			null === formData && (formData = new FormData());
+			var data = formData;
+			pendingParts++;
+			var streamId = nextPartId++;
+			iterable = iterable === iterator;
+			iterator.next().then(progress, reject);
+			return "$" + (iterable ? "x" : "X") + streamId.toString(16);
+		}
+		function resolveToJSON(key, value) {
+			if (null === value) return null;
+			if ("object" === typeof value) {
+				switch (value.$$typeof) {
+					case REACT_ELEMENT_TYPE:
+						if (void 0 !== temporaryReferences && -1 === key.indexOf(":")) {
+							var parentReference = writtenObjects.get(this);
+							if (void 0 !== parentReference) return temporaryReferences.set(parentReference + ":" + key, value), "$T";
+						}
+						throw Error("React Element cannot be passed to Server Functions from the Client without a temporary reference set. Pass a TemporaryReferenceSet to the options.");
+					case REACT_LAZY_TYPE:
+						parentReference = value._payload;
+						var init = value._init;
+						null === formData && (formData = new FormData());
+						pendingParts++;
+						try {
+							var resolvedModel = init(parentReference), lazyId = nextPartId++, partJSON = serializeModel(resolvedModel, lazyId);
+							formData.append(formFieldPrefix + lazyId, partJSON);
+							return "$" + lazyId.toString(16);
+						} catch (x) {
+							if ("object" === typeof x && null !== x && "function" === typeof x.then) {
+								pendingParts++;
+								var lazyId$23 = nextPartId++;
+								parentReference = function() {
+									try {
+										var partJSON$24 = serializeModel(value, lazyId$23), data$25 = formData;
+										data$25.append(formFieldPrefix + lazyId$23, partJSON$24);
+										pendingParts--;
+										0 === pendingParts && resolve(data$25);
+									} catch (reason) {
+										reject(reason);
+									}
+								};
+								x.then(parentReference, parentReference);
+								return "$" + lazyId$23.toString(16);
+							}
+							reject(x);
+							return null;
+						} finally {
+							pendingParts--;
+						}
+				}
+				parentReference = writtenObjects.get(value);
+				if ("function" === typeof value.then) {
+					if (void 0 !== parentReference) if (modelRoot === value) modelRoot = null;
+					else return parentReference;
+					null === formData && (formData = new FormData());
+					pendingParts++;
+					var promiseId = nextPartId++;
+					key = "$@" + promiseId.toString(16);
+					writtenObjects.set(value, key);
+					value.then(function(partValue) {
+						try {
+							var previousReference = writtenObjects.get(partValue);
+							var partJSON$27 = void 0 !== previousReference ? JSON.stringify(previousReference) : serializeModel(partValue, promiseId);
+							partValue = formData;
+							partValue.append(formFieldPrefix + promiseId, partJSON$27);
+							pendingParts--;
+							0 === pendingParts && resolve(partValue);
+						} catch (reason) {
+							reject(reason);
+						}
+					}, reject);
+					return key;
+				}
+				if (void 0 !== parentReference) if (modelRoot === value) modelRoot = null;
+				else return parentReference;
+				else -1 === key.indexOf(":") && (parentReference = writtenObjects.get(this), void 0 !== parentReference && (key = parentReference + ":" + key, writtenObjects.set(value, key), void 0 !== temporaryReferences && temporaryReferences.set(key, value)));
+				if (isArrayImpl(value)) return value;
+				if (value instanceof FormData) {
+					null === formData && (formData = new FormData());
+					var data$31 = formData;
+					key = nextPartId++;
+					var prefix = formFieldPrefix + "_" + key + "_";
+					value.forEach(function(originalValue, originalKey) {
+						data$31.append(prefix + originalKey, originalValue);
+					});
+					return "$K" + key.toString(16);
+				}
+				if (value instanceof Map) return key = nextPartId++, parentReference = serializeModel(Array.from(value), key), null === formData && (formData = new FormData()), formData.append(formFieldPrefix + key, parentReference), "$Q" + key.toString(16);
+				if (value instanceof Set) return key = nextPartId++, parentReference = serializeModel(Array.from(value), key), null === formData && (formData = new FormData()), formData.append(formFieldPrefix + key, parentReference), "$W" + key.toString(16);
+				if (value instanceof ArrayBuffer) return key = new Blob([value]), parentReference = nextPartId++, null === formData && (formData = new FormData()), formData.append(formFieldPrefix + parentReference, key), "$A" + parentReference.toString(16);
+				if (value instanceof Int8Array) return serializeTypedArray("O", value);
+				if (value instanceof Uint8Array) return serializeTypedArray("o", value);
+				if (value instanceof Uint8ClampedArray) return serializeTypedArray("U", value);
+				if (value instanceof Int16Array) return serializeTypedArray("S", value);
+				if (value instanceof Uint16Array) return serializeTypedArray("s", value);
+				if (value instanceof Int32Array) return serializeTypedArray("L", value);
+				if (value instanceof Uint32Array) return serializeTypedArray("l", value);
+				if (value instanceof Float32Array) return serializeTypedArray("G", value);
+				if (value instanceof Float64Array) return serializeTypedArray("g", value);
+				if (value instanceof BigInt64Array) return serializeTypedArray("M", value);
+				if (value instanceof BigUint64Array) return serializeTypedArray("m", value);
+				if (value instanceof DataView) return serializeTypedArray("V", value);
+				if ("function" === typeof Blob && value instanceof Blob) return null === formData && (formData = new FormData()), key = nextPartId++, formData.append(formFieldPrefix + key, value), "$B" + key.toString(16);
+				if (key = getIteratorFn(value)) return parentReference = key.call(value), parentReference === value ? (key = nextPartId++, parentReference = serializeModel(Array.from(parentReference), key), null === formData && (formData = new FormData()), formData.append(formFieldPrefix + key, parentReference), "$i" + key.toString(16)) : Array.from(parentReference);
+				if ("function" === typeof ReadableStream && value instanceof ReadableStream) return serializeReadableStream(value);
+				key = value[ASYNC_ITERATOR];
+				if ("function" === typeof key) return serializeAsyncIterable(value, key.call(value));
+				key = getPrototypeOf(value);
+				if (key !== ObjectPrototype && (null === key || null !== getPrototypeOf(key))) {
+					if (void 0 === temporaryReferences) throw Error("Only plain objects, and a few built-ins, can be passed to Server Functions. Classes or null prototypes are not supported.");
+					return "$T";
+				}
+				return value;
+			}
+			if ("string" === typeof value) {
+				if ("Z" === value[value.length - 1] && this[key] instanceof Date) return "$D" + value;
+				key = "$" === value[0] ? "$" + value : value;
+				return key;
+			}
+			if ("boolean" === typeof value) return value;
+			if ("number" === typeof value) return serializeNumber(value);
+			if ("undefined" === typeof value) return "$undefined";
+			if ("function" === typeof value) {
+				parentReference = knownServerReferences.get(value);
+				if (void 0 !== parentReference) {
+					key = writtenObjects.get(value);
+					if (void 0 !== key) return key;
+					key = JSON.stringify({
+						id: parentReference.id,
+						bound: parentReference.bound
+					}, resolveToJSON);
+					null === formData && (formData = new FormData());
+					parentReference = nextPartId++;
+					formData.set(formFieldPrefix + parentReference, key);
+					key = "$h" + parentReference.toString(16);
+					writtenObjects.set(value, key);
+					return key;
+				}
+				if (void 0 !== temporaryReferences && -1 === key.indexOf(":") && (parentReference = writtenObjects.get(this), void 0 !== parentReference)) return temporaryReferences.set(parentReference + ":" + key, value), "$T";
+				throw Error("Client Functions cannot be passed directly to Server Functions. Only Functions passed from the Server can be passed back again.");
+			}
+			if ("symbol" === typeof value) {
+				if (void 0 !== temporaryReferences && -1 === key.indexOf(":") && (parentReference = writtenObjects.get(this), void 0 !== parentReference)) return temporaryReferences.set(parentReference + ":" + key, value), "$T";
+				throw Error("Symbols cannot be passed to a Server Function without a temporary reference set. Pass a TemporaryReferenceSet to the options.");
+			}
+			if ("bigint" === typeof value) return "$n" + value.toString(10);
+			throw Error("Type " + typeof value + " is not supported as an argument to a Server Function.");
+		}
+		function serializeModel(model, id) {
+			"object" === typeof model && null !== model && (id = "$" + id.toString(16), writtenObjects.set(model, id), void 0 !== temporaryReferences && temporaryReferences.set(id, model));
+			modelRoot = model;
+			return JSON.stringify(model, resolveToJSON);
+		}
+		var nextPartId = 1, pendingParts = 0, formData = null, writtenObjects = /* @__PURE__ */ new WeakMap(), modelRoot = root, json = serializeModel(root, 0);
+		null === formData ? resolve(json) : (formData.set(formFieldPrefix + "0", json), 0 === pendingParts && resolve(formData));
+		return function() {
+			0 < pendingParts && (pendingParts = 0, null === formData ? resolve(json) : resolve(formData));
+		};
+	}
+	var boundCache = /* @__PURE__ */ new WeakMap();
+	function encodeFormData(reference) {
+		var resolve, reject, thenable = new Promise(function(res, rej) {
+			resolve = res;
+			reject = rej;
+		});
+		processReply(reference, "", void 0, function(body) {
+			if ("string" === typeof body) {
+				var data = new FormData();
+				data.append("0", body);
+				body = data;
+			}
+			thenable.status = "fulfilled";
+			thenable.value = body;
+			resolve(body);
+		}, function(e) {
+			thenable.status = "rejected";
+			thenable.reason = e;
+			reject(e);
+		});
+		return thenable;
+	}
+	function defaultEncodeFormAction(identifierPrefix) {
+		var referenceClosure = knownServerReferences.get(this);
+		if (!referenceClosure) throw Error("Tried to encode a Server Action from a different instance than the encoder is from. This is a bug in React.");
+		var data = null;
+		if (null !== referenceClosure.bound) {
+			data = boundCache.get(referenceClosure);
+			data || (data = encodeFormData({
+				id: referenceClosure.id,
+				bound: referenceClosure.bound
+			}), boundCache.set(referenceClosure, data));
+			if ("rejected" === data.status) throw data.reason;
+			if ("fulfilled" !== data.status) throw data;
+			referenceClosure = data.value;
+			var prefixedData = new FormData();
+			referenceClosure.forEach(function(value, key) {
+				prefixedData.append("$ACTION_" + identifierPrefix + ":" + key, value);
+			});
+			data = prefixedData;
+			referenceClosure = "$ACTION_REF_" + identifierPrefix;
+		} else referenceClosure = "$ACTION_ID_" + referenceClosure.id;
+		return {
+			name: referenceClosure,
+			method: "POST",
+			encType: "multipart/form-data",
+			data
+		};
+	}
+	function isSignatureEqual(referenceId, numberOfBoundArgs) {
+		var referenceClosure = knownServerReferences.get(this);
+		if (!referenceClosure) throw Error("Tried to encode a Server Action from a different instance than the encoder is from. This is a bug in React.");
+		if (referenceClosure.id !== referenceId) return !1;
+		var boundPromise = referenceClosure.bound;
+		if (null === boundPromise) return 0 === numberOfBoundArgs;
+		switch (boundPromise.status) {
+			case "fulfilled": return boundPromise.value.length === numberOfBoundArgs;
+			case "pending": throw boundPromise;
+			case "rejected": throw boundPromise.reason;
+			default: throw "string" !== typeof boundPromise.status && (boundPromise.status = "pending", boundPromise.then(function(boundArgs) {
+				boundPromise.status = "fulfilled";
+				boundPromise.value = boundArgs;
+			}, function(error) {
+				boundPromise.status = "rejected";
+				boundPromise.reason = error;
+			})), boundPromise;
+		}
+	}
+	function registerBoundServerReference(reference, id, bound, encodeFormAction) {
+		knownServerReferences.has(reference) || (knownServerReferences.set(reference, {
+			id,
+			originalBind: reference.bind,
+			bound
+		}), Object.defineProperties(reference, {
+			$$FORM_ACTION: { value: void 0 === encodeFormAction ? defaultEncodeFormAction : function() {
+				var referenceClosure = knownServerReferences.get(this);
+				if (!referenceClosure) throw Error("Tried to encode a Server Action from a different instance than the encoder is from. This is a bug in React.");
+				var boundPromise = referenceClosure.bound;
+				null === boundPromise && (boundPromise = Promise.resolve([]));
+				return encodeFormAction(referenceClosure.id, boundPromise);
+			} },
+			$$IS_SIGNATURE_EQUAL: { value: isSignatureEqual },
+			bind: { value: bind }
+		}));
+	}
+	var FunctionBind = Function.prototype.bind, ArraySlice = Array.prototype.slice;
+	function bind() {
+		var referenceClosure = knownServerReferences.get(this);
+		if (!referenceClosure) return FunctionBind.apply(this, arguments);
+		var newFn = referenceClosure.originalBind.apply(this, arguments), args = ArraySlice.call(arguments, 1), boundPromise = null;
+		boundPromise = null !== referenceClosure.bound ? Promise.resolve(referenceClosure.bound).then(function(boundArgs) {
+			return boundArgs.concat(args);
+		}) : Promise.resolve(args);
+		knownServerReferences.set(newFn, {
+			id: referenceClosure.id,
+			originalBind: newFn.bind,
+			bound: boundPromise
+		});
+		Object.defineProperties(newFn, {
+			$$FORM_ACTION: { value: this.$$FORM_ACTION },
+			$$IS_SIGNATURE_EQUAL: { value: isSignatureEqual },
+			bind: { value: bind }
+		});
+		return newFn;
+	}
+	function createBoundServerReference(metaData, callServer, encodeFormAction) {
+		function action() {
+			var args = Array.prototype.slice.call(arguments);
+			return bound ? "fulfilled" === bound.status ? callServer(id, bound.value.concat(args)) : Promise.resolve(bound).then(function(boundArgs) {
+				return callServer(id, boundArgs.concat(args));
+			}) : callServer(id, args);
+		}
+		var id = metaData.id, bound = metaData.bound;
+		registerBoundServerReference(action, id, bound, encodeFormAction);
+		return action;
+	}
+	function ReactPromise(status, value, reason) {
+		this.status = status;
+		this.value = value;
+		this.reason = reason;
+	}
+	ReactPromise.prototype = Object.create(Promise.prototype);
+	ReactPromise.prototype.then = function(resolve, reject) {
+		switch (this.status) {
+			case "resolved_model":
+				initializeModelChunk(this);
+				break;
+			case "resolved_module": initializeModuleChunk(this);
+		}
+		switch (this.status) {
+			case "fulfilled":
+				"function" === typeof resolve && resolve(this.value);
+				break;
+			case "pending":
+			case "blocked":
+				"function" === typeof resolve && (null === this.value && (this.value = []), this.value.push(resolve));
+				"function" === typeof reject && (null === this.reason && (this.reason = []), this.reason.push(reject));
+				break;
+			case "halted": break;
+			default: "function" === typeof reject && reject(this.reason);
+		}
+	};
+	function readChunk(chunk) {
+		switch (chunk.status) {
+			case "resolved_model":
+				initializeModelChunk(chunk);
+				break;
+			case "resolved_module": initializeModuleChunk(chunk);
+		}
+		switch (chunk.status) {
+			case "fulfilled": return chunk.value;
+			case "pending":
+			case "blocked":
+			case "halted": throw chunk;
+			default: throw chunk.reason;
+		}
+	}
+	function wakeChunk(listeners, value, chunk) {
+		for (var i = 0; i < listeners.length; i++) {
+			var listener = listeners[i];
+			"function" === typeof listener ? listener(value) : fulfillReference(listener, value, chunk);
+		}
+	}
+	function rejectChunk(listeners, error) {
+		for (var i = 0; i < listeners.length; i++) {
+			var listener = listeners[i];
+			"function" === typeof listener ? listener(error) : rejectReference(listener, error);
+		}
+	}
+	function resolveBlockedCycle(resolvedChunk, reference) {
+		var referencedChunk = reference.handler.chunk;
+		if (null === referencedChunk) return null;
+		if (referencedChunk === resolvedChunk) return reference.handler;
+		reference = referencedChunk.value;
+		if (null !== reference) for (referencedChunk = 0; referencedChunk < reference.length; referencedChunk++) {
+			var listener = reference[referencedChunk];
+			if ("function" !== typeof listener && (listener = resolveBlockedCycle(resolvedChunk, listener), null !== listener)) return listener;
+		}
+		return null;
+	}
+	function wakeChunkIfInitialized(chunk, resolveListeners, rejectListeners) {
+		switch (chunk.status) {
+			case "fulfilled":
+				wakeChunk(resolveListeners, chunk.value, chunk);
+				break;
+			case "blocked": for (var i = 0; i < resolveListeners.length; i++) {
+				var listener = resolveListeners[i];
+				if ("function" !== typeof listener) {
+					var cyclicHandler = resolveBlockedCycle(chunk, listener);
+					if (null !== cyclicHandler) switch (fulfillReference(listener, cyclicHandler.value, chunk), resolveListeners.splice(i, 1), i--, null !== rejectListeners && (listener = rejectListeners.indexOf(listener), -1 !== listener && rejectListeners.splice(listener, 1)), chunk.status) {
+						case "fulfilled":
+							wakeChunk(resolveListeners, chunk.value, chunk);
+							return;
+						case "rejected":
+							null !== rejectListeners && rejectChunk(rejectListeners, chunk.reason);
+							return;
+					}
+				}
+			}
+			case "pending":
+				if (chunk.value) for (i = 0; i < resolveListeners.length; i++) chunk.value.push(resolveListeners[i]);
+				else chunk.value = resolveListeners;
+				if (chunk.reason) {
+					if (rejectListeners) for (resolveListeners = 0; resolveListeners < rejectListeners.length; resolveListeners++) chunk.reason.push(rejectListeners[resolveListeners]);
+				} else chunk.reason = rejectListeners;
+				break;
+			case "rejected": rejectListeners && rejectChunk(rejectListeners, chunk.reason);
+		}
+	}
+	function triggerErrorOnChunk(response, chunk, error) {
+		"pending" !== chunk.status && "blocked" !== chunk.status ? chunk.reason.error(error) : (response = chunk.reason, chunk.status = "rejected", chunk.reason = error, null !== response && rejectChunk(response, error));
+	}
+	function createResolvedIteratorResultChunk(response, value, done) {
+		return new ReactPromise("resolved_model", (done ? "{\"done\":true,\"value\":" : "{\"done\":false,\"value\":") + value + "}", response);
+	}
+	function resolveIteratorResultChunk(response, chunk, value, done) {
+		resolveModelChunk(response, chunk, (done ? "{\"done\":true,\"value\":" : "{\"done\":false,\"value\":") + value + "}");
+	}
+	function resolveModelChunk(response, chunk, value) {
+		if ("pending" !== chunk.status) chunk.reason.enqueueModel(value);
+		else {
+			var resolveListeners = chunk.value, rejectListeners = chunk.reason;
+			chunk.status = "resolved_model";
+			chunk.value = value;
+			chunk.reason = response;
+			null !== resolveListeners && (initializeModelChunk(chunk), wakeChunkIfInitialized(chunk, resolveListeners, rejectListeners));
+		}
+	}
+	function resolveModuleChunk(response, chunk, value) {
+		if ("pending" === chunk.status || "blocked" === chunk.status) {
+			response = chunk.value;
+			var rejectListeners = chunk.reason;
+			chunk.status = "resolved_module";
+			chunk.value = value;
+			chunk.reason = null;
+			null !== response && (initializeModuleChunk(chunk), wakeChunkIfInitialized(chunk, response, rejectListeners));
+		}
+	}
+	var initializingHandler = null;
+	function initializeModelChunk(chunk) {
+		var prevHandler = initializingHandler;
+		initializingHandler = null;
+		var resolvedModel = chunk.value, response = chunk.reason;
+		chunk.status = "blocked";
+		chunk.value = null;
+		chunk.reason = null;
+		try {
+			var value = JSON.parse(resolvedModel, response._fromJSON), resolveListeners = chunk.value;
+			if (null !== resolveListeners) for (chunk.value = null, chunk.reason = null, resolvedModel = 0; resolvedModel < resolveListeners.length; resolvedModel++) {
+				var listener = resolveListeners[resolvedModel];
+				"function" === typeof listener ? listener(value) : fulfillReference(listener, value, chunk);
+			}
+			if (null !== initializingHandler) {
+				if (initializingHandler.errored) throw initializingHandler.reason;
+				if (0 < initializingHandler.deps) {
+					initializingHandler.value = value;
+					initializingHandler.chunk = chunk;
+					return;
+				}
+			}
+			chunk.status = "fulfilled";
+			chunk.value = value;
+		} catch (error) {
+			chunk.status = "rejected", chunk.reason = error;
+		} finally {
+			initializingHandler = prevHandler;
+		}
+	}
+	function initializeModuleChunk(chunk) {
+		try {
+			var value = requireModule(chunk.value);
+			chunk.status = "fulfilled";
+			chunk.value = value;
+		} catch (error) {
+			chunk.status = "rejected", chunk.reason = error;
+		}
+	}
+	function reportGlobalError(weakResponse, error) {
+		weakResponse._closed = !0;
+		weakResponse._closedReason = error;
+		weakResponse._chunks.forEach(function(chunk) {
+			"pending" === chunk.status ? triggerErrorOnChunk(weakResponse, chunk, error) : "fulfilled" === chunk.status && null !== chunk.reason && chunk.reason.error(error);
+		});
+	}
+	function createLazyChunkWrapper(chunk) {
+		return {
+			$$typeof: REACT_LAZY_TYPE,
+			_payload: chunk,
+			_init: readChunk
+		};
+	}
+	function getChunk(response, id) {
+		var chunks = response._chunks, chunk = chunks.get(id);
+		chunk || (chunk = response._closed ? new ReactPromise("rejected", null, response._closedReason) : new ReactPromise("pending", null, null), chunks.set(id, chunk));
+		return chunk;
+	}
+	function fulfillReference(reference, value) {
+		var response = reference.response, handler = reference.handler, parentObject = reference.parentObject, key = reference.key, map = reference.map, path = reference.path;
+		try {
+			for (var i = 1; i < path.length; i++) {
+				for (; "object" === typeof value && null !== value && value.$$typeof === REACT_LAZY_TYPE;) {
+					var referencedChunk = value._payload;
+					if (referencedChunk === handler.chunk) value = handler.value;
+					else {
+						switch (referencedChunk.status) {
+							case "resolved_model":
+								initializeModelChunk(referencedChunk);
+								break;
+							case "resolved_module": initializeModuleChunk(referencedChunk);
+						}
+						switch (referencedChunk.status) {
+							case "fulfilled":
+								value = referencedChunk.value;
+								continue;
+							case "blocked":
+								var cyclicHandler = resolveBlockedCycle(referencedChunk, reference);
+								if (null !== cyclicHandler) {
+									value = cyclicHandler.value;
+									continue;
+								}
+							case "pending":
+								path.splice(0, i - 1);
+								null === referencedChunk.value ? referencedChunk.value = [reference] : referencedChunk.value.push(reference);
+								null === referencedChunk.reason ? referencedChunk.reason = [reference] : referencedChunk.reason.push(reference);
+								return;
+							case "halted": return;
+							default:
+								rejectReference(reference, referencedChunk.reason);
+								return;
+						}
+					}
+				}
+				var name = path[i];
+				if ("object" === typeof value && null !== value && hasOwnProperty.call(value, name)) value = value[name];
+				else throw Error("Invalid reference.");
+			}
+			for (; "object" === typeof value && null !== value && value.$$typeof === REACT_LAZY_TYPE;) {
+				var referencedChunk$44 = value._payload;
+				if (referencedChunk$44 === handler.chunk) value = handler.value;
+				else {
+					switch (referencedChunk$44.status) {
+						case "resolved_model":
+							initializeModelChunk(referencedChunk$44);
+							break;
+						case "resolved_module": initializeModuleChunk(referencedChunk$44);
+					}
+					switch (referencedChunk$44.status) {
+						case "fulfilled":
+							value = referencedChunk$44.value;
+							continue;
+					}
+					break;
+				}
+			}
+			var mappedValue = map(response, value, parentObject, key);
+			"__proto__" !== key && (parentObject[key] = mappedValue);
+			"" === key && null === handler.value && (handler.value = mappedValue);
+			if (parentObject[0] === REACT_ELEMENT_TYPE && "object" === typeof handler.value && null !== handler.value && handler.value.$$typeof === REACT_ELEMENT_TYPE) {
+				var element = handler.value;
+				switch (key) {
+					case "3": element.props = mappedValue;
+				}
+			}
+		} catch (error) {
+			rejectReference(reference, error);
+			return;
+		}
+		handler.deps--;
+		0 === handler.deps && (reference = handler.chunk, null !== reference && "blocked" === reference.status && (value = reference.value, reference.status = "fulfilled", reference.value = handler.value, reference.reason = handler.reason, null !== value && wakeChunk(value, handler.value, reference)));
+	}
+	function rejectReference(reference, error) {
+		var handler = reference.handler;
+		reference = reference.response;
+		handler.errored || (handler.errored = !0, handler.value = null, handler.reason = error, handler = handler.chunk, null !== handler && "blocked" === handler.status && triggerErrorOnChunk(reference, handler, error));
+	}
+	function waitForReference(referencedChunk, parentObject, key, response, map, path) {
+		if (initializingHandler) {
+			var handler = initializingHandler;
+			handler.deps++;
+		} else handler = initializingHandler = {
+			parent: null,
+			chunk: null,
+			value: null,
+			reason: null,
+			deps: 1,
+			errored: !1
+		};
+		parentObject = {
+			response,
+			handler,
+			parentObject,
+			key,
+			map,
+			path
+		};
+		null === referencedChunk.value ? referencedChunk.value = [parentObject] : referencedChunk.value.push(parentObject);
+		null === referencedChunk.reason ? referencedChunk.reason = [parentObject] : referencedChunk.reason.push(parentObject);
+		return null;
+	}
+	function loadServerReference(response, metaData, parentObject, key) {
+		if (!response._serverReferenceConfig) return createBoundServerReference(metaData, response._callServer, response._encodeFormAction);
+		var serverReference = resolveServerReference(response._serverReferenceConfig, metaData.id), promise = preloadModule(serverReference);
+		if (promise) metaData.bound && (promise = Promise.all([promise, metaData.bound]));
+		else if (metaData.bound) promise = Promise.resolve(metaData.bound);
+		else return promise = requireModule(serverReference), registerBoundServerReference(promise, metaData.id, metaData.bound, response._encodeFormAction), promise;
+		if (initializingHandler) {
+			var handler = initializingHandler;
+			handler.deps++;
+		} else handler = initializingHandler = {
+			parent: null,
+			chunk: null,
+			value: null,
+			reason: null,
+			deps: 1,
+			errored: !1
+		};
+		promise.then(function() {
+			var resolvedValue = requireModule(serverReference);
+			if (metaData.bound) {
+				var boundArgs = metaData.bound.value.slice(0);
+				boundArgs.unshift(null);
+				resolvedValue = resolvedValue.bind.apply(resolvedValue, boundArgs);
+			}
+			registerBoundServerReference(resolvedValue, metaData.id, metaData.bound, response._encodeFormAction);
+			"__proto__" !== key && (parentObject[key] = resolvedValue);
+			"" === key && null === handler.value && (handler.value = resolvedValue);
+			if (parentObject[0] === REACT_ELEMENT_TYPE && "object" === typeof handler.value && null !== handler.value && handler.value.$$typeof === REACT_ELEMENT_TYPE) switch (boundArgs = handler.value, key) {
+				case "3": boundArgs.props = resolvedValue;
+			}
+			handler.deps--;
+			0 === handler.deps && (resolvedValue = handler.chunk, null !== resolvedValue && "blocked" === resolvedValue.status && (boundArgs = resolvedValue.value, resolvedValue.status = "fulfilled", resolvedValue.value = handler.value, resolvedValue.reason = null, null !== boundArgs && wakeChunk(boundArgs, handler.value, resolvedValue)));
+		}, function(error) {
+			if (!handler.errored) {
+				handler.errored = !0;
+				handler.value = null;
+				handler.reason = error;
+				var chunk = handler.chunk;
+				null !== chunk && "blocked" === chunk.status && triggerErrorOnChunk(response, chunk, error);
+			}
+		});
+		return null;
+	}
+	function getOutlinedModel(response, reference, parentObject, key, map) {
+		reference = reference.split(":");
+		var id = parseInt(reference[0], 16);
+		id = getChunk(response, id);
+		switch (id.status) {
+			case "resolved_model":
+				initializeModelChunk(id);
+				break;
+			case "resolved_module": initializeModuleChunk(id);
+		}
+		switch (id.status) {
+			case "fulfilled":
+				id = id.value;
+				for (var i = 1; i < reference.length; i++) {
+					for (; "object" === typeof id && null !== id && id.$$typeof === REACT_LAZY_TYPE;) {
+						id = id._payload;
+						switch (id.status) {
+							case "resolved_model":
+								initializeModelChunk(id);
+								break;
+							case "resolved_module": initializeModuleChunk(id);
+						}
+						switch (id.status) {
+							case "fulfilled":
+								id = id.value;
+								break;
+							case "blocked":
+							case "pending": return waitForReference(id, parentObject, key, response, map, reference.slice(i - 1));
+							case "halted": return initializingHandler ? (response = initializingHandler, response.deps++) : initializingHandler = {
+								parent: null,
+								chunk: null,
+								value: null,
+								reason: null,
+								deps: 1,
+								errored: !1
+							}, null;
+							default: return initializingHandler ? (initializingHandler.errored = !0, initializingHandler.value = null, initializingHandler.reason = id.reason) : initializingHandler = {
+								parent: null,
+								chunk: null,
+								value: null,
+								reason: id.reason,
+								deps: 0,
+								errored: !0
+							}, null;
+						}
+					}
+					id = id[reference[i]];
+				}
+				for (; "object" === typeof id && null !== id && id.$$typeof === REACT_LAZY_TYPE;) {
+					reference = id._payload;
+					switch (reference.status) {
+						case "resolved_model":
+							initializeModelChunk(reference);
+							break;
+						case "resolved_module": initializeModuleChunk(reference);
+					}
+					switch (reference.status) {
+						case "fulfilled":
+							id = reference.value;
+							continue;
+					}
+					break;
+				}
+				return map(response, id, parentObject, key);
+			case "pending":
+			case "blocked": return waitForReference(id, parentObject, key, response, map, reference);
+			case "halted": return initializingHandler ? (response = initializingHandler, response.deps++) : initializingHandler = {
+				parent: null,
+				chunk: null,
+				value: null,
+				reason: null,
+				deps: 1,
+				errored: !1
+			}, null;
+			default: return initializingHandler ? (initializingHandler.errored = !0, initializingHandler.value = null, initializingHandler.reason = id.reason) : initializingHandler = {
+				parent: null,
+				chunk: null,
+				value: null,
+				reason: id.reason,
+				deps: 0,
+				errored: !0
+			}, null;
+		}
+	}
+	function createMap(response, model) {
+		return new Map(model);
+	}
+	function createSet(response, model) {
+		return new Set(model);
+	}
+	function createBlob(response, model) {
+		return new Blob(model.slice(1), { type: model[0] });
+	}
+	function createFormData(response, model) {
+		response = new FormData();
+		for (var i = 0; i < model.length; i++) response.append(model[i][0], model[i][1]);
+		return response;
+	}
+	function extractIterator(response, model) {
+		return model[Symbol.iterator]();
+	}
+	function createModel(response, model) {
+		return model;
+	}
+	function parseModelString(response, parentObject, key, value) {
+		if ("$" === value[0]) {
+			if ("$" === value) return null !== initializingHandler && "0" === key && (initializingHandler = {
+				parent: initializingHandler,
+				chunk: null,
+				value: null,
+				reason: null,
+				deps: 0,
+				errored: !1
+			}), REACT_ELEMENT_TYPE;
+			switch (value[1]) {
+				case "$": return value.slice(1);
+				case "L": return parentObject = parseInt(value.slice(2), 16), response = getChunk(response, parentObject), createLazyChunkWrapper(response);
+				case "@": return parentObject = parseInt(value.slice(2), 16), getChunk(response, parentObject);
+				case "S": return Symbol.for(value.slice(2));
+				case "h": return value = value.slice(2), getOutlinedModel(response, value, parentObject, key, loadServerReference);
+				case "T":
+					parentObject = "$" + value.slice(2);
+					response = response._tempRefs;
+					if (null == response) throw Error("Missing a temporary reference set but the RSC response returned a temporary reference. Pass a temporaryReference option with the set that was used with the reply.");
+					return response.get(parentObject);
+				case "Q": return value = value.slice(2), getOutlinedModel(response, value, parentObject, key, createMap);
+				case "W": return value = value.slice(2), getOutlinedModel(response, value, parentObject, key, createSet);
+				case "B": return value = value.slice(2), getOutlinedModel(response, value, parentObject, key, createBlob);
+				case "K": return value = value.slice(2), getOutlinedModel(response, value, parentObject, key, createFormData);
+				case "Z": return resolveErrorProd();
+				case "i": return value = value.slice(2), getOutlinedModel(response, value, parentObject, key, extractIterator);
+				case "I": return Infinity;
+				case "-": return "$-0" === value ? -0 : -Infinity;
+				case "N": return NaN;
+				case "u": return;
+				case "D": return new Date(Date.parse(value.slice(2)));
+				case "n": return BigInt(value.slice(2));
+				default: return value = value.slice(1), getOutlinedModel(response, value, parentObject, key, createModel);
+			}
+		}
+		return value;
+	}
+	function missingCall() {
+		throw Error("Trying to call a function from \"use server\" but the callServer option was not implemented in your router runtime.");
+	}
+	function ResponseInstance(bundlerConfig, serverReferenceConfig, moduleLoading, callServer, encodeFormAction, nonce, temporaryReferences) {
+		var chunks = /* @__PURE__ */ new Map();
+		this._bundlerConfig = bundlerConfig;
+		this._serverReferenceConfig = serverReferenceConfig;
+		this._moduleLoading = moduleLoading;
+		this._callServer = void 0 !== callServer ? callServer : missingCall;
+		this._encodeFormAction = encodeFormAction;
+		this._nonce = nonce;
+		this._chunks = chunks;
+		this._stringDecoder = new TextDecoder();
+		this._fromJSON = null;
+		this._closed = !1;
+		this._closedReason = null;
+		this._tempRefs = temporaryReferences;
+		this._fromJSON = createFromJSONCallback(this);
+	}
+	function resolveBuffer(response, id, buffer) {
+		response = response._chunks;
+		var chunk = response.get(id);
+		chunk && "pending" !== chunk.status ? chunk.reason.enqueueValue(buffer) : (buffer = new ReactPromise("fulfilled", buffer, null), response.set(id, buffer));
+	}
+	function resolveModule(response, id, model) {
+		var chunks = response._chunks, chunk = chunks.get(id);
+		model = JSON.parse(model, response._fromJSON);
+		var clientReference = resolveClientReference(response._bundlerConfig, model);
+		prepareDestinationWithChunks(response._moduleLoading, model[1], response._nonce);
+		if (model = preloadModule(clientReference)) {
+			if (chunk) {
+				var blockedChunk = chunk;
+				blockedChunk.status = "blocked";
+			} else blockedChunk = new ReactPromise("blocked", null, null), chunks.set(id, blockedChunk);
+			model.then(function() {
+				return resolveModuleChunk(response, blockedChunk, clientReference);
+			}, function(error) {
+				return triggerErrorOnChunk(response, blockedChunk, error);
+			});
+		} else chunk ? resolveModuleChunk(response, chunk, clientReference) : (chunk = new ReactPromise("resolved_module", clientReference, null), chunks.set(id, chunk));
+	}
+	function resolveStream(response, id, stream, controller) {
+		response = response._chunks;
+		var chunk = response.get(id);
+		chunk ? "pending" === chunk.status && (id = chunk.value, chunk.status = "fulfilled", chunk.value = stream, chunk.reason = controller, null !== id && wakeChunk(id, chunk.value, chunk)) : (stream = new ReactPromise("fulfilled", stream, controller), response.set(id, stream));
+	}
+	function startReadableStream(response, id, type) {
+		var controller = null, closed = !1;
+		type = new ReadableStream({
+			type,
+			start: function(c) {
+				controller = c;
+			}
+		});
+		var previousBlockedChunk = null;
+		resolveStream(response, id, type, {
+			enqueueValue: function(value) {
+				null === previousBlockedChunk ? controller.enqueue(value) : previousBlockedChunk.then(function() {
+					controller.enqueue(value);
+				});
+			},
+			enqueueModel: function(json) {
+				if (null === previousBlockedChunk) {
+					var chunk = new ReactPromise("resolved_model", json, response);
+					initializeModelChunk(chunk);
+					"fulfilled" === chunk.status ? controller.enqueue(chunk.value) : (chunk.then(function(v) {
+						return controller.enqueue(v);
+					}, function(e) {
+						return controller.error(e);
+					}), previousBlockedChunk = chunk);
+				} else {
+					chunk = previousBlockedChunk;
+					var chunk$55 = new ReactPromise("pending", null, null);
+					chunk$55.then(function(v) {
+						return controller.enqueue(v);
+					}, function(e) {
+						return controller.error(e);
+					});
+					previousBlockedChunk = chunk$55;
+					chunk.then(function() {
+						previousBlockedChunk === chunk$55 && (previousBlockedChunk = null);
+						resolveModelChunk(response, chunk$55, json);
+					});
+				}
+			},
+			close: function() {
+				if (!closed) if (closed = !0, null === previousBlockedChunk) controller.close();
+				else {
+					var blockedChunk = previousBlockedChunk;
+					previousBlockedChunk = null;
+					blockedChunk.then(function() {
+						return controller.close();
+					});
+				}
+			},
+			error: function(error) {
+				if (!closed) if (closed = !0, null === previousBlockedChunk) controller.error(error);
+				else {
+					var blockedChunk = previousBlockedChunk;
+					previousBlockedChunk = null;
+					blockedChunk.then(function() {
+						return controller.error(error);
+					});
+				}
+			}
+		});
+	}
+	function asyncIterator() {
+		return this;
+	}
+	function createIterator(next) {
+		next = { next };
+		next[ASYNC_ITERATOR] = asyncIterator;
+		return next;
+	}
+	function startAsyncIterable(response, id, iterator) {
+		var buffer = [], closed = !1, nextWriteIndex = 0, iterable = {};
+		iterable[ASYNC_ITERATOR] = function() {
+			var nextReadIndex = 0;
+			return createIterator(function(arg) {
+				if (void 0 !== arg) throw Error("Values cannot be passed to next() of AsyncIterables passed to Client Components.");
+				if (nextReadIndex === buffer.length) {
+					if (closed) return new ReactPromise("fulfilled", {
+						done: !0,
+						value: void 0
+					}, null);
+					buffer[nextReadIndex] = new ReactPromise("pending", null, null);
+				}
+				return buffer[nextReadIndex++];
+			});
+		};
+		resolveStream(response, id, iterator ? iterable[ASYNC_ITERATOR]() : iterable, {
+			enqueueValue: function(value) {
+				if (nextWriteIndex === buffer.length) buffer[nextWriteIndex] = new ReactPromise("fulfilled", {
+					done: !1,
+					value
+				}, null);
+				else {
+					var chunk = buffer[nextWriteIndex], resolveListeners = chunk.value, rejectListeners = chunk.reason;
+					chunk.status = "fulfilled";
+					chunk.value = {
+						done: !1,
+						value
+					};
+					chunk.reason = null;
+					null !== resolveListeners && wakeChunkIfInitialized(chunk, resolveListeners, rejectListeners);
+				}
+				nextWriteIndex++;
+			},
+			enqueueModel: function(value) {
+				nextWriteIndex === buffer.length ? buffer[nextWriteIndex] = createResolvedIteratorResultChunk(response, value, !1) : resolveIteratorResultChunk(response, buffer[nextWriteIndex], value, !1);
+				nextWriteIndex++;
+			},
+			close: function(value) {
+				if (!closed) for (closed = !0, nextWriteIndex === buffer.length ? buffer[nextWriteIndex] = createResolvedIteratorResultChunk(response, value, !0) : resolveIteratorResultChunk(response, buffer[nextWriteIndex], value, !0), nextWriteIndex++; nextWriteIndex < buffer.length;) resolveIteratorResultChunk(response, buffer[nextWriteIndex++], "\"$undefined\"", !0);
+			},
+			error: function(error) {
+				if (!closed) for (closed = !0, nextWriteIndex === buffer.length && (buffer[nextWriteIndex] = new ReactPromise("pending", null, null)); nextWriteIndex < buffer.length;) triggerErrorOnChunk(response, buffer[nextWriteIndex++], error);
+			}
+		});
+	}
+	function resolveErrorProd() {
+		var error = Error("An error occurred in the Server Components render. The specific message is omitted in production builds to avoid leaking sensitive details. A digest property is included on this error instance which may provide additional details about the nature of the error.");
+		error.stack = "Error: " + error.message;
+		return error;
+	}
+	function mergeBuffer(buffer, lastChunk) {
+		for (var l = buffer.length, byteLength = lastChunk.length, i = 0; i < l; i++) byteLength += buffer[i].byteLength;
+		byteLength = new Uint8Array(byteLength);
+		for (var i$56 = i = 0; i$56 < l; i$56++) {
+			var chunk = buffer[i$56];
+			byteLength.set(chunk, i);
+			i += chunk.byteLength;
+		}
+		byteLength.set(lastChunk, i);
+		return byteLength;
+	}
+	function resolveTypedArray(response, id, buffer, lastChunk, constructor, bytesPerElement) {
+		buffer = 0 === buffer.length && 0 === lastChunk.byteOffset % bytesPerElement ? lastChunk : mergeBuffer(buffer, lastChunk);
+		constructor = new constructor(buffer.buffer, buffer.byteOffset, buffer.byteLength / bytesPerElement);
+		resolveBuffer(response, id, constructor);
+	}
+	function processFullBinaryRow(response, streamState, id, tag, buffer, chunk) {
+		switch (tag) {
+			case 65:
+				resolveBuffer(response, id, mergeBuffer(buffer, chunk).buffer);
+				return;
+			case 79:
+				resolveTypedArray(response, id, buffer, chunk, Int8Array, 1);
+				return;
+			case 111:
+				resolveBuffer(response, id, 0 === buffer.length ? chunk : mergeBuffer(buffer, chunk));
+				return;
+			case 85:
+				resolveTypedArray(response, id, buffer, chunk, Uint8ClampedArray, 1);
+				return;
+			case 83:
+				resolveTypedArray(response, id, buffer, chunk, Int16Array, 2);
+				return;
+			case 115:
+				resolveTypedArray(response, id, buffer, chunk, Uint16Array, 2);
+				return;
+			case 76:
+				resolveTypedArray(response, id, buffer, chunk, Int32Array, 4);
+				return;
+			case 108:
+				resolveTypedArray(response, id, buffer, chunk, Uint32Array, 4);
+				return;
+			case 71:
+				resolveTypedArray(response, id, buffer, chunk, Float32Array, 4);
+				return;
+			case 103:
+				resolveTypedArray(response, id, buffer, chunk, Float64Array, 8);
+				return;
+			case 77:
+				resolveTypedArray(response, id, buffer, chunk, BigInt64Array, 8);
+				return;
+			case 109:
+				resolveTypedArray(response, id, buffer, chunk, BigUint64Array, 8);
+				return;
+			case 86:
+				resolveTypedArray(response, id, buffer, chunk, DataView, 1);
+				return;
+		}
+		streamState = response._stringDecoder;
+		for (var row = "", i = 0; i < buffer.length; i++) row += streamState.decode(buffer[i], decoderOptions);
+		buffer = row += streamState.decode(chunk);
+		switch (tag) {
+			case 73:
+				resolveModule(response, id, buffer);
+				break;
+			case 72:
+				id = buffer[0];
+				buffer = buffer.slice(1);
+				response = JSON.parse(buffer, response._fromJSON);
+				buffer = ReactDOMSharedInternals.d;
+				switch (id) {
+					case "D":
+						buffer.D(response);
+						break;
+					case "C":
+						"string" === typeof response ? buffer.C(response) : buffer.C(response[0], response[1]);
+						break;
+					case "L":
+						id = response[0];
+						tag = response[1];
+						3 === response.length ? buffer.L(id, tag, response[2]) : buffer.L(id, tag);
+						break;
+					case "m":
+						"string" === typeof response ? buffer.m(response) : buffer.m(response[0], response[1]);
+						break;
+					case "X":
+						"string" === typeof response ? buffer.X(response) : buffer.X(response[0], response[1]);
+						break;
+					case "S":
+						"string" === typeof response ? buffer.S(response) : buffer.S(response[0], 0 === response[1] ? void 0 : response[1], 3 === response.length ? response[2] : void 0);
+						break;
+					case "M": "string" === typeof response ? buffer.M(response) : buffer.M(response[0], response[1]);
+				}
+				break;
+			case 69:
+				tag = response._chunks;
+				chunk = tag.get(id);
+				buffer = JSON.parse(buffer);
+				streamState = resolveErrorProd();
+				streamState.digest = buffer.digest;
+				chunk ? triggerErrorOnChunk(response, chunk, streamState) : (response = new ReactPromise("rejected", null, streamState), tag.set(id, response));
+				break;
+			case 84:
+				response = response._chunks;
+				(tag = response.get(id)) && "pending" !== tag.status ? tag.reason.enqueueValue(buffer) : (buffer = new ReactPromise("fulfilled", buffer, null), response.set(id, buffer));
+				break;
+			case 78:
+			case 68:
+			case 74:
+			case 87: throw Error("Failed to read a RSC payload created by a development version of React on the server while using a production version on the client. Always use matching versions on the server and the client.");
+			case 82:
+				startReadableStream(response, id, void 0);
+				break;
+			case 114:
+				startReadableStream(response, id, "bytes");
+				break;
+			case 88:
+				startAsyncIterable(response, id, !1);
+				break;
+			case 120:
+				startAsyncIterable(response, id, !0);
+				break;
+			case 67:
+				(id = response._chunks.get(id)) && "fulfilled" === id.status && id.reason.close("" === buffer ? "\"$undefined\"" : buffer);
+				break;
+			default: tag = response._chunks, (chunk = tag.get(id)) ? resolveModelChunk(response, chunk, buffer) : (response = new ReactPromise("resolved_model", buffer, response), tag.set(id, response));
+		}
+	}
+	function createFromJSONCallback(response) {
+		return function(key, value) {
+			if ("__proto__" !== key) {
+				if ("string" === typeof value) return parseModelString(response, this, key, value);
+				if ("object" === typeof value && null !== value) {
+					if (value[0] === REACT_ELEMENT_TYPE) {
+						if (key = {
+							$$typeof: REACT_ELEMENT_TYPE,
+							type: value[1],
+							key: value[2],
+							ref: null,
+							props: value[3]
+						}, null !== initializingHandler) {
+							if (value = initializingHandler, initializingHandler = value.parent, value.errored) key = new ReactPromise("rejected", null, value.reason), key = createLazyChunkWrapper(key);
+							else if (0 < value.deps) {
+								var blockedChunk = new ReactPromise("blocked", null, null);
+								value.value = key;
+								value.chunk = blockedChunk;
+								key = createLazyChunkWrapper(blockedChunk);
+							}
+						}
+					} else key = value;
+					return key;
+				}
+				return value;
+			}
+		};
+	}
+	function close(weakResponse) {
+		reportGlobalError(weakResponse, Error("Connection closed."));
+	}
+	function noServerCall() {
+		throw Error("Server Functions cannot be called during initial render. This would create a fetch waterfall. Try to use a Server Component to pass data to Client Components instead.");
+	}
+	function createResponseFromOptions(options) {
+		return new ResponseInstance(options.serverConsumerManifest.moduleMap, options.serverConsumerManifest.serverModuleMap, options.serverConsumerManifest.moduleLoading, noServerCall, options.encodeFormAction, "string" === typeof options.nonce ? options.nonce : void 0, options && options.temporaryReferences ? options.temporaryReferences : void 0);
+	}
+	function startReadingFromStream(response, stream, onDone) {
+		function progress(_ref) {
+			var value = _ref.value;
+			if (_ref.done) return onDone();
+			var i = 0, rowState = streamState._rowState;
+			_ref = streamState._rowID;
+			for (var rowTag = streamState._rowTag, rowLength = streamState._rowLength, buffer = streamState._buffer, chunkLength = value.length; i < chunkLength;) {
+				var lastIdx = -1;
+				switch (rowState) {
+					case 0:
+						lastIdx = value[i++];
+						58 === lastIdx ? rowState = 1 : _ref = _ref << 4 | (96 < lastIdx ? lastIdx - 87 : lastIdx - 48);
+						continue;
+					case 1:
+						rowState = value[i];
+						84 === rowState || 65 === rowState || 79 === rowState || 111 === rowState || 85 === rowState || 83 === rowState || 115 === rowState || 76 === rowState || 108 === rowState || 71 === rowState || 103 === rowState || 77 === rowState || 109 === rowState || 86 === rowState ? (rowTag = rowState, rowState = 2, i++) : 64 < rowState && 91 > rowState || 35 === rowState || 114 === rowState || 120 === rowState ? (rowTag = rowState, rowState = 3, i++) : (rowTag = 0, rowState = 3);
+						continue;
+					case 2:
+						lastIdx = value[i++];
+						44 === lastIdx ? rowState = 4 : rowLength = rowLength << 4 | (96 < lastIdx ? lastIdx - 87 : lastIdx - 48);
+						continue;
+					case 3:
+						lastIdx = value.indexOf(10, i);
+						break;
+					case 4: lastIdx = i + rowLength, lastIdx > value.length && (lastIdx = -1);
+				}
+				var offset = value.byteOffset + i;
+				if (-1 < lastIdx) rowLength = new Uint8Array(value.buffer, offset, lastIdx - i), processFullBinaryRow(response, streamState, _ref, rowTag, buffer, rowLength), i = lastIdx, 3 === rowState && i++, rowLength = _ref = rowTag = rowState = 0, buffer.length = 0;
+				else {
+					value = new Uint8Array(value.buffer, offset, value.byteLength - i);
+					buffer.push(value);
+					rowLength -= value.byteLength;
+					break;
+				}
+			}
+			streamState._rowState = rowState;
+			streamState._rowID = _ref;
+			streamState._rowTag = rowTag;
+			streamState._rowLength = rowLength;
+			return reader.read().then(progress).catch(error);
+		}
+		function error(e) {
+			reportGlobalError(response, e);
+		}
+		var streamState = {
+			_rowState: 0,
+			_rowID: 0,
+			_rowTag: 0,
+			_rowLength: 0,
+			_buffer: []
+		}, reader = stream.getReader();
+		reader.read().then(progress).catch(error);
+	}
+	exports.createFromReadableStream = function(stream, options) {
+		options = createResponseFromOptions(options);
+		startReadingFromStream(options, stream, close.bind(null, options));
+		return getChunk(options, 0);
+	};
+}));
+//#endregion
+//#region ../../../node_modules/.pnpm/@vitejs+plugin-rsc@0.5.26_r_d7be5b5d64a64a218ac22ba955ebe0d2/node_modules/@vitejs/plugin-rsc/dist/react/ssr.js
+var import_client_edge = /* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin(((exports, module) => {
+	module.exports = require_react_server_dom_webpack_client_edge_production();
+})))(), 1);
+function createFromReadableStream(stream, options = {}) {
+	return import_client_edge.createFromReadableStream(stream, {
+		serverConsumerManifest: createServerConsumerManifest(),
+		...options
+	});
+}
+//#endregion
+//#region \0virtual:vite-rsc/client-references
+var client_references_default = {
+	"0132a7525229": async () => {
+		const m = await import("./_next/static/home-client-CxWd5hi7.js");
+		return { get "default"() {
+			return m["default"];
+		} };
+	},
+	"0604f93d3a06": async () => {
+		const m = await import("./_next/static/app-router-scroll-DO385Tog.js");
+		return { get "AppRouterScrollTarget"() {
+			return m["AppRouterScrollTarget"];
+		} };
+	},
+	"243ee20defce": async () => {
+		const m = await import("./_next/static/layout-segment-context-EY4ZX1zT.js");
+		return { get "LayoutSegmentProvider"() {
+			return m["LayoutSegmentProvider"];
+		} };
+	},
+	"878821595ec6": async () => {
+		const m = await import("./_next/static/chat-client-DCTwKbdB.js");
+		return { get "default"() {
+			return m["default"];
+		} };
+	},
+	"8c59b4cfb786": async () => {
+		const m = await Promise.resolve().then(() => default_global_error_exports);
+		return { get "default"() {
+			return m["default"];
+		} };
+	},
+	"9d9ddb30364a": async () => {
+		const m = await Promise.resolve().then(() => slot_exports);
+		return {
+			get "BfcacheSegmentBoundary"() {
+				return m["BfcacheSegmentBoundary"];
+			},
+			get "Children"() {
+				return m["Children"];
+			},
+			get "ParallelSlot"() {
+				return m["ParallelSlot"];
+			},
+			get "Slot"() {
+				return m["Slot"];
+			}
+		};
+	},
+	"be06c29e631a": async () => {
+		const m = await import("./_next/static/error-boundary-BW4zQve8.js");
+		return {
+			get "ErrorBoundary"() {
+				return m["ErrorBoundary"];
+			},
+			get "ForbiddenBoundary"() {
+				return m["ForbiddenBoundary"];
+			},
+			get "GlobalErrorBoundary"() {
+				return m["GlobalErrorBoundary"];
+			},
+			get "NotFoundBoundary"() {
+				return m["NotFoundBoundary"];
+			},
+			get "RedirectBoundary"() {
+				return m["RedirectBoundary"];
+			},
+			get "SerializedErrorBoundary"() {
+				return m["SerializedErrorBoundary"];
+			},
+			get "UnauthorizedBoundary"() {
+				return m["UnauthorizedBoundary"];
+			}
+		};
+	},
+	"c5e0424ad109": async () => {
+		await import("./_next/static/app-prefetch-fetch-queue-C9180ymC.js");
+		return {};
+	},
+	"de80fbf070f4": async () => {
+		const m = await import("./_next/static/streamed-icons-Cok9EkWr.js");
+		return { get "StreamedIconsInsertion"() {
+			return m["StreamedIconsInsertion"];
+		} };
+	},
+	"e97a5adc44a3": async () => {
+		const m = await import("./_next/static/desktop-runtime-shell-CrylNd9h.js");
+		return { get "default"() {
+			return m["default"];
+		} };
+	}
+};
+//#endregion
+//#region ../../../node_modules/.pnpm/@vitejs+plugin-rsc@0.5.26_r_d7be5b5d64a64a218ac22ba955ebe0d2/node_modules/@vitejs/plugin-rsc/dist/ssr.js
+var onClientReference;
+initialize();
+function initialize() {
+	setRequireModule({ load: async (id) => {
+		{
+			const import_ = client_references_default[id];
+			if (!import_) throw new Error(`client reference not found '${id}'`);
+			const deps = __vite_rsc_assets_manifest.clientReferenceDeps[id] ?? {
+				js: [],
+				css: []
+			};
+			preloadDeps(deps);
+			onClientReference?.({
+				id,
+				deps
+			});
+			return wrapResourceProxy(await import_(), id, deps);
+		}
+	} });
+}
+function wrapResourceProxy(mod, id, deps) {
+	return new Proxy(mod, { get(target, p, receiver) {
+		if (p in mod) {
+			preloadDeps(deps);
+			onClientReference?.({
+				id,
+				deps
+			});
+		}
+		return Reflect.get(target, p, receiver);
+	} });
+}
+function preloadDeps(deps) {
+	for (const href of deps.js) ReactDOM.preloadModule(href, {
+		as: "script",
+		crossOrigin: ""
+	});
+	for (const href of deps.css) ReactDOM.preinit(href, {
+		as: "style",
+		precedence: __vite_rsc_assets_manifest.cssLinkPrecedence !== false ? "vite-rsc/client-reference" : void 0
+	});
+}
+/**
+* Default cap for the preload `Link` header, matching Next.js's
+* `defaultConfig.reactMaxHeadersLength`. Used when no config value threads
+* through (e.g. error-boundary renders) so React's internal cap agrees with
+* the response-layer combine cap.
+*/
+var DEFAULT_REACT_MAX_HEADERS_LENGTH = 6e3;
+function isReactDevelopmentRuntime() {
+	return false;
+}
+function isStaticPrerenderModule(value) {
+	return typeof value === "object" && value !== null && "prerender" in value && typeof value.prerender === "function";
+}
+async function loadStaticPrerender() {
+	const staticRenderer = await import("react-dom/static.edge");
+	if (isStaticPrerenderModule(staticRenderer)) return staticRenderer.prerender;
+	if (isReactDevelopmentRuntime()) try {
+		const [{ createRequire }, path] = await Promise.all([import("node:module"), import("node:path")]);
+		const reactDomPackageJson = createRequire(import.meta.url).resolve("react-dom/package.json");
+		const reactDomDir = path.dirname(reactDomPackageJson);
+		const devRenderer = await import(
+			/* @vite-ignore */
+			path.join(reactDomDir, "cjs/react-dom-server.edge.development.js")
+);
+		if (isStaticPrerenderModule(devRenderer)) return devRenderer.prerender;
+		const devRendererDefault = typeof devRenderer === "object" && devRenderer !== null && "default" in devRenderer && devRenderer.default;
+		if (isStaticPrerenderModule(devRendererDefault)) return devRendererDefault.prerender;
+		throw new Error("react-dom development renderer did not expose prerender().");
+	} catch (error) {
+		throw new Error("[vinext] Failed to load React static development renderer.", { cause: error });
+	}
+	throw new Error("[vinext] react-dom/static.edge did not expose prerender().");
+}
+function createUtf8Stream(html) {
+	const encoder = new TextEncoder();
+	return new ReadableStream({ start(controller) {
+		controller.enqueue(encoder.encode(html));
+		controller.close();
+	} });
+}
+function buildBootstrapModuleScript(bootstrapModuleUrl, nonce) {
+	if (!bootstrapModuleUrl) return "";
+	return `<script type="module"${createNonceAttribute(nonce)} src="` + escapeHtmlAttr(bootstrapModuleUrl) + "\" id=\"_R_\" async=\"\"><\/script>";
+}
+function renderSsrErrorDocumentShell(bootstrapModuleUrl, nonce) {
+	const html = renderToStaticMarkup(createElement(DefaultGlobalError, { error: null })).replace("<style>", "<style data-vinext-error-shell-style=\"\">");
+	const bootstrapScript = buildBootstrapModuleScript(bootstrapModuleUrl, nonce);
+	if (!bootstrapScript) return createUtf8Stream(`<!DOCTYPE html>${html}`);
+	const documentClose = "</body></html>";
+	if (!html.endsWith(documentClose)) return createUtf8Stream(`<!DOCTYPE html>${html}${bootstrapScript}`);
+	return createUtf8Stream(`<!DOCTYPE html>${html.slice(0, -14)}${bootstrapScript}${documentClose}`);
+}
+var clientReferencePreloader = createClientReferencePreloader({
+	getReferences() {
+		return client_references_default;
+	},
+	getClientRequire() {
+		return globalThis.__vite_rsc_client_require__;
+	},
+	onPreloadError(id, error) {}
+});
+var BfcacheIdMapContext = getBfcacheIdMapContext();
+function ssrErrorDigest(input) {
+	let hash = 5381;
+	for (let i = input.length - 1; i >= 0; i--) hash = hash * 33 ^ input.charCodeAt(i);
+	return (hash >>> 0).toString();
+}
+function getErrorMessage(error) {
+	if (error instanceof Error) return error.message;
+	if (typeof error === "string") return error;
+	return Object.prototype.toString.call(error);
+}
+function renderInsertedHtml(insertedElements) {
+	let insertedHTML = "";
+	for (const element of insertedElements) try {
+		insertedHTML += renderToStaticMarkup(createElement(Fragment, null, element));
+	} catch {}
+	return insertedHTML;
+}
+function renderFontHtml(fontData, nonce, options = {}) {
+	if (!fontData) return "";
+	let fontHTML = "";
+	const nonceAttr = createNonceAttribute(nonce);
+	const includeStyles = options.includeStyles ?? true;
+	for (const url of fontData.links ?? []) fontHTML += `<link rel="stylesheet"${nonceAttr} href="${escapeHtmlAttr(appendAssetDeploymentIdQuery(url))}" />\n`;
+	for (const preload of fontData.preloads ?? []) fontHTML += `<link rel="preload"${nonceAttr} href="${escapeHtmlAttr(preload.href)}" as="font" type="${escapeHtmlAttr(preload.type)}" crossorigin />\n`;
+	if (includeStyles && fontData.styles && fontData.styles.length > 0) fontHTML += `<style data-vinext-fonts${nonceAttr}>${fontData.styles.join("\n")}</style>\n`;
+	return fontHTML;
+}
+function hasInlineCssManifest(manifest) {
+	return manifest !== void 0 && Object.keys(manifest).length > 0;
+}
+/**
+* Extract the bootstrap module URL from the `import("...")` string that
+* `import.meta.viteRsc.loadBootstrapScriptContent("index")` returns.
+*
+* The plugin-rsc helper returns the bootstrap as an inline call so we can
+* inject it via `bootstrapScriptContent`. We instead pass the URL to
+* React's `bootstrapModules` option so a real
+* `<script type="module" src="…">` tag ends up in the streamed HTML —
+* this exposes the URL to anything that reads `script.attribs.src` (e.g.
+* the Next.js asset-prefix fixture test). The same URL also feeds the
+* `<link rel="modulepreload">` we emit ahead of the bootstrap.
+*
+* Returns `undefined` when the helper produced no URL (older plugin-rsc
+* versions, or a custom client entry that disables bootstrap content).
+*/
+function extractBootstrapModuleUrl(bootstrapScriptContent) {
+	if (!bootstrapScriptContent) return void 0;
+	return bootstrapScriptContent.match(/import\(["']([^"']+)["']\)/)?.[1] ?? void 0;
+}
+function buildModulePreloadHtml(bootstrapModuleUrl, nonce) {
+	if (!bootstrapModuleUrl) return "";
+	return `<link rel="modulepreload"${createNonceAttribute(nonce)} href="${escapeHtmlAttr(bootstrapModuleUrl)}" />\n`;
+}
+function buildHeadInjectionHtml(navContext, bootstrapModuleUrl, formState, insertedHTML, fontHTML, dynamicStaleTimeSeconds, scriptNonce) {
+	const navPayload = {
+		pathname: navContext.pathname,
+		searchParams: [...navContext.searchParams.entries()]
+	};
+	return createInlineScriptTag(createNavigationRuntimeRscMetadataScript(navContext.params, navPayload, dynamicStaleTimeSeconds), scriptNonce) + (formState === null ? "" : createInlineScriptTag("self[" + safeJsonStringify(RSC_FORM_STATE_GLOBAL) + "]=" + safeJsonStringify(formState), scriptNonce)) + buildModulePreloadHtml(bootstrapModuleUrl, scriptNonce) + insertedHTML + fontHTML;
+}
+function requireNavigationContext(navContext) {
+	if (!navContext) throw new Error("App SSR requires navigation context for BFCache state keys");
+	return navContext;
+}
+async function handleSsr(rscStream, navContext, fontData, options) {
+	return runWithNavigationContext(async () => {
+		const ssrNavigationContext = requireNavigationContext(navContext);
+		await clientReferencePreloader.preload();
+		setNavigationContext(ssrNavigationContext);
+		clearServerInsertedHTML();
+		const cleanup = () => {
+			setNavigationContext(null);
+			clearServerInsertedHTML();
+		};
+		return runWithRootParamsScope(options?.rootParams ?? {}, async () => {
+			try {
+				let ssrStream;
+				let rscEmbed;
+				if (options?.sideStream) {
+					ssrStream = rscStream;
+					rscEmbed = createRscEmbedTransform(options.sideStream, options?.scriptNonce, options?.getInitialNavigationCacheMetadata);
+					if (options.capturedRscDataRef) options.capturedRscDataRef.value = rscEmbed.getRawBuffer();
+				} else {
+					const [s1, s2] = rscStream.tee();
+					ssrStream = s1;
+					rscEmbed = createRscEmbedTransform(s2, options?.scriptNonce, options?.getInitialNavigationCacheMetadata);
+				}
+				let flightRoot = null;
+				function VinextFlightRoot() {
+					for (const moduleUrl of pagesClientAssets.appBootstrapPreinitModules ?? []) preinitModule(moduleUrl, {
+						as: "script",
+						nonce: options?.scriptNonce
+					});
+					if (!flightRoot) flightRoot = createFromReadableStream(ssrStream);
+					const wireElements = use(flightRoot);
+					const elements = AppElementsWire.decode(wireElements);
+					const metadata = AppElementsWire.readMetadata(elements);
+					const bfcacheMaps = createInitialBfcacheMaps({
+						elements,
+						metadata
+					});
+					const routeTree = createElement(ElementsContext.Provider, { value: elements }, createElement(Slot, { id: metadata.routeId }));
+					const identityMapTree = createElement(BfcacheIdentityMapContext.Provider, { value: bfcacheMaps.identities }, routeTree);
+					return BfcacheIdMapContext ? createElement(BfcacheIdMapContext.Provider, { value: bfcacheMaps.bfcacheIds }, identityMapTree) : identityMapTree;
+				}
+				const flightRootElement = createElement(VinextFlightRoot);
+				const root = AppRouterContext ? createElement(AppRouterContext.Provider, { value: ssrAppRouterInstance }, flightRootElement) : flightRootElement;
+				const ssrTree = ServerInsertedHTMLContext ? createElement(ServerInsertedHTMLContext.Provider, { value: registerServerInsertedHTMLCallback }, root) : root;
+				const beforeInteractiveInlineScripts = [];
+				const registerBeforeInteractiveInlineScript = (script) => {
+					beforeInteractiveInlineScripts.push(script);
+				};
+				const ssrRoot = withScriptNonce(createElement(BeforeInteractiveContext.Provider, { value: registerBeforeInteractiveInlineScript }, ssrTree), options?.scriptNonce);
+				const bootstrapModuleUrl = extractBootstrapModuleUrl(await Promise.resolve(__vite_rsc_assets_manifest.bootstrapScriptContent));
+				const errorMetaRenderer = createSsrErrorMetaRenderer({ basePath: options?.basePath });
+				const pprFallbackShellSignal = options?.pprFallbackShellSignal;
+				let reactLinkHeader = "";
+				const maxHeadersLength = options?.reactMaxHeadersLength ?? DEFAULT_REACT_MAX_HEADERS_LENGTH;
+				const captureHeaders = maxHeadersLength > 0;
+				const renderOptions = {
+					bootstrapModules: bootstrapModuleUrl ? [bootstrapModuleUrl] : void 0,
+					formState: options?.formState ?? null,
+					nonce: options?.scriptNonce,
+					onHeaders: captureHeaders ? (headers) => {
+						const link = headers.get("Link");
+						if (link) reactLinkHeader = link;
+					} : void 0,
+					maxHeadersLength: captureHeaders ? maxHeadersLength : void 0,
+					onError(error) {
+						if (pprFallbackShellSignal && isPprFallbackShellAbortError(error)) return;
+						errorMetaRenderer.capture(error);
+						if (error && typeof error === "object" && "digest" in error) return String(error.digest);
+						if (error) return ssrErrorDigest(getErrorMessage(error) + (error instanceof Error ? error.stack ?? "" : ""));
+					}
+				};
+				let htmlStream;
+				let shellErrorRecovered = false;
+				let shouldDelayInitialHtmlPull = false;
+				if (pprFallbackShellSignal) {
+					const prerender = await loadStaticPrerender();
+					const htmlAbortController = new AbortController();
+					const pendingHtml = prerender(ssrRoot, {
+						...renderOptions,
+						signal: htmlAbortController.signal
+					});
+					setTimeout(() => htmlAbortController.abort(), 0);
+					htmlStream = (await pendingHtml).prelude;
+				} else {
+					let streamingHtmlStream;
+					try {
+						streamingHtmlStream = await renderToReadableStream(ssrRoot, { ...renderOptions });
+						if (options?.waitForAllReady === true) await streamingHtmlStream.allReady;
+						else shouldDelayInitialHtmlPull = true;
+						htmlStream = streamingHtmlStream;
+					} catch (error) {
+						streamingHtmlStream?.cancel().catch(() => {});
+						if (options?.fallbackToErrorDocumentOnShellError !== true || options?.waitForAllReady === true || typeof error?.digest === "string") throw error;
+						shellErrorRecovered = true;
+						htmlStream = renderSsrErrorDocumentShell(bootstrapModuleUrl, options?.scriptNonce);
+					}
+				}
+				const inlineCssManifest = globalThis.__VINEXT_INLINE_CSS__;
+				const fontStyles = fontData?.styles ?? [];
+				const mergeFontStylesIntoInlineCss = fontStyles.length > 0 && hasInlineCssManifest(inlineCssManifest);
+				const inlineCssFontStyles = mergeFontStylesIntoInlineCss ? fontStyles.join("\n") : "";
+				const inlineCssFontStyleFallbackHTML = mergeFontStylesIntoInlineCss ? renderFontHtml({ styles: fontStyles }, options?.scriptNonce) : "";
+				const fontHTML = renderFontHtml(fontData, options?.scriptNonce, { includeStyles: !mergeFontStylesIntoInlineCss });
+				let traceMetaHTML = null;
+				const getTraceMetaHTML = () => {
+					if (traceMetaHTML === null) traceMetaHTML = getClientTraceMetadataHTML(options?.clientTraceMetadata);
+					return traceMetaHTML;
+				};
+				let didInjectHeadHTML = false;
+				const getInsertedHTML = () => {
+					const insertedHTML = renderInsertedHtml(renderServerInsertedHTML());
+					const errorMetaHTML = errorMetaRenderer.flush();
+					const initialDevServerErrorHTML = createInitialDevServerErrorScript(options?.initialDevServerError, options?.scriptNonce);
+					if (didInjectHeadHTML) return insertedHTML + errorMetaHTML;
+					didInjectHeadHTML = true;
+					return buildHeadInjectionHtml(ssrNavigationContext, bootstrapModuleUrl, options?.formState ?? null, insertedHTML + errorMetaHTML + getTraceMetaHTML() + initialDevServerErrorHTML, fontHTML, options?.dynamicStaleTimeSeconds, options?.scriptNonce);
+				};
+				const getBeforeInteractiveHeadHTML = () => renderBeforeInteractiveInlineScripts(beforeInteractiveInlineScripts);
+				if (shouldDelayInitialHtmlPull) await waitAtLeastOneReactRenderTask();
+				return {
+					htmlStream: deferUntilStreamConsumed(htmlStream.pipeThrough(createTickBufferedTransform(rscEmbed, getInsertedHTML, getBeforeInteractiveHeadHTML, inlineCssManifest, inlineCssFontStyles, inlineCssFontStyleFallbackHTML, options?.scriptNonce)), cleanup),
+					metadataReady: Promise.resolve(),
+					capturedRscData: options?.capturedRscDataRef?.value ?? null,
+					shellErrorRecovered,
+					linkHeader: reactLinkHeader
+				};
+			} catch (error) {
+				cleanup();
+				throw error;
+			}
+		});
+	});
+}
+var app_ssr_entry_default = { async fetch(request) {
+	if (isOpenRedirectShaped(new URL(request.url).pathname)) return notFoundResponse();
+	const result = await (await import("../index.js")).default(request);
+	if (result instanceof Response) return result;
+	if (result == null) return notFoundResponse();
+	return new Response(String(result), { status: 200 });
+} };
+//#endregion
+export { getLayoutSegmentContext as a, markPprFallbackShellDynamicBoundary as c, app_ssr_entry_default as default, handleSsr, isRedirectError as i, __commonJSMin as l, DefaultGlobalError as n, getNavigationContext as o, decodeRedirectError as r, AppRouterContext as s, stripBasePath as t, __require as u };

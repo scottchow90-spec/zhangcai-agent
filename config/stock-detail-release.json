@@ -1,0 +1,16 @@
+{
+  "schema": "ZHANGCAI_STOCK_DETAIL_RELEASE_V1",
+  "provenance": "Exact entry order from preserved app/home-client.tsx stockDetailSkills; also listed in agent-server.mjs INDIVIDUAL_STOCK_SKILL_IDS.",
+  "skills": [
+    "baimao-score-system",
+    "big-bull-analysis-scoring-system",
+    "financial-roe-analysis",
+    "stock-analysis",
+    "stock-research-engine",
+    "stock-study",
+    "support-pressure-analysis-system",
+    "risk-mine-clearance",
+    "baimao-teacher-system",
+    "technical-analysis"
+  ]
+}

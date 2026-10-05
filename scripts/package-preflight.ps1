@@ -53,6 +53,13 @@ Require-Path 'agent-server.mjs' 'bridge entry'
 Require-Path (Join-Path $siteBuildDist 'client') 'Vinext client build'
 Require-Path (Join-Path $siteBuildDist 'server') 'Vinext server build'
 Require-Path 'harness-skills' 'skill directory'
+Require-Path 'skill-archives' 'Skill14 source archive directory'
+Require-Path 'scripts\verify_skill14_archives.py' 'Skill14 archive release verifier'
+Require-Path 'scripts\verify_stock_detail_skills.py' 'stock-detail skill release verifier'
+Require-Path 'scripts\tests\verify_stock_detail_skill_discovery.mjs' 'stock-detail DSH discovery test'
+Require-Path 'scripts\tests\verify_skill14_packaged_runtime.mjs' 'Skill14 packaged runtime and DSH discovery test'
+Require-Path 'config\skill14-archive-lock.json' 'Skill14 release archive hashes'
+Require-Path 'config\stock-detail-release.json' 'stock-detail release IDs'
 Require-Path '.runtime\node\node.exe' 'bundled Node'
 Require-Path '.runtime\python\python.exe' 'bundled Python'
 Require-Path 'harness-headless.patch.yml' 'Harness headless patch'
@@ -64,7 +71,7 @@ Require-Path 'electron-app\runtime-manifest.json' 'desktop runtime manifest'
 Require-Path 'packaging\staging\desktop-runtime\manifest.json' 'pruned reusable desktop environment layer'
 Require-Path 'packaging\staging\desktop-runtime\deepseek-harness\node_modules\yaml\dist\doc\directives.js' 'Harness YAML runtime directive module'
 Require-Path 'packaging\environment-baseline-version.txt' 'environment baseline version'
-Require-Path 'app-data\evidence\formulas\package\manifest.json' 'portable TQ formula seed source'
+Require-Path 'electron-app\resource-library\evidence\formulas\package\manifest.json' 'embedded portable TQ formula seed'
 Require-Path 'packaging\dependency-manifest.json' 'desktop dependency manifest'
 Require-Path 'packaging\main-installer-policy.json' 'main installer packaging policy'
 Require-Path 'electron-app\resources\zhangcai-icon.png' 'desktop icon'
@@ -91,16 +98,100 @@ if ($MainInstaller) {
   $mainBuildScriptPath = Join-Path $projectRoot 'scripts\package-win.ps1'
   $builderText = if (Test-Path -LiteralPath $builderConfigPath) { Get-Content -LiteralPath $builderConfigPath -Raw -Encoding UTF8 } else { '' }
   $mainBuildText = if (Test-Path -LiteralPath $mainBuildScriptPath) { Get-Content -LiteralPath $mainBuildScriptPath -Raw -Encoding UTF8 } else { '' }
+  $expectedSiteBuildMapping = "packaging/staging/site-build-$($package.version)/dist"
+  if ($builderText.IndexOf($expectedSiteBuildMapping, [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
+    $errors.Add("Main installer frontend mapping must match package version $($package.version): $expectedSiteBuildMapping")
+  }
+  $expectedReleaseDirectory = "dist-installer/releases/$($package.version)"
+  if ($builderText.IndexOf($expectedReleaseDirectory, [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
+    $warnings.Add("Electron builder default output path is not pinned to current package version $($package.version); package-win must pass the immutable release output explicitly.")
+  }
 
   foreach ($requiredMapping in @(
     'packaging/staging/desktop-runtime/app-node-modules',
     'packaging/staging/desktop-runtime/python',
     'packaging/staging/desktop-runtime/deepseek-harness',
-    'electron-app/resource-library'
+    'electron-app/resource-library',
+    'from: harness-skills',
+    'to: app/harness-skills',
+    'from: skill-archives',
+    'to: app/skill-archives'
   )) {
     if ($builderText.IndexOf($requiredMapping, [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
       $errors.Add("Main installer builder is missing required baseline mapping: $requiredMapping")
     }
+  }
+
+  $archiveVerifier = Join-Path $projectRoot 'scripts\verify_skill14_archives.py'
+  $archivePython = Join-Path $projectRoot '.runtime\python\python.exe'
+  if ((Test-Path -LiteralPath $archiveVerifier -PathType Leaf) -and (Test-Path -LiteralPath $archivePython -PathType Leaf)) {
+    $archiveOutput = & $archivePython -B $archiveVerifier 2>&1
+    $archiveExitCode = $LASTEXITCODE
+    try {
+      $archiveReport = ($archiveOutput -join "`n") | ConvertFrom-Json
+      if ($archiveExitCode -ne 0 -or $archiveReport.status -ne 'CLEAN_PASS' -or $archiveReport.checked_count -ne 14) {
+        $details = @($archiveReport.errors) -join '; '
+        if (-not $details) { $details = "status=$($archiveReport.status); checked=$($archiveReport.checked_count)" }
+        $errors.Add("Skill14 archive release gate failed: $details")
+      }
+    }
+    catch {
+      $errors.Add("Skill14 archive release verifier returned invalid JSON: $($_.Exception.Message)")
+    }
+  }
+  else {
+    $errors.Add('Skill14 archive verification requires the bundled Python runtime and scripts/verify_skill14_archives.py.')
+  }
+
+  $skill14RuntimeTest = Join-Path $projectRoot 'scripts\tests\verify_skill14_packaged_runtime.mjs'
+  $skill14Node = Join-Path $projectRoot '.runtime\node\node.exe'
+  $skill14DshRoot = Join-Path $projectRoot 'packaging\staging\desktop-runtime\deepseek-harness'
+  if ((Test-Path -LiteralPath $skill14RuntimeTest -PathType Leaf) -and (Test-Path -LiteralPath $skill14Node -PathType Leaf) -and (Test-Path -LiteralPath $skill14DshRoot -PathType Container) -and (Test-Path -LiteralPath $archivePython -PathType Leaf)) {
+    $runtimeTestEnvNames = @('ZHANGCAI_RELEASE_APP_ROOT', 'ZHANGCAI_RELEASE_DSH_ROOT', 'ZHANGCAI_RELEASE_PYTHON')
+    $runtimeTestOldEnv = @{}
+    foreach ($name in $runtimeTestEnvNames) { $runtimeTestOldEnv[$name] = [Environment]::GetEnvironmentVariable($name) }
+    try {
+      $env:ZHANGCAI_RELEASE_APP_ROOT = $projectRoot
+      $env:ZHANGCAI_RELEASE_DSH_ROOT = $skill14DshRoot
+      $env:ZHANGCAI_RELEASE_PYTHON = $archivePython
+      $runtimeTestOutput = & $skill14Node $skill14RuntimeTest 2>&1
+      $runtimeTestExitCode = $LASTEXITCODE
+    }
+    finally {
+      foreach ($name in $runtimeTestEnvNames) { [Environment]::SetEnvironmentVariable($name, $runtimeTestOldEnv[$name]) }
+    }
+    try {
+      $runtimeTestReport = ($runtimeTestOutput -join "`n") | ConvertFrom-Json
+      if ($runtimeTestExitCode -ne 0 -or $runtimeTestReport.status -ne 'CLEAN_PASS' -or $runtimeTestReport.prepared -ne 14 -or $runtimeTestReport.discovered -ne 14) {
+        $errors.Add("Skill14 packaged runtime release gate failed: prepared=$($runtimeTestReport.prepared); DSH=$($runtimeTestReport.discovered); status=$($runtimeTestReport.status)")
+      }
+    }
+    catch {
+      $errors.Add("Skill14 packaged runtime verifier returned invalid JSON: $($_.Exception.Message)")
+    }
+  }
+  else {
+    $errors.Add('Skill14 packaged runtime test requires the bundled Python/Node runtimes and staged Harness provider.')
+  }
+
+  $stockSkillVerifier = Join-Path $projectRoot 'scripts\verify_stock_detail_skills.py'
+  if ((Test-Path -LiteralPath $stockSkillVerifier -PathType Leaf) -and (Test-Path -LiteralPath $archivePython -PathType Leaf)) {
+    $stockSkillOutput = & $archivePython -B $stockSkillVerifier 2>&1
+    $stockSkillExitCode = $LASTEXITCODE
+    try {
+      $stockSkillReport = ($stockSkillOutput -join "`n") | ConvertFrom-Json
+      if ($stockSkillExitCode -ne 0 -or $stockSkillReport.status -ne 'CLEAN_PASS' -or $stockSkillReport.expected_skills -ne 10 -or $stockSkillReport.selftests_passed -ne 10 -or $stockSkillReport.dsh_discovered -ne 10) {
+        $details = @($stockSkillReport.errors) -join '; '
+        if (-not $details) { $details = "status=$($stockSkillReport.status); selftests=$($stockSkillReport.selftests_passed)/10; DSH=$($stockSkillReport.dsh_discovered)/10" }
+        $errors.Add("Stock-detail skill release gate failed: $details")
+      }
+    }
+    catch {
+      $errors.Add("Stock-detail skill release verifier returned invalid JSON: $($_.Exception.Message)")
+    }
+  }
+  else {
+    $errors.Add('Stock-detail skill verification requires the bundled Python runtime and scripts/verify_stock_detail_skills.py.')
   }
 
   foreach ($forbiddenMapping in @(
@@ -163,9 +254,28 @@ foreach ($name in $devDependencyNames) {
   if ($name -eq 'electron') { $hasElectron = $true }
   if ($name -eq 'electron-builder') { $hasElectronBuilder = $true }
 }
-$electronReady = $hasElectron -and $hasElectronBuilder
+$builderShim = Join-Path $projectRoot 'node_modules\.bin\electron-builder.cmd'
+$builderCli = Join-Path $projectRoot 'node_modules\electron-builder\cli.js'
+$builderNode = Join-Path $projectRoot '.runtime\node\node.exe'
+$builderEntrypointReady = (Test-Path -LiteralPath $builderShim -PathType Leaf) -or ((Test-Path -LiteralPath $builderCli -PathType Leaf) -and (Test-Path -LiteralPath $builderNode -PathType Leaf))
+$builderPackageFile = Join-Path $projectRoot 'node_modules\electron-builder\package.json'
+if ($builderEntrypointReady -and (Test-Path -LiteralPath $builderPackageFile -PathType Leaf)) {
+  try {
+    $installedBuilder = Get-Content -LiteralPath $builderPackageFile -Raw -Encoding UTF8 | ConvertFrom-Json
+    $pinnedBuilderVersion = [string]$package.devDependencies.'electron-builder'
+    if ($installedBuilder.version -ne $pinnedBuilderVersion) {
+      $builderEntrypointReady = $false
+      $errors.Add("Installed electron-builder version $($installedBuilder.version) does not match pinned package version $pinnedBuilderVersion.")
+    }
+  } catch {
+    $builderEntrypointReady = $false
+    $errors.Add("Installed electron-builder package metadata is invalid: $($_.Exception.Message)")
+  }
+}
+$electronReady = $hasElectron -and $hasElectronBuilder -and $builderEntrypointReady
 if (-not $electronReady) {
-  $warnings.Add('Electron and electron-builder are missing from package.json.')
+  $message = 'Electron runtime or the pinned electron-builder CLI is unavailable.'
+  if ($MainInstaller) { $errors.Add($message) } else { $warnings.Add($message) }
 }
 
 if (Test-Path -LiteralPath (Join-Path $projectRoot '.env.local')) {
@@ -212,6 +322,7 @@ $environmentUninstallerLabel = -join @([char]0x638C, [char]0x8D22, [char]0x684C,
   harnessReady = [bool]$harnessReady
   harnessEntry = if ($harnessReady) { $harnessReady } else { '' }
   electronReady = $electronReady
+  electronBuilderInvocation = if (Test-Path -LiteralPath $builderShim -PathType Leaf) { 'cmd-shim' } elseif ($builderEntrypointReady) { 'bundled-node-cli' } else { 'missing' }
   sizesBytes = $sizes
   errors = @($errors)
   warnings = @($warnings)

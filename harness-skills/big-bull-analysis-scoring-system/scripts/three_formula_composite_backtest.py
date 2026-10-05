@@ -22,6 +22,11 @@ from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
 
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
+
 import numpy as np
 import pandas as pd
 
@@ -38,7 +43,7 @@ from scoring_mode_gate import (
 )
 
 
-TDX_ROOT = Path(r"C:\new_tdx_mock")
+TDX_ROOT = resolve_tdx_root()
 TQ_USER_DIR = TDX_ROOT / "PYPlugins" / "user"
 TQ_INIT_PATH = TQ_USER_DIR / "tdxdata_test.py"
 DEFAULT_BLOCK_DIR = TDX_ROOT / "T0002" / "blocknew"

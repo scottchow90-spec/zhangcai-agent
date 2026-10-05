@@ -7,10 +7,15 @@ Conversion float32(value*10000) matches native TQ Ltgb/Zgb shares, including
 """
 from pathlib import Path
 from datetime import datetime,timezone,timedelta
-import struct,math,hashlib,importlib.util
+import struct,math,hashlib,importlib.util,sys
 
-CACHE=Path(r'D:\TDX\T0002\hq_cache\gbbq')
-READER=Path(r'F:\Codex\Home\skills\a-share-oss-research\runtimes\fasiondog-hikyuu\Lib\site-packages\pytdx\reader\gbbq_reader.py')
+_app_scripts_dir = str(Path(__file__).resolve().parents[6] / 'scripts')
+if _app_scripts_dir not in sys.path: sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_app_root, resolve_tdx_root
+
+APP_ROOT=resolve_app_root();TDX_ROOT=resolve_tdx_root()
+CACHE=TDX_ROOT/'T0002'/'hq_cache'/'gbbq'
+READER=APP_ROOT/'harness-skills'/'feilong-strategy'/'vendor'/'pytdx-1.72'/'pytdx'/'reader'/'gbbq_reader.py'
 FIELDS=('hongli_panqianliutong','peigujia_qianzongguben','songgu_qianzongguben','peigu_houzongguben')
 
 def day(value):

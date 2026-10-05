@@ -9,7 +9,14 @@ if _onestock_embedded_dir not in _onestock_embedded_sys.path:
     _onestock_embedded_sys.path.insert(0, _onestock_embedded_dir)
 import os, sys, json
 from pathlib import Path
-TDX_ROOT = Path(r"C:\new_tdx_mock")
+import sys
+
+APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
+
+TDX_ROOT = resolve_tdx_root()
 TQ_INIT = TDX_ROOT / "PYPlugins" / "user" / "tdxdata_test.py"
 os.chdir(str(TDX_ROOT))
 sys.path.insert(0, str(TDX_ROOT / "PYPlugins" / "user"))

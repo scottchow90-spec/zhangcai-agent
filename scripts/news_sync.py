@@ -210,6 +210,12 @@ def main() -> int:
     providers = {provider: _fetch_provider(provider, args.limit) for provider in ("eastmoney", "sina", "cls", "ths")}
     records = _merge_records(providers)
     same_day = [row for row in records if str(row.get("source_timestamp") or "").startswith(date_text)]
+    actual_record_dates = [
+        _source_time(row.get("source_timestamp"))[:10]
+        for row in records
+        if _source_time(row.get("source_timestamp"))
+    ]
+    latest_record_date = max(actual_record_dates) if actual_record_dates else ""
     succeeded = [provider for provider, value in providers.items() if value.get("record_count", 0) > 0]
     failed = {provider: value.get("error", "empty") for provider, value in providers.items() if provider not in succeeded}
     provider_hashes = "|".join(str(value.get("sha256") or "") for value in providers.values())
@@ -217,7 +223,11 @@ def main() -> int:
         "schema": "ZHANGCAI_MULTI_SOURCE_NEWS_SNAPSHOT_V2",
         "date": date_text,
         "requested_date": date_text,
-        "source_date": date_text,
+        # `date` is the requested archive/trade date; `source_date` must
+        # describe the actual publication dates in the records. This prevents
+        # rolling public news from being mislabeled as same-day evidence.
+        "source_date": latest_record_date or date_text,
+        "latest_record_date": latest_record_date,
         "source": providers.get("eastmoney", {}),
         "source_name": "eastmoney,sina,cls,ths",
         "source_url_or_local_root": "news/" + compact,

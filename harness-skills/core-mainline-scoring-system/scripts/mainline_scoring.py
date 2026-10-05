@@ -83,12 +83,18 @@ THEME_ALIASES = {
     "算力": "算力",
 }
 TDX_DAY_RECORD = struct.Struct("<IIIIIfII")
-TDX_VIPDOC = Path(os.environ.get("TDX_VIPDOC", r"C:\new_tdx_mock\vipdoc"))
-TDX_HQ_CACHE = Path(os.environ.get("TDX_HQ_CACHE", r"C:\new_tdx_mock\T0002\hq_cache"))
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in _onestock_embedded_sys.path:
+    _onestock_embedded_sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_tdx_root
+
+TDX_ROOT = resolve_tdx_root()
+TDX_VIPDOC = Path(os.environ.get("TDX_VIPDOC", str(TDX_ROOT / "vipdoc"))).expanduser().resolve()
+TDX_HQ_CACHE = Path(os.environ.get("TDX_HQ_CACHE", str(TDX_ROOT / "T0002" / "hq_cache"))).expanduser().resolve()
 TDX_INFOHARBOR_BLOCK = Path(os.environ.get(
     "TDX_INFOHARBOR_BLOCK",
-    r"C:\new_tdx_mock\T0002\hq_cache\infoharbor_block.dat",
-))
+    str(TDX_HQ_CACHE / "infoharbor_block.dat"),
+)).expanduser().resolve()
 TDX_ZS_CONFIG = Path(os.environ.get("TDX_ZS_CONFIG", str(TDX_HQ_CACHE / "tdxzs.cfg")))
 TDX_HY_CONFIG = Path(os.environ.get("TDX_HY_CONFIG", str(TDX_HQ_CACHE / "tdxhy.cfg")))
 TDX_BASE_DBF = Path(os.environ.get("TDX_BASE_DBF", str(TDX_HQ_CACHE / "base.dbf")))

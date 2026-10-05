@@ -18,7 +18,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = ROOT / "scripts"
-DUAN_CLIENT = Path(r"D:\C盘转移\日志\codex\skills\a-share-hotspot-sentiment-analysis\scripts\duanxianxia_client.ps1")
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_app_root, resolve_tdx_root
+
+DUAN_CLIENT = resolve_app_root() / "harness-skills" / "a-share-hotspot-sentiment-analysis" / "scripts" / "duanxianxia_client.ps1"
 sys.path.insert(0, str(SCRIPTS))
 from live_snapshot import build_snapshot
 from sentiment_engine import SnapshotValidationError, analyze_snapshot
@@ -94,7 +99,7 @@ def main() -> int:
     run_parser = sub.add_parser("run")
     run_parser.add_argument("--run-dir", required=True)
     run_parser.add_argument("--snapshot")
-    run_parser.add_argument("--tdx-root", default=r"C:\new_tdx_mock")
+    run_parser.add_argument("--tdx-root", default=str(resolve_tdx_root()))
     sub.add_parser("selftest")
     args = parser.parse_args()
     return selftest() if args.command == "selftest" else run(args)

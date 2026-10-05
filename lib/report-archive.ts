@@ -82,7 +82,7 @@ function normalizeReportRecord(record: ReportArchiveRecord): ReportArchiveRecord
 export function getReportArchiveKey(record: ReportArchiveRecord) {
   const explicit = safeArchivePart(record?.archiveKey);
   if (explicit) {
-    const dated = explicit.match(/^(chat|stock|skill14|strategy|golden):([^:]+):(.*)$/);
+    const dated = explicit.match(/^(chat|stock|skill14|strategy|golden|mainline|market):([^:]+):(.*)$/);
     return dated ? `${dated[1]}:${archiveDate(dated[2])}:${dated[3]}` : explicit;
   }
   const content = record?.content && typeof record.content === 'object'
@@ -98,7 +98,9 @@ export function getReportArchiveKey(record: ReportArchiveRecord) {
     const skill = Number(content.planLength || 0) > 1
       ? 'complete-plan'
       : safeArchivePart(content.skillId || 'complete-plan');
-    return `chat:${date}:${skill}`;
+    const targetStocks = Array.isArray(content.targetStocks) ? content.targetStocks as Array<Record<string, unknown>> : [];
+    const targets = targetStocks.map((stock) => `${safeArchivePart(stock.market || 'XX')}${safeArchivePart(stock.code || stock.name || 'market')}`).sort().join('_') || 'market';
+    return `chat:${date}:${targets}:${skill}`;
   }
   if (kind === 'stock-research') {
     const stock = safeArchivePart((content.stock as Record<string, unknown> | undefined)?.code || 'unknown-stock');
@@ -175,6 +177,22 @@ export function loadReportArchive(): ReportArchiveRecord[] {
   } catch {
     return [];
   }
+}
+
+const excludedIndividualStockSkillIds = new Set([
+  'support-pressure-analysis-system',
+  'technical-analysis',
+]);
+
+/** Keep lightweight stock-detail calculations out of the durable report list. */
+export function shouldShowInMyReports(record: ReportArchiveRecord): boolean {
+  const content = record.content as Record<string, unknown> | undefined;
+  if (content?.kind !== 'stock-research') return true;
+  const skillId = String(content.skillId || '');
+  if (excludedIndividualStockSkillIds.has(skillId)) return false;
+  const generatedBy = String(record.generatedBy || '');
+  return !(generatedBy.startsWith('Local Daily Formula')
+    && (record.reportType.includes('支撑压力分析系统') || record.reportType.includes('技术分析')));
 }
 
 export async function saveReportArchive(record: ReportArchiveRecord): Promise<void> {

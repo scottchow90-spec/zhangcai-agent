@@ -8,12 +8,18 @@ import importlib.util
 import json
 import math
 import re
+import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
 import numpy as np
 import pandas as pd
+
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_data_root, resolve_tdx_root
 
 from feilong_continuation_research import (
     eligible_day_files,
@@ -38,13 +44,14 @@ from feilong_offline_replay import (
 
 FORMULA_NAME = "飞龙在天"
 FORMULA_SHA256 = "aabcec3d83b2b37d01d53ba4d9c281a745e29f53d941f3704da95dcea114e1e0"
-TDX_ROOT = Path(r"C:\new_tdx_mock")
+TDX_ROOT = resolve_tdx_root()
 SKILL_ROOT = Path(__file__).resolve().parents[1]
 FORMULA_PATH = SKILL_ROOT / "references" / "formulas" / "飞龙在天.tdx.txt"
-DEFAULT_MODEL = Path(r"F:\Codex\projects\飞龙在天评分体系彻底优化_20260901-184258\维度扩展V3\评分模型\飞龙共振首板_319维评分模型配置.json")
-DEFAULT_HISTORY = Path(r"F:\Codex\projects\飞龙在天评分体系彻底优化_20260901-184258\维度扩展V3\因子全量重算\飞龙共振首板_全量因子事件值.csv")
-DEFAULT_SCORER = Path(r"F:\Codex\projects\飞龙在天评分体系彻底优化_20260901-184258\apply_yaogu_scoring.py")
-DEFAULT_OUT = Path(r"F:\Codex\projects\飞龙在天评分体系彻底优化_20260901-184258\维度扩展V3\实战评分")
+DAILY_SCORE_ASSET_ROOT = SKILL_ROOT / "models" / "daily-score-v3"
+DEFAULT_MODEL = DAILY_SCORE_ASSET_ROOT / "飞龙共振首板_319维评分模型配置.json"
+DEFAULT_HISTORY = DAILY_SCORE_ASSET_ROOT / "history" / "飞龙共振首板_全量因子事件值.csv"
+DEFAULT_SCORER = SKILL_ROOT / "scripts" / "apply_yaogu_scoring.py"
+DEFAULT_OUT = resolve_data_root() / "reports" / "feilong-strategy" / "daily-score"
 PRODUCTION_LOCK_PATH = SKILL_ROOT / "references" / "daily-score-production-lock-v3.json"
 PRODUCTION_SCHEMA = "FEILONG_DAILY_YAOGU_PRODUCTION_V3"
 DECISION_RULE_VERSION = "FEILONG_MULTIDIM_DECISION_V3"
@@ -79,6 +86,33 @@ def file_evidence(path: Path) -> dict[str, Any]:
     return {"path": str(path), "size": path.stat().st_size, "sha256": sha256_path(path)}
 
 
+def resolve_portable_lock_asset(item: dict[str, Any]) -> Path:
+    """Resolve lock entries to the packaged skill tree, not their authoring PC."""
+    role = str(item.get("role", "")).strip()
+    authored_path = str(item.get("path", ""))
+    authored = Path(authored_path)
+    if authored.is_file():
+        return authored.resolve()
+
+    normalized = authored_path.replace("/", "\\")
+    marker = "feilong-strategy\\"
+    marker_at = normalized.casefold().find(marker.casefold())
+    if marker_at >= 0:
+        relative = normalized[marker_at + len(marker):]
+        portable = SKILL_ROOT.joinpath(*relative.split("\\"))
+        if portable.is_file():
+            return portable.resolve()
+
+    portable_roles = {
+        "score_model": DAILY_SCORE_ASSET_ROOT / "飞龙共振首板_319维评分模型配置.json",
+        "training_history": DAILY_SCORE_ASSET_ROOT / "history" / "飞龙共振首板_全量因子事件值.csv",
+        "score_engine": SKILL_ROOT / "scripts" / "apply_yaogu_scoring.py",
+    }
+    if role in portable_roles:
+        return portable_roles[role].resolve()
+    return authored.resolve()
+
+
 def validate_production_lock(path: Path) -> dict[str, Any]:
     payload = json.loads(path.read_text(encoding="utf-8"))
     if payload.get("schema") != "FEILONG_DAILY_SCORE_PRODUCTION_LOCK_V3" or payload.get("status") != "LOCKED":
@@ -102,7 +136,7 @@ def validate_production_lock(path: Path) -> dict[str, Any]:
         role = str(item.get("role", "")).strip()
         if not role or role in bindings:
             raise RuntimeError("生产规则锁资产角色缺失或重复")
-        asset = Path(str(item.get("path", ""))).resolve()
+        asset = resolve_portable_lock_asset(item)
         if not asset.is_file():
             raise RuntimeError(f"生产规则锁资产缺失:{asset}")
         evidence = file_evidence(asset)

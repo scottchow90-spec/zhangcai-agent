@@ -717,7 +717,7 @@ function coerceHarnessJson(text) {
 
 // Harness 只接收 DeepSeek 凭据。不要继承父进程中可能存在的其他模型
 // 服务商密钥，以免未来桌面版误切换到非预期的 AI 提供方。
-function harnessEnvironment() {
+function harnessEnvironment(skillBundleRoot = '') {
   const configuredTdxRoot = bridgeTdxRoot();
   const childTdxRoot = configuredTdxRoot || path.join(DATA_ROOT, 'runtime', '__tdx_root_not_configured__');
   const env = {
@@ -750,6 +750,7 @@ function harnessEnvironment() {
     PYTHONIOENCODING: 'utf-8',
     ZHANGCAI_DATA_POLICY: process.env.ZHANGCAI_DATA_POLICY || 'local_first_on_demand',
   };
+  if (skillBundleRoot) env.DSH_BUNDLED_SKILL_DIR = skillBundleRoot;
   const requiredSystemVariables = [
     'PATH', 'Path', 'PATHEXT', 'SystemRoot', 'SYSTEMROOT', 'WINDIR', 'ComSpec',
     'TEMP', 'TMP', 'APPDATA', 'LOCALAPPDATA', 'USERPROFILE', 'HOMEDRIVE',
@@ -762,6 +763,31 @@ function harnessEnvironment() {
   delete env.Path;
   env.PATH = [path.dirname(process.execPath), path.dirname(localPythonExecutable()), inheritedPath].filter(Boolean).join(path.delimiter);
   return env;
+}
+
+async function prepareSkill14HarnessPackage(skillId) {
+  if (!skill14Catalog().skills.some((skill) => skill?.id === skillId)) return null;
+  const result = await runLocalScript(
+    'skill14_data_runtime.py',
+    ['prepare-harness-skill', '--skill-id', skillId],
+    600000,
+    24000,
+  );
+  let bundle;
+  try { bundle = JSON.parse(result.output || '{}'); } catch { throw new Error('14 技能装载器返回了无效 JSON'); }
+  if (bundle?.status !== 'available' || !bundle.harness_skill_root) {
+    throw new Error(String(bundle?.error || `14 技能 ${skillId} 未能装载到 Harness`));
+  }
+  const root = path.resolve(String(bundle.harness_skill_root));
+  const relative = path.relative(DATA_ROOT, root);
+  if (!relative || relative === '..' || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
+    throw new Error(`14 技能装载路径不在本应用数据目录中：${root}`);
+  }
+  if (!existsSync(path.join(root, 'SKILL.md'))) {
+    throw new Error(`14 技能入口文件缺失：${path.join(root, 'SKILL.md')}`);
+  }
+  if (!bundle.skill_name) throw new Error(`14 技能缺少 Harness frontmatter name：${skillId}`);
+  return { ...bundle, harness_skill_root: root };
 }
 
 function stopHarnessProcess(child) {
@@ -777,13 +803,17 @@ function stopHarnessProcess(child) {
 async function runHarness(prompt, skillId = '', options = {}) {
   // Resolve before entering the Promise: a thrown launcher error must reject
   // the task instead of escaping an async Promise executor and keeping its lock.
+  const skill14Bundle = await prepareSkill14HarnessPackage(skillId);
+  const harnessPrompt = skill14Bundle
+    ? `本次必须调用已装载的 Harness 技能“${skill14Bundle.skill_name}”（掌财技能 ID：${skillId}），按其 SKILL.md 和相对 references 规则执行；不得改用同名旧副本。\n\n${prompt}`
+    : prompt;
   const taskDir = path.join(HARNESS_ROOT, 'tasks');
   const taskFile = path.join(taskDir, `task-${randomUUID()}.txt`);
-  const inline = options.inline === true && Buffer.byteLength(prompt, 'utf8') < 7000;
-  const launchTask = inline ? prompt : `请读取并执行任务文件 ${taskFile}，最终只输出文件要求的结果。`;
+  const inline = options.inline === true && Buffer.byteLength(harnessPrompt, 'utf8') < 7000;
+  const launchTask = inline ? harnessPrompt : `请读取并执行任务文件 ${taskFile}，最终只输出文件要求的结果。`;
   const spec = commandFor(launchTask);
   await mkdir(taskDir, { recursive: true });
-  await writeFile(taskFile, prompt, 'utf8');
+  await writeFile(taskFile, harnessPrompt, 'utf8');
   return new Promise((resolve, reject) => {
     const timeoutMs = timeoutForSkill(skillId);
     const startedAt = Date.now();
@@ -794,7 +824,7 @@ async function runHarness(prompt, skillId = '', options = {}) {
     let child;
     try {
       child = spawn(spec.command, spec.args, {
-        env: harnessEnvironment(),
+        env: harnessEnvironment(skill14Bundle?.harness_skill_root || ''),
         cwd: DATA_ROOT,
         windowsHide: true,
       });
@@ -1320,6 +1350,34 @@ function localTdxDailyProjection(row, historyLimit = 60) {
   };
 }
 
+function localTdxQuoteProjection(code, market, seed = {}) {
+  const normalized = normalizeHistorySymbol(`${code}.${market}`);
+  if (!normalized) return null;
+  const history = localTdxHistory(normalized.code, normalized.market, 60);
+  if (!history.length) return null;
+  const latest = history.at(-1);
+  const previous = history.at(-2);
+  const close = numericMarketField(latest?.close);
+  if (!(close > 0)) return null;
+  const previousClose = numericMarketField(previous?.close, numericMarketField(seed.previousClose, close));
+  return {
+    ...seed,
+    ...latest,
+    code: normalized.code,
+    market: normalized.market.toLowerCase(),
+    name: String(seed.name || normalized.code),
+    date: compactMarketDate(latest.date),
+    previousClose,
+    pct: previousClose > 0 ? Number((((close / previousClose) - 1) * 100).toFixed(2)) : 0,
+    history,
+    realtime: false,
+    quoteMode: 'local_daily_close',
+    latestDataAt: new Date().toISOString(),
+    source: '通达信本地最近交易日收盘数据（降级）',
+    quality: 'degraded',
+  };
+}
+
 function publicQueryString(params) {
   return Object.entries(params).map(([key, value]) => (
     `${encodeURIComponent(key)}=${encodeURIComponent(String(value)).replace(/%2C/gi, ',').replace(/%2E/gi, '.')}`
@@ -1632,6 +1690,15 @@ function localMarketFallback(scope, codes, reason) {
     ? sourceRows.filter((row) => requested.has(String(row?.code || '')))
     : sourceRows;
   const rows = selectedRows.map((row) => localTdxDailyProjection(row));
+  if (scope === 'watchlist') {
+    for (const code of requested) {
+      if (rows.some((row) => String(row?.code || '') === code)) continue;
+      const normalized = normalizeHistorySymbol(code);
+      if (!normalized) continue;
+      const quote = localTdxQuoteProjection(code, normalized.market);
+      if (quote) rows.push(quote);
+    }
+  }
   const indices = (Array.isArray(snapshot.indices) ? snapshot.indices : []).map((row) => {
     const config = PUBLIC_INDEX_QUOTES.find((item) => item.key === String(row?.code || ''));
     return config
@@ -1740,8 +1807,23 @@ async function runMarketRefresh(scope = 'indices', codes = '') {
     });
   });
   try {
+    const expectedWatchlistCode = scope === 'watchlist'
+      ? String(codes || '').trim().split(',')[0].trim().split('.', 1)[0]
+      : '';
     const primaryResult = primary.then(
-      (value) => ({ kind: 'primary', value }),
+      (value) => {
+        if (!value || value.status === 'error') {
+          return { kind: 'primary-error', error: new Error(String(value?.error || '行情桥接返回错误状态')) };
+        }
+        if (scope === 'watchlist' && expectedWatchlistCode) {
+          const quote = (Array.isArray(value.stocks) ? value.stocks : [])
+            .find((row) => String(row?.code || '') === expectedWatchlistCode);
+          if (!quote || !(Number(quote.close) > 0)) {
+            return { kind: 'primary-error', error: new Error(`行情桥接未返回 ${expectedWatchlistCode} 的有效价格`) };
+          }
+        }
+        return { kind: 'primary', value };
+      },
       (error) => ({ kind: 'primary-error', error }),
     );
     const candidates = [primaryResult];
@@ -2830,13 +2912,49 @@ function resourceLibraryContext() {
   const publicMarket = readJson(path.join(DATA_ROOT, 'public', 'latest.json')) || {};
   const publicResearchPrimaryFile = path.join(DATA_ROOT, 'evidence', 'public', 'latest.json');
   const publicResearchFallbackFile = path.join(DATA_ROOT, 'evidence', 'public', 'fallback-latest.json');
-  const publicResearchFile = existsSync(publicResearchPrimaryFile)
-    ? publicResearchPrimaryFile
-    : publicResearchFallbackFile;
-  const publicResearch = readJson(publicResearchFile)
-    || readJson(publicResearchFallbackFile)
-    || readJson(path.join(DATA_ROOT, 'news', 'latest.json'))
-    || {};
+  const newsLatestFile = path.join(DATA_ROOT, 'news', 'latest.json');
+  const publicResearchPrimary = readJson(publicResearchPrimaryFile) || {};
+  const publicResearchFallback = readJson(publicResearchFallbackFile) || {};
+  const newsLatest = readJson(newsLatestFile) || {};
+  const researchStats = (value) => {
+    const snapshot = value?.snapshot && typeof value.snapshot === 'object' ? value.snapshot : value;
+    let records = Array.isArray(snapshot?.records) ? snapshot.records.filter((row) => row && typeof row === 'object') : [];
+    if (!records.length && snapshot?.providers && typeof snapshot.providers === 'object') {
+      records = Object.values(snapshot.providers).flatMap((provider) => Array.isArray(provider?.records) ? provider.records : []);
+    }
+    if (!records.length && snapshot?.source && Array.isArray(snapshot.source.records)) records = snapshot.source.records;
+    const recordDates = records.map((row) => String(row?.source_timestamp || row?.publishedAt || row?.published_at || row?.publish_time || row?.date || '').match(/\d{4}-\d{1,2}-\d{1,2}/)?.[0] || '').filter(Boolean).map((date) => {
+      const [year, month, day] = date.split('-');
+      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    });
+    const targetDate = String(value?.requested_trade_date || value?.requested_date || value?.target_date || value?.date || snapshot?.requested_date || snapshot?.date || '').replace(/\//g, '-').slice(0, 10);
+    const sameDayRecordCount = records.filter((row) => {
+      const raw = String(row?.source_timestamp || row?.publishedAt || row?.published_at || row?.publish_time || row?.date || '').match(/\d{4}-\d{1,2}-\d{1,2}/)?.[0] || '';
+      if (!raw || !targetDate) return false;
+      const [year, month, day] = raw.split('-');
+      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}` === targetDate;
+    }).length;
+    const fallbackKind = String(value?.fallback_kind || '');
+    const providers = new Set(records.flatMap((row) => Array.isArray(row?.providers) ? row.providers : [row?.provider || row?.source].filter(Boolean)).map(String));
+    return { snapshot, recordCount: records.length, latestRecordDate: recordDates.sort().at(-1) || '', sameDayRecordCount, targetDate, fallbackKind, providerCounts: value?.context_provider_counts || value?.provider_counts || snapshot?.provider_records || {}, providerNames: [...providers] };
+  };
+  const primaryStats = researchStats(publicResearchPrimary);
+  const newsStats = researchStats(newsLatest);
+  const fallbackStats = researchStats(publicResearchFallback);
+  // A market-only fallback is useful context but must never mask real news
+  // that was already downloaded to news/latest.json.
+  const selectedResearch = primaryStats.recordCount > 0 && !primaryStats.fallbackKind
+    ? [publicResearchPrimary, publicResearchPrimaryFile, primaryStats]
+    : newsStats.recordCount > 0 && !newsStats.fallbackKind
+      ? [newsLatest, newsLatestFile, newsStats]
+      : primaryStats.fallbackKind
+        ? [publicResearchPrimary, publicResearchPrimaryFile, primaryStats]
+        : fallbackStats.recordCount > 0
+          ? [publicResearchFallback, publicResearchFallbackFile, fallbackStats]
+          : existsSync(publicResearchPrimaryFile)
+            ? [publicResearchPrimary, publicResearchPrimaryFile, primaryStats]
+            : [newsLatest, newsLatestFile, newsStats];
+  const [publicResearch, publicResearchFile, selectedResearchStats] = selectedResearch;
   const formulaManifestFile = path.join(DATA_ROOT, 'evidence', 'formulas', 'package', 'manifest.json');
   const formulaManifest = readJson(formulaManifestFile) || {};
   const formulaPackageRoot = path.dirname(formulaManifestFile);
@@ -2870,12 +2988,12 @@ function resourceLibraryContext() {
   const publicAsset = statusAssets.public_research && typeof statusAssets.public_research === 'object'
     ? statusAssets.public_research
     : {};
-  const publicSnapshot = publicResearch?.snapshot && typeof publicResearch.snapshot === 'object'
-    ? publicResearch.snapshot
-    : publicResearch;
-  const publicResearchFallback = Boolean(publicResearch?.fallback_kind);
-  const publicResearchStatus = publicAsset.status
-    || (publicSnapshot && Object.keys(publicSnapshot).length ? (publicResearchFallback ? 'degraded' : 'available') : 'missing');
+  const publicSnapshot = selectedResearchStats.snapshot;
+  const publicResearchFallbackKind = selectedResearchStats.fallbackKind;
+  const publicTargetDate = String(publicAsset.target_date || statusAssets.tdx_daily_history?.trade_date || publicMarket.date || selectedResearchStats.targetDate || '');
+  const publicResearchStatus = selectedResearchStats.recordCount > 0
+    ? (selectedResearchStats.sameDayRecordCount > 0 && !publicResearchFallbackKind ? 'available' : 'degraded')
+    : (publicResearchFallbackKind ? 'degraded' : 'missing');
   const latestReceipt = latestFormulaReceipt();
   const formulaRuntimeStatus = formulaAsset.status === 'available' || latestReceipt
     ? 'available'
@@ -2906,10 +3024,16 @@ function resourceLibraryContext() {
     public_research: {
       status: publicResearchStatus,
       path: dataRelativePath(publicResearchFile),
-      sourceDate: publicResearch.source_date || publicResearch.date || publicSnapshot.date || '',
-      sameDayRecordCount: Number(publicResearch.same_day_record_count || publicResearch.sameDayRecordCount || 0),
-      providerCounts: publicResearch.provider_counts || {},
-      fallbackKind: publicResearch.fallback_kind || '',
+      sourceDate: selectedResearchStats.latestRecordDate || '',
+      targetDate: publicTargetDate,
+      sameDayRecordCount: selectedResearchStats.sameDayRecordCount,
+      contextRecordCount: selectedResearchStats.recordCount,
+      providerCounts: selectedResearchStats.providerCounts,
+      providers: selectedResearchStats.providerNames,
+      fallbackKind: publicResearchFallbackKind,
+      reason: publicResearchStatus === 'degraded'
+        ? `保留 ${selectedResearchStats.recordCount} 条公开资讯记录（最新来源日 ${selectedResearchStats.latestRecordDate || '未标注'}）；目标日 ${publicTargetDate || '未知'} 同日记录 ${selectedResearchStats.sameDayRecordCount} 条。`
+        : publicResearchStatus === 'missing' ? '资源库中尚无可引用的公开资讯记录。' : '',
       fallbackPath: dataRelativePath(publicResearchFallbackFile),
       snapshot: publicSnapshot,
     },
@@ -3450,7 +3574,7 @@ function normalizeReportArchiveRecord(record) {
 function reportArchiveKey(record) {
   const explicit = safeReportArchivePart(record?.archiveKey);
   if (explicit) {
-    const dated = explicit.match(/^(chat|stock|skill14|strategy|golden):([^:]+):(.*)$/);
+    const dated = explicit.match(/^(chat|stock|skill14|strategy|golden|mainline|market):([^:]+):(.*)$/);
     return dated ? `${dated[1]}:${reportArchiveDate(dated[2])}:${dated[3]}` : explicit;
   }
   const content = record?.content && typeof record.content === 'object' ? record.content : {};
@@ -3460,7 +3584,10 @@ function reportArchiveKey(record) {
   if (kind === 'market-report' || /行情复盘|历史复盘|结构化复盘|Harness 复盘/.test(reportLabel)) return 'market-review';
   if (kind === 'chat-report') {
     const skill = Number(content.planLength || 0) > 1 ? 'complete-plan' : safeReportArchivePart(content.skillId || 'complete-plan');
-    return `chat:${date}:${skill}`;
+    const targets = Array.isArray(content.targetStocks)
+      ? content.targetStocks.map((stock) => `${safeReportArchivePart(stock?.market || 'XX')}${safeReportArchivePart(stock?.code || stock?.name || 'market')}`).sort().join('_')
+      : '';
+    return `chat:${date}:${targets || 'market'}:${skill}`;
   }
   if (kind === 'stock-research') {
     const stock = content.stock && typeof content.stock === 'object' ? content.stock : {};
@@ -3529,33 +3656,15 @@ function readLocalReportArchive() {
   return collapseReportArchiveRows(readRawLocalReportArchive());
 }
 
-async function compactLocalReportArchive() {
-  const indexed = readRawLocalReportArchive();
-  const reports = collapseReportArchiveRows(indexed);
-  const keepIds = new Set(reports.map((item) => item.id));
-  const removedIds = [...new Set(indexed
-    .filter((item) => item && typeof item.id === 'string' && !keepIds.has(item.id))
-    .map((item) => item.id))];
-  // Also remove orphaned JSON files and old reports that were hidden by the
-  // semantic-key collapse. The user-facing archive is a latest-result store,
-  // not an append-only run log.
-  try {
-    for (const name of readdirSync(REPORT_ARCHIVE_ROOT)) {
-      if (!name.toLowerCase().endsWith('.json') || name === 'index.json') continue;
-      const item = readJson(path.join(REPORT_ARCHIVE_ROOT, name), null);
-      if (item?.id && !keepIds.has(item.id) && !removedIds.includes(item.id)) removedIds.push(item.id);
-    }
-  } catch { /* index cleanup remains valid even if an orphan file disappears */ }
-  for (const id of removedIds) {
-    const safeId = safeReportArchiveId(id);
-    if (!safeId) continue;
-    try { await unlink(path.join(REPORT_ARCHIVE_ROOT, `${safeId}.json`)); } catch { /* 已不存在 */ }
-  }
-  await writeRuntimeJson(REPORT_ARCHIVE_INDEX_FILE, reports);
-  return { reports, removed: removedIds.length };
+let reportArchiveMutationTail = Promise.resolve();
+function runReportArchiveMutation(operation) {
+  const current = reportArchiveMutationTail.then(operation, operation);
+  reportArchiveMutationTail = current.then(() => undefined, () => undefined);
+  return current;
 }
 
 async function persistLocalReportArchive(record) {
+  return runReportArchiveMutation(async () => {
   const id = safeReportArchiveId(record?.id);
   if (!id) throw new Error('报告缺少合法 ID');
   if (isHarnessTaskRecord(record)) {
@@ -3565,6 +3674,10 @@ async function persistLocalReportArchive(record) {
   const existing = readRawLocalReportArchive().filter((item) => item.id !== id);
   const next = collapseReportArchiveRows([normalized, ...existing]);
   const keepIds = new Set(next.map((item) => item.id));
+  // Commit the new record and index before removing superseded per-report
+  // files. A failed index write must not destroy the last visible report.
+  await writeRuntimeJson(path.join(REPORT_ARCHIVE_ROOT, `${id}.json`), normalized);
+  await writeRuntimeJson(REPORT_ARCHIVE_INDEX_FILE, next);
   for (const item of existing) {
     if (item?.id && !keepIds.has(item.id)) {
       const staleId = safeReportArchiveId(item.id);
@@ -3573,18 +3686,19 @@ async function persistLocalReportArchive(record) {
       }
     }
   }
-  await writeRuntimeJson(path.join(REPORT_ARCHIVE_ROOT, `${id}.json`), normalized);
-  await writeRuntimeJson(REPORT_ARCHIVE_INDEX_FILE, next);
   return { status: 'ok', id, path: path.join(DATA_ROOT, 'reports', 'archive', `${id}.json`), count: next.length };
+  });
 }
 
 async function deleteLocalReportArchive(id) {
+  return runReportArchiveMutation(async () => {
   const safeId = safeReportArchiveId(id);
   if (!safeId) throw new Error('报告 ID 无效');
   const next = readLocalReportArchive().filter((item) => item.id !== safeId);
-  try { await unlink(path.join(REPORT_ARCHIVE_ROOT, `${safeId}.json`)); } catch { /* 文件已不存在 */ }
   await writeRuntimeJson(REPORT_ARCHIVE_INDEX_FILE, next);
+  try { await unlink(path.join(REPORT_ARCHIVE_ROOT, `${safeId}.json`)); } catch { /* 文件已不存在 */ }
   return { status: 'ok', id: safeId, count: next.length };
+  });
 }
 
 function readableScriptError(scriptName, raw, code = 1) {
@@ -4762,8 +4876,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
   if (req.method === 'GET' && req.url === '/reports/archive') {
-    const compacted = await compactLocalReportArchive();
-    json(res, 200, { status: 'ok', root: path.join(DATA_ROOT, 'reports', 'archive'), index: path.join(DATA_ROOT, 'reports', 'archive', 'index.json'), reports: compacted.reports, compacted: compacted.removed });
+    json(res, 200, { status: 'ok', root: path.join(DATA_ROOT, 'reports', 'archive'), index: path.join(DATA_ROOT, 'reports', 'archive', 'index.json'), reports: readLocalReportArchive() });
     return;
   }
   if (req.method === 'POST' && req.url === '/reports/archive') {
@@ -4831,6 +4944,44 @@ const server = http.createServer(async (req, res) => {
     json(res, 200, resourceLibraryContext());
     return;
   }
+  if (req.method === 'GET' && req.url.startsWith('/runtime/environment?')) {
+    const requestUrl = new URL(req.url, `http://${HOST}:${PORT}`);
+    if (requestUrl.searchParams.get('summary') === '1') {
+      const cachedTdx = readJson(path.join(DATA_ROOT, 'runtime', 'tdx-runtime-status.json')) || {};
+      const currentStatus = readJson(path.join(DATA_ROOT, 'status', 'current.json')) || {};
+      const dailyArchive = readJson(path.join(DATA_ROOT, 'status', 'tdx-daily-history.json')) || {};
+      const tdxAsset = currentStatus.assets?.tdx_daily_history || {};
+      const checkedAt = cachedTdx.generatedAt || currentStatus.checked_at || dailyArchive.checked_at || '';
+      const ageMs = checkedAt ? Math.max(0, Date.now() - Date.parse(checkedAt)) : Number.POSITIVE_INFINITY;
+      const processState = cachedTdx.processState && typeof cachedTdx.processState === 'object' ? cachedTdx.processState : {};
+      const cacheStale = !Number.isFinite(ageMs) || ageMs > 30000;
+      const lastKnownTdxStatus = processState.running === true
+        ? (processState.rootMatches === false ? 'path_mismatch' : processState.rootMatches === true ? 'open' : 'open_unverified')
+        : processState.running === false ? 'closed' : 'unknown';
+      const credentials = credentialStatus();
+      json(res, 200, {
+        status: 'ok',
+        summary: true,
+        stale: cacheStale,
+        checkedAt,
+        bridge: { status: 'ok', host: HOST, port: PORT },
+        harness: { status: credentials.configured ? 'ready' : 'missing_credentials', credentialsConfigured: credentials.configured, credentialSource: credentials.source, keyHint: credentials.keyHint, base: 'DeepSeek Harness' },
+        resourceLibrary: { ...resourceLibraryStatus(), assets: Object.fromEntries(Object.entries(currentStatus.assets || {}).map(([name, value]) => [name, value?.status || 'unknown'])) },
+        codePolicy: PACKAGED_RUNTIME ? 'embedded-in-exe-resources' : 'workspace',
+        minuteData: currentStatus.minute_data || { status: 'unknown', reason: '详细检查将在后台更新。' },
+        tdx: {
+          status: cacheStale ? 'unknown' : lastKnownTdxStatus,
+          lastKnownStatus: lastKnownTdxStatus,
+          rootMatches: typeof processState.rootMatches === 'boolean' ? processState.rootMatches : null,
+          root: bridgeTdxRoot() || '',
+          checkedAt,
+        },
+        daily: { status: tdxAsset.status || dailyArchive.status || 'unknown', date: dailyArchive.trade_date || tdxAsset.trade_date || tdxAsset.freshness?.selected_trade_date || '', freshness: tdxAsset.freshness || {} },
+        dailyArchive: { status: dailyArchive.status || 'unknown', trade_date: dailyArchive.trade_date || '', checked_at: dailyArchive.checked_at || '' },
+      });
+      return;
+    }
+  }
   if (req.method === 'GET' && req.url === '/runtime/environment') {
     try {
       const tdxRoot = bridgeTdxRoot();
@@ -4886,7 +5037,16 @@ const server = http.createServer(async (req, res) => {
         resourceLibrary: { ...resourceLibraryStatus(), assets: resourceContext.assets, paths: resourceContext.paths },
         codePolicy: PACKAGED_RUNTIME ? 'embedded-in-exe-resources' : 'workspace',
         minuteData: inspectMinuteData(tdxRoot),
-        tdx: { status: Array.isArray(tdxStatus.processes) && tdxStatus.processes.length > 0 ? 'open' : 'closed', processes: tdxStatus.processes || [], root: tdxRoot, formulas: tdxStatus.formulaRegistry || {}, freshness: tdxStatus.freshness || {} },
+        tdx: {
+          status: tdxStatus.processState?.running === true
+            ? (tdxStatus.processState?.rootMatches === false ? 'path_mismatch' : tdxStatus.processState?.rootMatches === true ? 'open' : 'open_unverified')
+            : tdxStatus.processState?.running === false ? 'closed' : 'unknown',
+          rootMatches: tdxStatus.processState?.rootMatches ?? null,
+          processes: tdxStatus.processes || [],
+          root: tdxRoot,
+          formulas: tdxStatus.formulaRegistry || {},
+          freshness: tdxStatus.freshness || {},
+        },
         daily: { ...daily, ...dailyFreshness },
         dailyArchive,
         dailyDataIndex: snapshots.dailyDataIndex,

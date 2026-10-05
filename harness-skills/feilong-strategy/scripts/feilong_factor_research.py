@@ -4,9 +4,15 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_tdx_root
 
 import numpy as np
 import pandas as pd
@@ -26,6 +32,7 @@ from feilong_offline_replay import (
 SCHEMA = "FEILONG_FACTOR_RESEARCH_V1"
 MANIFEST_SCHEMA = "FEILONG_FACTOR_RESEARCH_MANIFEST_V1"
 FORMULA_NAME = "飞龙在天"
+TDX_ROOT = resolve_tdx_root()
 FORMULA_SHA256 = "aabcec3d83b2b37d01d53ba4d9c281a745e29f53d941f3704da95dcea114e1e0"
 PRICE_COLUMNS = ("open", "high", "low", "close")
 
@@ -893,7 +900,7 @@ def run_factor_research(
     matches_csv: str,
     migration_manifest: str,
     out_dir: str,
-    tdx_root: str = r"C:\new_tdx_mock",
+    tdx_root: str | Path = TDX_ROOT,
 ) -> dict[str, Any]:
     generated_at = datetime.now().astimezone().isoformat()
     skill_root = Path(__file__).resolve().parents[1]

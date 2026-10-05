@@ -1,7 +1,7 @@
 {
   "schema": "ZHANGCAI_DESKTOP_PACKAGE_PLAN_V4",
   "product": "掌财桌面端",
-  "packageVersion": "0.1.13",
+  "packageVersion": "0.1.22",
   "scope": "electron-app-main-program-4319-3003-3004",
   "releaseMode": "integrated-main-installer-plus-program-update",
   "packagingPolicy": {
@@ -13,19 +13,19 @@
   },
   "releaseLayers": {
     "environment": {
-      "baseline": "dist-installer/releases/0.1.13/掌财桌面端-0.1.13-x64.exe",
+      "baseline": "dist-installer/releases/0.1.22/掌财桌面端-0.1.22-x64.exe",
       "reusable": true,
       "contains": ["private Node.js", "private Python", "DeepSeek Harness", "pruned Vinext runtime dependencies"],
       "doesNotContain": ["user market data", "TDX executable", "DeepSeek credentials"],
       "baselineVersion": "packaging/environment-baseline-version.txt",
-      "reuseRule": "the verified baseline runtime is embedded in the 0.1.13 main installer; later program updates reuse it and do not rebuild it",
+      "reuseRule": "the verified baseline runtime is embedded in the 0.1.22 main installer; later program updates reuse it and do not rebuild it",
       "legacyArtifacts": [
         "dist-installer/releases/0.1.6/掌财桌面端-运行环境-0.1.6-x64.exe",
         "dist-installer/releases/0.1.6/掌财桌面端-运行环境卸载-0.1.6-x64.exe"
       ]
     },
     "mainProgram": {
-      "installerArtifact": "dist-installer/releases/0.1.13/掌财桌面端-0.1.13-x64.exe",
+      "installerArtifact": "dist-installer/releases/0.1.22/掌财桌面端-0.1.22-x64.exe",
       "requiresEnvironmentLayer": false,
       "contains": [
         "Electron",
@@ -39,7 +39,7 @@
       "excludes": ["data/resource-library", "TDX executable", "DeepSeek credentials"]
     },
     "programUpdate": {
-      "installerArtifact": "dist-installer/releases/0.1.13/掌财桌面端-程序更新-0.1.13-x64.exe",
+      "installerArtifact": "dist-installer/releases/0.1.22/掌财桌面端-程序更新-0.1.22-x64.exe",
       "sourceScript": "scripts/package-program-update.ps1",
       "contains": ["resources/app.asar", "resources/app without node_modules", "formula seed"],
       "excludes": ["Electron", "resources/runtime", "resources/deepseek-harness", "resources/app/node_modules", "data/resource-library"],
@@ -93,7 +93,7 @@
     "data": "local data first; user-selected TDX/mock data plus on-demand public-source snapshots",
     "dataPolicy": "local_first_on_demand",
     "network": "DeepSeek Harness API plus explicit on-demand public data/news downloads; downloaded source files must land in the user resource library before Harness use",
-    "mainProgramExcludes": ["app-data", "skill-archives", "*.lc5", ".env.local", "DEEPSEEK_API_KEY"],
+    "mainProgramExcludes": ["app-data", "*.lc5", ".env.local", "DEEPSEEK_API_KEY"],
     "dataPack": "self-contained-separate-installer; never overwrite embedded code or runtimes"
   },
   "desktopExperience": {

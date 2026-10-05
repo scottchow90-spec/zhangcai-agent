@@ -20,8 +20,13 @@ except Exception:
     pass
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-DATA_DIR = SCRIPT_DIR.parents[2] / "tmp_lb" / "data"
 sys.path.insert(0, str(SCRIPT_DIR))
+_APP_SCRIPTS = SCRIPT_DIR.resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_data_root
+
+DATA_DIR = resolve_data_root() / "strategy-data" / "a-share-limit-up-mining"
 from run_research import find_tdx_day_path, read_tdx_day
 HARD_KEYWORDS = {
     "regulatory": ("立案", "重大违法", "行政处罚"),

@@ -17,8 +17,14 @@ from pathlib import Path
 SKILL = 'youzi-capital-monitoring'
 SOURCE_ID = 'youzi-capital-monitoring'
 ROOT = Path(__file__).resolve().parents[1]
+APP_ROOT = Path(__file__).resolve().parents[3]
+APP_SCRIPTS = APP_ROOT / "scripts"
+if str(APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
+
 PRIMARY_REL = 'scripts/parse_day_recalc_youzi.py'
-DEFAULT_ARGS = ['--day', 'C:\\new_tdx_mock\\vipdoc\\sz\\lday\\sz301372.day', '--count', '30']
+DEFAULT_ARGS = ['--day', str(resolve_tdx_root() / 'vipdoc' / 'sz' / 'lday' / 'sz301372.day'), '--count', '30']
 FORBIDDEN = (".openclaw\\workspace\\skills", ".openclaw/workspace/skills", "stock_skill_executor", "stock-skill-executor")
 
 

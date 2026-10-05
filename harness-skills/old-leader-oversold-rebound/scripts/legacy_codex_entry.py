@@ -9,8 +9,14 @@ if _onestock_embedded_dir not in _onestock_embedded_sys.path:
 import argparse
 import csv
 import json
+import sys
 import tempfile
 from pathlib import Path
+
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
 
 from scan_old_leader_rebound import (
     Bar,
@@ -53,7 +59,7 @@ def add_common_scan_arguments(
         parser.add_argument("--as-of", required=True, help="YYYY-MM-DD or YYYYMMDD")
     else:
         parser.add_argument("--as-of", default="2026-07-29", help="YYYY-MM-DD or YYYYMMDD")
-    parser.add_argument("--tdx", type=Path, default=Path(r"C:\new_tdx_mock"))
+    parser.add_argument("--tdx", type=Path, default=resolve_tdx_root())
     parser.add_argument("--fresh-limit-csv", type=Path)
     if include_outputs:
         parser.add_argument("--json", type=Path, required=True)

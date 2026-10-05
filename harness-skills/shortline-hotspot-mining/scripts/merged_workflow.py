@@ -15,10 +15,16 @@ import csv
 import json
 import os
 import sys
+import sys
 from datetime import date, datetime, time
 from pathlib import Path
 from typing import Sequence
 from zoneinfo import ZoneInfo
+
+_APP_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
+if str(_APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
 
 from catalyst_features import fuse_catalysts, validate_evidence_rows
 from forecast_gate import (
@@ -33,16 +39,9 @@ from point_in_time_snapshot import SnapshotBlocked, build_point_in_time_snapshot
 
 
 ROOT = Path(__file__).resolve().parents[1]
-BLOCKNEW_CANDIDATES = (
-    Path(r"C:\new_tdx_mock\T0002\blocknew"),
-    Path(r"C:\new_tdx\T0002\blocknew"),
-    Path(r"C:\zd_tdx\T0002\blocknew"),
-)
-VIPDOC_CANDIDATES = (
-    Path(r"C:\new_tdx_mock\vipdoc"),
-    Path(r"C:\new_tdx\vipdoc"),
-    Path(r"C:\zd_tdx\vipdoc"),
-)
+_TDX_ROOT = resolve_tdx_root()
+BLOCKNEW_CANDIDATES = (_TDX_ROOT / "T0002" / "blocknew",)
+VIPDOC_CANDIDATES = (_TDX_ROOT / "vipdoc",)
 
 
 def _json_write(path: Path, payload: object) -> None:

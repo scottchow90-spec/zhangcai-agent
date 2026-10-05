@@ -14,13 +14,17 @@ import argparse
 import json
 import os
 import sys
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_tdx_root
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--code', required=True, help='Stock code, e.g. 301372.SZ')
     parser.add_argument('--count', type=int, default=30)
-    parser.add_argument('--tdx', default=r'C:\new_tdx_mock')
+    parser.add_argument('--tdx', default=str(resolve_tdx_root()))
     parser.add_argument('--formula', default='游资资金监控')
     parser.add_argument('--dividend-type', type=int, default=1)
     args = parser.parse_args()

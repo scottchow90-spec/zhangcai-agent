@@ -27,8 +27,14 @@ REPORTS = (
     if _DATA_ROOT
     else SKILL_ROOT / "reports"
 )
-TDX_ROOT = Path(r"C:\new_tdx_mock")
-TDX_HUB_PATH = Path(r"D:\C盘转移\日志\codex\skills\tdx-local-hub\scripts\tdx_hub.py")
+APP_ROOT = Path(__file__).resolve().parents[3]
+APP_SCRIPTS = APP_ROOT / "scripts"
+if str(APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(APP_SCRIPTS))
+from tdx_path_config import resolve_tdx_root
+
+TDX_ROOT = resolve_tdx_root()
+TDX_HUB_PATH = APP_ROOT / "harness-skills" / "tdx-local-hub" / "scripts" / "tdx_hub.py"
 TNF_FILES = {
     "SZ": TDX_ROOT / "T0002" / "hq_cache" / "szs.tnf",
     "SH": TDX_ROOT / "T0002" / "hq_cache" / "shs.tnf",

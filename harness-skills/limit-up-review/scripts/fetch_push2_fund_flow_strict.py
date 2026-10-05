@@ -31,7 +31,14 @@ try:
 except Exception:
     pass
 
-TASK_DIR = Path(os.environ.get("LIMITUP_TASK_DIR", r"D:\C盘转移\日志\codex\reports\limit_up_review"))
+APP_ROOT = Path(__file__).resolve().parents[3]
+APP_SCRIPTS = APP_ROOT / "scripts"
+if str(APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(APP_SCRIPTS))
+from tdx_path_config import resolve_data_root, resolve_path_from
+
+DATA_ROOT = resolve_data_root()
+TASK_DIR = resolve_path_from(os.environ.get("LIMITUP_TASK_DIR", str(DATA_ROOT / "reports" / "limit_up_review")), DATA_ROOT)
 TABLE = Path(os.environ.get("LIMITUP_TABLE", TASK_DIR / "verified_limitup_union.csv"))
 DATE = os.environ.get("LIMITUP_DATE", datetime.now().strftime("%Y%m%d"))
 DATE_H = os.environ.get("LIMITUP_DATE_H", f"{DATE[:4]}-{DATE[4:6]}-{DATE[6:]}")

@@ -32,19 +32,26 @@ import requests
 
 from entry_limit_up_review import evaluate_date_gate
 
+_app_scripts_dir = str(Path(__file__).resolve().parents[3] / "scripts")
+if _app_scripts_dir not in sys.path:
+    sys.path.insert(0, _app_scripts_dir)
+from tdx_path_config import resolve_data_root, resolve_tdx_root
+
 try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 except Exception:
     pass
 
-TASK_DIR = Path(os.environ.get("LIMITUP_TASK_DIR", r"D:\C盘转移\日志\codex\reports\limit_up_review"))
+DATA_ROOT = resolve_data_root()
+TASK_DIR = Path(os.environ.get("LIMITUP_TASK_DIR", DATA_ROOT / "reports" / "limit_up_review")).expanduser().resolve()
 TASK_DIR.mkdir(parents=True, exist_ok=True)
 DATE = os.environ.get("LIMITUP_DATE", datetime.now().strftime("%Y%m%d"))
 DATE_H = os.environ.get("LIMITUP_DATE_H", f"{DATE[:4]}-{DATE[4:6]}-{DATE[6:]}")
 RUN_ID = os.environ.get("LIMITUP_RUN_ID", "")
-TDX_BLOCK_DIR = Path(r"C:\new_tdx_mock\T0002\blocknew")
-TDX_VIPDOC = Path(r"C:\new_tdx_mock\vipdoc")
+TDX_ROOT = resolve_tdx_root()
+TDX_BLOCK_DIR = TDX_ROOT / "T0002" / "blocknew"
+TDX_VIPDOC = TDX_ROOT / "vipdoc"
 DAY_RECORD = struct.Struct("<IIIIIfII")
 OFFICIAL_POOL_URL = "https://push2ex.eastmoney.com/getTopicZTPool"
 CORE_CONCEPTION_URL = "https://emweb.securities.eastmoney.com/PC_HSF10/CoreConception/PageAjax"

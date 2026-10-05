@@ -7,9 +7,10 @@ from pathlib import Path as _OneStockEmbeddedPath
 _onestock_embedded_dir = str(_OneStockEmbeddedPath(__file__).resolve().parent)
 if _onestock_embedded_dir not in _onestock_embedded_sys.path:
     _onestock_embedded_sys.path.insert(0, _onestock_embedded_dir)
-import json, subprocess
-r = subprocess.run(["python","skills/tdx-local-hub/scripts/tdx_hub.py","registry"],
-                   cwd=r"D:\C盘转移\日志\codex",
+import json, subprocess, sys
+hub_script = Path(__file__).resolve().with_name("tdx_hub.py")
+r = subprocess.run([sys.executable, str(hub_script), "registry"],
+                   cwd=str(hub_script.parent),
                    capture_output=True, text=True, encoding="utf-8", errors="replace")
 d = json.loads(r.stdout)
 for f in d["formulas"]:

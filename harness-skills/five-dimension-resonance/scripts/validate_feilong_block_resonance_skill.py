@@ -17,14 +17,19 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[3]
+APP_SCRIPTS = ROOT / "scripts"
+if str(APP_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(APP_SCRIPTS))
+from tdx_path_config import resolve_data_root, resolve_tdx_root
+
 SKILLS_ROOT = ROOT / "harness-skills"
 SKILL = SKILLS_ROOT / "five-dimension-resonance"
-REPORT = ROOT / "reports" / "2026-06-03_five_dimension_feilong_block_hardening"
+REPORT = resolve_data_root() / "reports" / "five-dimension-resonance" / "feilong-block-hardening"
 TDX_HUB = SKILLS_ROOT / "tdx-local-hub" / "scripts" / "tdx_hub.py"
 GLOBAL_SCORE_CONTRACT = SKILLS_ROOT / "stock-unified" / "references" / "short_term_strong_stock_scoring_contract.json"
 GLOBAL_SCORE_CONTRACT_SHA256 = hashlib.sha256(GLOBAL_SCORE_CONTRACT.read_bytes()).hexdigest()
 SCORE_CONTRACT_VERSION = "A-SHARE-STRONG-26F-100-V6.1"
-BLOCK_FILE = Path(r"C:\new_tdx_mock\T0002\blocknew\FLZT.blk")
+BLOCK_FILE = resolve_tdx_root() / "T0002" / "blocknew" / "FLZT.blk"
 SCAN_JSON = REPORT / "feilong_block_resonance_scan.json"
 CANDIDATE_JSON = REPORT / "feilong_block_candidates.json"
 MAPPING_JSON = REPORT / "feilong_block_mapping_evidence.json"
