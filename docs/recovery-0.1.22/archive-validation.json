@@ -136,6 +136,16 @@
     "windowsInstaller": {
       "status": "NOT_RUN",
       "reason": "Requires verified Windows runtime/preflight and installation tests."
+    },
+    "remoteLfsDownload": {
+      "status": "PASS",
+      "date": "2026-10-05",
+      "remote": "https://github.com/scottchow90-spec/zhangcai-agent.git",
+      "verifiedCommit": "6e394a1d6ce715199454252ade785ab7789b2c8a",
+      "emptyCacheUsed": true,
+      "downloadedBytes": 145649253,
+      "sha256": "4f492bf7167cf45c523bfb533806a790b0d00ea08f9ce8eda26084944bb504e4",
+      "method": "Git LFS fetch into a new temporary lfs.storage directory; hash and size independently verified, then temporary cache removed."
     }
   },
   "limits": {

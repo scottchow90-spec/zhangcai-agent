@@ -166,7 +166,7 @@
       "path": "docs/recovery-0.1.22/archive-validation.json",
       "kind": "archive-delivery-evidence",
       "originalSha256": null,
-      "sha256": "4a3cafa74287b75310391f31709eb1d890849dbb9080acff77ca6411e9861ef2",
+      "sha256": "fd5391166c67825498aebb6a2aa99ec881b72c87686962e3b95d41af81f78ed6",
       "reason": "2026-10-05 original archive delivery/verification evidence; no executable release code changes."
     },
     {
@@ -212,6 +212,19 @@
           "path": "skill-archives/A股行情资讯全接口与数据能力大全_WorkBuddy电脑版_20260908-014459.zip",
           "previousSha256": null,
           "sha256": "4f492bf7167cf45c523bfb533806a790b0d00ea08f9ce8eda26084944bb504e4"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-05",
+      "parentCommit": "6e394a1d6ce715199454252ade785ab7789b2c8a",
+      "previousManifestSha256": "1002932bb1133edbcf13f74a8fb07ff6fbb91fbd58bb45c280703c19dc54bfa5",
+      "event": "Record successful independent remote LFS download into an empty cache after upload; exact original size and SHA-256 verified.",
+      "changes": [
+        {
+          "path": "docs/recovery-0.1.22/archive-validation.json",
+          "previousSha256": "4a3cafa74287b75310391f31709eb1d890849dbb9080acff77ca6411e9861ef2",
+          "sha256": "fd5391166c67825498aebb6a2aa99ec881b72c87686962e3b95d41af81f78ed6"
         }
       ]
     }
