@@ -4,6 +4,26 @@
 基线：`web-3003-14-skill-adapters` @ `89bbbb1a05e113772e82b963751fdbfddeb964f6`。
 产品版本：**0.1.22**；运行环境基线：**0.1.9**。未修改 main 或基线分支。
 
+## 2026-10-05 原始大技能包补齐
+
+用户补交 `0.1.22-大文件-A股行情资讯全接口与数据能力大全.zip`。其大小 **145,649,253 字节**，SHA-256 为 `4f492bf7167cf45c523bfb533806a790b0d00ea08f9ce8eda26084944bb504e4`，均与原恢复清单一致。仅按 catalog 重命名为 `skill-archives/A股行情资讯全接口与数据能力大全_WorkBuddy电脑版_20260908-014459.zip`，ZIP 原字节不变。
+
+仅该文件使用 Git LFS 存储，其他 13 个 ZIP 不转为 LFS、不改写既有提交历史。Git 中保存该 ZIP 的指针，实际 ZIP 由 LFS 传输；`.gitattributes` 的规则精确匹配该路径。
+
+重新执行完整验证，14 个 ZIP 的大小、哈希、CRC、安全解压及 SKILL.md 校验均为 `CLEAN_PASS`；14 个技能的运行准备与真实 Harness 发现/加载也均为 `CLEAN_PASS`。实测结果见 `docs/recovery-0.1.22/archive-validation.json`，补交来源及前后哈希修订记录见 `completion-manifest.json`。首次恢复和 2026-10-02 的验证文件保留当时结果，不覆盖为新结果。
+
+当前剩余缺口是私有 Windows 运行环境和通达信业务验收条件，以及 8 个页面的原始 0.1.22 TSX/source map。Windows preflight、安装器构建/安装测试、模型调用和真实行情报告验收仍未执行。产品版本继续为 0.1.22，运行环境基线继续为 0.1.9。
+
+下载分支后，在仓库根目录安装/启用 Git LFS 并取得真实 ZIP，再执行验证；只取得 Git 指针文件时，哈希门禁会阻止打包。
+
+```text
+git lfs install
+git lfs pull --include="skill-archives/A股行情资讯全接口与数据能力大全_WorkBuddy电脑版_20260908-014459.zip"
+python -B scripts/verify-recovery-0.1.22.py
+python -B scripts/verify_skill14_archives.py
+pnpm run verify:skill14-packaged
+```
+
 ## 2026-10-02 缺口补齐
 
 根据恢复脚本的调用参数、返回值门禁和现存技能接口，新增实现了四个缺失验证入口。它们是本次编写的补齐代码，**不是从更新包恢复的原始源码**：
@@ -34,7 +54,7 @@ Harness 校验使用测试目录中安装的官方 `@deepseek-ai/dsh-skill-files
 
 本轮新增/修改文件的来源、原哈希与当前哈希见 `docs/recovery-0.1.22/completion-manifest.json`；实测结果见 `completion-validation.json`。原 `audit.json` 和首次 `validation.json` 保持不变，恢复核验脚本同时核验原恢复层与明确标注的新增实现。
 
-剩余外部缺口仍为：145,649,253 字节原始技能 ZIP、私有 Windows Node/Python/Harness 与通达信验证条件、8 个页面的 0.1.22 原始 TSX/source map。未生成替代 ZIP 或猜测 TSX；全部 8 个 TSX 和精确 dist 保持原字节。补齐验证入口不等于已经满足 Windows 发布条件。
+截至 2026-10-02，剩余外部缺口为：145,649,253 字节原始技能 ZIP、私有 Windows Node/Python/Harness 与通达信验证条件、8 个页面的 0.1.22 原始 TSX/source map。未生成替代 ZIP 或猜测 TSX；全部 8 个 TSX 和精确 dist 保持原字节。补齐验证入口不等于已经满足 Windows 发布条件。
 
 ### 复核命令
 

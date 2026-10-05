@@ -84,7 +84,7 @@
       "archive": "A股行情资讯全接口与数据能力大全_WorkBuddy电脑版_20260908-014459.zip",
       "bytes": 145649253,
       "sha256": "4f492bf7167cf45c523bfb533806a790b0d00ea08f9ce8eda26084944bb504e4",
-      "provenance": "Supplied recovery manifest; original large archive not provided."
+      "provenance": "Supplied recovery manifest; user provided the original archive on 2026-10-05, independently verified with exact size and SHA-256."
     },
     {
       "id": "morning-intelligence-plan",

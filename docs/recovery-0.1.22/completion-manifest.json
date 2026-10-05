@@ -19,14 +19,14 @@
       "path": "RECOVERY-0.1.22.md",
       "kind": "completion-repair",
       "originalSha256": "92401038a025344e53edfc1d90083361c45fc2b3f81b18610813fd259a38aec9",
-      "sha256": "004afa9e5488b4aa409dc2166d3f112c24af4fc9548ec87969f860e6edca6573",
+      "sha256": "9a6629a9f05012ce6cb34da2286eef6984305885881a1f820ca498f85125e2fa",
       "reason": "Document newly authored completion, actual results and remaining original-source/external-input gaps."
     },
     {
       "path": "config/skill14-archive-lock.json",
       "kind": "new-implementation-or-evidence",
       "originalSha256": null,
-      "sha256": "3d983dd91321802e3840d759929b228147f9dd0407b3ef99ea0ee8483f0f067b",
+      "sha256": "4f6267e40d39670f6eaad25988c5bee980e354ad43955278967d2ce09ec4a615",
       "reason": "Newly authored implementation/test/catalog/evidence based on recovered call contracts; not claimed as original recovered source."
     },
     {
@@ -154,6 +154,66 @@
       "originalSha256": null,
       "sha256": "dedd7edb257cab4b12d6985c233199350f9eb78c027e65518888fae592fd37da",
       "reason": "Newly authored implementation/test/catalog/evidence based on recovered call contracts; not claimed as original recovered source."
+    },
+    {
+      "path": ".gitattributes",
+      "kind": "archive-delivery-evidence",
+      "originalSha256": null,
+      "sha256": "dbb94a33ae91e868df27679f515334846b97366a32ebeec1cc1660c606ae2786",
+      "reason": "2026-10-05 original archive delivery/verification evidence; no executable release code changes."
+    },
+    {
+      "path": "docs/recovery-0.1.22/archive-validation.json",
+      "kind": "archive-delivery-evidence",
+      "originalSha256": null,
+      "sha256": "4a3cafa74287b75310391f31709eb1d890849dbb9080acff77ca6411e9861ef2",
+      "reason": "2026-10-05 original archive delivery/verification evidence; no executable release code changes."
+    },
+    {
+      "path": "skill-archives/A股行情资讯全接口与数据能力大全_WorkBuddy电脑版_20260908-014459.zip",
+      "kind": "supplied-original-release-archive",
+      "originalSha256": null,
+      "sha256": "4f492bf7167cf45c523bfb533806a790b0d00ea08f9ce8eda26084944bb504e4",
+      "reason": "Exact user-supplied original ZIP, verified against original recovery size/SHA-256; stored through a path-specific Git LFS rule.",
+      "bytes": 145649253,
+      "storage": "Git LFS",
+      "gitBlob": "LFS pointer; verification hashes the materialized ZIP bytes."
+    }
+  ],
+  "lastUpdated": "2026-10-05",
+  "revisions": [
+    {
+      "date": "2026-10-05",
+      "parentCommit": "b432a91563771c2a1d8123d44089c9bc735df729",
+      "previousManifestSha256": "93a8497c94fc317107f40dce1c064d63968d1bb5e3875f6e7b88d5bb9f8caf98",
+      "event": "Original missing release ZIP supplied and independently verified; specific-file Git LFS delivery added. Earlier validation reports preserved.",
+      "changes": [
+        {
+          "path": ".gitattributes",
+          "previousSha256": null,
+          "sha256": "dbb94a33ae91e868df27679f515334846b97366a32ebeec1cc1660c606ae2786"
+        },
+        {
+          "path": "RECOVERY-0.1.22.md",
+          "previousSha256": "004afa9e5488b4aa409dc2166d3f112c24af4fc9548ec87969f860e6edca6573",
+          "sha256": "9a6629a9f05012ce6cb34da2286eef6984305885881a1f820ca498f85125e2fa"
+        },
+        {
+          "path": "config/skill14-archive-lock.json",
+          "previousSha256": "3d983dd91321802e3840d759929b228147f9dd0407b3ef99ea0ee8483f0f067b",
+          "sha256": "4f6267e40d39670f6eaad25988c5bee980e354ad43955278967d2ce09ec4a615"
+        },
+        {
+          "path": "docs/recovery-0.1.22/archive-validation.json",
+          "previousSha256": null,
+          "sha256": "4a3cafa74287b75310391f31709eb1d890849dbb9080acff77ca6411e9861ef2"
+        },
+        {
+          "path": "skill-archives/A股行情资讯全接口与数据能力大全_WorkBuddy电脑版_20260908-014459.zip",
+          "previousSha256": null,
+          "sha256": "4f492bf7167cf45c523bfb533806a790b0d00ea08f9ce8eda26084944bb504e4"
+        }
+      ]
     }
   ]
 }
