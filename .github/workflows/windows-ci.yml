@@ -1,0 +1,112 @@
+# Windows CI：完整验证 + 服务冒烟测试 + 安装器构建
+#
+# 在 GitHub 托管的 Windows runner 上执行：
+#  1. bootstrap-dev.ps1 准备 Windows 版 Node/Python 运行时
+#  2. 仓库自检 verify:repository
+#  3. pnpm install / tsc / oxlint
+#  4. 启动 agent-server 与 quick-stock-server 并打 health 接口做冒烟测试
+#  5. electron-builder 构建便携目录版与 NSIS 安装器，产物上传为 artifact
+#
+# 触发：push 到 main、PR、手动触发。
+
+name: Windows CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  PYTHONUTF8: '1'
+  PYTHONIOENCODING: 'utf-8'
+
+jobs:
+  verify-and-test:
+    name: 自检 / 构建检查 / 服务冒烟测试
+    runs-on: windows-latest
+    steps:
+      - name: Checkout（含 LFS 大文件）
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: 准备 Windows 开发运行时
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/bootstrap-dev.ps1
+
+      - name: 仓库自检 verify:repository
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pnpm.ps1 run verify:repository
+
+      - name: 安装依赖
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pnpm.ps1 install --frozen-lockfile
+
+      - name: 类型检查 tsc
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pnpm.ps1 exec tsc --noEmit
+
+      - name: 代码检查 oxlint
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pnpm.ps1 exec oxlint
+
+      - name: 服务文件语法检查
+        run: |
+          $node = Join-Path $PWD '.runtime/node/node.exe'
+          & $node --check agent-server.mjs
+          & $node --check quick-stock-server.mjs
+
+      - name: 启动桥接服务并冒烟测试
+        run: |
+          $node = Join-Path $PWD '.runtime/node/node.exe'
+          $bridge = Start-Process -FilePath $node -ArgumentList 'agent-server.mjs' -PassThru -WindowStyle Hidden
+          $quick = Start-Process -FilePath $node -ArgumentList 'quick-stock-server.mjs' -PassThru -WindowStyle Hidden
+          try {
+            $ready = $false
+            for ($i = 0; $i -lt 30 -and -not $ready; $i++) {
+              Start-Sleep -Seconds 2
+              try {
+                $r = Invoke-WebRequest -Uri 'http://127.0.0.1:4319/health' -UseBasicParsing -TimeoutSec 5
+                if ($r.StatusCode -eq 200) { $ready = $true }
+              } catch { }
+            }
+            if (-not $ready) { throw 'agent-server /health 未就绪' }
+            $s = Invoke-WebRequest -Uri 'http://127.0.0.1:4319/skill14/status' -UseBasicParsing -TimeoutSec 10
+            if ($s.StatusCode -ne 200) { throw '/skill14/status 失败' }
+            $c = Invoke-WebRequest -Uri 'http://127.0.0.1:4319/runtime/credentials' -UseBasicParsing -TimeoutSec 10
+            if ($c.StatusCode -ne 200) { throw '/runtime/credentials 失败' }
+            $q = Invoke-WebRequest -Uri 'http://127.0.0.1:4320/health' -UseBasicParsing -TimeoutSec 10
+            if ($q.StatusCode -ne 200) { throw 'quick-stock /health 失败' }
+            $bad = Invoke-WebRequest -Uri 'http://127.0.0.1:4320/stock/quick?symbol=abc' -UseBasicParsing -TimeoutSec 10 -SkipHttpErrorCheck
+            if ($bad.StatusCode -ne 400) { throw 'quick-stock 参数校验未返回 400' }
+            Write-Host '冒烟测试通过'
+          } finally {
+            Stop-Process -Id $bridge.Id -Force -ErrorAction SilentlyContinue
+            Stop-Process -Id $quick.Id -Force -ErrorAction SilentlyContinue
+          }
+
+  build-installer:
+    name: 构建 Windows 安装器
+    runs-on: windows-latest
+    needs: verify-and-test
+    steps:
+      - name: Checkout（含 LFS 大文件）
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: 准备 Windows 开发运行时
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/bootstrap-dev.ps1
+
+      - name: 安装依赖
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pnpm.ps1 install --frozen-lockfile
+
+      - name: 构建便携目录版（electron-builder）
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pnpm.ps1 run package:build:win:dir
+
+      - name: 构建 NSIS 安装器
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pnpm.ps1 run package:build:win
+
+      - name: 上传安装器产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: dist-installer/
+          if-no-files-found: warn
