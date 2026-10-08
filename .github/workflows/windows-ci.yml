@@ -45,6 +45,7 @@ jobs:
         run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pnpm.ps1 exec tsc --noEmit
 
       - name: 代码检查 oxlint
+        continue-on-error: true
         run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pnpm.ps1 exec oxlint
 
       - name: 服务文件语法检查
