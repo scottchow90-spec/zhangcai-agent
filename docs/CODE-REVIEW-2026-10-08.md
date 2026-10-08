@@ -30,7 +30,28 @@
 | Electron win-unpacked 构建 | 通过 |
 | 重建桌面程序启动 | PASS：控件 ready、首页/chat、CORS、appRoot/dataRoot 身份、34303/44319 隔离、缺凭据状态如实显示 |
 
-完整 NSIS 安装器已实际构建成功：568,468,780 字节（验证用成品，未替换哈希锁定的原安装器）。程序更新器也已实际构建并通过载荷完整性校验：140,666,253 字节，SHA-256 为 `6103d332a4e3c962b8c16f13ae94a916fb692850840cdb9d2d4ca1aa9f9ff129`；不包含环境层，保留目标电脑的运行环境和用户数据。重建桌面冒烟再次通过，额外检查了首页和 /chat 引用的所有客户端资源。未执行对用户现有安装的安装/覆盖测试。独立远端克隆复现结果将在实际执行完成后补记。
+完整 NSIS 安装器已实际构建成功：568,468,780 字节（验证用成品，未替换哈希锁定的原安装器）。程序更新器也已实际构建并通过载荷完整性校验：140,666,253 字节，SHA-256 为 `6103d332a4e3c962b8c16f13ae94a916fb692850840cdb9d2d4ca1aa9f9ff129`；不包含环境层，保留目标电脑的运行环境和用户数据。重建桌面冒烟再次通过，额外检查了首页和 /chat 引用的所有客户端资源。未执行对用户现有安装的安装/覆盖测试。
+
+## 独立远端克隆复现
+
+2026-10-08 在同一台 Windows 电脑另建 `zhangcai-desktop-main` 目录，从 GitHub 克隆 main，而非共享 Git worktree 或复制现有开发环境。完成换行修正后的源码提交为 `a3737eb393fbeaac8e7f0b63258fbbdd2e6a5525`，此节补记只修改文档。不是在另一台实体电脑上完成的测试。
+
+| 全新目录检查 | 实际结果 |
+| --- | --- |
+| GitHub 远端源码 | 克隆成功，1,428 个受跟踪文件 |
+| 独立 LFS 对象缓存 | 4/4 对象从 GitHub 下载，完整大小与 SHA-256 正确，git lfs fsck OK |
+| 本地网络大文件超时 | 用 GitHub 官方 media CDN 分段续传；只下载远端字节，没有复制本机已存在的安装器或技能包 |
+| 开发准备脚本 | Windows PowerShell 执行成功，Node 24.19.0、Python 3.12.14、pnpm 11.19.0、Harness 0.1.2-rc.1 |
+| Python 测试依赖 | 从仓库固定 wheel 离线安装，未访问 PyPI |
+| 空 pnpm 缓存安装 | FreshDependencyStore 成功；项目私有 store，730 下载、0 复用、730 安装 |
+| verify:repository --original-release | CLEAN_PASS，14 原包、9 原始前端源码及锁定资产无错误 |
+| verify:portable-tests | 26 通过 |
+| TypeScript noEmit | 通过 |
+| prepare:desktop-frontend | BUILT_FROM_SOURCE，生产构建完成；不是复用旧 dist |
+| package:preflight | READY，0 错误、0 警告；14/14 技能准备与 Harness 发现、10/10 个股 selftest 与发现门禁通过 |
+| 克隆目录 Git 状态 | 干净；运行环境、依赖、构建输出按规则忽略 |
+
+全量安装器、程序更新器和桌面实际启动/资源冒烟使用前节的独立整理工作区完成；未在这份冷克隆里重复生成完整 NSIS 安装器。该验证覆盖远端资产获取、空开发依赖缓存、运行环境准备、源码构建与打包预检；不等于脱离 Windows/npm/GitHub 网络的完全离线复现，也不代表真实行情和模型业务研究验收。
 
 ## 保留的已知问题
 
