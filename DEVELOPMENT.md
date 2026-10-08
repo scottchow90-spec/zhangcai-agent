@@ -16,7 +16,7 @@ main 和 web-test 初始化为同一提交，不人为删去桌面源码；二�
 
 ## 1. 新电脑准备
 
-需要 Windows 10/11 x64、Git for Windows（含 Git LFS）、网络与可写磁盘。首次准备约需数 GB 空间。依赖安装和 Electron/NSIS 下载需要访问 npm registry、PyPI 与 GitHub；不是完全离线安装。无需安装 Codex，也无需手动配置 Node、Python、pnpm 或 Harness。
+需要 Windows 10/11 x64、Git for Windows（含 Git LFS）、网络与可写磁盘。首次准备约需数 GB 空间。依赖安装和 Electron/NSIS 下载需要访问 npm registry 与 GitHub；Python 开发测试 wheel 已随仓库提供，不需要访问 PyPI。不是完全离线安装。无需安装 Codex，也无需手动配置 Node、Python、pnpm 或 Harness。
 
 ```powershell
 git lfs install

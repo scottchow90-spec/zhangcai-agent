@@ -10,6 +10,8 @@
 - 117 个已存在源文件曾受 Git CRLF 转换影响，恢复到安装器中的原字节，并通过 gitattributes 保持跨电脑源码字节。没有刷新旧 source-manifest 来掩盖真实漂移。
 - 14 个原始 ZIP、原安装器、程序更新器、Node/Python/Harness 开发准备输入与测试 wheel 已列入哈希清单。用户行情、报告与凭据不作为开发源码输入。
 
+首次独立远端克隆发现 app/layout.tsx 最后一个混合换行尚未按原字节进入 Git 索引。已对设为 `-text` 的源码目录强制重建索引，使 158 个受跟踪文本的存储字节与已核对的工作区一致；`git diff --cached --ignore-space-at-eol --exit-code` 返回 0，确认此次索引修正只有换行差异，没有业务内容改写。
+
 ## 已完成检查
 
 | 检查 | 实际结果 |
