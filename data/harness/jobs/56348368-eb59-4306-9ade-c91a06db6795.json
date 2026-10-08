@@ -1,9 +1,0 @@
-{
-  "id": "56348368-eb59-4306-9ade-c91a06db6795",
-  "status": "failed",
-  "skill_id": "baimao-teacher-system",
-  "started_at": 1789010262588,
-  "error": "DeepSeek Harness 超时（240 秒，技能 baimao-teacher-system）",
-  "elapsed_ms": 240051,
-  "completed_at": 1789010502639
-}

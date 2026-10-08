@@ -1,2 +1,0 @@
-TIMEOUT after 360s
-TDX_PROCESS_INTEGRITY_VIOLATION: tdx_protected_process_disappeared:tdxcef:37628

@@ -1,8 +1,0 @@
-{
-  "schema": "A_SHARE_SENTIMENT_REPORT_TEMPLATE_BINDING_V1",
-  "status": "PASS",
-  "template": {
-    "path": "assets/a-share-sentiment-report-template.docx",
-    "sha256": "e16ab8b9448b49ef66afec40a0015dfcf194771db639d5eae2f2382cd2dde68c"
-  }
-}

@@ -10,11 +10,11 @@ import ast
 from pathlib import Path
 
 
-HOME = Path(r"D:\C盘转移\日志\codex")
+HOME = Path(__file__).resolve().parents[3]
 GLOBAL_AGENTS_PATH = HOME / "AGENTS.md"
 CONTRACTS_PATH = (
     HOME
-    / "skills"
+    / "harness-skills"
     / "stock-unified"
     / "references"
     / "stock_execution_contracts.json"

@@ -1,8 +1,0 @@
-{
-  "id": "c5e24ce5-6021-4cbe-8254-33a07a2277cf",
-  "status": "failed",
-  "skill_id": "big-bull-analysis-scoring-system",
-  "started_at": 1789185921784,
-  "error": "桥接服务在 Harness 返回前重启，任务未完成；可重新执行。",
-  "completed_at": 1789185959507
-}

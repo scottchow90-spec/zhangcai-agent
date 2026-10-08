@@ -1,6 +1,0 @@
-interface:
-  display_name: "黄金点火"
-  short_description: "股票与可转债正股映射的通用点火信号分析"
-  default_prompt: "Use $golden-ignition to analyze the golden ignition signal for a stock or a convertible bond's underlying stock."
-policy:
-  allow_implicit_invocation: false

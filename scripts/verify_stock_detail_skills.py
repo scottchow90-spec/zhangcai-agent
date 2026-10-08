@@ -26,7 +26,7 @@ def verify(root, static_only=False):
     errors, passed, discovered = [], [], 0
     frontend = root / 'app/home-client.tsx'
     if frontend.is_file():
-        match = re.search(r'const stockDetailSkills=\[(.*?)\];', frontend.read_text(), re.S)
+        match = re.search(r'const stockDetailSkills=\[(.*?)\];', frontend.read_text(encoding='utf-8'), re.S)
         found = re.findall(r"id:'([^']+)'", match.group(1)) if match else []
         if found != ids:
             errors.append('Stock-detail release IDs differ from the actual frontend entry list')

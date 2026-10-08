@@ -1,9 +1,0 @@
-Traceback (most recent call last):
-  File "C:\work\260907 掌财智能体\CodeX-st-wsp\skill_pack_extract\Codex股票技能迁移包\payload\skills\a-share-15d-selection\scripts\run_a_share_15d.py", line 1824, in <module>
-    raise SystemExit(main())
-                     ^^^^^^
-  File "C:\work\260907 掌财智能体\CodeX-st-wsp\skill_pack_extract\Codex股票技能迁移包\payload\skills\a-share-15d-selection\scripts\run_a_share_15d.py", line 1814, in main
-    execute(Path(args.outdir).resolve(), args.candidate_block)
-  File "C:\work\260907 掌财智能体\CodeX-st-wsp\skill_pack_extract\Codex股票技能迁移包\payload\skills\a-share-15d-selection\scripts\run_a_share_15d.py", line 1639, in execute
-    raise RuntimeError(f"TDX latest trade date is stale: {trade_date}, expected completed session {expected_date}")
-RuntimeError: TDX latest trade date is stale: 20260909, expected completed session 20260908

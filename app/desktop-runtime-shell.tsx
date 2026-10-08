@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Activity, CheckCircle2, Database, Home, MessageSquare, RefreshCw, X } from 'lucide-react';
 import { bridgeUrl } from '@/lib/bridge-url';
 
@@ -17,10 +17,15 @@ declare global {
 }
 
 type EnvironmentSnapshot = {
+  loading?: boolean;
+  refreshing?: boolean;
+  stale?: boolean;
+  summary?: boolean;
+  error?: string;
   checkedAt?: string;
   bridge?: { status?: string; host?: string; port?: number };
   harness?: { status?: string; base?: string; credentialsConfigured?: boolean; credentialSource?: string; keyHint?: string };
-  tdx?: { status?: string; root?: string };
+  tdx?: { status?: string; lastKnownStatus?: string; rootMatches?: boolean | null; root?: string; checkedAt?: string };
   minuteData?: { status?: string; mode?: string; packaged?: boolean; fileCount?: number; reason?: string };
   daily?: { status?: string; date?: string };
   resourceLibrary?: { root?: string; writable?: boolean };
@@ -47,12 +52,23 @@ function minuteDataLabel(value?: EnvironmentSnapshot['minuteData']) {
   return value.status || '未知';
 }
 
+function tdxStatusLabel(status?: string) {
+  switch (status) {
+    case 'open': return '已检测运行';
+    case 'closed': return '未运行';
+    case 'path_mismatch': return '运行目录不匹配';
+    case 'open_unverified': return '检测到进程，路径未确认';
+    default: return '未知';
+  }
+}
+
 export default function DesktopRuntimeShell() {
   const [enabled, setEnabled] = useState(false);
   const [notice, setNotice] = useState('桌面运行时已隔离');
   const [environment, setEnvironment] = useState<EnvironmentSnapshot | null>(null);
   const [busy, setBusy] = useState('');
   const [credentialInput, setCredentialInput] = useState('');
+  const environmentRequestRef = useRef(0);
 
   useEffect(() => {
     const desktop = new URLSearchParams(window.location.search).get('desktop') === '1';
@@ -62,17 +78,52 @@ export default function DesktopRuntimeShell() {
   if (!enabled) return null;
 
   async function inspectEnvironment() {
+    const requestId = ++environmentRequestRef.current;
+    setEnvironment((current) => current
+      ? { ...current, loading: true, refreshing: false, error: undefined }
+      : { loading: true, bridge: { status: '读取中' }, harness: { status: '读取中' }, tdx: { status: '读取中' } });
+    setNotice('正在打开运行环境…');
     setBusy('environment');
+    try {
+      // Opening the panel is intentionally cache-only. The full environment
+      // endpoint scans TDX history and probes processes synchronously; running
+      // it on every open can monopolize the bridge event loop.
+      const response = await fetch(bridgeUrl('/runtime/environment?summary=1'), { cache: 'no-store' });
+      const body = await response.json().catch(() => ({})) as EnvironmentSnapshot & Record<string, unknown>;
+      if (!response.ok) throw new Error(resultMessage(body, `运行环境检测失败（${response.status}）`));
+      if (requestId !== environmentRequestRef.current) return;
+      setEnvironment({ ...body, summary: true, loading: false, refreshing: false });
+      setNotice(body.stale ? '已显示最近缓存状态；需要时可手动刷新详细检查' : '已显示运行环境缓存状态');
+    } catch (error) {
+      if (requestId === environmentRequestRef.current) {
+        setEnvironment((current) => current ? { ...current, loading: false, refreshing: false, error: error instanceof Error ? error.message : '运行环境检测失败' } : current);
+        setNotice(error instanceof Error ? error.message : '运行环境检测失败');
+      }
+    } finally {
+      if (requestId === environmentRequestRef.current) setBusy('');
+    }
+  }
+
+  async function refreshEnvironmentDetails() {
+    const requestId = ++environmentRequestRef.current;
+    setEnvironment((current) => current ? { ...current, refreshing: true, error: undefined } : current);
+    setBusy('environment-details');
+    setNotice('正在执行详细环境诊断…');
     try {
       const response = await fetch(bridgeUrl('/runtime/environment'), { cache: 'no-store' });
       const body = await response.json().catch(() => ({})) as EnvironmentSnapshot & Record<string, unknown>;
-      if (!response.ok) throw new Error(resultMessage(body, `运行环境检测失败（${response.status}）`));
-      setEnvironment(body);
-      setNotice('运行环境已检查');
+      if (!response.ok) throw new Error(resultMessage(body, `详细检查失败（${response.status}）`));
+      if (requestId !== environmentRequestRef.current) return;
+      setEnvironment({ ...body, summary: false, loading: false, refreshing: false });
+      setNotice('运行环境详细检查已完成');
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : '运行环境检测失败');
+      if (requestId === environmentRequestRef.current) {
+        const message = error instanceof Error ? error.message : '运行环境详细检查失败';
+        setEnvironment((current) => current ? { ...current, refreshing: false, error: message } : current);
+        setNotice(`缓存状态仍可查看；详细检查失败：${message}`);
+      }
     } finally {
-      setBusy('');
+      if (requestId === environmentRequestRef.current) setBusy('');
     }
   }
 
@@ -203,13 +254,18 @@ export default function DesktopRuntimeShell() {
         <aside className="desktop-runtime-panel" aria-label="桌面运行环境">
           <div className="desktop-runtime-panel-head">
             <b>桌面运行环境</b>
-            <button type="button" onClick={() => setEnvironment(null)} aria-label="关闭运行环境"><X size={15} /></button>
+            <small>{environment.loading ? '正在读取状态…' : environment.refreshing ? '详细诊断进行中…' : environment.stale ? '显示最近缓存状态' : environment.summary ? '缓存状态' : ''}</small>
+            <button type="button" onClick={() => { environmentRequestRef.current += 1; setBusy(''); setEnvironment(null); }} aria-label="关闭运行环境"><X size={15} /></button>
           </div>
           <div className="desktop-runtime-panel-grid">
             <span>桥接端口</span><b>{environment.bridge?.port || '动态分配'}</b>
             <span>桥接状态</span><b>{environment.bridge?.status || '未知'}</b>
             <span>Harness</span><b>{environment.harness?.status || '未知'}</b>
-            <span>通达信</span><b>{environment.tdx?.status || '未知'}</b>
+            <span>通达信</span><b title={`${environment.tdx?.root || ''}${environment.tdx?.checkedAt ? ` · 检查于 ${environment.tdx.checkedAt}` : ''}${environment.tdx?.rootMatches === false ? ' · 当前进程目录与设置目录不一致' : ''}`}>
+              {environment.stale
+                ? `缓存过期（上次：${tdxStatusLabel(environment.tdx?.lastKnownStatus || environment.tdx?.status)}）`
+                : tdxStatusLabel(environment.tdx?.status)}
+            </b>
             <span>TDX 目录</span><b title={environment.tdx?.root}>{environment.tdx?.root || '未设置'}</b>
             <span>5 分钟线</span><b title={environment.minuteData?.reason}>{minuteDataLabel(environment.minuteData)}</b>
             <span>行情日期</span><b>{environment.daily?.date || '等待刷新'}</b>
@@ -239,6 +295,11 @@ export default function DesktopRuntimeShell() {
               下载 Mock
             </button>
           </div>
+          <button className="desktop-runtime-diagnostics" type="button" onClick={() => void refreshEnvironmentDetails()} disabled={Boolean(busy) || environment.refreshing}>
+            <RefreshCw size={12} className={environment.refreshing ? 'desktop-runtime-spin' : ''} />
+            {environment.refreshing ? '详细检查中…' : '刷新详细检查'}
+          </button>
+          {environment.error && <small className="desktop-runtime-error">{environment.error}</small>}
           <small>桌面版使用独立桥接和可写资源库，网页服务保持独立。</small>
         </aside>
       )}

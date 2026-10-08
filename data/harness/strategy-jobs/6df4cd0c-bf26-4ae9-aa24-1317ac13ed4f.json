@@ -1,8 +1,0 @@
-{
-  "id": "6df4cd0c-bf26-4ae9-aa24-1317ac13ed4f",
-  "skill_id": "a-share-15d-selection",
-  "status": "failed",
-  "started_at": 1789213824367,
-  "error": "桥接服务在原始策略返回前重启，任务未完成；可重新执行。",
-  "completed_at": 1789214742665
-}

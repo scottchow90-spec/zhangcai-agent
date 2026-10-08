@@ -1,6 +1,10 @@
-# 掌财智能体：14 技能本地版（3003）
+# 掌财智能体：14 技能电脑安装版 0.1.22
 
-这是从原网页独立出的 14 技能工作台。原 3002 网页与 4318 桥接不在本工程的改动范围内；本工程使用 `127.0.0.1:3003` 前端和 `127.0.0.1:4319` 本地桥接。页面、技能包、行情文件、原始快照和报告均留在本机，为后续 Windows EXE 打包准备。
+`main` 是正式电脑安装版主线，`web-test` 是网页测试分支。旧 3001/3002 网页保存在 `legacy-web-3001-3002`，旧 3003 和恢复过程保留原分支，未改写历史。
+
+本仓库包含可修改的前后端源码、14 个原始技能 ZIP、10 个个股技能实现、Electron/NSIS 安装与更新脚本、公式种子、锁定依赖、原始 0.1.22 安装器和便携开发准备工具。大型二进制通过 Git LFS 获取，不能只下载 GitHub 的源码 ZIP。完整操作说明见 [DEVELOPMENT.md](DEVELOPMENT.md)。
+
+正式安装版使用独立端口（优先 `34303` / `44319`）；网页测试使用 `3003` / `4319`，聊天测试页为 `3004`。不修改原 3002 / 4318 服务。
 
 ## 包含的技能
 
@@ -11,13 +15,18 @@
 ## 本地运行
 
 ```powershell
-pnpm install
-pnpm prepare:skill14     # 解压 14 个只读技能包到 app-data
-pnpm data:archive        # 从通达信归档日线并写入每日数据报告
-pnpm start:local         # 启动 4319 桥接与 3003 网页
+git lfs install
+git lfs pull
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/bootstrap-dev.ps1
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/pnpm.ps1 run verify:repository
+# 两个终端分别启动桥接与网页，不需要这台电脑的 Codex 环境：
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/pnpm.ps1 run agent:dev
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/pnpm.ps1 run dev
 ```
 
-也可分别运行 `pnpm agent:dev` 和 `pnpm dev`。运行时只监听回环地址，不向局域网暴露接口。开发环境默认从 `C:\new_tdx_mock` 读取通达信；可通过 `ZHANGCAI_TDX_ROOT` 改为实际安装目录。若系统没有 `python` 命令，运行器会使用 Codex 随附的 Python；EXE 应内置 Python 并设置 `ZHANGCAI_PYTHON`。
+开发命令统一通过 `scripts/pnpm.ps1` 使用仓库准备的 Node/Python/pnpm/Harness，不依赖 Scott 用户目录或 Codex 的运行环境。真实行情应设置 `ZHANGCAI_TDX_ROOT` 指向自己的通达信目录；模型密钥由使用者自行填写，缺少真实数据或凭据时保留阻塞状态。程序源码和开发工具可复现，不包含个人行情库、报告、密钥或保证逐字节相同的安装器重建。
+
+修改源码后运行 `scripts/pnpm.ps1 run package:build:win:dir` 可生成并测试桌面程序；`package:build:win` 生成完整安装器，`package:build:win:update` 在当前程序构建上生成程序更新器。打包现在编译当前源码，不再复制历史 dist。
 
 ## 可迁移的数据目录
 

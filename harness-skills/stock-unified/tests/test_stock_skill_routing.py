@@ -32,7 +32,7 @@ def load_module(name: str, path: Path):
 
 RUNTIME = load_module(
     "stock_canonical_runtime_routing_test",
-    Path(r"D:\C盘转移\日志\codex\scripts\stock_canonical_runtime.py"),
+    ROOT.parents[1] / "scripts" / "stock_canonical_runtime.py",
 )
 CATALOG = load_module(
     "stock_contract_catalog_routing_test",

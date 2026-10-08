@@ -12,8 +12,9 @@ from pathlib import Path
 import pytest
 
 
-DRAGON = Path(r"D:\C盘转移\日志\codex\skills\dragon-pullback\scripts\run_dragon_pullback_smoke.py")
-OVERSOLD = Path(r"D:\C盘转移\日志\codex\skills\oversold-first-board\scripts\run_oversold_first_board_smoke.py")
+SKILLS_ROOT = Path(__file__).resolve().parents[2]
+DRAGON = SKILLS_ROOT / "dragon-pullback" / "scripts" / "run_dragon_pullback_smoke.py"
+OVERSOLD = SKILLS_ROOT / "oversold-first-board" / "scripts" / "run_oversold_first_board_smoke.py"
 
 
 def load_module(path: Path, name: str):

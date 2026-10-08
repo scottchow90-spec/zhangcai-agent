@@ -99,11 +99,11 @@ if ($MainInstaller) {
   $builderText = if (Test-Path -LiteralPath $builderConfigPath) { Get-Content -LiteralPath $builderConfigPath -Raw -Encoding UTF8 } else { '' }
   $mainBuildText = if (Test-Path -LiteralPath $mainBuildScriptPath) { Get-Content -LiteralPath $mainBuildScriptPath -Raw -Encoding UTF8 } else { '' }
   $expectedSiteBuildMapping = "packaging/staging/site-build-$($package.version)/dist"
-  if ($builderText.IndexOf($expectedSiteBuildMapping, [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
+  if ($builderText.IndexOf($expectedSiteBuildMapping, [System.StringComparison]::OrdinalIgnoreCase) -lt 0 -and $builderText.IndexOf('packaging/staging/site-build-${version}/dist', [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
     $errors.Add("Main installer frontend mapping must match package version $($package.version): $expectedSiteBuildMapping")
   }
   $expectedReleaseDirectory = "dist-installer/releases/$($package.version)"
-  if ($builderText.IndexOf($expectedReleaseDirectory, [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
+  if ($builderText.IndexOf($expectedReleaseDirectory, [System.StringComparison]::OrdinalIgnoreCase) -lt 0 -and $builderText.IndexOf('dist-installer/releases/${version}', [System.StringComparison]::OrdinalIgnoreCase) -lt 0) {
     $warnings.Add("Electron builder default output path is not pinned to current package version $($package.version); package-win must pass the immutable release output explicitly.")
   }
 

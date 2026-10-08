@@ -1,7 +1,0 @@
-interface:
-  display_name: "短线热点挖掘"
-  short_description: "融合题材发现、板块轮动、事件催化与热点龙头识别"
-  default_prompt: "Use $shortline-hotspot-mining to run the merged 短线热点挖掘 workflow with the matching hotspot or leader mode."
-policy:
-  allow_implicit_invocation: false
-

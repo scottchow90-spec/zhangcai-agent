@@ -1,5 +1,7 @@
 # 0.1.22 可审计恢复记录
 
+> 历史记录：以下“剩余缺口”描述的是 recovery-0.1.22 分支当时的状态，不代表现在 main 的发布状态。2026-10-08 Windows 整理已找回原始前端源码并补齐便携开发环境；当前入口见 README.md 和 DEVELOPMENT.md。精确历史 dist 仍保存在 recovery-0.1.22，不作为 main 修改源码后的打包输入。
+
 恢复日期：2026-10-01（Asia/Shanghai）。分支：`recovery-0.1.22`。
 基线：`web-3003-14-skill-adapters` @ `89bbbb1a05e113772e82b963751fdbfddeb964f6`。
 产品版本：**0.1.22**；运行环境基线：**0.1.9**。未修改 main 或基线分支。

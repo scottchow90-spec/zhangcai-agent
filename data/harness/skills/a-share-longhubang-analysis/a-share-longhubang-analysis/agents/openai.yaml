@@ -1,6 +1,0 @@
-interface:
-  display_name: "龙虎榜分析"
-  short_description: "分析A股龙虎榜净买额、席位游资与概念并生成明亮大字海报"
-  default_prompt: "使用 $a-share-longhubang-analysis 分析指定交易日的A股龙虎榜，并按需生成明亮大字海报。"
-policy:
-  allow_implicit_invocation: false

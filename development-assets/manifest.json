@@ -1,0 +1,109 @@
+{
+  "schema": "ZHANGCAI_REPRODUCIBLE_DEVELOPMENT_V1",
+  "productVersion": "0.1.22",
+  "environmentBaseline": "0.1.9",
+  "nodeVersion": "24.19.0",
+  "pythonVersion": "3.12.14",
+  "pnpmVersion": "11.19.0",
+  "harnessVersion": "0.1.2-rc.1",
+  "installer": {
+    "path": "release-assets/0.1.22/zhangcai-desktop-0.1.22-x64.exe",
+    "bytes": 568449314,
+    "sha256": "54eb11cc7686016b078e5549ca98ad526bd6aa53aae92739445d34e79f9f98d5"
+  },
+  "update": {
+    "path": "release-assets/0.1.22/zhangcai-desktop-update-0.1.22-x64.exe",
+    "bytes": 140662513,
+    "sha256": "c0cc35747a71b9c0d7144bd86a43f80cc095fb22750eb5e04116ca180366f890"
+  },
+  "tools": {
+    "path": "development-assets/windows-x64-dev-tools-0.1.22.zip",
+    "bytes": 7635576,
+    "sha256": "3de2fa37a0a01321402e84133c20ea7703f0aedb28a37a7a72c96290199506a5"
+  },
+  "sourceProvenance": "Original Windows 0.1.22 build workspace (site-work-0.1.22), retained before the 2026-09-25 installer build; byte-checked against the local working sources. Compiled bundles vary between the recovered update and the later full installer; no claim of byte-identical rebuild.",
+  "originalFrontendSources": [
+    {
+      "path": "app/home-client.tsx",
+      "bytes": 67847,
+      "sha256": "411c2a2d9fb841b048f0189977cca40b6176a860087227cdd5f3b0a0b6744be2"
+    },
+    {
+      "path": "app/chat/chat-client.tsx",
+      "bytes": 108896,
+      "sha256": "0eec9b9f81ec84dbc65c57124365094261af9785cb8ad145949f43bbd425d682"
+    },
+    {
+      "path": "app/workspace-pages.tsx",
+      "bytes": 232890,
+      "sha256": "2ed43488f0eab6d115dad029a55aa503c6d589d4b9acac6dc08da71e8f2858e6"
+    },
+    {
+      "path": "app/desktop-runtime-shell.tsx",
+      "bytes": 14932,
+      "sha256": "bdff327f18dbf33b7a1d1f3271f2886deb60d530f7f86f7220e2ac09aacb9762"
+    },
+    {
+      "path": "app/skill14-home.tsx",
+      "bytes": 8602,
+      "sha256": "5ede5fb00a3705ec29cc8fe264adcab2953215d04f5686c1e13c502607ad4a77"
+    },
+    {
+      "path": "app/page.tsx",
+      "bytes": 5635,
+      "sha256": "39d7444fd18f01088de6165e08cac6829a4bf8e8bbc8133036be8c322f9152be"
+    },
+    {
+      "path": "app/layout.tsx",
+      "bytes": 497,
+      "sha256": "80e3907ad3fce5ff4cae05f2c6d4846d698f592021387e80f01bbdac60c981fb"
+    },
+    {
+      "path": "app/chat/page.tsx",
+      "bytes": 380,
+      "sha256": "43c69434b575d136828a6bf244dcea890969a5583fd0845c9099d10ebd1b47f9"
+    },
+    {
+      "path": "app/globals.css",
+      "bytes": 110204,
+      "sha256": "0e196d1316cdd32c3f5e0d6394308e9700a39e4f3aa5f6342d70363ea9c6ecf2"
+    }
+  ],
+  "externalInputs": [
+    "User-selected TDX installation/market history",
+    "User-supplied DeepSeek credentials",
+    "npm registry packages resolved by pnpm-lock.yaml"
+  ],
+  "pythonDevWheels": [
+    {
+      "path": "development-assets/python-dev-wheels/pytest-8.4.2-py3-none-any.whl",
+      "bytes": 365750,
+      "sha256": "872f880de3fc3a5bdc88a11b39c9710c3497a547cfa9320bc3c5e62fbf272e79"
+    },
+    {
+      "path": "development-assets/python-dev-wheels/colorama-0.4.6-py2.py3-none-any.whl",
+      "bytes": 25335,
+      "sha256": "4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"
+    },
+    {
+      "path": "development-assets/python-dev-wheels/iniconfig-2.1.0-py3-none-any.whl",
+      "bytes": 6050,
+      "sha256": "9deba5723312380e77435581c6bf4935c94cbfab9b1ed33ef8d238ea168eb760"
+    },
+    {
+      "path": "development-assets/python-dev-wheels/packaging-25.0-py3-none-any.whl",
+      "bytes": 66469,
+      "sha256": "29572ef2b1f17581046b3a2227d5c611fb25ec70ca1ba8554b24b0e69331a484"
+    },
+    {
+      "path": "development-assets/python-dev-wheels/pluggy-1.6.0-py3-none-any.whl",
+      "bytes": 20538,
+      "sha256": "e920276dd6813095e9377c0bc5566d94c932c33b27a3e3945d8389c374dd4746"
+    },
+    {
+      "path": "development-assets/python-dev-wheels/pygments-2.19.2-py3-none-any.whl",
+      "bytes": 1225217,
+      "sha256": "86540386c03d588bb81d44bc3928634ff26449851e99741617ecb9037ee5ec0b"
+    }
+  ]
+}

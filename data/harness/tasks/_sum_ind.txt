@@ -1,6 +1,0 @@
-INDUSTRY_COUNT=23
-THEME_COUNT=23
-SUP_THEMES_COUNT=12  LADDER_COUNT=30
---- INDUSTRY (sorted avgPct desc): name|count|avgPct|amountYi|up/down/flat|limitCount|leaders
-石油|23|4.31|128.04|22/1/0|3|华锦股份,和顺石油,中曼石油
-

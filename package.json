@@ -2,6 +2,7 @@
   "name": "zhangcai-agent",
   "version": "0.1.22",
   "private": true,
+  "packageManager": "pnpm@11.19.0",
   "description": "掌财 4319 本地股票研究桌面程序",
   "author": {
     "name": "Zhangcai"
@@ -23,6 +24,10 @@
     "prepare:runtime": "node scripts/prepare-runtime-assets.mjs",
     "prepare:skill14": "node scripts/skill14-runtime.mjs prepare-packages",
     "prepare:recovered-frontend": "node scripts/stage-recovered-frontend.mjs",
+    "prepare:desktop-frontend": "node scripts/stage-desktop-frontend.mjs",
+    "verify:repository": "node scripts/verify-repository.mjs",
+    "verify:tdx-paths": "node scripts/test-tdx-root-resolution.mjs",
+    "verify:portable-tests": "node scripts/verify-portable-tests.mjs",
     "verify:stock-detail-discovery": "node scripts/tests/verify_stock_detail_skill_discovery.mjs",
     "verify:skill14-packaged": "node scripts/tests/verify_skill14_packaged_runtime.mjs",
     "verify:recovery-completion": "node --test scripts/tests/recovery-completion.test.mjs",

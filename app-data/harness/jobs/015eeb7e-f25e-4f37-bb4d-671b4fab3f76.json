@@ -1,9 +1,0 @@
-{
-  "id": "015eeb7e-f25e-4f37-bb4d-671b4fab3f76",
-  "status": "failed",
-  "skill_id": "short-term-sentiment-v22",
-  "started_at": 1789370694091,
-  "error": "DeepSeek Harness 超时（600 秒，技能 short-term-sentiment-v22）",
-  "elapsed_ms": 600081,
-  "completed_at": 1789371294172
-}

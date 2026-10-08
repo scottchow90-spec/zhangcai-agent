@@ -1,6 +1,0 @@
-interface:
-  display_name: "龙虾智能涨停监控"
-  short_description: "启动、验证并维护本机 LOBSTER AI A股涨停监控可视化网页面板"
-  default_prompt: "使用 $lobster-ai 启动本机 LOBSTER AI 网页面板并验证数据状态。"
-policy:
-  allow_implicit_invocation: false

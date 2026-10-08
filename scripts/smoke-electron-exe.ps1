@@ -8,7 +8,10 @@ param(
 $ErrorActionPreference = 'Stop'
 
 $projectRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
-if (-not $UnpackedRoot) { $UnpackedRoot = Join-Path $projectRoot 'dist-installer\win-unpacked' }
+if (-not $UnpackedRoot) {
+  $metadata = Get-Content -LiteralPath (Join-Path $projectRoot 'package.json') -Raw -Encoding UTF8 | ConvertFrom-Json
+  $UnpackedRoot = Join-Path $projectRoot "dist-installer/releases/$($metadata.version)/win-unpacked"
+}
 $unpackedRoot = (Resolve-Path -LiteralPath $UnpackedRoot).Path
 $exe = (Get-ChildItem -LiteralPath $unpackedRoot -Filter '*.exe' -File | Select-Object -First 1).FullName
 $resourceLibraryPath = Join-Path $unpackedRoot 'resources\resource-library'
@@ -87,6 +90,11 @@ try {
   $corsOrigin = $corsResponse.Headers['Access-Control-Allow-Origin']
   $ui = (Invoke-WebRequest -Uri ("http://127.0.0.1:{0}/" -f $runtime.uiPort) -UseBasicParsing -TimeoutSec 8).StatusCode
   $chat = (Invoke-WebRequest -Uri ("http://127.0.0.1:{0}/chat" -f $runtime.uiPort) -UseBasicParsing -TimeoutSec 8).StatusCode
+  $assetNode = Join-Path $unpackedRoot 'resources/runtime/node/node.exe'
+  foreach ($route in @('/', '/chat')) {
+    & $assetNode (Join-Path $PSScriptRoot 'verify-served-assets.mjs') ("http://127.0.0.1:{0}{1}" -f $runtime.uiPort,$route) | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw "Packaged client assets failed verification: $route" }
+  }
   # The runtime panel opens from a cache-only summary route. The full diagnostic
   # route deliberately scans every TDX .day file and may take minutes on a
   # low-memory machine; that is an explicit follow-up action, not panel startup.

@@ -1,2 +1,0 @@
-跌停阈值候选：[{"code":"603398","name":"*ST沐邦","pct":-6.55,"amount":208808416,"close":9.99,"market":"sh"},{"code":"688496","name":"*ST清越","pct":-5.21,"amount":9006688,"close":0.91,"market":"sh"},{"code":"603272","name":"*ST联翔","pct":-4.76,"amount":90218608,"close":16.82,"market":"sh"}] 
-

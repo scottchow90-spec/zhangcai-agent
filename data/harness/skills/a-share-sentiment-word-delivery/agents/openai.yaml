@@ -1,6 +1,0 @@
-interface:
-  display_name: "A股情绪文档验收"
-  short_description: "Verify an existing A-share sentiment DOCX; no research routing"
-  default_prompt: "Use $a-share-sentiment-word-delivery to verify the supplied sentiment DOCX without selecting or running a research workflow."
-policy:
-  allow_implicit_invocation: false

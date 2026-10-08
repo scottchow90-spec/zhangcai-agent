@@ -1,8 +1,0 @@
-{
-  "id": "10725916-3307-45b1-80be-6c7278c472e9",
-  "status": "failed",
-  "skill_id": "a-share-hotspot-sentiment-analysis",
-  "started_at": 1789032165364,
-  "error": "桥接服务在 Harness 返回前重启，任务未完成；可重新执行。",
-  "completed_at": 1789032338560
-}

@@ -14,6 +14,12 @@ foreach ($port in @(3003, 3004, 4319, 34303, 44319)) {
     ForEach-Object { [void]$protected.Add([int]$_.OwningProcess) }
 }
 $processes = @(Get-CimInstance Win32_Process)
+foreach ($process in $processes) {
+  # Build cleanup must not terminate developers' active test runners/workers.
+  if ($process.CommandLine -match '(?:-m\s+(?:pytest|unittest)|node(?:\.exe)?[^\r\n]*\s--test(?:\s|$))') {
+    [void]$protected.Add([int]$process.ProcessId)
+  }
+}
 $ancestors = New-Object 'System.Collections.Generic.HashSet[int]'
 $ancestorId = $PID
 while ($ancestorId -gt 0 -and $ancestors.Add([int]$ancestorId)) {

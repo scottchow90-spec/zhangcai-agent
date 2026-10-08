@@ -1,2 +1,0 @@
-每日首次打开后的数据更新校验：本机 4 个补全步骤全部 completed 且 code=0；公开行情 3 源中连板网(10 条)与东方财富涨停池(28 条)可用，并与 marketBreadth 的 limitUp=28、lianban=10 互相印证；东方财富龙虎榜为 missing(providerSuccess=false，providerMessage=返回数据为空，recordCount=null，bytes=89)，当日龙虎榜未补齐；新闻快讯 100 条可用(httpStatus=200，providerCode=1)。指数、成交额、个股涨跌幅/成交额榜单、跌停阈值候选、前日涨停表现、TDX 行业/主题板块聚合、盘中封板-炸板代理、主线名称聚类与 TDX 涨停文件均未提供，因此本次只能完成来源级核验与市场宽度核验，不能产出板块级或个股级结论；且快照落盘路径与补全结果文件内容未给出，无法确认写入结果。\",\n  \"data_date\": \"2026-09-10\",\n  \"data_scope\": \"
-

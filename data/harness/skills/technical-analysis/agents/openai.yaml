@@ -1,6 +1,0 @@
-interface:
-  display_name: "技术分析"
-  short_description: "本机三公式强制技术分析：大牛线撑压版、飞龙在天、庄家资金监控缺一不可"
-  default_prompt: "Use $technical-analysis and execute all three mandatory local C:\\new_tdx_mock TQ formulas without any external fallback."
-policy:
-  allow_implicit_invocation: false

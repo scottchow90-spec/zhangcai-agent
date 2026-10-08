@@ -1,6 +1,0 @@
-interface:
-  display_name: "产业链深度研究"
-  short_description: "基于当前证据拆解产业链价值、供需周期并核验核心受益公司"
-  default_prompt: "使用 $industry-chain-analysis 深度研究目标产业链，并基于当前证据核验核心受益环节和公司。"
-policy:
-  allow_implicit_invocation: false

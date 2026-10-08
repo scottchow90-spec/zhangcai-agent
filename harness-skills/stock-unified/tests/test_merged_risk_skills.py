@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SKILLS_ROOT = ROOT.parent
 CATALOG_PATH = ROOT / "references" / "stock_skill_ids.json"
 CONTRACTS_PATH = ROOT / "references" / "stock_execution_contracts.json"
-RUNTIME_PATH = Path(r"D:\C盘转移\日志\codex\scripts\stock_canonical_runtime.py")
+RUNTIME_PATH = ROOT.parents[1] / "scripts" / "stock_canonical_runtime.py"
 OWNER_ID = "risk-mine-clearance"
 RETIRED_ID = "risk-warning"
 

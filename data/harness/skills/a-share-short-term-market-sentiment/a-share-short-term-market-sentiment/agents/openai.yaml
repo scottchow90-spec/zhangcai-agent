@@ -1,6 +1,0 @@
-interface:
-  display_name: "短线市场情绪研判"
-  short_description: "基于多维当前市场数据研判短线情绪周期、强弱状态与风险阶段"
-  default_prompt: "使用短线市场情绪研判，分析当前 A 股短线市场情绪、周期阶段和风险边界。"
-policy:
-  allow_implicit_invocation: false

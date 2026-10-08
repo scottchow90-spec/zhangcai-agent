@@ -8,8 +8,8 @@ import unittest
 from pathlib import Path
 
 
-HOME = Path(r"D:\C盘转移\日志\codex")
-SKILLS = HOME / "skills"
+HOME = Path(__file__).resolve().parents[3]
+SKILLS = HOME / "harness-skills"
 CONTRACTS = SKILLS / "stock-unified" / "references" / "stock_execution_contracts.json"
 
 

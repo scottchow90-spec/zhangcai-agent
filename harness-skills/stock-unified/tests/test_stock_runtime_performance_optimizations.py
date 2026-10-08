@@ -12,11 +12,11 @@ from pathlib import Path
 from unittest import mock
 
 
-HOME = Path(r"D:\C盘转移\日志\codex")
+HOME = Path(__file__).resolve().parents[3]
 RUNTIME_PATH = HOME / "scripts" / "stock_canonical_runtime.py"
 CONVERTIBLE_ENTRY = (
     HOME
-    / "skills"
+    / "harness-skills"
     / "convertible-bond-screening-strategy"
     / "scripts"
     / "codex_entry.py"

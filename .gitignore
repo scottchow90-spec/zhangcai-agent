@@ -33,7 +33,7 @@ yarn-error.log*
 
 # deployment and generated files
 .vercel
-next-env.d.ts
+# next-env.d.ts is a portable TypeScript source input; keep it tracked.
 /dist/
 /.wrangler/
 /outputs/
@@ -68,10 +68,30 @@ next-env.d.ts
 /**/reports/
 /data/strategy-results/
 /app-data/
-/skill-archives/
+/skill-archives/*
+!/skill-archives/*.zip
 /data/dev-server*.log
 **/__pycache__/
 *.log
 
 # Verified frontend staging is a local packaging input, not recovered source.
 /packaging/staging/
+
+# Reproducible source checkout; binaries are supplied as hash-locked LFS assets.
+/dist-installer/
+/packaging/runtime-node-modules/
+/packaging/vendor/
+/packaging/dist-backup*/
+/packaging/.incremental*/
+*.tsbuildinfo
+*.pyc
+*.pyo
+/.bootstrap-*/
+/.tmp*
+/_probe*
+/_task*
+/_scan*
+/_extract*
+/_prior_job_output*
+/.dev-tools/
+!.env.example

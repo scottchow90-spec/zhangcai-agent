@@ -29,7 +29,7 @@ def load_module(name: str, path: Path):
 
 RUNTIME = load_module(
     "stock_canonical_runtime_delivery_authorization_test",
-    Path(r"D:\C盘转移\日志\codex\scripts\stock_canonical_runtime.py"),
+    Path(__file__).resolve().parents[3] / "scripts" / "stock_canonical_runtime.py",
 )
 
 DELIVERY_POLICY = {
@@ -473,12 +473,12 @@ class DeliveryAuthorizationTests(unittest.TestCase):
         )
 
     def test_completion_run_command_consumes_lone_run_intent(self) -> None:
-        entry = Path(r"D:\C盘转移\日志\codex\skills\stock-unified\scripts\codex_entry.py")
+        entry = Path(__file__).resolve().parents[1] / "scripts" / "codex_entry.py"
         command = RUNTIME.completion_run_command(entry, ["run"])
         self.assertEqual(command, [sys.executable, str(entry), "run"])
 
     def test_completion_run_command_preserves_action_specific_arguments(self) -> None:
-        entry = Path(r"D:\C盘转移\日志\codex\skills\feilong-strategy\scripts\codex_entry.py")
+        entry = Path(__file__).resolve().parents[2] / "feilong-strategy" / "scripts" / "codex_entry.py"
         business_args = ["score-composite", "--board-name", "飞龙在天"]
         command = RUNTIME.completion_run_command(entry, business_args)
         self.assertEqual(

@@ -1,1 +1,0 @@
-{"status": "PASS", "skill": "golden-ignition", "input_symbol": "600577.SH", "analysis_symbol": "600577.SH", "latest_trading_date": "2026-09-11", "signal_status": "NO_SIGNAL", "result_path": "C:\\work\\260907 掌财智能体\\CodeX-st-wsp\\zhangcai-web-3003\\app-data\\strategy-results\\golden-ignition\\golden_ignition_600577_20260913_011804.json"}

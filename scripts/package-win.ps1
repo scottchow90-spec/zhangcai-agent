@@ -2,16 +2,17 @@ $ErrorActionPreference = 'Stop'
 
 $projectRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
 . (Join-Path $PSScriptRoot 'release-paths.ps1')
-Assert-NewArtifact (Join-Path $releaseRoot "掌财桌面端-$releaseVersion-x64.exe")
+$desktopProductName = -join @([char]0x638C, [char]0x8D22, [char]0x684C, [char]0x9762, [char]0x7AEF)
+Assert-NewArtifact (Join-Path $releaseRoot "$desktopProductName-$releaseVersion-x64.exe")
 & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot 'stop-packaging-processes.ps1') -WorkspaceRoot $projectRoot
 if ($LASTEXITCODE -ne 0) { throw 'Failed to stop packaging-conflicting project processes.' }
 & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot 'stage-desktop-runtime.ps1')
 if ($LASTEXITCODE -ne 0) {
   throw 'Desktop environment layer staging failed; electron-builder was not started.'
 }
-& (Join-Path $projectRoot '.runtime\node\node.exe') (Join-Path $PSScriptRoot 'stage-recovered-frontend.mjs')
+& (Join-Path $projectRoot '.runtime\node\node.exe') (Join-Path $PSScriptRoot 'stage-desktop-frontend.mjs')
 if ($LASTEXITCODE -ne 0) {
-  throw 'Verified recovered frontend/formula staging failed; electron-builder was not started.'
+  throw 'Frontend build from current source failed; electron-builder was not started.'
 }
 & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot 'package-preflight.ps1') -MainInstaller -RequireHarnessRuntime
 if ($LASTEXITCODE -ne 0) {

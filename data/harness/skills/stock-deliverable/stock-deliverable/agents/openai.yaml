@@ -1,6 +1,0 @@
-interface:
-  display_name: "股票投研交付"
-  short_description: "股票投研交付独立 Codex 股票工作流；仅显式调用，禁止跨技能路由和别名混用"
-  default_prompt: "Use $stock-deliverable to run the exact 股票投研交付 workflow without routing to sibling stock skills."
-policy:
-  allow_implicit_invocation: false

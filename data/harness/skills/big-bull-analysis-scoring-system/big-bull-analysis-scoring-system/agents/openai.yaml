@@ -1,7 +1,0 @@
-interface:
-  display_name: "大牛线分析评分系统"
-  short_description: "通达信大牛线单股十六项分析与自定义板块百分制评分排名"
-  default_prompt: "使用 $big-bull-analysis-scoring-system 分析单只股票或评分通达信自定义板块。"
-
-policy:
-  allow_implicit_invocation: false

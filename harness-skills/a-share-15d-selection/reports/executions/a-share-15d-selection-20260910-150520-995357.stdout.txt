@@ -1,7 +1,0 @@
-usage: canonical_business_adapter.py [-h] --run-dir RUN_DIR
-                                     [--timeout TIMEOUT]
-
-options:
-  -h, --help         show this help message and exit
-  --run-dir RUN_DIR
-  --timeout TIMEOUT

@@ -12,7 +12,7 @@ from pathlib import Path
 from unittest import mock
 
 
-SCRIPTS = Path(r"D:\C盘转移\日志\codex\skills\stock-unified\scripts")
+SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
 if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
@@ -36,7 +36,7 @@ AUDIT = load_module(
 )
 RUNTIME = load_module(
     "stock_canonical_runtime_failure_injection_test",
-    Path(r"D:\C盘转移\日志\codex\scripts\stock_canonical_runtime.py"),
+    Path(__file__).resolve().parents[3] / "scripts" / "stock_canonical_runtime.py",
 )
 
 

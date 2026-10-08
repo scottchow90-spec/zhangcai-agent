@@ -1,1 +1,12 @@
 skill-archives/A股行情资讯全接口与数据能力大全_WorkBuddy电脑版_20260908-014459.zip filter=lfs diff=lfs merge=lfs -text
+release-assets/**/*.exe filter=lfs diff=lfs merge=lfs -text
+development-assets/*.zip filter=lfs diff=lfs merge=lfs -text
+# Runtime contracts contain byte-level source hashes. Preserve original source
+# bytes on every checkout instead of applying machine-specific CRLF conversion.
+* whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+app/** -text
+scripts/** -text
+harness-skills/** -text
+config/** -text
+lib/** -text
+electron-app/** -text

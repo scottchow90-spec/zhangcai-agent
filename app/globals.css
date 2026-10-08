@@ -714,6 +714,10 @@
 .desktop-runtime-settings button{height:28px;padding:0 8px;border:1px solid #e7b8c0;border-radius:5px;background:#fff7f8;color:#a31d37;font-size:10px;white-space:nowrap}
 .desktop-runtime-settings button:hover{border-color:#c84b61;background:#ffecef}
 .desktop-runtime-settings button:disabled{cursor:wait;opacity:.6}
+.desktop-runtime-diagnostics{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;height:29px;margin-top:8px;border:1px solid #e7b8c0;border-radius:5px;background:#fff;color:#a31d37;font-size:10px}
+.desktop-runtime-diagnostics:hover{border-color:#c84b61;background:#fff7f8}
+.desktop-runtime-diagnostics:disabled{cursor:wait;opacity:.65}
+.desktop-runtime-error{display:block;margin-top:8px;color:#b4233e;font-size:10px;line-height:1.6}
 .desktop-runtime-panel>small{display:block;margin-top:11px;color:#a78b92;font-size:10px;line-height:1.7}
 @media(max-width:900px){
   .desktop-runtime-shell{gap:5px}
@@ -732,3 +736,5 @@
 .stock-sheet .detail-price{font-size:clamp(42px,6vw,56px);font-weight:700;line-height:1.15;flex-wrap:wrap;column-gap:16px;row-gap:5px;font-variant-numeric:tabular-nums}
 .stock-sheet .detail-price small{flex-basis:100%;font-size:13px;font-weight:500;color:#797f8a}
 .stock-sheet .detail-price span{font-size:21px;font-weight:650}
+.stock-sheet .stock-detail-title{font-size:27px!important;font-weight:700!important;line-height:1.25!important;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.stock-sheet .stock-detail-title small{font-size:17px;font-weight:600;color:#7b4652;letter-spacing:.04em}

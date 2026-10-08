@@ -13,7 +13,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 
-SOURCE = Path(r"D:\C盘转移\日志\codex\scripts\stock_support_pressure_adapter.py")
+SOURCE = Path(__file__).resolve().parents[3] / "scripts" / "stock_support_pressure_adapter.py"
 
 
 def load_module():

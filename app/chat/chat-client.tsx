@@ -1508,7 +1508,7 @@ export default function ChatClient() {
       fetch(bridgeUrl('/market?scope=latest'), { cache: 'no-store' }).then(
         async (response) => (response.ok ? response.json() : null),
       ),
-      fetch(bridgeUrl('/runtime/environment'), { cache: 'no-store' }).then(
+      fetch(bridgeUrl('/runtime/environment?summary=1'), { cache: 'no-store' }).then(
         async (response) => (response.ok ? response.json() : null),
       ),
       fetch(bridgeUrl('/runtime/resource-context'), { cache: 'no-store' }).then(
@@ -1773,6 +1773,7 @@ export default function ChatClient() {
     const current = resume?.pending || pending;
     if (!current) return;
     const steps = current.plan?.length ? current.plan : [current];
+    let latestResourceContext = resourceLibraryContext || {};
     cancelRef.current = false;
     const firstStepIndex = Math.min(
       Math.max(resume?.stepIndex || 0, 0),
@@ -1835,6 +1836,13 @@ export default function ChatClient() {
         setPending(null);
         return;
       }
+      try {
+        const response = await fetch(bridgeUrl('/runtime/resource-context'), { cache: 'no-store' });
+        if (response.ok) {
+          latestResourceContext = await response.json() as Record<string, unknown>;
+          setResourceLibraryContext(latestResourceContext);
+        }
+      } catch { /* 继续使用页面缓存；Harness 输出仍需注明资源缺口。 */ }
       const marketRows = (market.allStocks || market.stocks || []).length;
       append({
         role: 'assistant',
@@ -1983,7 +1991,7 @@ export default function ChatClient() {
           preflight: step.preflight,
           request: step.request,
           environment: environment || {},
-          resourceLibrary: resourceLibraryContext || {},
+          resourceLibrary: latestResourceContext,
         };
         // The strategy page does not send selection skills straight to
         // generic Harness reasoning. It first runs the same local scoring
@@ -2107,6 +2115,15 @@ export default function ChatClient() {
       );
       const completeSkillIds = steps.map((step) => step.skill.id).join('+');
       const completeSkillNames = steps.map((step) => step.skill.name).join('、');
+      const targetStocks = [...new Map(steps.map((step) => {
+        const identity = stockIdentity(market, step.request);
+        const stock = identity.stock;
+        const code = identity.code || step.stockCode || '';
+        const exchange = String(stock?.market || '').toUpperCase().slice(0, 2);
+        const key = code ? `${exchange || 'XX'}${code}` : `name-${identity.name || step.stockName || 'market'}`;
+        return [key, { code, market: exchange, name: identity.name || step.stockName || '' }] as const;
+      }))].map(([key, value]) => ({ key, ...value })).sort((a, b) => a.key.localeCompare(b.key));
+      const targetKey = targetStocks.length ? targetStocks.map((item) => item.key).join('_') : 'market';
       append({
         role: 'assistant',
         kind: 'report',
@@ -2117,7 +2134,7 @@ export default function ChatClient() {
       const time = iso();
       await saveReportArchive({
         id: createReportId('chat-report'),
-        archiveKey: `chat:${completeReport.dataDate || market?.date || ''}:${steps.length > 1 ? 'complete-plan' : completeSkillIds}`,
+        archiveKey: `chat:${completeReport.dataDate || market?.date || ''}:${targetKey}:${completeSkillIds}`,
         createdAt: time,
         updatedAt: time,
         date: completeReport.dataDate || String(market?.date || market?.tradeDate || ''),
@@ -2136,6 +2153,7 @@ export default function ChatClient() {
           skillId: steps.length === 1 ? steps[0].skill.id : 'complete-plan',
           skillName: completeSkillNames,
           skills: steps.map((step) => ({ id: step.skill.id, name: step.skill.name })),
+          targetStocks,
           request: current.request,
           status: completeReport.status,
           report: completeReport.value,

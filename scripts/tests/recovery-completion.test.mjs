@@ -97,11 +97,12 @@ test('formula manifest tampering cannot authorize changed embedded files', async
   } finally { await rm(root, { recursive: true, force: true }); }
 });
 
-test('Windows build hooks stage verified evidence before preflight', async () => {
+test('Windows build hooks compile current source before preflight', async () => {
   for (const name of ['package-win.ps1', 'package-win-dir.ps1']) {
     const script = await readFile(path.join(appRoot, 'scripts', name), 'utf8');
-    assert.ok(script.indexOf('stage-recovered-frontend.mjs') > 0);
-    assert.ok(script.indexOf('stage-recovered-frontend.mjs') < script.indexOf('package-preflight.ps1'));
+    assert.ok(script.indexOf('stage-desktop-frontend.mjs') > 0);
+    assert.ok(script.indexOf('stage-desktop-frontend.mjs') < script.indexOf('package-preflight.ps1'));
+    assert.equal(script.includes('stage-recovered-frontend.mjs'), false);
     assert.equal(script.includes('stage-desktop-formula-seed.ps1'), false);
   }
   const preflight = await readFile(path.join(appRoot, 'scripts/package-preflight.ps1'), 'utf8');

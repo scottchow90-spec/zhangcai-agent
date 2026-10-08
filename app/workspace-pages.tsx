@@ -56,6 +56,7 @@ import {
   deleteArchivedReport,
   loadReportArchive,
   loadReportArchiveFromLocalRuntime,
+  shouldShowInMyReports,
   reportArchiveChangedEvent,
   saveReportArchive,
   type ReportArchiveRecord,
@@ -2082,7 +2083,7 @@ export default function WorkspacePages({
     [pageNo, setPageNo] = useState(0),
     [sort, setSort] = useState('gain'),
     [archiveRows, setArchiveRows] = useState<ReportArchiveRecord[]>(() =>
-      loadReportArchive(),
+      loadReportArchive().filter(shouldShowInMyReports),
     ),
     [openedArchive, setOpenedArchive] = useState<ReportArchiveRecord | null>(null),
     [watchRefreshing, setWatchRefreshing] = useState(false),
@@ -2157,7 +2158,27 @@ export default function WorkspacePages({
       .then((response) => response.ok ? response.json() : null)
       .then((job) => {
         if (!active) return;
-        setMainlineHarnessOutput(typeof job?.output === 'string' ? job.output : '');
+        const raw = typeof job?.output === 'string' ? job.output : '';
+        setMainlineHarnessOutput(raw);
+        if (raw && (!job?.status || job.status === 'completed')) {
+          const parsed = parseHarnessOutput(raw);
+          const reportDate = String(parsed.dataDate || job?.date || market.date || '');
+          const time = new Date().toISOString();
+          void saveReportArchive({
+            id: createReportId('mainline'),
+            archiveKey: `mainline:${reportDate}:short-term-sentiment-v22`,
+            createdAt: time,
+            updatedAt: time,
+            date: reportDate,
+            title: `主线追踪 · A股短线市场情绪 V2.2 · ${d(reportDate)}`,
+            reportType: '主线追踪 Harness 报告',
+            generatedBy: 'DeepSeek Harness · short-term-sentiment-v22',
+            summary: parsed.summary || '主线追踪研究报告已完成。',
+            dataScope: parsed.dataScope || `市场情绪技能 · ${reportDate || '日期未提供'}`,
+            content: { kind: 'harness-skill', skillId: 'short-term-sentiment-v22', skillName: 'A股短线市场情绪 V2.2', raw },
+            raw,
+          });
+        }
       })
       .catch(() => { if (active) setMainlineHarnessOutput(''); })
       .finally(() => { if (active) setMainlineHarnessLoading(false); });
@@ -2449,9 +2470,9 @@ export default function WorkspacePages({
     }
   }
   useEffect(() => {
-    const refresh = () => setArchiveRows(loadReportArchive());
+    const refresh = () => setArchiveRows(loadReportArchive().filter(shouldShowInMyReports));
     void loadReportArchiveFromLocalRuntime().then((reports) => {
-      if (reports.length) setArchiveRows(reports);
+      if (reports.length) setArchiveRows(reports.filter(shouldShowInMyReports));
     });
     const migratedKey = `zhangcai.report.archive.migrated.${market.date}`;
     const legacy = loadReport(market.date);
@@ -2534,11 +2555,11 @@ export default function WorkspacePages({
     setHarnessStartedAt(null);
     setHarnessElapsed(0);
   }
-  async function archiveMarketReport(value: Report, reportType: string) {
+  async function archiveMarketReport(value: Report, reportType: string, archiveKey = 'market-review') {
     const now = new Date().toISOString();
     await saveReportArchive({
       id: createReportId('market'),
-      archiveKey: 'market-review',
+      archiveKey,
       createdAt: now,
       updatedAt: now,
       date: value.date,
@@ -2661,9 +2682,17 @@ export default function WorkspacePages({
     _context?: unknown,
     label = skillId,
   ) {
+    let latestResourceLibrary = resourceLibraryContext || {};
+    try {
+      const response = await fetch(bridgeUrl('/runtime/resource-context'), { cache: 'no-store' });
+      if (response.ok) {
+        latestResourceLibrary = await response.json() as Record<string, unknown>;
+        setResourceLibraryContext(latestResourceLibrary);
+      }
+    } catch { /* 继续使用页面缓存，并在报告中保留资源库边界。 */ }
     const resourceContext = _context && typeof _context === 'object'
-      ? { ...(_context as Record<string, unknown>), resourceLibrary: resourceLibraryContext || {} }
-      : { resourceLibrary: resourceLibraryContext || {} };
+      ? { ...(_context as Record<string, unknown>), resourceLibrary: latestResourceLibrary }
+      : { resourceLibrary: latestResourceLibrary };
     const result = await runHarnessInBackground({
       task,
       skillId,
@@ -2813,7 +2842,11 @@ export default function WorkspacePages({
         aiPresentation: rendered.presentation,
       };
       setReport(nextReport);
-      await archiveMarketReport(nextReport, 'Harness 复盘');
+      const reportDate = String(parsed.dataDate || base.date || market.date || '');
+      const archiveKey = skillId === 'short-term-sentiment-v22'
+        ? `mainline:${reportDate}:short-term-sentiment-v22`
+        : `market:${reportDate}:${skillId}`;
+      await archiveMarketReport(nextReport, 'Harness 复盘', archiveKey);
     } catch (error) {
       setAiError(
         error instanceof Error ? error.message : 'DeepSeek Harness 调用失败',

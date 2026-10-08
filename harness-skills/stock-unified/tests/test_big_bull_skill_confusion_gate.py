@@ -15,14 +15,14 @@ from pathlib import Path
 import pandas as pd
 
 
-HOME = Path(r"D:\C盘转移\日志\codex")
-BIG_BULL = HOME / "skills" / "big-bull-analysis-scoring-system"
+HOME = Path(__file__).resolve().parents[3]
+BIG_BULL = HOME / "harness-skills" / "big-bull-analysis-scoring-system"
 SCRIPTS = BIG_BULL / "scripts"
 if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 CONTRACTS = (
     HOME
-    / "skills"
+    / "harness-skills"
     / "stock-unified"
     / "references"
     / "stock_execution_contracts.json"

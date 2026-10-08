@@ -1,9 +1,0 @@
-{
-  "id": "b3a566f1-8742-4120-a1cf-cbc78985b4d0",
-  "status": "failed",
-  "skill_id": "big-bull-analysis-scoring-system",
-  "started_at": 1789040954097,
-  "error": "DeepSeek Harness 退出码 1：dsh: TRANSPORT: DeepSeek API request to https://api.deepseek.com failed",
-  "elapsed_ms": 52889,
-  "completed_at": 1789041006986
-}

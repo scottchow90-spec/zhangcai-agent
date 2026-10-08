@@ -1,6 +1,0 @@
-interface:
-  display_name: "Stock Research Codex"
-  short_description: "Canonical stock workflow discovery, dispatch, and generic fallback."
-  default_prompt: "First route the user's original stock request with F:\\Codex\\Workspaces\\2026-08-20\\onestock-browser-v040\\workspace\\product\\stock_runtime\\versions\\v1-86edba1dfdc5-py311-deps5-r14\\Home\\scripts\\stock_canonical_runtime.py route --query. Execute every exact matched stock skill through its own scripts\\codex_entry.py in returned order; use $stock-research-codex generic research only for generic_default."
-policy:
-  allow_implicit_invocation: true

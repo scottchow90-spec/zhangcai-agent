@@ -8,7 +8,7 @@ npmRebuild: false
 # Only the small formula seed below is embedded; the verified baseline runtime
 # is embedded alongside the program and reused by later program updates.
 directories:
-  output: dist-installer/releases/0.1.22
+  output: dist-installer/releases/${version}
   buildResources: electron-app/resources
 files:
   - package.json
@@ -48,7 +48,7 @@ extraResources:
     filter:
       - '**/*'
   # Built from a slim isolated source tree; do not replace the live web dist.
-  - from: packaging/staging/site-build-0.1.22/dist
+  - from: packaging/staging/site-build-${version}/dist
     to: app/dist
   - from: agent-server.mjs
     to: app/agent-server.mjs

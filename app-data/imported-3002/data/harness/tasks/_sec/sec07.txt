@@ -1,2 +1,0 @@
-盘中封板/炸板代理（OHLC）：{"date":"20260908","source":"本地日线 OHLC 代理（非逐笔）","method":"以 high/low 是否触及涨跌停阈值估算触板；以 close 是否收于阈值估算封板，不能提供首封时刻或封单额","upperHitCount":71,"upperClosedCount":42,"openedAfterHitCount":29,"sealRatePct":59.15,"explosionRatePct":40.85,"lowerHitCount":6,"lowerClosedCount":3,"lowerOpenedAfterHitCount":3,"lowerSealRatePct":50,"firstSealTimeAvailable":false,"orderBookAvailable":false,"lc5Files":2738,"lc5DateDistribution":{"20260904":2738},"lc5CurrentDateCount":0,"dataFresh":false} 
-

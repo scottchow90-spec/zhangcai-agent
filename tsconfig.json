@@ -28,6 +28,10 @@
   ],
   "exclude": [
     "node_modules",
+    ".runtime/**",
+    "packaging/**",
+    "dist/**",
+    "dist-installer/**",
     "data/harness/skills/**",
     "harness-skills/**",
     "app-data/**",
